@@ -18,6 +18,7 @@ import data.MySQLTable;
 public class Initializer extends HttpServlet implements YahooRoomHandler {
 
     private static final long serialVersionUID = -4558999460178582604L;
+    public static Initializer selfInstance = null;
 
     public static java.sql.Connection mySqlConnection;
     private static String dbHost = "127.0.0.1";
@@ -66,6 +67,18 @@ public class Initializer extends HttpServlet implements YahooRoomHandler {
         return pool2Port;
     }
 
+    public YahooPoolServer getPoolServer() {
+        return poolServer;
+    }
+
+    public YahooPoolServer2 getPoolServer2() {
+        return poolServer2;
+    }
+
+    public YahooCheckersServer getCheckersServer() {
+        return checkersServer;
+    }
+
     private String readConfig(String name, String defaultValue) {
         String value = getInitParameter(name);
         if ((value == null || value.length() == 0) && getServletContext() != null)
@@ -90,6 +103,7 @@ public class Initializer extends HttpServlet implements YahooRoomHandler {
 
     @Override
     public void destroy() {
+        selfInstance = null;
         try {
             if (connectionPool != null) {
                 connectionPool.destroy();
@@ -169,6 +183,7 @@ public class Initializer extends HttpServlet implements YahooRoomHandler {
     @Override
     public void init() {
         System.out.println("NEWYAHOO INIT START");
+        selfInstance = this;
 
         try {
             dbHost = readConfig("newyahoo.db.host", dbHost);

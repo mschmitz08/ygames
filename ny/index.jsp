@@ -84,6 +84,13 @@
 %>
 <%
     String launcherVersion = "0.7.2";
+    String requestedGame = request.getParameter("game");
+    if (!"checkers".equalsIgnoreCase(requestedGame))
+        requestedGame = "pool";
+    String requestedRoom = request.getParameter("room");
+    String requestedHost = request.getParameter("host");
+    String requestedWidth = request.getParameter("width");
+    String requestedHeight = request.getParameter("height");
     String requestHost = request.getServerName();
     String defaultHost = requestHost;
     int defaultCheckersPort = 11999;
@@ -109,6 +116,25 @@
             defaultHost = configuredHost;
         defaultCheckersPort = Initializer.selfInstance.getCheckersPort();
         defaultPoolPort = Initializer.selfInstance.getPoolPort();
+    }
+
+    if (requestedHost != null && requestedHost.trim().length() > 0)
+        defaultHost = requestedHost.trim();
+
+    int initialPort = "checkers".equals(requestedGame) ? defaultCheckersPort : defaultPoolPort;
+    int initialWidth = 1400;
+    int initialHeight = 900;
+    try {
+        if (requestedWidth != null && requestedWidth.trim().length() > 0)
+            initialWidth = Integer.parseInt(requestedWidth.trim());
+    }
+    catch (NumberFormatException ignore) {
+    }
+    try {
+        if (requestedHeight != null && requestedHeight.trim().length() > 0)
+            initialHeight = Integer.parseInt(requestedHeight.trim());
+    }
+    catch (NumberFormatException ignore) {
     }
 
     if (Initializer.selfInstance != null) {
@@ -313,13 +339,16 @@ body {
 }
 .size-grid {
     display: grid;
-    grid-template-columns: 1fr 0.8fr 0.8fr;
+    grid-template-columns: 1.45fr 0.8fr 0.8fr;
     align-items: end;
     gap: 12px;
     margin-bottom: 16px;
 }
 .size-grid .field-label {
     white-space: nowrap;
+}
+.size-preset-select {
+    min-width: 0;
 }
 .helper-copy {
     margin: -4px 0 16px 0;
@@ -364,6 +393,11 @@ body {
     background: #4d3725;
     color: #f7ebd2;
 }
+.action-ghost {
+    background: rgba(32, 49, 77, 0.08);
+    color: #312216;
+    border: 1px solid rgba(61, 43, 28, 0.18);
+}
 .microcopy {
     margin-top: 18px;
     font-size: 12px;
@@ -394,6 +428,9 @@ body {
 </style>
 <script type="text/javascript">
 var launcherVersion = '<%=launcherVersion%>';
+var initialGame = '<%=jsEscape(requestedGame)%>';
+var initialRoom = '<%=jsEscape(requestedRoom == null ? "" : requestedRoom)%>';
+var initialRoomApplied = false;
 var defaultHost = '<%=jsEscape(defaultHost)%>';
 var webBase = '<%=jsEscape(webBase)%>';
 var defaultPorts = {
@@ -435,7 +472,7 @@ function selectedGame() {
         if (options[i].checked)
             return options[i].value;
     }
-    return 'checkers';
+    return initialGame || 'pool';
 }
 
 function refreshGameCards() {
@@ -477,6 +514,15 @@ function populateRooms() {
         option.text = room.label;
         select.add(option);
     }
+    if (!initialRoomApplied && initialRoom) {
+        for (var roomIndex = 0; roomIndex < select.options.length; roomIndex++) {
+            if (select.options[roomIndex].value === initialRoom) {
+                select.selectedIndex = roomIndex;
+                break;
+            }
+        }
+        initialRoomApplied = true;
+    }
     note.innerHTML = 'Pick a room, then choose whether you want to play, register, or change your password.';
 }
 
@@ -496,6 +542,18 @@ function applySizePreset() {
         return;
     widthField.value = values.width;
     heightField.value = values.height;
+}
+
+function browseLiveRooms() {
+    var game = selectedGame();
+    var host = document.getElementById('host').value;
+    var width = document.getElementById('width').value;
+    var height = document.getElementById('height').value;
+    window.location.href = '../newyahoo/status.jsp?game=' + encodeURIComponent(game)
+        + '&host=' + encodeURIComponent(host)
+        + '&width=' + encodeURIComponent(width)
+        + '&height=' + encodeURIComponent(height);
+    return false;
 }
 
 function launch(mode) {
@@ -561,15 +619,15 @@ function launch(mode) {
         <div class="content">
             <div class="panel panel-left">
                 <h2 class="section-title">Choose Your Game</h2>
-                <p class="section-copy">Checkers and Pool share the same polished entry flow now. Pool 2 is staying off this launcher for the moment.</p>
+                <p class="section-copy">Pool comes up first now, but you can bounce between Pool and Checkers and keep the same polished launcher flow. Pool 2 is staying off this launcher for the moment.</p>
                 <div class="choice-grid">
-                    <label class="game-choice active" data-game="checkers">
-                        <input type="radio" name="game" value="checkers" checked="checked" onclick="syncLauncher()"/>
+                    <label class="game-choice<%="checkers".equals(requestedGame) ? " active" : ""%>" data-game="checkers">
+                        <input type="radio" name="game" value="checkers" <%="checkers".equals(requestedGame) ? "checked=\"checked\"" : ""%> onclick="syncLauncher()"/>
                         <span class="game-name">Checkers</span>
                         <span class="game-desc">Classic lobby play with room-based entry and in-applet account tools.</span>
                     </label>
-                    <label class="game-choice" data-game="pool">
-                        <input type="radio" name="game" value="pool" onclick="syncLauncher()"/>
+                    <label class="game-choice<%="pool".equals(requestedGame) ? " active" : ""%>" data-game="pool">
+                        <input type="radio" name="game" value="pool" <%="pool".equals(requestedGame) ? "checked=\"checked\"" : ""%> onclick="syncLauncher()"/>
                         <span class="game-name">Pool</span>
                         <span class="game-desc">Enter the cue room you want, then sign in or manage your account without leaving the launcher flow.</span>
                     </label>
@@ -588,13 +646,13 @@ function launch(mode) {
                     </div>
                     <div>
                         <label class="field-label" for="port">Game Port</label>
-                        <input id="port" class="connection-input" type="text" value="<%=defaultCheckersPort%>"/>
+                        <input id="port" class="connection-input" type="text" value="<%=initialPort%>"/>
                     </div>
                 </div>
                 <div class="size-grid">
                     <div>
-                        <label class="field-label" for="sizePreset">Preset</label>
-                        <select id="sizePreset" class="room-select" onchange="applySizePreset()">
+                        <label class="field-label" for="sizePreset">Preset Size</label>
+                        <select id="sizePreset" class="room-select size-preset-select" onchange="applySizePreset()">
                             <option value="roomy" selected="selected">Roomy (1400x900)</option>
                             <option value="standard">Standard (1024x768)</option>
                             <option value="large">Large (1600x1000)</option>
@@ -604,11 +662,11 @@ function launch(mode) {
                     </div>
                     <div>
                         <label class="field-label" for="width">Width</label>
-                        <input id="width" class="connection-input" type="text" value="1400"/>
+                        <input id="width" class="connection-input" type="text" value="<%=initialWidth%>"/>
                     </div>
                     <div>
                         <label class="field-label" for="height">Height</label>
-                        <input id="height" class="connection-input" type="text" value="900"/>
+                        <input id="height" class="connection-input" type="text" value="<%=initialHeight%>"/>
                     </div>
                 </div>
                 <p class="helper-copy">Preset and custom size affect the applet window launched from this page. You can change these before each launch.</p>
@@ -616,8 +674,9 @@ function launch(mode) {
                     <button class="action-button action-primary" onclick="return launch('')">Play Now</button>
                     <button class="action-button action-secondary" onclick="return launch('register')">Register In Applet</button>
                     <button class="action-button action-tertiary" onclick="return launch('change_password')">Change Password</button>
+                    <button class="action-button action-ghost" onclick="return browseLiveRooms()">Browse Live Rooms</button>
                 </div>
-                <p class="microcopy">The tiny version tag on this screen and the in-applet welcome dialog makes it easy to see which launcher build you are testing as the flow evolves.</p>
+                <p class="microcopy">The tiny version tag on this screen and the in-applet welcome dialog makes it easy to see which launcher build you are testing as the flow evolves. Browse Live Rooms shows where the activity is before you launch.</p>
             </div>
         </div>
     </div>
