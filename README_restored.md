@@ -170,6 +170,12 @@ SELECT * FROM pool_rooms;
 SELECT * FROM pool2_rooms;
 ```
 
+To replace an existing Pool room list with the larger historical Yahoo Pool set, run:
+
+```sql
+SOURCE <INSTALL_PATH>/ygames2/sql/replace_pool_rooms_historical.sql;
+```
+
 Known working room names:
 
 - Checkers: `badger_bridge`
