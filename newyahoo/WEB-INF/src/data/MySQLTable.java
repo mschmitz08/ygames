@@ -16,7 +16,7 @@ public class MySQLTable {
 		if (value instanceof String) {
 			String result = (String) value;
 			result = result.replace("\\", "\\\\");
-			result = result.replace("'", "\\'");
+			result = result.replace("'", "''");
 			return "'" + result + "'";
 		}
 		else if (value instanceof java.util.Date) {

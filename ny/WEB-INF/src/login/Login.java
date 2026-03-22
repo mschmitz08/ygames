@@ -148,11 +148,11 @@ public class Login {
 	public static boolean isValidName(String name) {
 		for (int i = 0; i < name.length(); i++) {
 			char c = name.charAt(i);
-			if (c >= 'a' || c <= 'z')
+			if (c >= 'a' && c <= 'z')
 				continue;
-			if (c >= 'A' || c <= 'Z')
+			if (c >= 'A' && c <= 'Z')
 				continue;
-			if (c >= '0' || c <= '9')
+			if (c >= '0' && c <= '9')
 				continue;
 			if (c == '_' || c == '.')
 				continue;
