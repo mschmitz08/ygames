@@ -210,18 +210,7 @@ public class Login {
 			}
 		}
 
-		MessageDigest md5 = null;
-		try {
-			md5 = MessageDigest.getInstance("MD5");
-		}
-		catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return -1;
-		}
-		md5.reset();
-		md5.update(password.getBytes(StandardCharsets.UTF_8));
-		ycookie[0] = Hex.toString(md5.digest());
+		ycookie[0] = buildSessionCookie(password);
 
 		String ip1 = getHostByName(ip);
 		ids.assyncUpdate(new String[] {"name"}, new Object[] {name}, new String[] { "ycookie", "ip",
@@ -269,19 +258,7 @@ public class Login {
 		if (loginExist(ids, name))
 			return 4;
 		String ip1 = getHostByName(ip);
-		MessageDigest md5 = null;
-		try {
-			md5 = MessageDigest.getInstance("MD5");
-		}
-		catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return -1;
-		}
-		md5.reset();
-		md5.update(password.getBytes(StandardCharsets.UTF_8));
-		byte[] hash = md5.digest();
-		String ycookie = Hex.toString(hash);
+		String ycookie = buildSessionCookie(password);
 		Timestamp cookieExpires = new Timestamp(System.currentTimeMillis() + 24
 				* 60 * 60 * 1000);
 		
@@ -330,6 +307,78 @@ public class Login {
 			return 6;
 		}
 
+		return 0;
+	}
+
+	public static int newLoginDirect(MySQLTable ids, String name,
+			String password, String ip, String ycookie[]) {
+		if (!isValidLogin(name))
+			return 1;
+		if (!isValidPassword(password))
+			return 2;
+		if (loginExist(ids, name))
+			return 4;
+		String ip1 = getHostByName(ip);
+		Timestamp cookieExpires = new Timestamp(System.currentTimeMillis() + 24
+				* 60 * 60 * 1000);
+		Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
+		String sessionCookie = buildSessionCookie(password);
+		ids.assyncInsert(new Object[] { name, currentTimestamp, 1, 192, 0,
+				hashPassword(password), sessionCookie, "", ip1, cookieExpires,
+				currentTimestamp, 1, null, null, 1, 2, 1, 0, 0, 1 });
+		if (ycookie != null && ycookie.length > 0)
+			ycookie[0] = sessionCookie;
+		return 0;
+	}
+
+	public static int changePassword(MySQLTable ids, String name,
+			String currentPassword, String newPassword, String ip,
+			String ycookie[]) {
+		if (!isValidLogin(name))
+			return 1;
+		if (!loginExist(ids, name))
+			return 3;
+		if (!isValidPassword(currentPassword) || !isValidPassword(newPassword))
+			return 2;
+
+		ResultSet rs = null;
+		try {
+			rs = ids.getValue(new String[] { "name" }, new Object[] { name },
+					new String[] { "password", "status" });
+			if (!rs.next())
+				return -1;
+			String storedPassword = rs.getString("password");
+			int status = rs.getInt("status");
+			if (!isMatchingPassword(currentPassword, storedPassword))
+				return 4;
+			if (status == 0)
+				return 5;
+			if (status == 2)
+				return 6;
+			if (status != 1)
+				return -1;
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			return -1;
+		}
+		finally {
+			if (rs != null) {
+				ids.closeResultSet(rs);
+				rs = null;
+			}
+		}
+
+		String newSessionCookie = buildSessionCookie(newPassword);
+		String ip1 = getHostByName(ip);
+		ids.assyncUpdate(new String[] { "name" }, new Object[] { name },
+				new String[] { "password", "ycookie", "ip", "cookie_expires",
+						"last_access" }, new Object[] { hashPassword(newPassword),
+						newSessionCookie, ip1,
+						new Timestamp(System.currentTimeMillis() + 24 * 60 * 60
+								* 1000), new Timestamp(System.currentTimeMillis()) });
+		if (ycookie != null && ycookie.length > 0)
+			ycookie[0] = newSessionCookie;
 		return 0;
 	}
 
@@ -389,6 +438,19 @@ public class Login {
 		finally {
 			spec.clearPassword();
 		}
+	}
+
+	private static String buildSessionCookie(String password) {
+		MessageDigest md5 = null;
+		try {
+			md5 = MessageDigest.getInstance("MD5");
+		}
+		catch (NoSuchAlgorithmException e) {
+			throw new IllegalStateException("Unable to create session cookie", e);
+		}
+		md5.reset();
+		md5.update(password.getBytes(StandardCharsets.UTF_8));
+		return Hex.toString(md5.digest());
 	}
 
 }

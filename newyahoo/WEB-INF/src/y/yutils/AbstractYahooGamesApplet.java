@@ -146,7 +146,11 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 	boolean								loginRequestInProgress;
 	String								loginErrorMessage;
 	String								login_url;
+	String								register_url;
+	String								change_password_url;
 	public static final String	APPLET_LOGIN_REQUEST	= "APPLET_LOGIN_REQUEST";
+	public static final String	APPLET_REGISTER_REQUEST	= "APPLET_REGISTER_REQUEST";
+	public static final String	APPLET_CHANGE_PASSWORD_REQUEST	= "APPLET_CHANGE_PASSWORD_REQUEST";
 	String										agent;
 	protected String							page_id;
 	String										prof_id;
@@ -198,6 +202,8 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 		loginRequestInProgress = false;
 		loginErrorMessage = null;
 		login_url = null;
+		register_url = null;
+		change_password_url = null;
 		host = null;
 		noPopupTables = true;
 		nofaceicons = true;
@@ -445,6 +451,7 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 		loginDialog.setBusy(false);
 		loginDialog.setMessage(message != null ? message : "Please sign in");
 		loginDialog.setUsername(extractIdFromCookie());
+		loginDialog.showSignIn();
 		loginDialog.showDialog();
 	}
 
@@ -479,6 +486,81 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 		loginRequestInProgress = false;
 	}
 
+	public void submitAppletRegister(String username, String password,
+			String confirmPassword) {
+		if (loginRequestInProgress)
+			return;
+		if (username == null)
+			username = "";
+		if (password == null)
+			password = "";
+		if (confirmPassword == null)
+			confirmPassword = "";
+		username = username.trim();
+		if (username.length() == 0 || password.length() == 0
+				|| confirmPassword.length() == 0) {
+			if (loginDialog != null) {
+				loginDialog.showRegister();
+				loginDialog.setMessage("Complete all registration fields");
+			}
+			return;
+		}
+		loginRequestInProgress = true;
+		loginErrorMessage = null;
+		if (loginDialog != null) {
+			loginDialog.setBusy(true);
+			loginDialog.showRegister();
+			loginDialog.setMessage("Creating account...");
+		}
+		String postBody = encodeFormValue("username", username) + "&"
+				+ encodeFormValue("password", password) + "&"
+				+ encodeFormValue("confirm_password", confirmPassword);
+		UrlProcessEntry entry = new UrlProcessEntry(register_url, 0,
+				APPLET_REGISTER_REQUEST, false, "POST",
+				"application/x-www-form-urlencoded; charset=UTF-8",
+				postBody.getBytes(StandardCharsets.UTF_8));
+		urlProcessQueue.add(entry);
+	}
+
+	public void submitAppletPasswordChange(String username,
+			String currentPassword, String newPassword, String confirmPassword) {
+		if (loginRequestInProgress)
+			return;
+		if (username == null)
+			username = "";
+		if (currentPassword == null)
+			currentPassword = "";
+		if (newPassword == null)
+			newPassword = "";
+		if (confirmPassword == null)
+			confirmPassword = "";
+		username = username.trim();
+		if (username.length() == 0 || currentPassword.length() == 0
+				|| newPassword.length() == 0 || confirmPassword.length() == 0) {
+			if (loginDialog != null) {
+				loginDialog.showChangePassword();
+				loginDialog.setMessage("Complete all password fields");
+			}
+			return;
+		}
+		loginRequestInProgress = true;
+		loginErrorMessage = null;
+		if (loginDialog != null) {
+			loginDialog.setBusy(true);
+			loginDialog.showChangePassword();
+			loginDialog.setMessage("Updating password...");
+		}
+		String postBody = encodeFormValue("username", username) + "&"
+				+ encodeFormValue("current_password", currentPassword) + "&"
+				+ encodeFormValue("new_password", newPassword) + "&"
+				+ encodeFormValue("confirm_password", confirmPassword);
+		UrlProcessEntry entry = new UrlProcessEntry(change_password_url, 0,
+				APPLET_CHANGE_PASSWORD_REQUEST, false, "POST",
+				"application/x-www-form-urlencoded; charset=UTF-8",
+				postBody.getBytes(StandardCharsets.UTF_8));
+		urlProcessQueue.add(entry);
+	}
+
 	private String encodeFormValue(String key, String value) {
 		try {
 			return URLEncoder.encode(key, "UTF-8") + "="
@@ -493,6 +575,14 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 	protected boolean handleUrlProcessEntry(UrlProcessEntry entry) {
 		if (APPLET_LOGIN_REQUEST.equals(entry.obj)) {
 			processAppletLoginResponse(entry);
+			return true;
+		}
+		if (APPLET_REGISTER_REQUEST.equals(entry.obj)) {
+			processAppletRegisterResponse(entry);
+			return true;
+		}
+		if (APPLET_CHANGE_PASSWORD_REQUEST.equals(entry.obj)) {
+			processAppletChangePasswordResponse(entry);
 			return true;
 		}
 		return false;
@@ -540,6 +630,103 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 		}
 		else {
 			promptForAppletLogin(message != null ? message : "Invalid login");
+		}
+	}
+
+	protected void processAppletRegisterResponse(UrlProcessEntry entry) {
+		loginRequestInProgress = false;
+		if (entry == null) {
+			if (loginDialog != null) {
+				loginDialog.setBusy(false);
+				loginDialog.showRegister();
+				loginDialog.setMessage("No registration response");
+			}
+			return;
+		}
+		if (entry.exception != null) {
+			if (loginDialog != null) {
+				loginDialog.setBusy(false);
+				loginDialog.showRegister();
+				loginDialog.setMessage("Registration failed: "
+						+ entry.exception.toString());
+			}
+			return;
+		}
+		processSuccessfulCredentialResponse(entry, true, false);
+	}
+
+	protected void processAppletChangePasswordResponse(UrlProcessEntry entry) {
+		loginRequestInProgress = false;
+		if (entry == null) {
+			if (loginDialog != null) {
+				loginDialog.setBusy(false);
+				loginDialog.showChangePassword();
+				loginDialog.setMessage("No password change response");
+			}
+			return;
+		}
+		if (entry.exception != null) {
+			if (loginDialog != null) {
+				loginDialog.setBusy(false);
+				loginDialog.showChangePassword();
+				loginDialog.setMessage("Password change failed: "
+						+ entry.exception.toString());
+			}
+			return;
+		}
+		processSuccessfulCredentialResponse(entry, false, false);
+	}
+
+	private void processSuccessfulCredentialResponse(UrlProcessEntry entry,
+			boolean connectOnSuccess, boolean returnToSignIn) {
+		if (entry.content == null) {
+			if (loginDialog != null) {
+				loginDialog.setBusy(false);
+				loginDialog.setMessage("Request returned no data");
+			}
+			return;
+		}
+		String response = entry.content;
+		String responseCookie = null;
+		String responseYCookie = null;
+		String message = null;
+		boolean error = false;
+		StringTokenizer st = new StringTokenizer(response, "\r\n");
+		while (st.hasMoreTokens()) {
+			String line = st.nextToken().trim();
+			if (line.startsWith("cookie="))
+				responseCookie = line.substring("cookie=".length());
+			else if (line.startsWith("ycookie="))
+				responseYCookie = line.substring("ycookie=".length());
+			else if (line.startsWith("message="))
+				message = line.substring("message=".length());
+			else if (line.startsWith("ERROR"))
+				error = true;
+		}
+		if (!error && responseCookie != null && responseYCookie != null) {
+			cookie = responseCookie;
+			ycookie = responseYCookie;
+			loginErrorMessage = null;
+			if (loginDialog != null) {
+				loginDialog.setBusy(false);
+				if (connectOnSuccess) {
+					loginDialog.hideDialog();
+				}
+				else {
+					loginDialog.showSignIn();
+					loginDialog.setMessage(message != null ? message
+							: "Password changed. Sign in.");
+				}
+			}
+			if (connectOnSuccess)
+				connectToServer();
+			return;
+		}
+		if (loginDialog != null) {
+			loginDialog.setBusy(false);
+			if (returnToSignIn)
+				loginDialog.showSignIn();
+			loginDialog.setMessage(message != null ? message : "Request failed");
 		}
 	}
 
@@ -1157,6 +1344,12 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 		login_url = getParameter("login_url");
 		if (login_url == null || login_url.length() == 0)
 			login_url = "http://127.0.0.1:8080/ny/applet_login.jsp";
+		register_url = getParameter("register_url");
+		if (register_url == null || register_url.length() == 0)
+			register_url = "http://127.0.0.1:8080/ny/applet_register.jsp";
+		change_password_url = getParameter("change_password_url");
+		if (change_password_url == null || change_password_url.length() == 0)
+			change_password_url = "http://127.0.0.1:8080/ny/applet_change_password.jsp";
 		btnExit = new YahooButton(lookupString(0x665000f9));// Exit
 		// Games
 		lbChat = new YahooListBox(ph(), 100, 1, -1, null, false, false, true,

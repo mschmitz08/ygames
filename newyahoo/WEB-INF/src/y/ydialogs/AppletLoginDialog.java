@@ -10,7 +10,6 @@ import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Event;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.GridLayout;
@@ -29,21 +28,36 @@ public class AppletLoginDialog extends Dialog {
 
     private static final long serialVersionUID = 1L;
 
+    private static final int MODE_SIGN_IN = 0;
+    private static final int MODE_REGISTER = 1;
+    private static final int MODE_CHANGE_PASSWORD = 2;
+
     private static final Color FRAME_BG = new Color(22, 26, 38);
     private static final Color PANEL_BG = new Color(236, 224, 192);
     private static final Color FIELD_BG = new Color(255, 248, 224);
     private static final Color ACCENT = new Color(209, 124, 48);
-    private static final Color ACCENT_SHADOW = new Color(107, 54, 21);
     private static final Color INK = new Color(44, 32, 24);
     private static final Color SUBTLE = new Color(110, 86, 58);
 
     protected AbstractYahooGamesApplet applet;
     protected Label lblMessage;
-    protected TextField txtUsername;
-    protected TextField txtPassword;
-    protected Button btnLogin;
+    protected Label lblField1;
+    protected Label lblField2;
+    protected Label lblField3;
+    protected Label lblField4;
+    protected TextField txtField1;
+    protected TextField txtField2;
+    protected TextField txtField3;
+    protected TextField txtField4;
+    protected Button btnPrimary;
     protected Button btnCancel;
+    protected Button btnSignInMode;
+    protected Button btnRegisterMode;
+    protected Button btnChangePasswordMode;
     protected HeroCanvas heroCanvas;
+    protected Panel row3;
+    protected Panel row4;
+    protected int mode;
 
     public AppletLoginDialog(AbstractYahooGamesApplet applet) {
         super(findOwnerFrame(applet), "Game Login", false);
@@ -58,32 +72,73 @@ public class AppletLoginDialog extends Dialog {
         Panel body = new Panel(new BorderLayout(0, 10));
         body.setBackground(PANEL_BG);
 
+        Panel modeButtons = new Panel(new GridLayout(1, 3, 6, 0));
+        modeButtons.setBackground(PANEL_BG);
+        btnSignInMode = new Button("Sign In");
+        btnRegisterMode = new Button("Register");
+        btnChangePasswordMode = new Button("Change Password");
+        styleModeButton(btnSignInMode);
+        styleModeButton(btnRegisterMode);
+        styleModeButton(btnChangePasswordMode);
+        modeButtons.add(btnSignInMode);
+        modeButtons.add(btnRegisterMode);
+        modeButtons.add(btnChangePasswordMode);
+        body.add(modeButtons, BorderLayout.NORTH);
+
+        Panel center = new Panel(new BorderLayout(0, 8));
+        center.setBackground(PANEL_BG);
+
         lblMessage = new Label("Please sign in");
         lblMessage.setForeground(INK);
         lblMessage.setBackground(PANEL_BG);
         lblMessage.setFont(new Font("Dialog", Font.BOLD, 14));
-        body.add(lblMessage, BorderLayout.NORTH);
+        center.add(lblMessage, BorderLayout.NORTH);
 
-        Panel fields = new Panel(new GridLayout(2, 2, 8, 8));
+        Panel fields = new Panel(new GridLayout(4, 1, 0, 8));
         fields.setBackground(PANEL_BG);
-        fields.add(createFieldLabel("User Name"));
-        txtUsername = new TextField(24);
-        styleField(txtUsername);
-        fields.add(txtUsername);
-        fields.add(createFieldLabel("Password"));
-        txtPassword = new TextField(24);
-        txtPassword.setEchoChar('*');
-        styleField(txtPassword);
-        fields.add(txtPassword);
-        body.add(fields, BorderLayout.CENTER);
+        row3 = new Panel(new GridLayout(1, 2, 8, 0));
+        row3.setBackground(PANEL_BG);
+        row4 = new Panel(new GridLayout(1, 2, 8, 0));
+        row4.setBackground(PANEL_BG);
+
+        Panel row1 = new Panel(new GridLayout(1, 2, 8, 0));
+        row1.setBackground(PANEL_BG);
+        Panel row2 = new Panel(new GridLayout(1, 2, 8, 0));
+        row2.setBackground(PANEL_BG);
+
+        lblField1 = createFieldLabel("User Name");
+        lblField2 = createFieldLabel("Password");
+        lblField3 = createFieldLabel("Confirm Password");
+        lblField4 = createFieldLabel("Email");
+
+        txtField1 = createField(false);
+        txtField2 = createField(true);
+        txtField3 = createField(true);
+        txtField4 = createField(false);
+
+        row1.add(lblField1);
+        row1.add(txtField1);
+        row2.add(lblField2);
+        row2.add(txtField2);
+        row3.add(lblField3);
+        row3.add(txtField3);
+        row4.add(lblField4);
+        row4.add(txtField4);
+
+        fields.add(row1);
+        fields.add(row2);
+        fields.add(row3);
+        fields.add(row4);
+        center.add(fields, BorderLayout.CENTER);
+        body.add(center, BorderLayout.CENTER);
 
         Panel buttons = new Panel(new GridLayout(1, 2, 8, 0));
         buttons.setBackground(PANEL_BG);
-        btnLogin = new Button("Enter Room");
+        btnPrimary = new Button("Enter Room");
         btnCancel = new Button("Cancel");
-        styleButton(btnLogin, true);
-        styleButton(btnCancel, false);
-        buttons.add(btnLogin);
+        stylePrimaryButton(btnPrimary);
+        styleSecondaryButton(btnCancel);
+        buttons.add(btnPrimary);
         buttons.add(btnCancel);
         body.add(buttons, BorderLayout.SOUTH);
 
@@ -92,6 +147,7 @@ public class AppletLoginDialog extends Dialog {
         pack();
         setResizable(false);
         setAlwaysOnTop(true);
+        applyMode(MODE_SIGN_IN);
     }
 
     private Label createFieldLabel(String text) {
@@ -102,6 +158,16 @@ public class AppletLoginDialog extends Dialog {
         return label;
     }
 
+    private TextField createField(boolean password) {
+        TextField field = new TextField(24);
+        field.setBackground(FIELD_BG);
+        field.setForeground(INK);
+        field.setFont(new Font("Dialog", Font.PLAIN, 13));
+        if (password)
+            field.setEchoChar('*');
+        return field;
+    }
+
     private Panel wrapBody(Panel body) {
         Panel wrapper = new Panel(new BorderLayout());
         wrapper.setBackground(FRAME_BG);
@@ -109,21 +175,22 @@ public class AppletLoginDialog extends Dialog {
         return wrapper;
     }
 
-    private void styleField(TextField field) {
-        field.setBackground(FIELD_BG);
-        field.setForeground(INK);
-        field.setFont(new Font("Dialog", Font.PLAIN, 13));
+    private void styleModeButton(Button button) {
+        button.setFont(new Font("Dialog", Font.BOLD, 11));
+        button.setBackground(new Color(194, 180, 147));
+        button.setForeground(INK);
     }
 
-    private void styleButton(Button button, boolean primary) {
+    private void stylePrimaryButton(Button button) {
         button.setFont(new Font("Dialog", Font.BOLD, 12));
-        if (primary) {
-            button.setBackground(ACCENT);
-            button.setForeground(Color.white);
-        } else {
-            button.setBackground(new Color(194, 180, 147));
-            button.setForeground(INK);
-        }
+        button.setBackground(ACCENT);
+        button.setForeground(Color.white);
+    }
+
+    private void styleSecondaryButton(Button button) {
+        button.setFont(new Font("Dialog", Font.BOLD, 12));
+        button.setBackground(new Color(194, 180, 147));
+        button.setForeground(INK);
     }
 
     protected static Frame findOwnerFrame(Applet applet) {
@@ -136,15 +203,101 @@ public class AppletLoginDialog extends Dialog {
         return new Frame();
     }
 
+    private void applyMode(int newMode) {
+        mode = newMode;
+        if (mode == MODE_SIGN_IN) {
+            lblField1.setText("User Name");
+            lblField2.setText("Password");
+            lblField3.setText("Confirm Password");
+            lblField4.setText("Email");
+            row3.setVisible(false);
+            row4.setVisible(false);
+            txtField2.setEchoChar('*');
+            txtField3.setEchoChar('*');
+            txtField4.setEchoChar((char) 0);
+            btnPrimary.setLabel("Enter Room");
+        }
+        else if (mode == MODE_REGISTER) {
+            lblField1.setText("User Name");
+            lblField2.setText("Password");
+            lblField3.setText("Confirm Password");
+            lblField4.setText("Invite Code");
+            row3.setVisible(true);
+            row4.setVisible(false);
+            txtField2.setEchoChar('*');
+            txtField3.setEchoChar('*');
+            txtField4.setEchoChar((char) 0);
+            btnPrimary.setLabel("Create Account");
+            txtField3.setText("");
+            txtField4.setText("");
+        }
+        else {
+            lblField1.setText("User Name");
+            lblField2.setText("Current Password");
+            lblField3.setText("New Password");
+            lblField4.setText("Confirm New Password");
+            row3.setVisible(true);
+            row4.setVisible(true);
+            txtField2.setEchoChar('*');
+            txtField3.setEchoChar('*');
+            txtField4.setEchoChar('*');
+            btnPrimary.setLabel("Update Password");
+        }
+        refreshModeButtons();
+        pack();
+    }
+
+    private void refreshModeButtons() {
+        highlightModeButton(btnSignInMode, mode == MODE_SIGN_IN);
+        highlightModeButton(btnRegisterMode, mode == MODE_REGISTER);
+        highlightModeButton(btnChangePasswordMode,
+                mode == MODE_CHANGE_PASSWORD);
+    }
+
+    private void highlightModeButton(Button button, boolean active) {
+        if (active) {
+            button.setBackground(ACCENT);
+            button.setForeground(Color.white);
+        }
+        else {
+            button.setBackground(new Color(194, 180, 147));
+            button.setForeground(INK);
+        }
+    }
+
     private void submit() {
-        applet.submitAppletLogin(txtUsername.getText(), txtPassword.getText());
+        if (mode == MODE_SIGN_IN) {
+            applet.submitAppletLogin(txtField1.getText(), txtField2.getText());
+        }
+        else if (mode == MODE_REGISTER) {
+            applet.submitAppletRegister(txtField1.getText(), txtField2.getText(),
+                    txtField3.getText());
+        }
+        else {
+            applet.submitAppletPasswordChange(txtField1.getText(),
+                    txtField2.getText(), txtField3.getText(),
+                    txtField4.getText());
+        }
     }
 
     @Override
     public boolean action(Event event, Object obj) {
-        if (event.target == btnLogin || event.target == txtUsername
-                || event.target == txtPassword) {
+        if (event.target == btnPrimary || event.target == txtField1
+                || event.target == txtField2 || event.target == txtField3
+                || event.target == txtField4) {
             submit();
+            return true;
+        }
+        if (event.target == btnSignInMode) {
+            showSignIn();
+            return true;
+        }
+        if (event.target == btnRegisterMode) {
+            showRegister();
+            return true;
+        }
+        if (event.target == btnChangePasswordMode) {
+            showChangePassword();
             return true;
         }
         if (event.target == btnCancel) {
@@ -171,9 +324,14 @@ public class AppletLoginDialog extends Dialog {
     }
 
     public void setBusy(boolean busy) {
-        txtUsername.setEnabled(!busy);
-        txtPassword.setEnabled(!busy);
-        btnLogin.setEnabled(!busy);
+        txtField1.setEnabled(!busy);
+        txtField2.setEnabled(!busy);
+        txtField3.setEnabled(!busy);
+        txtField4.setEnabled(!busy);
+        btnPrimary.setEnabled(!busy);
+        btnSignInMode.setEnabled(!busy);
+        btnRegisterMode.setEnabled(!busy);
+        btnChangePasswordMode.setEnabled(!busy);
     }
 
     public void setMessage(String message) {
@@ -183,7 +341,22 @@ public class AppletLoginDialog extends Dialog {
     public void setUsername(String username) {
         if (username == null)
             username = "";
-        txtUsername.setText(username);
+        txtField1.setText(username);
+    }
+
+    public void showSignIn() {
+        applyMode(MODE_SIGN_IN);
+        txtField2.requestFocus();
+    }
+
+    public void showRegister() {
+        applyMode(MODE_REGISTER);
+        txtField1.requestFocus();
+    }
+
+    public void showChangePassword() {
+        applyMode(MODE_CHANGE_PASSWORD);
+        txtField1.requestFocus();
     }
 
     private void centerOverApplet() {
@@ -197,8 +370,10 @@ public class AppletLoginDialog extends Dialog {
         catch (Throwable t) {
             Frame owner = findOwnerFrame(applet);
             if (owner != null) {
-                int x = owner.getX() + Math.max(0, (owner.getWidth() - getWidth()) / 2);
-                int y = owner.getY() + Math.max(0, (owner.getHeight() - getHeight()) / 2);
+                int x = owner.getX() + Math.max(0,
+                        (owner.getWidth() - getWidth()) / 2);
+                int y = owner.getY() + Math.max(0,
+                        (owner.getHeight() - getHeight()) / 2);
                 setLocation(x, y);
             }
         }
@@ -211,10 +386,7 @@ public class AppletLoginDialog extends Dialog {
         setVisible(true);
         toFront();
         requestFocus();
-        if (txtUsername.getText() != null && txtUsername.getText().length() > 0)
-            txtPassword.requestFocus();
-        else
-            txtUsername.requestFocus();
+        txtField1.requestFocus();
     }
 
     @Override
@@ -273,11 +445,9 @@ public class AppletLoginDialog extends Dialog {
             int height = getHeight();
             if (width <= 0 || height <= 0)
                 return;
-
             if (backBuffer == null || backBuffer.getWidth(this) != width
                     || backBuffer.getHeight(this) != height)
                 backBuffer = createImage(width, height);
-
             Graphics bufferGraphics = backBuffer.getGraphics();
             drawHero(bufferGraphics, width, height);
             g.drawImage(backBuffer, 0, 0, this);
@@ -313,7 +483,7 @@ public class AppletLoginDialog extends Dialog {
 
             g.setColor(SUBTLE);
             g.setFont(new Font("Dialog", Font.BOLD, 11));
-            g.drawString("SIGN IN TO CONNECT", 36, 108);
+            g.drawString("PLAY, REGISTER, OR UPDATE YOUR ACCOUNT", 36, 108);
         }
 
         private String roomTitle() {
@@ -328,7 +498,8 @@ public class AppletLoginDialog extends Dialog {
                 if (cap && Character.isLetter(c)) {
                     title.append(Character.toUpperCase(c));
                     cap = false;
-                } else {
+                }
+                else {
                     title.append(c);
                     cap = c == ' ';
                 }
