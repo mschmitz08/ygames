@@ -11,6 +11,24 @@ echo.
 if not exist "%TARGET%" mkdir "%TARGET%"
 xcopy "%BASE%*" "%TARGET%\" /E /I /Y >nul
 
+if not exist "%TARGET%\app\newyahoo\client.jar" (
+echo.
+echo Warning: the launcher package copy did not include app\newyahoo\client.jar.
+echo Re-extract the ZIP fully and run this installer again.
+echo.
+pause
+exit /b 1
+)
+
+if not exist "%TARGET%\app\newyahoo\yog" (
+echo.
+echo Warning: the launcher package copy did not include app\newyahoo\yog.
+echo Re-extract the ZIP fully and run this installer again.
+echo.
+pause
+exit /b 1
+)
+
 reg add "HKCU\Software\Classes\nygames" /ve /d "URL:Y! Games Launcher Protocol" /f >nul
 reg add "HKCU\Software\Classes\nygames" /v "URL Protocol" /d "" /f >nul
 reg add "HKCU\Software\Classes\nygames\DefaultIcon" /ve /d "\"%SystemRoot%\System32\shell32.dll\",13" /f >nul

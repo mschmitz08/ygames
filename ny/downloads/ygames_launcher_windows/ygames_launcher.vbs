@@ -282,8 +282,11 @@ Sub EnsureSiteBundle()
     End If
 
     Dim siteClientJar
+    Dim siteYogDir
     siteClientJar = fso.BuildPath(appDir, "client.jar")
-    If fso.FileExists(siteClientJar) Then
+    siteYogDir = fso.BuildPath(appDir, "yog")
+
+    If fso.FileExists(siteClientJar) And fso.FolderExists(siteYogDir) Then
         Exit Sub
     End If
 
