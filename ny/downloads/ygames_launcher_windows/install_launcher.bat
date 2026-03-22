@@ -1,18 +1,27 @@
 @echo off
 setlocal
 set "BASE=%~dp0"
+set "TARGET=%LocalAppData%\YGamesLauncher"
 
 echo Installing Y! Games launcher protocol for this Windows user...
+echo Copying launcher files to:
+echo %TARGET%
+echo.
+
+if exist "%TARGET%" rmdir /S /Q "%TARGET%"
+mkdir "%TARGET%"
+xcopy "%BASE%*" "%TARGET%\" /E /I /Y >nul
 
 reg add "HKCU\Software\Classes\nygames" /ve /d "URL:Y! Games Launcher Protocol" /f >nul
 reg add "HKCU\Software\Classes\nygames" /v "URL Protocol" /d "" /f >nul
 reg add "HKCU\Software\Classes\nygames\DefaultIcon" /ve /d "\"%SystemRoot%\System32\shell32.dll\",13" /f >nul
-reg add "HKCU\Software\Classes\nygames\shell\open\command" /ve /d "wscript.exe \"%BASE%ygames_launcher.vbs\" \"%%1\"" /f >nul
+reg add "HKCU\Software\Classes\nygames\shell\open\command" /ve /d "wscript.exe \"%TARGET%\ygames_launcher.vbs\" \"%%1\"" /f >nul
 
 echo.
 echo Installed.
 echo.
 echo The website can now hand off nygames:// links to this launcher.
-echo Keep this launcher folder where it is so the protocol registration stays valid.
+echo Future reinstalls will refresh this stable launcher folder:
+echo %TARGET%
 echo.
 pause

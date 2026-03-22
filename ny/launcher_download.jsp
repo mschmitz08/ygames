@@ -1,5 +1,19 @@
 <%@page pageEncoding="Cp1252" contentType="text/html; charset=Cp1252"%>
+<%!
+    private boolean isLoopbackHost(String host) {
+        if(host == null)
+            return true;
+        host = host.trim().toLowerCase();
+        return host.length() == 0 || "127.0.0.1".equals(host) || "localhost".equals(host)
+                || "::1".equals(host) || "0:0:0:0:0:0:0:1".equals(host);
+    }
+%>
 <%
+    response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
+    response.setHeader("Pragma", "no-cache");
+    response.setDateHeader("Expires", 0);
+
+    String launcherVersion = request.getParameter("launcher_version");
     String game = request.getParameter("game");
     String room = request.getParameter("room");
     String host = request.getParameter("host");
@@ -10,16 +24,19 @@
             && !(request.getScheme().equals("https") && request.getServerPort() == 443))
         webBase += ":" + request.getServerPort();
     webBase += request.getContextPath();
+    if (launcherVersion == null || launcherVersion.length() == 0)
+        launcherVersion = "0.7.2";
     if (game == null || game.length() == 0)
         game = "pool";
     if (room == null || room.length() == 0)
         room = "corner_pocket";
-    if (host == null || host.length() == 0)
+    if (host == null || host.length() == 0 || isLoopbackHost(host))
         host = request.getServerName();
     if (port == null || port.length() == 0)
         port = "pool".equalsIgnoreCase(game) ? "11998" : "11999";
     if (accountMode == null)
         accountMode = "";
+    String launcherPackageName = "ygames_launcher_windows_" + launcherVersion + ".zip";
 %>
 <html>
 <head>
@@ -139,13 +156,14 @@ function tryLaunchAgain() {
             <div class="pane">
                 <h2>First-Time Setup</h2>
                 <p>Download the Windows launcher package, extract it somewhere permanent, and run the installer once so your browser can hand off future game launches automatically.</p>
-                <p><a class="button" href="downloads/ygames_launcher_windows.zip">Download Windows Launcher</a></p>
+                <p><a class="button" href="downloads/<%=launcherPackageName%>">Download Windows Launcher <%=launcherVersion%></a></p>
                 <ol>
                     <li>Extract the ZIP file.</li>
                     <li>Run <code>install_launcher.bat</code>.</li>
                     <li>If the launcher says Java 8 AppletViewer support is missing, follow the requirement prompt it shows.</li>
                     <li>Come back here and press Launch Again.</li>
                 </ol>
+                <p><strong>Version tip:</strong> If you already installed an older launcher, reinstall this exact version so Windows refreshes the local launcher files.</p>
             </div>
             <div class="pane pane-light">
                 <h2>Launch Target</h2>

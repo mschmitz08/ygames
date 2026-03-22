@@ -22,6 +22,7 @@ Dim port
 Dim accountMode
 Dim launcherVersion
 Dim webBase
+Dim installedLauncherVersion
 
 game = "pool"
 room = "corner_pocket"
@@ -30,8 +31,16 @@ port = "11998"
 accountMode = ""
 launcherVersion = ""
 webBase = "http://127.0.0.1:8080/ny"
+installedLauncherVersion = "0.7.2"
 
 ParseArguments
+
+If launcherVersion <> "" Then
+    If CompareVersions(installedLauncherVersion, launcherVersion) < 0 Then
+        ShowUpdateRequired launcherVersion
+        WScript.Quit 1
+    End If
+End If
 
 Dim appletViewerPath
 appletViewerPath = FindAppletViewer()
@@ -176,6 +185,13 @@ Function FindAppletViewer()
         End If
     End If
 
+    Dim discoveredPath
+    discoveredPath = FindAppletViewerInKnownLocations()
+    If discoveredPath <> "" Then
+        FindAppletViewer = discoveredPath
+        Exit Function
+    End If
+
     Dim exec
     On Error Resume Next
     Set exec = shell.Exec("cmd /c where appletviewer")
@@ -195,18 +211,235 @@ Function FindAppletViewer()
     FindAppletViewer = ""
 End Function
 
+Function FindAppletViewerInKnownLocations()
+    Dim searchRoots
+    searchRoots = Array( _
+        "C:\Program Files\Java", _
+        "C:\Program Files (x86)\Java", _
+        "C:\Program Files\Eclipse Adoptium", _
+        "C:\Program Files\AdoptOpenJDK", _
+        "C:\Program Files\BellSoft" _
+    )
+
+    Dim i
+    For i = 0 To UBound(searchRoots)
+        Dim candidate
+        candidate = FindAppletViewerUnderRoot(searchRoots(i))
+        If candidate <> "" Then
+            FindAppletViewerInKnownLocations = candidate
+            Exit Function
+        End If
+    Next
+
+    FindAppletViewerInKnownLocations = ""
+End Function
+
+Function FindAppletViewerUnderRoot(rootPath)
+    If Not fso.FolderExists(rootPath) Then
+        FindAppletViewerUnderRoot = ""
+        Exit Function
+    End If
+
+    Dim rootFolder
+    Set rootFolder = fso.GetFolder(rootPath)
+
+    Dim subFolder
+    For Each subFolder In rootFolder.SubFolders
+        Dim directCandidate
+        directCandidate = fso.BuildPath(subFolder.Path, "bin\appletviewer.exe")
+        If fso.FileExists(directCandidate) Then
+            FindAppletViewerUnderRoot = directCandidate
+            Exit Function
+        End If
+    Next
+
+    FindAppletViewerUnderRoot = ""
+End Function
+
+Function GetAppletViewerDiagnostics()
+    Dim report
+    report = "Y! Games Launcher diagnostics" & vbCrLf
+    report = report & "Time: " & Now & vbCrLf
+    report = report & "Launcher folder: " & baseDir & vbCrLf
+    report = report & "Game folder: " & appDir & vbCrLf & vbCrLf
+
+    Dim javaHome
+    javaHome = shell.ExpandEnvironmentStrings("%JAVA_HOME%")
+    report = report & "JAVA_HOME: " & javaHome & vbCrLf
+    If javaHome <> "%JAVA_HOME%" Then
+        report = report & "JAVA_HOME appletviewer: " & CheckCandidatePath(fso.BuildPath(javaHome, "bin\appletviewer.exe")) & vbCrLf
+    Else
+        report = report & "JAVA_HOME appletviewer: JAVA_HOME is not set" & vbCrLf
+    End If
+
+    report = report & "Bundled runtime appletviewer: " & CheckCandidatePath(fso.BuildPath(baseDir, "runtime\bin\appletviewer.exe")) & vbCrLf & vbCrLf
+    report = report & "Known install folders:" & vbCrLf
+    report = report & DescribeKnownLocationChecks()
+    report = report & vbCrLf & "PATH lookup (where appletviewer):" & vbCrLf
+    report = report & DescribeWhereLookup()
+    report = report & vbCrLf & "Current request:" & vbCrLf
+    report = report & "installed_launcher_version=" & installedLauncherVersion & vbCrLf
+    report = report & "game=" & game & vbCrLf
+    report = report & "room=" & room & vbCrLf
+    report = report & "host=" & host & vbCrLf
+    report = report & "port=" & port & vbCrLf
+    report = report & "account_mode=" & accountMode & vbCrLf
+    report = report & "launcher_version=" & launcherVersion & vbCrLf
+    report = report & "webbase=" & webBase & vbCrLf
+
+    GetAppletViewerDiagnostics = report
+End Function
+
+Function CompareVersions(leftValue, rightValue)
+    Dim leftParts
+    Dim rightParts
+    leftParts = Split(leftValue, ".")
+    rightParts = Split(rightValue, ".")
+
+    Dim maxIndex
+    maxIndex = UBound(leftParts)
+    If UBound(rightParts) > maxIndex Then
+        maxIndex = UBound(rightParts)
+    End If
+
+    Dim i
+    For i = 0 To maxIndex
+        Dim leftPart
+        Dim rightPart
+        leftPart = 0
+        rightPart = 0
+        If i <= UBound(leftParts) And IsNumeric(leftParts(i)) Then
+            leftPart = CLng(leftParts(i))
+        End If
+        If i <= UBound(rightParts) And IsNumeric(rightParts(i)) Then
+            rightPart = CLng(rightParts(i))
+        End If
+        If leftPart < rightPart Then
+            CompareVersions = -1
+            Exit Function
+        End If
+        If leftPart > rightPart Then
+            CompareVersions = 1
+            Exit Function
+        End If
+    Next
+
+    CompareVersions = 0
+End Function
+
+Function DescribeKnownLocationChecks()
+    Dim searchRoots
+    searchRoots = Array( _
+        "C:\Program Files\Java", _
+        "C:\Program Files (x86)\Java", _
+        "C:\Program Files\Eclipse Adoptium", _
+        "C:\Program Files\AdoptOpenJDK", _
+        "C:\Program Files\BellSoft" _
+    )
+
+    Dim report
+    Dim i
+    report = ""
+    For i = 0 To UBound(searchRoots)
+        report = report & DescribeRoot(searchRoots(i))
+    Next
+    DescribeKnownLocationChecks = report
+End Function
+
+Function DescribeRoot(rootPath)
+    Dim report
+    report = ""
+    If Not fso.FolderExists(rootPath) Then
+        DescribeRoot = "- " & rootPath & " (missing)" & vbCrLf
+        Exit Function
+    End If
+
+    report = "- " & rootPath & vbCrLf
+    Dim rootFolder
+    Set rootFolder = fso.GetFolder(rootPath)
+
+    Dim subFolder
+    For Each subFolder In rootFolder.SubFolders
+        report = report & "    " & CheckCandidatePath(fso.BuildPath(subFolder.Path, "bin\appletviewer.exe")) & vbCrLf
+    Next
+
+    DescribeRoot = report
+End Function
+
+Function CheckCandidatePath(candidatePath)
+    If fso.FileExists(candidatePath) Then
+        CheckCandidatePath = candidatePath & " [FOUND]"
+    Else
+        CheckCandidatePath = candidatePath & " [missing]"
+    End If
+End Function
+
+Function DescribeWhereLookup()
+    Dim exec
+    Dim report
+    report = ""
+    On Error Resume Next
+    Set exec = shell.Exec("cmd /c where appletviewer")
+    If Err.Number <> 0 Then
+        DescribeWhereLookup = "Unable to run PATH lookup: " & Err.Description & vbCrLf
+        Err.Clear
+        On Error GoTo 0
+        Exit Function
+    End If
+
+    Do While Not exec.StdOut.AtEndOfStream
+        report = report & "    " & Trim(exec.StdOut.ReadLine) & vbCrLf
+    Loop
+    Do While Not exec.StdErr.AtEndOfStream
+        report = report & "    " & Trim(exec.StdErr.ReadLine) & vbCrLf
+    Loop
+    On Error GoTo 0
+
+    If report = "" Then
+        report = "    No appletviewer.exe found on PATH" & vbCrLf
+    End If
+    DescribeWhereLookup = report
+End Function
+
 Sub ShowRequirementError()
     Dim message
     message = "This launcher needs Java 8 AppletViewer support before it can start the game." & vbCrLf & vbCrLf & _
         "What the launcher checked:" & vbCrLf & _
         "1. Bundled runtime in the launcher package" & vbCrLf & _
         "2. JAVA_HOME\bin\appletviewer.exe" & vbCrLf & _
-        "3. appletviewer on your PATH" & vbCrLf & vbCrLf & _
+        "3. Standard Java install folders under Program Files" & vbCrLf & _
+        "4. appletviewer on your PATH" & vbCrLf & vbCrLf & _
         "What to do next:" & vbCrLf & _
         "- Install a Java 8 JDK that includes appletviewer, or" & vbCrLf & _
         "- Place an approved bundled Java 8 runtime under the launcher's runtime folder." & vbCrLf & vbCrLf & _
+        "Launcher folder:" & vbCrLf & baseDir & vbCrLf & vbCrLf & _
+        "Click Yes to open a diagnostics report."
+
+    Dim response
+    response = MsgBox(message, vbExclamation + vbYesNo, "Y! Games Launcher Requirements")
+    If response = vbYes Then
+        OpenDiagnosticsReport
+    End If
+End Sub
+
+Sub ShowUpdateRequired(requiredVersion)
+    Dim message
+    message = "This launcher is out of date for the website you just opened." & vbCrLf & vbCrLf & _
+        "Installed launcher version: " & installedLauncherVersion & vbCrLf & _
+        "Website expects version: " & requiredVersion & vbCrLf & vbCrLf & _
+        "Please download the newer launcher package from the site and run install_launcher.bat again." & vbCrLf & vbCrLf & _
         "Launcher folder:" & vbCrLf & baseDir
-    MsgBox message, vbExclamation, "Y! Games Launcher Requirements"
+    MsgBox message, vbExclamation, "Y! Games Launcher Update Needed"
+End Sub
+
+Sub OpenDiagnosticsReport()
+    Dim reportPath
+    Dim file
+    reportPath = fso.BuildPath(launchDir, "launcher_diagnostics.txt")
+    Set file = fso.CreateTextFile(reportPath, True)
+    file.Write GetAppletViewerDiagnostics()
+    file.Close
+    shell.Run "notepad.exe " & Quote(reportPath), 1, False
 End Sub
 
 Sub WritePolicyFile(policyPath)

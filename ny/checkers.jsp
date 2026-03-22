@@ -1,5 +1,14 @@
 <%@page pageEncoding="Cp1252" contentType="text/html; charset=Cp1252"%>
 <%@page import="core.*"%>
+<%!
+    private boolean isLoopbackHost(String host) {
+        if(host == null)
+            return true;
+        host = host.trim().toLowerCase();
+        return host.length() == 0 || "127.0.0.1".equals(host) || "localhost".equals(host)
+                || "::1".equals(host) || "0:0:0:0:0:0:0:1".equals(host);
+    }
+%>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=Cp1252"/>
@@ -31,11 +40,13 @@
         }
     }
     if(appletHost == null || appletHost.length() == 0){
+        String requestHost = request.getServerName();
+        appletHost = requestHost;
         if(Initializer.selfInstance != null && Initializer.selfInstance.getGameHost() != null
-                && Initializer.selfInstance.getGameHost().length() > 0)
+                && Initializer.selfInstance.getGameHost().length() > 0
+                && (!isLoopbackHost(Initializer.selfInstance.getGameHost())
+                    || isLoopbackHost(requestHost)))
             appletHost = Initializer.selfInstance.getGameHost();
-        else
-            appletHost = request.getServerName();
     }
 
     String baseUrl = request.getScheme() + "://" + request.getServerName();

@@ -18,10 +18,19 @@
         }
         return escaped.toString();
     }
+
+    private boolean isLoopbackHost(String host) {
+        if (host == null)
+            return true;
+        host = host.trim().toLowerCase();
+        return host.length() == 0 || "127.0.0.1".equals(host) || "localhost".equals(host)
+                || "::1".equals(host) || "0:0:0:0:0:0:0:1".equals(host);
+    }
 %>
 <%
-    String launcherVersion = "0.7.1";
-    String defaultHost = request.getServerName();
+    String launcherVersion = "0.7.2";
+    String requestHost = request.getServerName();
+    String defaultHost = requestHost;
     int defaultCheckersPort = 11999;
     int defaultPoolPort = 11998;
     String webBase = request.getScheme() + "://" + request.getServerName();
@@ -33,9 +42,10 @@
     Vector<String[]> poolRooms = new Vector<String[]>();
 
     if (Initializer.selfInstance != null) {
-        if (Initializer.selfInstance.getGameHost() != null
-                && Initializer.selfInstance.getGameHost().length() > 0)
-            defaultHost = Initializer.selfInstance.getGameHost();
+        String configuredHost = Initializer.selfInstance.getGameHost();
+        if (configuredHost != null && configuredHost.length() > 0
+                && (!isLoopbackHost(configuredHost) || isLoopbackHost(requestHost)))
+            defaultHost = configuredHost;
         defaultCheckersPort = Initializer.selfInstance.getCheckersPort();
         defaultPoolPort = Initializer.selfInstance.getPoolPort();
     }
