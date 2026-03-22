@@ -484,6 +484,13 @@ public class AppletLoginDialog extends Dialog {
             g.setColor(SUBTLE);
             g.setFont(new Font("Dialog", Font.BOLD, 11));
             g.drawString("PLAY, REGISTER, OR UPDATE YOUR ACCOUNT", 36, 108);
+
+            String launcherVersion = applet.getParameter("launcher_version");
+            if (launcherVersion != null && launcherVersion.length() > 0) {
+                g.setColor(new Color(210, 201, 182));
+                g.setFont(new Font("Dialog", Font.PLAIN, 10));
+                g.drawString("v" + launcherVersion, width - 58, height - 18);
+            }
         }
 
         private String roomTitle() {

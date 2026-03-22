@@ -1,5 +1,5 @@
 <%@page pageEncoding="Cp1252" contentType="text/html; charset=Cp1252"%>
-<%@page import="login.*, data.*, core.*"%>
+<%@page import="core.*"%>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=Cp1252"/>
@@ -9,10 +9,40 @@
     String agent = request.getHeader("agent");
     String room = request.getParameter("room");
     String intl_code = request.getParameter("intl_code");
+    String accountMode = request.getParameter("account_mode");
+    String launcherVersion = request.getParameter("launcher_version");
+    String appletHost = request.getParameter("host");
+    String portParam = request.getParameter("port");
+    int appletPort = 11999;
     if(intl_code == null)
         intl_code = "us";
     if(room == null)
         room = "badger_bridge";
+    if(accountMode == null)
+        accountMode = "";
+    if(launcherVersion == null)
+        launcherVersion = "";
+    if(Initializer.selfInstance != null)
+        appletPort = Initializer.selfInstance.getCheckersPort();
+    if(portParam != null && portParam.length() > 0){
+        try{
+            appletPort = Integer.parseInt(portParam);
+        }catch(NumberFormatException e){
+        }
+    }
+    if(appletHost == null || appletHost.length() == 0){
+        if(Initializer.selfInstance != null && Initializer.selfInstance.getGameHost() != null
+                && Initializer.selfInstance.getGameHost().length() > 0)
+            appletHost = Initializer.selfInstance.getGameHost();
+        else
+            appletHost = request.getServerName();
+    }
+
+    String baseUrl = request.getScheme() + "://" + request.getServerName();
+    if(!(request.getScheme().equals("http") && request.getServerPort() == 80)
+            && !(request.getScheme().equals("https") && request.getServerPort() == 443))
+        baseUrl += ":" + request.getServerPort();
+    baseUrl += request.getContextPath();
 
     Cookie[] cookies = request.getCookies();
     String cookie = "";
@@ -26,25 +56,10 @@
                 ycookie = cookies[i].getValue();
         }
     }
-
-    if(!cookie.startsWith("id=")){
-        response.setStatus(302);
-        response.setHeader("Location", "/ny/login.jsp?redirect_url=%2Fny%2Fcheckers.jsp%3fgame=checkers%26room=" + room + "%26intl_code=" + intl_code);
-        return;
-    }
-
-    String username = cookie.substring(3);
-    MySQLTable ids = Initializer.selfInstance.ids;
-
-    if(!Login.isValidCookie(ids, username, ycookie)){
-        response.setStatus(302);
-        response.setHeader("Location", "/ny/login.jsp?redirect_url=%2Fny%2Fcheckers.jsp%3fgame=checkers%26room=" + room + "%26intl_code=" + intl_code);
-        return;
-    }
 %>
 <body>
 <applet code="y.k.YahooCheckers" name="ygames_applet" codebase="/ny/" archive="client.jar" width="100%" height="100%">
-<param name="port" value="11999">
+<param name="port" value="<%out.print(appletPort);%>">
 <param name="cookie" value="<%out.print(cookie);%>">
 <param name="uselogin" value="0">
 <param name="agent" value="<%out.print(agent);%>">
@@ -52,8 +67,13 @@
 <param name="logsentmessages" value="0">
 <param name="logreceivedmessages" value="0">
 <param name="yport" value="<%out.print(room);%>">
+<param name="account_mode" value="<%out.print(accountMode);%>">
+<param name="launcher_version" value="<%out.print(launcherVersion);%>">
+<param name="login_url" value="<%out.print(baseUrl);%>/applet_login.jsp">
+<param name="register_url" value="<%out.print(baseUrl);%>/applet_register.jsp">
+<param name="change_password_url" value="<%out.print(baseUrl);%>/applet_change_password.jsp">
 <param name="ldict_url" value="/yog/y/k/us-t4.ldict">
-<param name="host" value="127.0.0.1">
+<param name="host" value="<%out.print(appletHost);%>">
 <param name="ratingmilestones" value="2100|1800|1500|1200|0">
 <param name="intl_code" value="<%out.print(intl_code);%>">
 </applet>

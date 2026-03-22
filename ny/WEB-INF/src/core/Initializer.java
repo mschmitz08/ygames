@@ -20,6 +20,10 @@ public class Initializer extends HttpServlet {
     private static String dbName = "newyahoo";
     private static String dbUsername = "newyahoo";
     private static String dbPassword = "123456";
+    private String gameHost = "127.0.0.1";
+    private int checkersPort = 11999;
+    private int poolPort = 11998;
+    private int pool2Port = 12002;
 
     public MySQLTable ids;
     public MySQLTable games;
@@ -34,6 +38,44 @@ public class Initializer extends HttpServlet {
 
     public Connection[] mySqlConnections;
     public boolean[] using;
+
+    public String getGameHost() {
+        return gameHost;
+    }
+
+    public int getCheckersPort() {
+        return checkersPort;
+    }
+
+    public int getPoolPort() {
+        return poolPort;
+    }
+
+    public int getPool2Port() {
+        return pool2Port;
+    }
+
+    private String readConfig(String name, String defaultValue) {
+        String value = getInitParameter(name);
+        if ((value == null || value.length() == 0) && getServletContext() != null)
+            value = getServletContext().getInitParameter(name);
+        if (value == null || value.length() == 0)
+            value = System.getProperty(name);
+        if (value == null || value.length() == 0)
+            return defaultValue;
+        return value;
+    }
+
+    private int readConfigInt(String name, int defaultValue) {
+        String value = readConfig(name, null);
+        if (value == null || value.length() == 0)
+            return defaultValue;
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+    }
 
     @Override
     public void destroy() {
@@ -70,6 +112,16 @@ public class Initializer extends HttpServlet {
     @Override
     public void init() {
         selfInstance = this;
+
+        dbHost = readConfig("newyahoo.db.host", dbHost);
+        dbPort = readConfigInt("newyahoo.db.port", dbPort);
+        dbName = readConfig("newyahoo.db.name", dbName);
+        dbUsername = readConfig("newyahoo.db.username", dbUsername);
+        dbPassword = readConfig("newyahoo.db.password", dbPassword);
+        gameHost = readConfig("newyahoo.host", gameHost);
+        checkersPort = readConfigInt("newyahoo.port.checkers", checkersPort);
+        poolPort = readConfigInt("newyahoo.port.pool", poolPort);
+        pool2Port = readConfigInt("newyahoo.port.pool2", pool2Port);
 
         processPool = new ProcessPool();
         connectionPool = new MySQLConnectionPool(processPool, dbHost, dbPort, dbName, dbUsername, dbPassword);

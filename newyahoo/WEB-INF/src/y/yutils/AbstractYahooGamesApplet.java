@@ -148,6 +148,7 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 	String								login_url;
 	String								register_url;
 	String								change_password_url;
+	String								account_mode;
 	public static final String	APPLET_LOGIN_REQUEST	= "APPLET_LOGIN_REQUEST";
 	public static final String	APPLET_REGISTER_REQUEST	= "APPLET_REGISTER_REQUEST";
 	public static final String	APPLET_CHANGE_PASSWORD_REQUEST	= "APPLET_CHANGE_PASSWORD_REQUEST";
@@ -204,6 +205,7 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 		login_url = null;
 		register_url = null;
 		change_password_url = null;
+		account_mode = null;
 		host = null;
 		noPopupTables = true;
 		nofaceicons = true;
@@ -451,7 +453,14 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 		loginDialog.setBusy(false);
 		loginDialog.setMessage(message != null ? message : "Please sign in");
 		loginDialog.setUsername(extractIdFromCookie());
-		loginDialog.showSignIn();
+		if ("register".equalsIgnoreCase(account_mode)) {
+			loginDialog.showRegister();
+		} else if ("change_password".equalsIgnoreCase(account_mode)) {
+			loginDialog.showChangePassword();
+		} else {
+			loginDialog.showSignIn();
+		}
+		account_mode = null;
 		loginDialog.showDialog();
 	}
 
@@ -1350,6 +1359,7 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 		change_password_url = getParameter("change_password_url");
 		if (change_password_url == null || change_password_url.length() == 0)
 			change_password_url = "http://127.0.0.1:8080/ny/applet_change_password.jsp";
+		account_mode = getParameter("account_mode");
 		btnExit = new YahooButton(lookupString(0x665000f9));// Exit
 		// Games
 		lbChat = new YahooListBox(ph(), 100, 1, -1, null, false, false, true,

@@ -25,6 +25,9 @@ public class Initializer extends HttpServlet implements YahooRoomHandler {
     private static String dbName = "newyahoo";
     private static String dbUserName = "newyahoo";
     private static String dbPassword = "123456";
+    private int poolPort = 11998;
+    private int checkersPort = 11999;
+    private int pool2Port = 12002;
 
     public MySQLTable ids;
     public MySQLTable games;
@@ -50,6 +53,40 @@ public class Initializer extends HttpServlet implements YahooRoomHandler {
     private YahooPoolServer poolServer;
     private YahooPoolServer2 poolServer2;
     private YahooCheckersServer checkersServer;
+
+    public int getPoolPort() {
+        return poolPort;
+    }
+
+    public int getCheckersPort() {
+        return checkersPort;
+    }
+
+    public int getPool2Port() {
+        return pool2Port;
+    }
+
+    private String readConfig(String name, String defaultValue) {
+        String value = getInitParameter(name);
+        if ((value == null || value.length() == 0) && getServletContext() != null)
+            value = getServletContext().getInitParameter(name);
+        if (value == null || value.length() == 0)
+            value = System.getProperty(name);
+        if (value == null || value.length() == 0)
+            return defaultValue;
+        return value;
+    }
+
+    private int readConfigInt(String name, int defaultValue) {
+        String value = readConfig(name, null);
+        if (value == null || value.length() == 0)
+            return defaultValue;
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+    }
 
     @Override
     public void destroy() {
@@ -134,6 +171,15 @@ public class Initializer extends HttpServlet implements YahooRoomHandler {
         System.out.println("NEWYAHOO INIT START");
 
         try {
+            dbHost = readConfig("newyahoo.db.host", dbHost);
+            dbPort = readConfigInt("newyahoo.db.port", dbPort);
+            dbName = readConfig("newyahoo.db.name", dbName);
+            dbUserName = readConfig("newyahoo.db.username", dbUserName);
+            dbPassword = readConfig("newyahoo.db.password", dbPassword);
+            poolPort = readConfigInt("newyahoo.port.pool", poolPort);
+            checkersPort = readConfigInt("newyahoo.port.checkers", checkersPort);
+            pool2Port = readConfigInt("newyahoo.port.pool2", pool2Port);
+
             System.out.println("Creating ProcessPool");
             processPool = new ProcessPool();
 
@@ -200,8 +246,8 @@ public class Initializer extends HttpServlet implements YahooRoomHandler {
                 }
             }
 
-            System.out.println("Starting YahooPoolServer on 11998");
-            poolServer = new YahooPoolServer(this, 11998, yports);
+            System.out.println("Starting YahooPoolServer on " + poolPort);
+            poolServer = new YahooPoolServer(this, poolPort, yports);
             System.out.println("YahooPoolServer created");
 
             yports.clear();
@@ -221,8 +267,8 @@ public class Initializer extends HttpServlet implements YahooRoomHandler {
                 }
             }
 
-            System.out.println("Starting YahooCheckersServer on 11999");
-            checkersServer = new YahooCheckersServer(this, 11999, yports);
+            System.out.println("Starting YahooCheckersServer on " + checkersPort);
+            checkersServer = new YahooCheckersServer(this, checkersPort, yports);
             System.out.println("YahooCheckersServer created");
 
             yports.clear();
@@ -242,8 +288,8 @@ public class Initializer extends HttpServlet implements YahooRoomHandler {
                 }
             }
 
-            System.out.println("Starting YahooPoolServer2 on 12002");
-            poolServer2 = new YahooPoolServer2(this, 12002, yports);
+            System.out.println("Starting YahooPoolServer2 on " + pool2Port);
+            poolServer2 = new YahooPoolServer2(this, pool2Port, yports);
             System.out.println("YahooPoolServer2 created");
 
             System.out.println("NEWYAHOO INIT END");
