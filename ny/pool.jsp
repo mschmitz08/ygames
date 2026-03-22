@@ -1,5 +1,6 @@
 <%@page pageEncoding="Cp1252" contentType="text/html; charset=Cp1252"%>
 <%@page import="core.*"%>
+<%@page import="data.*"%>
 <%!
     private boolean isLoopbackHost(String host) {
         if(host == null)
@@ -8,12 +9,26 @@
         return host.length() == 0 || "127.0.0.1".equals(host) || "localhost".equals(host)
                 || "::1".equals(host) || "0:0:0:0:0:0:0:1".equals(host);
     }
+
+    private String findRoomLabel(MySQLTable table, String room, String fallback) {
+        if(table == null || room == null || room.length() == 0)
+            return fallback;
+        java.sql.ResultSet rs = null;
+        try {
+            rs = table.getAllValues(new String[] { "name" }, new Object[] { room });
+            if(rs.next()) {
+                String label = rs.getString("label");
+                if(label != null && label.length() > 0)
+                    return label;
+            }
+        } catch (java.sql.SQLException e) {
+        } finally {
+            if(rs != null)
+                table.closeResultSet(rs);
+        }
+        return fallback;
+    }
 %>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=Cp1252"/>
-<title>Yahoo Pool</title>
-</head>
 <%
     String game = request.getParameter("game");
     if(game == null)
@@ -70,17 +85,27 @@
         }
     }
 
+    String roomLabel = findRoomLabel(Initializer.selfInstance != null ? Initializer.selfInstance.pool_rooms : null,
+            room, "Corner Pocket");
     String title = "Yahoo Pool";
     if("pool2".equalsIgnoreCase(game)){
         title = "Yahoo Pool 2";
     }
+    String pageTitle = title + " - Room: " + roomLabel;
 %>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Cp1252"/>
+<title><%=pageTitle%></title>
+</head>
 <body>
-<h3><%=title%></h3>
+<h3><%=pageTitle%></h3>
 <applet code="y.po.YahooPool" name="ygames_applet" codebase="/ny/" archive="client.jar" width="100%" height="100%">
 <param name="port" value="<%=port%>">
 <param name="host" value="<%out.print(appletHost);%>">
 <param name="yport" value="<%=room%>">
+<param name="label" value="<%out.print(roomLabel);%>">
+<param name="page_title" value="<%out.print(title);%>">
 <param name="cookie" value="<%out.print(cookie);%>">
 <param name="uselogin" value="0">
 <param name="agent" value="<%out.print(agent);%>">

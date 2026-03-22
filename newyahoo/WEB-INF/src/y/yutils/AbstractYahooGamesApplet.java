@@ -5,7 +5,9 @@
 package y.yutils;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Event;
+import java.awt.Frame;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.io.DataInputStream;
@@ -1087,6 +1089,65 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 		return page_title;
 	}
 
+	public String getRoomLabel() {
+		return label;
+	}
+
+	private Frame findOwnerFrame() {
+		Component current = this;
+		while (current != null) {
+			if (current instanceof Frame)
+				return (Frame) current;
+			current = current.getParent();
+		}
+		return null;
+	}
+
+	private String fallbackPageTitle() {
+		String className = getClass().getName();
+		if (className.indexOf(".po2.") != -1)
+			return "Yahoo Pool 2";
+		if (className.indexOf(".po.") != -1)
+			return "Yahoo Pool";
+		if (className.indexOf(".k.") != -1)
+			return "Yahoo Checkers";
+		return "Yahoo Games";
+	}
+
+	private String fallbackRoomLabel(String roomName) {
+		if (roomName == null || roomName.length() == 0
+				|| roomName.equalsIgnoreCase("undefined"))
+			return "";
+		StringBuffer buffer = new StringBuffer(roomName.length());
+		boolean upper = true;
+		for (int i = 0; i < roomName.length(); i++) {
+			char c = roomName.charAt(i);
+			if (c == '_' || c == '-') {
+				buffer.append(' ');
+				upper = true;
+			}
+			else if (upper) {
+				buffer.append(Character.toUpperCase(c));
+				upper = false;
+			}
+			else {
+				buffer.append(c);
+			}
+		}
+		return buffer.toString();
+	}
+
+	private void updateOuterWindowTitle() {
+		Frame owner = findOwnerFrame();
+		if (owner == null)
+			return;
+		StringBuffer title = new StringBuffer();
+		title.append(page_title);
+		if (label != null && label.length() > 0)
+			title.append(" - Room: ").append(label);
+		owner.setTitle(title.toString());
+	}
+
 	public Color getYahooColor(String path, int defaultColor) {
 		String s2 = getParameter(path);
 		if (s2 != null)
@@ -1297,7 +1358,9 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 			prof_id = "chat_pf_1";
 		page_title = getParameter("page_title");
 		if (page_title == null)
-			page_title = "undefined";
+			page_title = fallbackPageTitle();
+		else if (page_title.equals("undefined"))
+			page_title = fallbackPageTitle();
 		cookie = getParameter("cookie");
 		ycookie = getParameter("ycookie");
 		proxy_http = getParameter("proxy_http") != null;
@@ -1378,6 +1441,9 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 		label = getParameter("label");
 		if (room == null)
 			room = "undefined";
+		if (label == null || label.length() == 0 || label.equals("undefined"))
+			label = fallbackRoomLabel(room);
+		updateOuterWindowTitle();
 
 		if (hasAppletCredentials()) {
 			connectToServer();

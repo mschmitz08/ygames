@@ -53,23 +53,28 @@ public abstract class YahooRoom {
 		String welcomeMsg = "";
 
 		ResultSet rs = null;
-		try {
-			rs = getRooms().getAllValues(new String[] { "name" },
-					new Object[] { yport });
-			if (rs.next()) {
-				welcomeMsg = "Welcome to room " + rs.getString("label");
-				DebugLog.log("YahooRoom.addId room label=" + rs.getString("label") + " welcomeMsgPresent=" + (rs.getString("welcome_msg") != null));
-				String s1 = rs.getString("welcome_msg");
-				if (s1 != null && !s1.equals(""))
-					welcomeMsg += "\r\n" + s1;
-			}
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-		}
-		finally {
-			if (rs != null) {
-				getRooms().closeResultSet(rs);
+        try {
+            rs = getRooms().getAllValues(new String[] { "name" },
+                    new Object[] { yport });
+            if (rs.next()) {
+                String label = rs.getString("label");
+                String defaultWelcome = "Welcome to room " + label;
+                welcomeMsg = defaultWelcome;
+                DebugLog.log("YahooRoom.addId room label=" + label + " welcomeMsgPresent=" + (rs.getString("welcome_msg") != null));
+                String s1 = rs.getString("welcome_msg");
+                if (s1 != null)
+                    s1 = s1.trim();
+                if (s1 != null && !s1.equals("")
+                        && !s1.equalsIgnoreCase(defaultWelcome))
+                    welcomeMsg += "\r\n" + s1;
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            if (rs != null) {
+                getRooms().closeResultSet(rs);
 				rs = null;
 			}
 		}

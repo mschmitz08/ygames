@@ -52,6 +52,10 @@ Replace those placeholders with your real paths.
 
 Install JDK 8, not just a JRE.
 
+Recommended download:
+
+- [Eclipse Temurin 8](https://adoptium.net/temurin/releases/?version=8)
+
 You need it for:
 
 - compiling if required

@@ -103,15 +103,19 @@ public class TableTitle implements YahooGamesTableListener {
 	}
 
 	void setTitle(String s) {
-		if (frame != null)
-			frame.setTitle(table.getApplet().lookupString(0x665000b0)
-					+ table.getApplet().getPageTitle()
-					+ table.getApplet().lookupString(0x6650008d)
-					+ table.getLabel()
-					+ table.getApplet().lookupString(0x665000ae)
-					+ table.getNumber()
-					+ (s != null ? table.getApplet().lookupString(0x665000a6)
-							+ s : ""));
+		if (frame != null) {
+			String roomLabel = table.getApplet().getRoomLabel();
+			if (roomLabel == null || roomLabel.length() == 0)
+				roomLabel = table.getApplet().getPageTitle();
+			StringBuffer title = new StringBuffer();
+			title.append("Game: ").append(table.getApplet().getPageTitle());
+			if (roomLabel != null && roomLabel.length() > 0)
+				title.append(" - Room: ").append(roomLabel);
+			title.append(" - Table: ").append(table.getNumber());
+			if (s != null && s.length() > 0)
+				title.append(" - Host: ").append(s);
+			frame.setTitle(title.toString());
+		}
 	}
 
 	public boolean tg() {
