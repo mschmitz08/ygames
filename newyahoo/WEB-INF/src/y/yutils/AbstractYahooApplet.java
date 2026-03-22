@@ -167,6 +167,7 @@ public abstract class AbstractYahooApplet extends Applet implements
 
 	@Override
 	public final void init() {
+		DebugLog.configureFromApplet(this);
 		debugLog("init ENTER");
 		try {
 			debugLog("codeBase=" + getCodeBase());

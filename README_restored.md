@@ -1,200 +1,134 @@
-# ny / newyahoo Local Restore Guide
+# ny / newyahoo Restore and Setup Guide
 
-## Overview
+This repository is a restored copy of an old Yahoo Games clone. It is not a modern turnkey application, but it can be run locally with the right Java, Tomcat, and MySQL setup.
 
-This project is a restored Yahoo Games clone with the goal of making it possible for someone else to get it running locally without having to rediscover all of the setup details from scratch. That means documenting not just the obvious installation steps, but also the small compatibility fixes, database adjustments, deployment details, and troubleshooting discoveries that were necessary along the way.
+This guide is meant to be practical:
 
-The source in GitHub should already include the code and configuration changes that were needed during the restore process. The purpose of this README is to explain how to set up the remaining environment on a new machine, how to deploy the project, and what to watch out for if the same legacy issues come up again.
+- how to set up the server side
+- how to deploy the two webapps
+- how to build the client jar
+- how to launch the applets locally for testing
+- what to check first when something breaks
 
-This project contains two main webapps:
+## What This Project Contains
 
-* `ny` = the JSP/web frontend
-* `newyahoo` = the backend/game server app, including socket listeners and applet/game code
+- `ny`: the JSP/web frontend
+- `newyahoo`: the backend startup webapp, socket listeners, and applet/client code
+- `lib`: external jars used by the project
+- `database_creation.sql`: main schema
+- `mysql_user_creation.sql`: helper SQL for the DB user
 
-This is a legacy project. It is not a modern turnkey build. Depending on what is already included in the repository, setup may involve a combination of:
+This project is centered around Java applets. Modern browsers do not support them, so local testing should be done with Java 8 `appletviewer`, not a browser plugin.
 
-* installing the correct Java/Tomcat/MySQL environment
-* loading the database schema
-* applying database compatibility fixes
-* deploying the two webapps into Tomcat
-* optionally recompiling Java source if prebuilt `.class` files are not already included
-* using `appletviewer` for local testing
+## Known Working Environment
 
-At the end of the restore process described here, the project was brought to a state where:
+The restore was tested on:
 
-* Tomcat runs locally
-* MySQL connects successfully
-* the schema loads with a required manual fix
-* both `ny` and `newyahoo` deploy successfully
-* the frontend loads locally
-* the backend game ports can listen locally
-* Checkers works far enough to enter a room and create a table
-* Pool and Pool2 can be exercised through local test files
-* a local login flow exists for applet-based testing
+- Windows 11 64-bit
+- Java 8 / JDK 8
+- Apache Tomcat 9
+- MySQL 8.0
 
-## Quick Start
+Use these versions if you want the least friction.
 
-1. Install **Java 8**, **Tomcat 9**, and **MySQL 8.0**.
-2. Create the `newyahoo` database and import `database\_creation.sql`.
-3. Fix the `ids` table timestamp defaults if the import fails under MySQL 8.
-4. Enlarge the `ids.ip` column to avoid login errors.
-5. Copy `ny` and `newyahoo` into Tomcat’s `webapps` folder.
-6. Replace the old MySQL JDBC driver with `mysql-connector-j-8.0.33.jar`.
-7. If needed, copy the included `WEB-INF\\classes` folders into Tomcat, or recompile from source.
-8. Build `client.jar` from `newyahoo`.
-9. Restart Tomcat and verify ports `11998`, `11999`, and `12002` are listening.
-10. Use `appletviewer` to test Checkers, Pool, or Pool2 locally.
+## Why These Versions
 
-## Current Status
+- Java 8: compatible with the source and includes `appletviewer`
+- Tomcat 9: still uses `javax.*`; Tomcat 10+ moved to `jakarta.*`
+- MySQL 8.0: works, but needs a couple of compatibility fixes
 
-This project is partially restored and locally runnable, but still legacy and rough around the edges.
+## Before You Start
 
-What is known to work:
+Choose two folders and keep them handy in the commands below:
 
-* local Tomcat deployment
-* local MySQL 8 setup
-* frontend pages under `/ny`
-* backend startup under `/newyahoo`
-* Checkers room connection and table creation
-* Pool and Pool2 socket connection paths
-* local applet testing via `appletviewer`
+- source root: `<INSTALL_PATH>\ny-master`
+- Tomcat root: `<TOMCAT_PATH>\apache-tomcat-9.0.116`
 
-What is still legacy / imperfect:
+Replace those placeholders with your real paths.
 
-* browser applet support is not realistic in modern browsers
-* `appletviewer` is the main reliable local test path
-* some pages and flows still assume old-era applet behavior
-* some game/resource issues may still exist depending on branch state
-* Pool2 required at least one type-casting code fix in `common.po2.Pool`
+## Server Setup
 
-## Tested Environment
+### 1. Install Java 8
 
-This setup was done on:
+Install JDK 8, not just a JRE.
 
-* Windows 11 64-bit
-* Apache Tomcat 9
-* Java 8 / JDK 8
-* MySQL Community Server 8.0
+You need it for:
 
-Paths used during setup:
+- compiling if required
+- running Tomcat
+- using `appletviewer`
 
-* source root: `<INSTALL\_PATH>\\ny-master`
-* Tomcat root: `<TOMCAT\_PATH>\\apache-tomcat-9.0.116`
+### 2. Install Tomcat 9
 
-Replace these placeholders with the actual folders on your machine.
-
-## Why These Versions Matter
-
-### Tomcat 9
-
-Use Tomcat 9, not Tomcat 10+.
-
-This codebase uses the old `javax.\*` servlet/JSP APIs, not the newer `jakarta.\*` namespace used by Tomcat 10 and later.
-
-### Java 8
-
-Use Java 8 / JDK 8.
-
-This matters because:
-
-* the code is old and compatible with Java 8
-* Java 8 includes `appletviewer`, which is essential for local testing
-* modern Java versions may break old applet-era behavior
-
-### MySQL 8.0
-
-MySQL 8 works, but the old schema and code need a few compatibility fixes.
-
-## Step 1: Install Tomcat 9
-
-Install Apache Tomcat 9 for Windows 64-bit.
-
-After extraction, the important directories are:
-
-* `bin`
-* `webapps`
-* `lib`
-* `work`
-* `logs`
-
-To start Tomcat:
+Extract Tomcat 9 and confirm it starts:
 
 ```bat
-cd /d <TOMCAT\_PATH>\\apache-tomcat-9.0.116\\bin
+cd /d <TOMCAT_PATH>\apache-tomcat-9.0.116\bin
 startup.bat
 ```
 
-To verify Tomcat is running, browse to:
+Then open:
 
 ```text
 http://localhost:8080/
 ```
 
-If that page loads, Tomcat itself is working.
+If that page loads, Tomcat is working.
 
-## Step 2: Install MySQL 8.0
+### 3. Install MySQL 8.0
 
-Use MySQL Community Server 8.0 and the Windows MSI installer.
+Recommended setup:
 
-Recommended installer choices:
+- product: Server only
+- config type: Development Computer
+- port: 3306
+- authentication: legacy authentication method
+- run as a Windows service
 
-* product: Server only
-* config type: Development Computer
-* port: 3306
-* authentication method: Use Legacy Authentication Method
-* install as Windows service
-* start automatically
+### 4. Create the Database and User
 
-## Step 3: Open MySQL
-
-If `mysql` is not on PATH, use the full executable path:
+Open MySQL:
 
 ```bat
-"C:\\Program Files\\MySQL\\MySQL Server 8.0\\bin\\mysql.exe" -u root -p
+"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p
 ```
 
-## Step 4: Create the Database and App User
-
-Inside the MySQL prompt:
+Then run:
 
 ```sql
 CREATE DATABASE newyahoo;
 CREATE USER 'newyahoo'@'localhost' IDENTIFIED BY '123456';
-GRANT ALL PRIVILEGES ON newyahoo.\* TO 'newyahoo'@'localhost';
+GRANT ALL PRIVILEGES ON newyahoo.* TO 'newyahoo'@'localhost';
 FLUSH PRIVILEGES;
 ```
 
-The code expects:
+The current code expects:
 
-* database: `newyahoo`
-* username: `newyahoo`
-* password: `123456`
+- database: `newyahoo`
+- username: `newyahoo`
+- password: `123456`
 
-## Step 5: Import the Schema
+### 5. Import the Schema
 
-From MySQL:
+From inside MySQL:
 
 ```sql
 USE newyahoo;
-SOURCE <INSTALL\_PATH>/ny-master/database\_creation.sql;
+SOURCE <INSTALL_PATH>/ny-master/database_creation.sql;
 ```
 
-### Important: the stock SQL does not import cleanly on MySQL 8
+### 6. Fix the `ids` Table for MySQL 8
 
-One major table, `ids`, fails because the old SQL uses invalid zero timestamp defaults that MySQL 8 rejects.
+The stock SQL uses old zero-date timestamp defaults that MySQL 8 rejects.
 
-You will need to recreate or fix the `ids` table so that timestamp fields use `NULL DEFAULT NULL` instead of old zero-date defaults.
+If `database_creation.sql` fails on the `ids` table, recreate or alter it so these columns use `NULL DEFAULT NULL` instead of `0000-00-00 00:00:00`:
 
-The important timestamp fields that needed fixing were:
+- `cookie_expires`
+- `last_access`
 
-* `cookie\_expires`
-* `last\_access`
+This is a required compatibility fix.
 
-If the import partly succeeds but the site later fails around login/account handling, check whether `ids` was created correctly.
-
-## Step 6: Fix `ids.ip` Length
-
-Later in testing, login/account code caused a MySQL error because the `ids.ip` column was too short.
+### 7. Fix the `ids.ip` Column Length
 
 Run:
 
@@ -203,204 +137,190 @@ USE newyahoo;
 ALTER TABLE ids MODIFY COLUMN ip VARCHAR(64) NOT NULL DEFAULT '0.0.0.0';
 ```
 
-This should be considered a required compatibility fix.
+Without this change, login/account flows can fail.
 
-## Step 7: Seed Required Room/Game Data
+### 8. Verify Required Seed Data
 
-At minimum, verify these tables contain usable rows:
+Make sure these tables contain usable rows:
 
-* `games`
-* `checkers\_rooms`
-* `pool\_rooms`
-* `pool2\_rooms`
+- `games`
+- `checkers_rooms`
+- `pool_rooms`
+- `pool2_rooms`
 
-Example check:
+Example:
 
 ```sql
-SELECT \* FROM checkers\_rooms;
-SELECT \* FROM pool\_rooms;
-SELECT \* FROM pool2\_rooms;
-SELECT \* FROM games;
+SELECT * FROM games;
+SELECT * FROM checkers_rooms;
+SELECT * FROM pool_rooms;
+SELECT * FROM pool2_rooms;
 ```
 
-Known working checkers room example:
+Known working room names:
 
-* `badger\_bridge`
+- Checkers: `badger_bridge`
+- Pool: `corner_pocket`
 
-Known working pool room example:
+The room keys must match what the backend registers.
 
-* `corner\_pocket`
+## Deploy the Webapps
 
-Room names matter because the applet/server connection logic must use a room key that exactly matches what the backend registered.
+### 9. Copy the Webapps into Tomcat
 
-## Step 8: Copy the Webapps into Tomcat
+Copy:
 
-Copy these source folders into Tomcat:
+- `<INSTALL_PATH>\ny-master\ny` to `<TOMCAT_PATH>\apache-tomcat-9.0.116\webapps\ny`
+- `<INSTALL_PATH>\ny-master\newyahoo` to `<TOMCAT_PATH>\apache-tomcat-9.0.116\webapps\newyahoo`
 
-* `<INSTALL\_PATH>\\ny-master\\ny`
--> `<TOMCAT\_PATH>\\apache-tomcat-9.0.116\\webapps\\ny`
-* `<INSTALL\_PATH>\\ny-master\\newyahoo`
--> `<TOMCAT\_PATH>\\apache-tomcat-9.0.116\\webapps\\newyahoo`
+### 10. Replace the MySQL JDBC Driver
 
-## Step 9: Replace the Old MySQL JDBC Driver
+Use:
 
-The original repo included an old MySQL driver:
+- `mysql-connector-j-8.0.33.jar`
 
-* `mysql-connector-java-5.1.39-bin.jar`
+Do not leave the old MySQL jar in place if both exist.
 
-Replace it with:
+At minimum, put the new jar in:
 
-* `mysql-connector-j-8.0.33.jar`
+- `<INSTALL_PATH>\ny-master\lib`
+- `<TOMCAT_PATH>\apache-tomcat-9.0.116\lib`
 
-Make sure the old driver is removed so both do not coexist.
+If needed during troubleshooting, also copy it into:
 
-Place the new jar in at least these locations:
+- `...\webapps\ny\WEB-INF\lib`
+- `...\webapps\newyahoo\WEB-INF\lib`
 
-* `<INSTALL\_PATH>\\ny-master\\lib`
-* `<TOMCAT\_PATH>\\apache-tomcat-9.0.116\\lib`
+### 11. Compile Only If Needed
 
-For safety during recovery, it was also copied into:
+If the repository already contains matching `.class` files, recompiling may not be necessary.
 
-* `...\\webapps\\ny\\WEB-INF\\lib`
-* `...\\webapps\\newyahoo\\WEB-INF\\lib`
+Recompile if:
 
-## Step 10: Compatibility Code Changes
+- you changed source files
+- `WEB-INF\classes` is missing
+- deployed behavior does not match the current source
 
-The codebase required JDBC modernization in both projects.
-
-Files that needed updating included:
-
-* `data\\MySQLConnectionPool.java`
-* `data\\MySQLTable.java`
-
-The important changes were:
-
-* use the modern driver class:
-
-```java
-Class.forName("com.mysql.cj.jdbc.Driver");
-```
-
-* update the JDBC URL to include:
-
-```text
-?useSSL=false\&serverTimezone=America/Chicago
-```
-
-* remove old MySQL-specific exception imports and catches
-* replace them with standard JDBC exception handling
-
-These source changes are expected to already be present in the patched source tree.
-
-## Step 11: Compilation May Be Optional
-
-If the repository already includes the correct compiled `.class` files, recompiling may not be necessary.
-
-In that case, deployment can be done by copying the included `WEB-INF\\classes` folders into the Tomcat webapps and rebuilding `client.jar` only if needed.
-
-Recompilation is mainly needed if:
-
-* source files were changed
-* `.class` files are missing
-* deployed classes do not match the patched source
-* runtime behavior does not reflect recent source edits
-
-## Step 12: Optional Compile Steps
-
-### Compile `ny`
+Compile `ny`:
 
 ```bat
-cd /d <INSTALL\_PATH>\\ny-master\\ny\\WEB-INF\\src
-dir /s /b \*.java > sources.txt
-javac -cp "<INSTALL\_PATH>\\ny-master\\lib\\\*;<TOMCAT\_PATH>\\apache-tomcat-9.0.116\\lib\\\*" -d <INSTALL\_PATH>\\ny-master\\ny\\WEB-INF\\classes @sources.txt
+cd /d <INSTALL_PATH>\ny-master\ny\WEB-INF\src
+dir /s /b *.java > sources.txt
+javac -cp "<INSTALL_PATH>\ny-master\lib\*;<TOMCAT_PATH>\apache-tomcat-9.0.116\lib\*" -d <INSTALL_PATH>\ny-master\ny\WEB-INF\classes @sources.txt
 ```
 
-### Compile `newyahoo`
+Compile `newyahoo`:
 
 ```bat
-cd /d <INSTALL\_PATH>\\ny-master\\newyahoo\\WEB-INF\\src
-dir /s /b \*.java > sources.txt
-javac -cp "<INSTALL\_PATH>\\ny-master\\lib\\\*;<TOMCAT\_PATH>\\apache-tomcat-9.0.116\\lib\\\*" -d <INSTALL\_PATH>\\ny-master\\newyahoo\\WEB-INF\\classes @sources.txt
+cd /d <INSTALL_PATH>\ny-master\newyahoo\WEB-INF\src
+dir /s /b *.java > sources.txt
+javac -cp "<INSTALL_PATH>\ny-master\lib\*;<TOMCAT_PATH>\apache-tomcat-9.0.116\lib\*" -d <INSTALL_PATH>\ny-master\newyahoo\WEB-INF\classes @sources.txt
 ```
 
-## Step 13: Copy Compiled or Included Classes into Tomcat
+### 12. Copy Compiled Classes into Tomcat
+
+If you recompiled locally, copy the classes into the deployed webapps.
 
 For `ny`:
 
 ```bat
-xcopy /E /I /Y <INSTALL\_PATH>\\ny-master\\ny\\WEB-INF\\classes <TOMCAT\_PATH>\\apache-tomcat-9.0.116\\webapps\\ny\\WEB-INF\\classes
+xcopy /E /I /Y <INSTALL_PATH>\ny-master\ny\WEB-INF\classes <TOMCAT_PATH>\apache-tomcat-9.0.116\webapps\ny\WEB-INF\classes
 ```
 
 For `newyahoo`:
 
 ```bat
-xcopy /E /I /Y <INSTALL\_PATH>\\ny-master\\newyahoo\\WEB-INF\\classes <TOMCAT\_PATH>\\apache-tomcat-9.0.116\\webapps\\newyahoo\\WEB-INF\\classes
+xcopy /E /I /Y <INSTALL_PATH>\ny-master\newyahoo\WEB-INF\classes <TOMCAT_PATH>\apache-tomcat-9.0.116\webapps\newyahoo\WEB-INF\classes
 ```
 
-If JSPs were changed, copy those too.
+If you changed JSPs, copy those too.
 
-## Step 14: Restart Tomcat
+### 13. Build `client.jar`
 
-Normal restart:
+The applet pages need `client.jar`.
+
+Build it from the `newyahoo` folder:
 
 ```bat
-cd /d <TOMCAT\_PATH>\\apache-tomcat-9.0.116\\bin
+cd /d <INSTALL_PATH>\ny-master\newyahoo
+del client.jar
+jar cf client.jar -C WEB-INF\classes . -C . yog
+```
+
+The `yog` folder must be included because it contains required resources such as:
+
+- `.ldict` files
+- sound files
+- image assets
+
+Quick check:
+
+```bat
+jar tf client.jar | findstr /I "yog/"
+```
+
+### 14. Restart Tomcat
+
+Basic restart:
+
+```bat
+cd /d <TOMCAT_PATH>\apache-tomcat-9.0.116\bin
 shutdown.bat
 startup.bat
 ```
 
-Cleaner restart with cache clearing:
+If you suspect stale JSP/class cache, do a cleaner restart:
 
 ```bat
-cd /d <TOMCAT\_PATH>\\apache-tomcat-9.0.116\\bin
+cd /d <TOMCAT_PATH>\apache-tomcat-9.0.116\bin
 shutdown.bat
-rmdir /S /Q <TOMCAT\_PATH>\\apache-tomcat-9.0.116\\work\\Catalina\\localhost\\ny
-rmdir /S /Q <TOMCAT\_PATH>\\apache-tomcat-9.0.116\\work\\Catalina\\localhost\\newyahoo
+rmdir /S /Q <TOMCAT_PATH>\apache-tomcat-9.0.116\work\Catalina\localhost\ny
+rmdir /S /Q <TOMCAT_PATH>\apache-tomcat-9.0.116\work\Catalina\localhost\newyahoo
 startup.bat
 ```
 
-## Step 15: Understand the Two App Contexts
+## Verify the Server
 
-### `/ny`
+### 15. Check the Web Frontend
 
-This is the main frontend you browse to:
+Open:
 
 ```text
 http://localhost:8080/ny/
 ```
 
-It contains pages such as:
+This is the main frontend.
 
-* `index.jsp`
-* `rooms.jsp`
-* `checkers.jsp`
-* `pool.jsp`
-* `login.jsp`
-* `register.jsp`
+Typical pages:
 
-### `/newyahoo`
+- `/ny/index.jsp`
+- `/ny/login.jsp`
+- `/ny/register.jsp`
+- `/ny/checkers.jsp`
+- `/ny/pool.jsp`
+- `/ny/rooms.jsp`
 
-This is mainly a backend startup webapp. It is not expected to behave like a normal browseable site.
+### 16. Understand `/newyahoo`
 
-Visiting:
+`/newyahoo` is mostly a backend startup webapp. It is not expected to behave like a normal website.
+
+If:
 
 ```text
 http://localhost:8080/newyahoo/
 ```
 
-may return not found, and that does not necessarily mean deployment failed.
+does not show a normal page, that does not automatically mean deployment failed.
 
-Its purpose is largely to start backend services.
+### 17. Verify the Game Ports
 
-## Step 16: Backend Game Ports
+The backend should open:
 
-The `newyahoo` backend is responsible for opening these game ports:
+- `11998` for Pool
+- `11999` for Checkers
+- `12002` for Pool2
 
-* `11998` = pool
-* `11999` = checkers
-* `12002` = pool2
-
-Check them with:
+Check them:
 
 ```bat
 netstat -ano | findstr :11998
@@ -408,59 +328,19 @@ netstat -ano | findstr :11999
 netstat -ano | findstr :12002
 ```
 
-If those ports are not listening, the applets will fail to connect.
+If these ports are not listening, the applets will not connect.
 
-If ports are already bound by an old Java/Tomcat process, kill the old PID and restart Tomcat cleanly.
+## Client Setup and Testing
 
-## Step 17: Build `client.jar`
+### 18. Use `appletviewer`, Not a Browser
 
-The repo did not include a ready-made `client.jar`, but the compiled client classes did exist.
+Modern browsers do not run these applets.
 
-Build it manually from `newyahoo`:
+Use Java 8 `appletviewer`.
 
-```bat
-cd /d <INSTALL\_PATH>\\ny-master\\newyahoo
-del client.jar
-jar cf client.jar -C WEB-INF\\classes . -C . yog
-```
+### 19. Security Policy for Local Socket Access
 
-The `yog` folder must be included because it contains required resources such as:
-
-* `.ldict` files
-* sound files
-* some image resources
-
-Verify contents:
-
-```bat
-jar tf client.jar | findstr /I "yog/"
-```
-
-## Step 18: Use `appletviewer` for Local Testing
-
-Modern browsers are not a realistic way to run these applets.
-
-Use Java 8’s `appletviewer`.
-
-Example:
-
-```bat
-cd /d <INSTALL\_PATH>\\ny-master\\newyahoo
-appletviewer -J-Djava.security.policy=<INSTALL\_PATH>\\ny-master\\ny\\pool.policy checkers\_test.html
-```
-
-or:
-
-```bat
-cd /d <INSTALL\_PATH>\\ny-master\\newyahoo
-appletviewer -J-Djava.security.policy=<INSTALL\_PATH>\\ny-master\\ny\\pool.policy pool\_test.html
-```
-
-Applet test HTML files must use numeric width/height values, not percentages.
-
-## Step 19: Security Policy for Local Socket Access
-
-The applets need permission to open sockets to the local game ports.
+The applets need permission to connect to the local socket servers.
 
 A permissive policy file used during debugging was:
 
@@ -470,184 +350,174 @@ grant {
 };
 ```
 
-If the applet throws `AccessControlException`, the policy file is the first thing to check.
+If you get `AccessControlException`, check the policy file first.
 
-## Step 20: Login / Account Notes
+### 20. Launch the Applets Locally
 
-A lot of the old registration flow is legacy and not very usable as-is.
+Example for Checkers:
 
-During recovery:
-
-* a manual test account was inserted
-* `status = 1` was required for the account to be treated as active
-* later, code was adjusted so new accounts could skip “email confirmation pending” by defaulting to active status
-
-If a newly created account says `email confirmation pending`, check whether its `status` is still `0`.
-
-For local dev, active users should typically have:
-
-* `status = 1`
-
-## Step 21: Local Applet Login Behavior
-
-A later improvement added an applet login flow so that `appletviewer` does not require manually editing `cookie` / `ycookie` every time.
-
-The intended flow is:
-
-1. launch the applet through `appletviewer`
-2. the applet prompts for credentials
-3. the applet hits a lightweight login endpoint
-4. the server returns the generated auth values
-5. the applet connects to the room
-
-If the applet still sends `undefined` as username or `Invalid cookie`, check:
-
-* whether the modified applet classes were rebuilt into `client.jar`
-* whether the test HTML has correct `<param name="...">` syntax
-* whether `name`, `cookie`, `ycookie`, and `login\_url` are set the way the patched flow expects
-
-## Step 22: Game-Specific Notes
-
-### Checkers
-
-Checkers is the most restored path and was brought far enough to:
-
-* connect to a room
-* create a table
-
-The room key that worked was:
-
-* `badger\_bridge`
-
-### Pool
-
-Pool uses port:
-
-* `11998`
-
-A working room key example was:
-
-* `corner\_pocket`
-
-### Pool2
-
-Pool2 uses port:
-
-* `12002`
-
-Pool2 appears to be a separate second pool implementation rather than just an alias.
-
-It has its own:
-
-* DB tables
-* server package
-* client package
-* listener port
-
-At least one error that came up repeatedly in Pool2 was:
-
-```text
-java.lang.ClassCastException: java.lang.Integer cannot be cast to java.lang.Float
+```bat
+cd /d <INSTALL_PATH>\ny-master\newyahoo
+appletviewer -J-Djava.security.policy=<INSTALL_PATH>\ny-master\ny\pool.policy checkers_test.html
 ```
 
-This pointed to `common.po2.Pool.getFloatProperty(...)` being too strict. The fix was to make it tolerate numeric values like `Integer` as well as `Float`.
+Example for Pool:
+
+```bat
+cd /d <INSTALL_PATH>\ny-master\newyahoo
+appletviewer -J-Djava.security.policy=<INSTALL_PATH>\ny-master\ny\pool.policy pool_test.html
+```
+
+Notes:
+
+- test HTML files should use numeric `width` and `height`, not percentages
+- `client.jar` and the test HTML should be in the expected local locations
+
+### 20.1 Logging Options
+
+There are two separate kinds of logging in this project:
+
+- `debug` controls the newer file-based debug logging used by `core.DebugLog`
+- `logsentmessages` and `logreceivedmessages` control the `>>:` / `<<:` packet trace printed to the command window
+
+Example:
+
+```html
+<param name="debug" value="1">
+<param name="logsentmessages" value="0">
+<param name="logreceivedmessages" value="0">
+```
+
+Notes:
+
+- if `debug` is omitted or set to `0`, file logging is off by default
+- if `logsentmessages` / `logreceivedmessages` are omitted or set to `0`, network packet tracing is off by default
+- the packet trace is independent from `debug`, so you can enable one without enabling the other
+- the noisy `>>:` and `<<:` output means packet tracing is on, not necessarily that file debug logging is on
+
+### 21. Local Login Behavior
+
+The restored code supports a local applet login flow so you do not have to hand-edit cookies every time.
+
+Expected flow:
+
+1. launch the applet with `appletviewer`
+2. enter credentials
+3. applet calls the lightweight login endpoint
+4. server returns auth values
+5. applet connects to the selected room
+
+If you still see blank usernames, `undefined`, or `Invalid cookie`, check:
+
+- `client.jar` was rebuilt after client-side changes
+- the applet HTML has the right `<param>` values
+- the account is active
+- the login endpoint is reachable
+
+### 22. Account Notes
+
+Legacy account behavior is still rough.
+
+Important detail:
+
+- active accounts should usually have `status = 1`
+
+If a user sees `email confirmation pending`, check whether `status` is still `0`.
+
+## What Is Known to Work
+
+The restore reached a point where all of the following worked locally:
+
+- Tomcat startup
+- MySQL 8 connectivity
+- deployment of both `ny` and `newyahoo`
+- frontend pages under `/ny`
+- backend socket listeners
+- Checkers room connection and table creation
+- Pool and Pool2 connection paths
+- local applet testing with `appletviewer`
+
+## What Is Still Legacy
+
+- browser applet support is effectively dead
+- `appletviewer` is the realistic local test path
+- auth and registration are legacy
+- some source appears restored/decompiled
+- this should be treated as a historical or experimental project, not production-ready software
 
 ## Troubleshooting
 
-### Stale Deployment
+### If the Site Loads but Games Do Not Connect
 
-A common issue was that source files were fixed, but Tomcat was still using stale deployed classes or cached JSP compilations.
+Check, in order:
 
-If runtime behavior does not match the source, do all of the following:
+1. Tomcat is running
+2. MySQL is reachable
+3. the room tables contain data
+4. `newyahoo` started the socket listeners
+5. ports `11998`, `11999`, and `12002` are listening
+6. `client.jar` exists and includes `yog`
+
+### If Runtime Behavior Does Not Match the Source
+
+This project is very sensitive to stale deployments.
+
+Do all of the following:
 
 1. recompile if needed
-2. recopy files into Tomcat `webapps`
-3. clear `work\\Catalina\\localhost\\...`
+2. recopy updated classes and JSPs into Tomcat
+3. clear Tomcat `work\Catalina\localhost\...`
 4. restart Tomcat
 
-### Missing `client.jar`
+### If MySQL Import Fails
 
-The repo did not include the jar needed by applet pages. It had to be built manually.
+Most likely cause:
 
-### MySQL 8 schema incompatibilities
+- the `ids` table timestamp defaults are not MySQL-8-compatible
 
-The old schema file was not MySQL-8-clean.
+### If Login Fails
 
-### Empty room tables
+Check:
 
-If room pages look blank, verify the tables actually contain rooms.
+- `ids` imported correctly
+- `ids.ip` was enlarged to `VARCHAR(64)`
+- the account exists
+- the account is active with `status = 1`
+- cookies/ycookies are being generated and returned
 
-### `newyahoo` not browseable
+### If Room Lists Are Empty
 
-That is expected. It is mainly a backend startup app.
+Check:
 
-### Browser support
+- `games`
+- `checkers_rooms`
+- `pool_rooms`
+- `pool2_rooms`
 
-Modern browsers do not natively run this old applet. Use `appletviewer`.
+### If `/newyahoo` Looks Broken in a Browser
 
-## Suggested Troubleshooting Checklist
+That can be normal. It mainly exists to initialize backend services.
 
-If something breaks, check these in order:
+## Quick Checklist
 
-### Tomcat
+If you just want the short version:
 
-* Does `http://localhost:8080/` load?
-* Does `http://localhost:8080/ny/` load?
+1. Install Java 8, Tomcat 9, and MySQL 8.0.
+2. Create the `newyahoo` database and user.
+3. Import `database_creation.sql`.
+4. Fix the `ids` timestamp defaults if MySQL 8 rejects them.
+5. Alter `ids.ip` to `VARCHAR(64)`.
+6. Verify room tables contain data.
+7. Copy `ny` and `newyahoo` into Tomcat `webapps`.
+8. Replace the old MySQL JDBC jar with `mysql-connector-j-8.0.33.jar`.
+9. Recompile only if needed.
+10. Build `client.jar`.
+11. Restart Tomcat.
+12. Confirm `/ny/` loads and the backend ports are listening.
+13. Use `appletviewer` to test the client locally.
 
-### MySQL
+## Final Notes
 
-* Does the `newyahoo` database exist?
-* Did `ids` import correctly?
-* Was `ids.ip` enlarged?
+This repo was not a clean turnkey project. It had to be brought back piece by piece. The patched source in this repository is enough to get surprisingly far, but setup still requires some manual compatibility work and old-school deployment steps.
 
-### Ports
-
-* Are `11998`, `11999`, and `12002` listening?
-* Are they listening under the current Tomcat/Java PID?
-
-### Deployment
-
-* Were updated classes copied into the correct Tomcat app?
-* Were both `ny` and `newyahoo` deployed?
-* Was Tomcat work cache cleared?
-
-### Client
-
-* Was `client.jar` rebuilt after applet class changes?
-* Does it include the `yog` folder?
-* Is the test HTML in the same folder as `client.jar` when using `appletviewer`?
-
-### Auth
-
-* Is the user active (`status = 1`)?
-* Is the applet still sending blank or undefined auth values?
-* Is the login endpoint reachable?
-
-## Security / Legacy Warnings
-
-This project is old and was never designed for modern security expectations.
-
-Be aware of all of the following:
-
-* applets are obsolete
-* browser plugin support is effectively dead
-* local dev may require broad Java security permissions
-* passwords and cookie flows are legacy
-* the project should be treated as a historical/experimental restoration, not a production-ready service
-
-## Summary
-
-This repo was not a clean turnkey restore. It required:
-
-* modernizing DB connectivity
-* fixing old schema assumptions
-* seeding missing data
-* patching JSPs
-* rebuilding client artifacts
-* optionally compiling from source
-* using `appletviewer` for local testing
-* carefully redeploying both webapps
-* debugging stale class and socket issues
-
-That said, the codebase is real enough to revive. With the patched source and the setup process described above, it is possible to get surprisingly far locally.
-
+If you keep the exact environment described above, the restore process is much easier to reproduce.
