@@ -24,6 +24,11 @@
     String defaultHost = request.getServerName();
     int defaultCheckersPort = 11999;
     int defaultPoolPort = 11998;
+    String webBase = request.getScheme() + "://" + request.getServerName();
+    if (!(request.getScheme().equals("http") && request.getServerPort() == 80)
+            && !(request.getScheme().equals("https") && request.getServerPort() == 443))
+        webBase += ":" + request.getServerPort();
+    webBase += request.getContextPath();
     Vector<String[]> checkersRooms = new Vector<String[]>();
     Vector<String[]> poolRooms = new Vector<String[]>();
 
@@ -303,6 +308,7 @@ body {
 <script type="text/javascript">
 var launcherVersion = '<%=launcherVersion%>';
 var defaultHost = '<%=jsEscape(defaultHost)%>';
+var webBase = '<%=jsEscape(webBase)%>';
 var defaultPorts = {
     checkers: <%=defaultCheckersPort%>,
     pool: <%=defaultPoolPort%>
@@ -395,18 +401,34 @@ function launch(mode) {
         alert('Please choose a room first.');
         return false;
     }
-    var target = game == 'pool' ? 'pool.jsp' : 'checkers.jsp';
-    var url = target + '?game=' + encodeURIComponent(game)
+    var protocolUrl = 'nygames://launch?game=' + encodeURIComponent(game)
         + '&room=' + encodeURIComponent(room)
-        + '&launcher_version=' + encodeURIComponent(launcherVersion);
-    if (host && host.length > 0)
-        url += '&host=' + encodeURIComponent(host);
-    if (port && port.length > 0)
-        url += '&port=' + encodeURIComponent(port);
+        + '&host=' + encodeURIComponent(host)
+        + '&port=' + encodeURIComponent(port)
+        + '&launcher_version=' + encodeURIComponent(launcherVersion)
+        + '&webbase=' + encodeURIComponent(webBase);
     if (mode && mode.length > 0)
-        url += '&account_mode=' + encodeURIComponent(mode);
-    window.open('/ny/' + url, 'ygames_launcher',
-        'top=2,left=2,toolbar=0,location=0,directories=0,status=1,menubar=0,scrollbars=0,resizable=yes,width=1040,height=820');
+        protocolUrl += '&account_mode=' + encodeURIComponent(mode);
+
+    var downloadUrl = 'launcher_download.jsp?game=' + encodeURIComponent(game)
+        + '&room=' + encodeURIComponent(room)
+        + '&host=' + encodeURIComponent(host)
+        + '&port=' + encodeURIComponent(port)
+        + '&launcher_version=' + encodeURIComponent(launcherVersion);
+    if (mode && mode.length > 0)
+        downloadUrl += '&account_mode=' + encodeURIComponent(mode);
+
+    var iframe = document.getElementById('launcherHandoff');
+    if (!iframe) {
+        iframe = document.createElement('iframe');
+        iframe.id = 'launcherHandoff';
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+    }
+    iframe.src = protocolUrl;
+    window.setTimeout(function () {
+        window.location.href = downloadUrl;
+    }, 1400);
     return false;
 }
 </script>
