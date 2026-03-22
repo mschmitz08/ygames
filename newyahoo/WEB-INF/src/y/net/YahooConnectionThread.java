@@ -31,6 +31,7 @@ public class YahooConnectionThread extends Thread implements ProcessHandler,
 	public int						state;
 	public DataInputStream			input;
 	public boolean					m;
+	private boolean					closingRequested;
 
 	public YahooConnectionThread(String s, int i1, String s1,
 			YahooConnectionHandler _pcls56) {
@@ -48,10 +49,13 @@ public class YahooConnectionThread extends Thread implements ProcessHandler,
 	}
 
 	public void close() {
-		yahooSocket.close();
+		closingRequested = true;
+		if (yahooSocket != null)
+			yahooSocket.close();
 	}
 
 	public void exit() {
+		closingRequested = true;
 		try {
 			yahooSocket.exit();
 		}
@@ -146,8 +150,11 @@ public class YahooConnectionThread extends Thread implements ProcessHandler,
 				throw exception;
 		}
 		catch (IOException ioexception) {
-			// ioexception.printStackTrace();
-			handler.handleError(ioexception);
+			// Ignore the benign null-command race that can happen while the
+			// applet is shutting down its socket thread.
+			if (!(closingRequested && "Illegal connection proxy command: 0"
+					.equals(ioexception.getMessage())))
+				handler.handleError(ioexception);
 		}
 		handler.handleProcess(this, yport == null ? -2 : -1, null);
 		if (yahooSocket != null)
