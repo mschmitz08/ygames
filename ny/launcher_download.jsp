@@ -18,6 +18,8 @@
     String room = request.getParameter("room");
     String host = request.getParameter("host");
     String port = request.getParameter("port");
+    String width = request.getParameter("width");
+    String height = request.getParameter("height");
     String accountMode = request.getParameter("account_mode");
     String webBase = request.getScheme() + "://" + request.getServerName();
     if (!(request.getScheme().equals("http") && request.getServerPort() == 80)
@@ -34,6 +36,10 @@
         host = request.getServerName();
     if (port == null || port.length() == 0)
         port = "pool".equalsIgnoreCase(game) ? "11998" : "11999";
+    if (width == null || width.length() == 0)
+        width = "1400";
+    if (height == null || height.length() == 0)
+        height = "900";
     if (accountMode == null)
         accountMode = "";
     String launcherPackageName = "ygames_launcher_windows_" + launcherVersion + ".zip";
@@ -133,6 +139,8 @@ function tryLaunchAgain() {
         + '&room=' + encodeURIComponent('<%=room%>')
         + '&host=' + encodeURIComponent('<%=host%>')
         + '&port=' + encodeURIComponent('<%=port%>')
+        + '&width=' + encodeURIComponent('<%=width%>')
+        + '&height=' + encodeURIComponent('<%=height%>')
         + '&webbase=' + encodeURIComponent('<%=webBase%>');
 <%
     if (accountMode.length() > 0) {
@@ -140,6 +148,14 @@ function tryLaunchAgain() {
 <%
     }
 %>
+    window.location.href = protocolUrl;
+    return false;
+}
+
+function openLauncherSettings() {
+    var protocolUrl = 'nygames://launch?action=settings'
+        + '&launcher_version=' + encodeURIComponent('<%=launcherVersion%>')
+        + '&webbase=' + encodeURIComponent('<%=webBase%>');
     window.location.href = protocolUrl;
     return false;
 }
@@ -173,9 +189,11 @@ function tryLaunchAgain() {
                     Game: <%=game%><br/>
                     Room: <%=room%><br/>
                     Host: <%=host%><br/>
-                    Port: <%=port%>
+                    Port: <%=port%><br/>
+                    Size: <%=width%> x <%=height%>
                 </div>
                 <p style="margin-top:20px;"><a class="button button-secondary" href="#" onclick="return tryLaunchAgain()">Launch Again</a></p>
+                <p style="margin-top:12px;"><a class="button button-secondary" href="#" onclick="return openLauncherSettings()">Open Launcher Settings</a></p>
             </div>
         </div>
     </div>

@@ -27,6 +27,21 @@ The launcher looks for AppletViewer in this order:
 
 If none of those are available, the launcher shows a requirements message explaining that a Java 8 AppletViewer-capable runtime is still needed.
 
+## Window size
+
+The launcher reads `launcher_settings.ini` from the install folder.
+
+You can also open the local settings dialog from the website's `Launcher Settings` button, or pass width/height straight from the website launcher form.
+
+Example:
+
+```ini
+width=1400
+height=900
+```
+
+If you want a larger or smaller game window, edit those values and launch again.
+
 ## Bundled game files
 
 The package expects:

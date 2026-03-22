@@ -250,6 +250,12 @@ body {
     gap: 12px;
     margin-bottom: 16px;
 }
+.size-grid {
+    display: grid;
+    grid-template-columns: 1fr 0.8fr 0.8fr;
+    gap: 12px;
+    margin-bottom: 16px;
+}
 .connection-input {
     width: 100%;
     box-sizing: border-box;
@@ -322,6 +328,12 @@ var webBase = '<%=jsEscape(webBase)%>';
 var defaultPorts = {
     checkers: <%=defaultCheckersPort%>,
     pool: <%=defaultPoolPort%>
+};
+var sizePresets = {
+    standard: { width: 1024, height: 768 },
+    roomy: { width: 1400, height: 900 },
+    large: { width: 1600, height: 1000 },
+    widescreen: { width: 1920, height: 1080 }
 };
 var roomsByGame = {
     checkers: [
@@ -402,11 +414,34 @@ function syncLauncher() {
     populateRooms();
 }
 
+function applySizePreset() {
+    var preset = document.getElementById('sizePreset').value;
+    var widthField = document.getElementById('width');
+    var heightField = document.getElementById('height');
+    if (preset === 'custom')
+        return;
+    var values = sizePresets[preset];
+    if (!values)
+        return;
+    widthField.value = values.width;
+    heightField.value = values.height;
+}
+
+function launcherSettings() {
+    var protocolUrl = 'nygames://launch?action=settings'
+        + '&launcher_version=' + encodeURIComponent(launcherVersion)
+        + '&webbase=' + encodeURIComponent(webBase);
+    window.location.href = protocolUrl;
+    return false;
+}
+
 function launch(mode) {
     var game = selectedGame();
     var room = document.getElementById('room').value;
     var host = document.getElementById('host').value;
     var port = document.getElementById('port').value;
+    var width = document.getElementById('width').value;
+    var height = document.getElementById('height').value;
     if (!room) {
         alert('Please choose a room first.');
         return false;
@@ -415,6 +450,8 @@ function launch(mode) {
         + '&room=' + encodeURIComponent(room)
         + '&host=' + encodeURIComponent(host)
         + '&port=' + encodeURIComponent(port)
+        + '&width=' + encodeURIComponent(width)
+        + '&height=' + encodeURIComponent(height)
         + '&launcher_version=' + encodeURIComponent(launcherVersion)
         + '&webbase=' + encodeURIComponent(webBase);
     if (mode && mode.length > 0)
@@ -424,6 +461,8 @@ function launch(mode) {
         + '&room=' + encodeURIComponent(room)
         + '&host=' + encodeURIComponent(host)
         + '&port=' + encodeURIComponent(port)
+        + '&width=' + encodeURIComponent(width)
+        + '&height=' + encodeURIComponent(height)
         + '&launcher_version=' + encodeURIComponent(launcherVersion);
     if (mode && mode.length > 0)
         downloadUrl += '&account_mode=' + encodeURIComponent(mode);
@@ -485,10 +524,31 @@ function launch(mode) {
                         <input id="port" class="connection-input" type="text" value="<%=defaultCheckersPort%>"/>
                     </div>
                 </div>
+                <div class="size-grid">
+                    <div>
+                        <label class="field-label" for="sizePreset">Window Size</label>
+                        <select id="sizePreset" class="room-select" onchange="applySizePreset()">
+                            <option value="roomy" selected="selected">Roomy (1400x900)</option>
+                            <option value="standard">Standard (1024x768)</option>
+                            <option value="large">Large (1600x1000)</option>
+                            <option value="widescreen">Widescreen (1920x1080)</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="field-label" for="width">Width</label>
+                        <input id="width" class="connection-input" type="text" value="1400"/>
+                    </div>
+                    <div>
+                        <label class="field-label" for="height">Height</label>
+                        <input id="height" class="connection-input" type="text" value="900"/>
+                    </div>
+                </div>
                 <div class="action-stack">
                     <button class="action-button action-primary" onclick="return launch('')">Play Now</button>
                     <button class="action-button action-secondary" onclick="return launch('register')">Register In Applet</button>
                     <button class="action-button action-tertiary" onclick="return launch('change_password')">Change Password</button>
+                    <button class="action-button action-secondary" onclick="return launcherSettings()">Launcher Settings</button>
                 </div>
                 <p class="microcopy">The tiny version tag on this screen and the in-applet welcome dialog makes it easy to see which launcher build you are testing as the flow evolves.</p>
             </div>

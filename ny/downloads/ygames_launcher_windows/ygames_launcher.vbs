@@ -23,6 +23,11 @@ Dim accountMode
 Dim launcherVersion
 Dim webBase
 Dim installedLauncherVersion
+Dim appletWidth
+Dim appletHeight
+Dim openSettings
+Dim widthSpecified
+Dim heightSpecified
 
 game = "pool"
 room = "corner_pocket"
@@ -32,8 +37,19 @@ accountMode = ""
 launcherVersion = ""
 webBase = "http://127.0.0.1:8080/ny"
 installedLauncherVersion = "0.7.2"
+appletWidth = "1400"
+appletHeight = "900"
+openSettings = False
+widthSpecified = False
+heightSpecified = False
 
 ParseArguments
+LoadLauncherSettings
+
+If openSettings Then
+    ConfigureLauncherSettings
+    WScript.Quit 0
+End If
 
 If launcherVersion <> "" Then
     If CompareVersions(installedLauncherVersion, launcherVersion) < 0 Then
@@ -121,6 +137,21 @@ Sub ParseNamedArgs()
         ElseIf name = "--webbase" Then
             webBase = value
             i = i + 2
+        ElseIf name = "--width" Then
+            If IsNumeric(value) Then
+                appletWidth = CStr(CLng(value))
+                widthSpecified = True
+            End If
+            i = i + 2
+        ElseIf name = "--height" Then
+            If IsNumeric(value) Then
+                appletHeight = CStr(CLng(value))
+                heightSpecified = True
+            End If
+            i = i + 2
+        ElseIf name = "--settings" Then
+            openSettings = True
+            i = i + 1
         Else
             i = i + 1
         End If
@@ -161,6 +192,18 @@ Sub ParseUri(uri)
                 launcherVersion = value
             ElseIf key = "webbase" Then
                 webBase = value
+            ElseIf key = "width" Then
+                If IsNumeric(value) Then
+                    appletWidth = CStr(CLng(value))
+                    widthSpecified = True
+                End If
+            ElseIf key = "height" Then
+                If IsNumeric(value) Then
+                    appletHeight = CStr(CLng(value))
+                    heightSpecified = True
+                End If
+            ElseIf key = "action" And LCase(value) = "settings" Then
+                openSettings = True
             End If
         End If
     Next
@@ -283,12 +326,93 @@ Function GetAppletViewerDiagnostics()
     report = report & "room=" & room & vbCrLf
     report = report & "host=" & host & vbCrLf
     report = report & "port=" & port & vbCrLf
+    report = report & "applet_width=" & appletWidth & vbCrLf
+    report = report & "applet_height=" & appletHeight & vbCrLf
     report = report & "account_mode=" & accountMode & vbCrLf
     report = report & "launcher_version=" & launcherVersion & vbCrLf
     report = report & "webbase=" & webBase & vbCrLf
 
     GetAppletViewerDiagnostics = report
 End Function
+
+Sub LoadLauncherSettings()
+    Dim settingsPath
+    settingsPath = fso.BuildPath(baseDir, "launcher_settings.ini")
+    If Not fso.FileExists(settingsPath) Then
+        Exit Sub
+    End If
+
+    Dim file
+    Set file = fso.OpenTextFile(settingsPath, 1)
+    Do While Not file.AtEndOfStream
+        Dim line
+        line = Trim(file.ReadLine)
+        If line <> "" And Left(line, 1) <> "#" And Left(line, 1) <> ";" Then
+            Dim eqPos
+            eqPos = InStr(line, "=")
+            If eqPos > 0 Then
+                Dim key
+                Dim value
+                key = LCase(Trim(Left(line, eqPos - 1)))
+                value = Trim(Mid(line, eqPos + 1))
+                If key = "width" And IsNumeric(value) And Not widthSpecified Then
+                    appletWidth = CStr(CLng(value))
+                ElseIf key = "height" And IsNumeric(value) And Not heightSpecified Then
+                    appletHeight = CStr(CLng(value))
+                End If
+            End If
+        End If
+    Loop
+    file.Close
+End Sub
+
+Sub ConfigureLauncherSettings()
+    Dim widthValue
+    Dim heightValue
+
+    widthValue = InputBox( _
+        "Enter the launcher width in pixels." & vbCrLf & vbCrLf & _
+        "Current width: " & appletWidth, _
+        "Y! Games Launcher Settings", appletWidth)
+    If widthValue = "" Then
+        Exit Sub
+    End If
+    If Not IsNumeric(widthValue) Then
+        MsgBox "Width must be a number.", vbExclamation, "Y! Games Launcher Settings"
+        Exit Sub
+    End If
+
+    heightValue = InputBox( _
+        "Enter the launcher height in pixels." & vbCrLf & vbCrLf & _
+        "Current height: " & appletHeight, _
+        "Y! Games Launcher Settings", appletHeight)
+    If heightValue = "" Then
+        Exit Sub
+    End If
+    If Not IsNumeric(heightValue) Then
+        MsgBox "Height must be a number.", vbExclamation, "Y! Games Launcher Settings"
+        Exit Sub
+    End If
+
+    appletWidth = CStr(CLng(widthValue))
+    appletHeight = CStr(CLng(heightValue))
+    SaveLauncherSettings
+
+    MsgBox "Launcher settings saved." & vbCrLf & vbCrLf & _
+        "Width: " & appletWidth & vbCrLf & _
+        "Height: " & appletHeight, vbInformation, "Y! Games Launcher Settings"
+End Sub
+
+Sub SaveLauncherSettings()
+    Dim settingsPath
+    Dim file
+    settingsPath = fso.BuildPath(baseDir, "launcher_settings.ini")
+    Set file = fso.CreateTextFile(settingsPath, True)
+    file.WriteLine "# Y! Games Launcher window size"
+    file.WriteLine "width=" & appletWidth
+    file.WriteLine "height=" & appletHeight
+    file.Close
+End Sub
 
 Function CompareVersions(leftValue, rightValue)
     Dim leftParts
@@ -485,8 +609,8 @@ Sub WriteAppletHtml(htmlPath)
     file.WriteLine "      code=""" & appletCode & """"
     file.WriteLine "      archive=""client.jar"""
     file.WriteLine "      codebase=""" & FileUrl(appDir) & """"
-    file.WriteLine "      width=""1024"""
-    file.WriteLine "      height=""768"">"
+    file.WriteLine "      width=""" & HtmlEscape(appletWidth) & """"
+    file.WriteLine "      height=""" & HtmlEscape(appletHeight) & """>"
     file.WriteLine "      <param name=""host"" value=""" & HtmlEscape(host) & """>"
     file.WriteLine "      <param name=""port"" value=""" & HtmlEscape(port) & """>"
     file.WriteLine "      <param name=""uselogin"" value=""0"">"
