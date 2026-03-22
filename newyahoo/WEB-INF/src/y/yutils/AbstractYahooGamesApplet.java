@@ -11,9 +11,11 @@ import java.awt.Toolkit;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.StringTokenizer;
@@ -464,13 +466,27 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 			loginDialog.setBusy(true);
 			loginDialog.setMessage("Signing in...");
 		}
-		String path = login_url + "?username=" + URLEncoder.encode(username)
-				+ "&password=" + URLEncoder.encode(password);
-		loadText(path, 0, APPLET_LOGIN_REQUEST, false);
+		String postBody = encodeFormValue("username", username) + "&"
+				+ encodeFormValue("password", password);
+		UrlProcessEntry entry = new UrlProcessEntry(login_url, 0,
+				APPLET_LOGIN_REQUEST, false, "POST",
+				"application/x-www-form-urlencoded; charset=UTF-8",
+				postBody.getBytes(StandardCharsets.UTF_8));
+		urlProcessQueue.add(entry);
 	}
 
 	public void cancelAppletLogin() {
 		loginRequestInProgress = false;
+	}
+
+	private String encodeFormValue(String key, String value) {
+		try {
+			return URLEncoder.encode(key, "UTF-8") + "="
+					+ URLEncoder.encode(value, "UTF-8");
+		}
+		catch (UnsupportedEncodingException e) {
+			throw new IllegalStateException("UTF-8 encoding unavailable", e);
+		}
 	}
 
 	@Override
@@ -1671,4 +1687,3 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 	}
 
 }
-

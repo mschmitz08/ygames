@@ -67,7 +67,7 @@ CREATE TABLE `ids` (
   `status` smallint(5) unsigned NOT NULL DEFAULT '0',
   `flags` bigint(20) unsigned NOT NULL DEFAULT '192',
   `more_flags` int(10) unsigned NOT NULL DEFAULT '0',
-  `password` varchar(16) NOT NULL,
+  `password` varchar(255) NOT NULL,
   `ycookie` varchar(72) NOT NULL DEFAULT '0',
   `e-mail` text NOT NULL,
   `ip` varchar(16) NOT NULL DEFAULT '0.0.0.0',

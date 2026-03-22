@@ -5,8 +5,10 @@ package login;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -20,6 +22,8 @@ import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 
 import data.MySQLTable;
 
@@ -28,6 +32,11 @@ import data.MySQLTable;
  * 
  */
 public class Login {
+
+	private static final String PASSWORD_HASH_PREFIX = "pbkdf2$";
+	private static final int PASSWORD_SALT_BYTES = 16;
+	private static final int PASSWORD_HASH_BYTES = 32;
+	private static final int PASSWORD_HASH_ITERATIONS = 120000;
 
 	public static String addressToString(byte[] address) {
 		if (address.length > 0) {
@@ -175,7 +184,7 @@ public class Login {
 				return -1;
 			String password1 = rs.getString("password");
 			int status = rs.getInt("status");
-			if (password1 == null || !password1.equals(password))
+			if (!isMatchingPassword(password, password1))
 				return 4;
 			if (status == 0)
 				return 5;
@@ -183,6 +192,11 @@ public class Login {
 				return 6;
 			if (status != 1)
 				return -1;
+			if (requiresPasswordUpgrade(password1)) {
+				ids.assyncUpdate(new String[] {"name"}, new Object[] {name},
+						new String[] { "password" },
+						new Object[] { hashPassword(password) });
+			}
 		}
 		catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -206,7 +220,7 @@ public class Login {
 			return -1;
 		}
 		md5.reset();
-		md5.update(password.getBytes());
+		md5.update(password.getBytes(StandardCharsets.UTF_8));
 		ycookie[0] = Hex.toString(md5.digest());
 
 		String ip1 = getHostByName(ip);
@@ -265,7 +279,7 @@ public class Login {
 			return -1;
 		}
 		md5.reset();
-		md5.update(password.getBytes());
+		md5.update(password.getBytes(StandardCharsets.UTF_8));
 		byte[] hash = md5.digest();
 		String ycookie = Hex.toString(hash);
 		Timestamp cookieExpires = new Timestamp(System.currentTimeMillis() + 24
@@ -273,7 +287,7 @@ public class Login {
 		
 		Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
 		
-		ids.assyncInsert(new Object[] { name, currentTimestamp, 0, 192, 0, password,
+		ids.assyncInsert(new Object[] { name, currentTimestamp, 0, 192, 0, hashPassword(password),
 				ycookie, email, ip1, cookieExpires, currentTimestamp, 1, null,
 				null, 1, 2, 1, 0, 0, 1});
 
@@ -317,6 +331,64 @@ public class Login {
 		}
 
 		return 0;
+	}
+
+	private static boolean requiresPasswordUpgrade(String storedPassword) {
+		return storedPassword != null
+				&& !storedPassword.startsWith(PASSWORD_HASH_PREFIX);
+	}
+
+	private static boolean isMatchingPassword(String password,
+			String storedPassword) {
+		if (password == null || storedPassword == null)
+			return false;
+		if (storedPassword.startsWith(PASSWORD_HASH_PREFIX))
+			return verifyHashedPassword(password, storedPassword);
+		return storedPassword.equals(password);
+	}
+
+	private static String hashPassword(String password) {
+		byte[] salt = new byte[PASSWORD_SALT_BYTES];
+		new SecureRandom().nextBytes(salt);
+		byte[] hash = derivePasswordHash(password.toCharArray(), salt,
+				PASSWORD_HASH_ITERATIONS, PASSWORD_HASH_BYTES);
+		return PASSWORD_HASH_PREFIX + PASSWORD_HASH_ITERATIONS + "$"
+				+ Hex.toString(salt) + "$" + Hex.toString(hash);
+	}
+
+	private static boolean verifyHashedPassword(String password,
+			String storedPassword) {
+		try {
+			String[] parts = storedPassword.split("\\$");
+			if (parts.length != 4)
+				return false;
+			int iterations = Integer.parseInt(parts[1]);
+			byte[] salt = Hex.fromString(parts[2]);
+			byte[] expectedHash = Hex.fromString(parts[3]);
+			byte[] actualHash = derivePasswordHash(password.toCharArray(), salt,
+					iterations, expectedHash.length);
+			return MessageDigest.isEqual(expectedHash, actualHash);
+		}
+		catch (RuntimeException e) {
+			return false;
+		}
+	}
+
+	private static byte[] derivePasswordHash(char[] password, byte[] salt,
+			int iterations, int outputBytes) {
+		PBEKeySpec spec = new PBEKeySpec(password, salt, iterations,
+				outputBytes * 8);
+		try {
+			SecretKeyFactory factory = SecretKeyFactory
+					.getInstance("PBKDF2WithHmacSHA256");
+			return factory.generateSecret(spec).getEncoded();
+		}
+		catch (Exception e) {
+			throw new IllegalStateException("Unable to hash password", e);
+		}
+		finally {
+			spec.clearPassword();
+		}
 	}
 
 }

@@ -139,6 +139,19 @@ ALTER TABLE ids MODIFY COLUMN ip VARCHAR(64) NOT NULL DEFAULT '0.0.0.0';
 
 Without this change, login/account flows can fail.
 
+### 7.1 Fix the `ids.password` Column Length
+
+Modern password hashes are much longer than the original plaintext field.
+
+Run:
+
+```sql
+USE newyahoo;
+ALTER TABLE ids MODIFY COLUMN password VARCHAR(255) NOT NULL;
+```
+
+Without this change, new registrations or password upgrades can be truncated.
+
 ### 8. Verify Required Seed Data
 
 Make sure these tables contain usable rows:
@@ -421,6 +434,8 @@ Legacy account behavior is still rough.
 Important detail:
 
 - active accounts should usually have `status = 1`
+- newer builds store passwords as salted PBKDF2 hashes, not plaintext
+- existing plaintext passwords are upgraded to hashed storage on the next successful login
 
 If a user sees `email confirmation pending`, check whether `status` is still `0`.
 
@@ -481,6 +496,7 @@ Check:
 
 - `ids` imported correctly
 - `ids.ip` was enlarged to `VARCHAR(64)`
+- `ids.password` was enlarged to `VARCHAR(255)`
 - the account exists
 - the account is active with `status = 1`
 - cookies/ycookies are being generated and returned
@@ -507,14 +523,15 @@ If you just want the short version:
 3. Import `database_creation.sql`.
 4. Fix the `ids` timestamp defaults if MySQL 8 rejects them.
 5. Alter `ids.ip` to `VARCHAR(64)`.
-6. Verify room tables contain data.
-7. Copy `ny` and `newyahoo` into Tomcat `webapps`.
-8. Replace the old MySQL JDBC jar with `mysql-connector-j-8.0.33.jar`.
-9. Recompile only if needed.
-10. Build `client.jar`.
-11. Restart Tomcat.
-12. Confirm `/ny/` loads and the backend ports are listening.
-13. Use `appletviewer` to test the client locally.
+6. Alter `ids.password` to `VARCHAR(255)`.
+7. Verify room tables contain data.
+8. Copy `ny` and `newyahoo` into Tomcat `webapps`.
+9. Replace the old MySQL JDBC jar with `mysql-connector-j-8.0.33.jar`.
+10. Recompile only if needed.
+11. Build `client.jar`.
+12. Restart Tomcat.
+13. Confirm `/ny/` loads and the backend ports are listening.
+14. Use `appletviewer` to test the client locally.
 
 ## Final Notes
 

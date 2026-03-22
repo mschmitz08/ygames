@@ -6,6 +6,8 @@ package y.ycontrols;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -70,6 +72,26 @@ public class UrlProcessQueue implements Runnable, ProcessHandler {
 					url = new URL(item.url);
 				}
 				URLConnection urlconnection = url.openConnection();
+				if (urlconnection instanceof HttpURLConnection) {
+					HttpURLConnection http = (HttpURLConnection) urlconnection;
+					http.setRequestMethod(item.method != null ? item.method : "GET");
+					if (item.body != null && item.body.length > 0) {
+						http.setDoOutput(true);
+						if (item.contentType != null)
+							http.setRequestProperty("Content-Type",
+									item.contentType);
+						OutputStream output = null;
+						try {
+							output = http.getOutputStream();
+							output.write(item.body);
+							output.flush();
+						}
+						finally {
+							if (output != null)
+								output.close();
+						}
+					}
+				}
 				StringBuffer stringbuffer = new StringBuffer();
 				InputStream input = null;
 				try {

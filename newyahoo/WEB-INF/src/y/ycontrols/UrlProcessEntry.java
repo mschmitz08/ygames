@@ -14,11 +14,24 @@ public class UrlProcessEntry {
 	public String		url;
 	public IOException	exception;
 	public boolean		proxy_http;
+	public String		method;
+	public String		contentType;
+	public byte[]		body;
 
 	public UrlProcessEntry(String url, int code, Object obj, boolean proxy_http) {
 		this.url = url;
 		this.obj = obj;
 		this.code = code;
 		this.proxy_http = proxy_http;
+		this.method = "GET";
+	}
+
+	public UrlProcessEntry(String url, int code, Object obj, boolean proxy_http,
+			String method, String contentType, byte[] body) {
+		this(url, code, obj, proxy_http);
+		if (method != null && method.length() > 0)
+			this.method = method;
+		this.contentType = contentType;
+		this.body = body;
 	}
 }
