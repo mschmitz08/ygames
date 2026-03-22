@@ -321,7 +321,19 @@ public class CueSprite extends YahooComponent implements YData {
 	}
 
 	public YPoint getPos(boolean flag) {
-		U.setCoords((int) m_ball.x, (int) m_ball.y);
+		float x = m_ball.x;
+		float y = m_ball.y;
+		if (flag && m_selectedBall != null) {
+			float dx = x - cs_a.x;
+			float dy = y - cs_a.y;
+			float dist = (float) Math.sqrt(dx * dx + dy * dy);
+			if (dist > maxPower && dist > 0.0F) {
+				float scale = maxPower / dist;
+				x = cs_a.x + dx * scale;
+				y = cs_a.y + dy * scale;
+			}
+		}
+		U.setCoords((int) x, (int) y);
 		if (flag) {
 			m_ball.setCoords(cs_a.x, cs_a.y);
 			setGrabed(false);

@@ -438,6 +438,8 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 		float contactY = 0.0F;
 		float targetTravelX = 0.0F;
 		float targetTravelY = 0.0F;
+		float hitBallX = 0.0F;
+		float hitBallY = 0.0F;
 
 		Vector<IBall> balls = table.getBallInPlayArea();
 		for (int i = 0; i < balls.size(); i++) {
@@ -469,6 +471,8 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 			contactY = cueY + dirY * candidateDistance;
 			hitBall = cloneBall((PoolBall) current);
 			index = current.getIndex();
+			hitBallX = otherX;
+			hitBallY = otherY;
 
 			float normalX = otherX - contactX;
 			float normalY = otherY - contactY;
@@ -492,8 +496,8 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 			cueLine = new YLine((int) Math.rint(cueX), (int) Math.rint(cueY),
 					(int) Math.rint(contactX), (int) Math.rint(contactY));
 
-			YPoint targetStart = new YPoint(hitBall.getYIntX(), hitBall.getYIntY());
-			YPoint targetEnd = extendToBounds(targetStart, new YVector(targetTravelX, targetTravelY));
+			YPoint targetStart = new YPoint(hitBallX, hitBallY);
+			YPoint targetEnd = extendDistance(targetStart, new YVector(targetTravelX, targetTravelY), 70.0F);
 			targetLine = new YLine();
 			targetLine.setCoords(targetStart, targetEnd);
 
@@ -505,7 +509,7 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 				cueDeflectX /= cueDeflectLength;
 				cueDeflectY /= cueDeflectLength;
 				YPoint deflectStart = new YPoint(contactX, contactY);
-				YPoint deflectEnd = extendToBounds(deflectStart, new YVector(cueDeflectX, cueDeflectY));
+				YPoint deflectEnd = extendDistance(deflectStart, new YVector(cueDeflectX, cueDeflectY), 55.0F);
 				deflectionLine = new YLine();
 				deflectionLine.setCoords(deflectStart, deflectEnd);
 			}
@@ -521,6 +525,15 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 		aim.invalidate();
 	}
 
+	private YPoint extendDistance(YPoint start, YVector direction, float distance) {
+		YVector normalized = new YVector(direction.x, direction.y);
+		float length = normalized.abs();
+		if (length <= 0.0001F)
+			return new YPoint(start.x, start.y);
+		normalized.mul(1.0F / length);
+		return new YPoint(start.x + normalized.x * distance, start.y + normalized.y * distance);
+	}
+
 	public void fs(BallSprite a_pcls31[]) {
 		for (BallSprite _lcls31 : a_pcls31) {
 			addChildObject(_lcls31, _lcls31.getLeft1(), _lcls31.getTop1(), true);
@@ -528,6 +541,12 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 					true);
 			_lcls31.ae(20);
 		}
+
+		// Keep the guide overlay above the balls so the old-style path preview stays visible.
+		components.remove(aim);
+		components.remove(arrow);
+		components.add(aim);
+		components.add(arrow);
 
 	}
 
