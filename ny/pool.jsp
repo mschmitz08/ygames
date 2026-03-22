@@ -1,4 +1,5 @@
 <%@page pageEncoding="Cp1252" contentType="text/html; charset=Cp1252"%>
+<%@page import="core.*"%>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=Cp1252"/>
