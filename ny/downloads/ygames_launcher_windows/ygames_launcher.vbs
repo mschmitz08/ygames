@@ -699,8 +699,10 @@ Sub ShowRequirementError()
         "3. Standard Java install folders under Program Files" & vbCrLf & _
         "4. appletviewer on your PATH" & vbCrLf & vbCrLf & _
         "What to do next:" & vbCrLf & _
-        "- Install a Java 8 JDK that includes appletviewer, or" & vbCrLf & _
-        "- Place an approved bundled Java 8 runtime under the launcher's runtime folder." & vbCrLf & vbCrLf & _
+        "- Install a Java 8 JDK that includes appletviewer." & vbCrLf & _
+        "  Recommended download: https://adoptium.net/temurin/releases/?version=8" & vbCrLf & _
+        "- After installing, open a new browser window and try Launch Again." & vbCrLf & _
+        "- Or place an approved bundled Java 8 runtime under the launcher's runtime folder." & vbCrLf & vbCrLf & _
         "Launcher folder:" & vbCrLf & baseDir & vbCrLf & vbCrLf & _
         "Click Yes to open a diagnostics report."
 
