@@ -16,10 +16,13 @@ import y.utils.TimerHandler;
 import y.utils.YahooImage;
 
 import common.po.PoolBall;
+import common.po.IBall;
 import common.po.PoolMath;
+import common.po.YLine;
 import common.po.YIPoint;
 import common.po.YPoint;
 import common.po.YRectangle;
+import common.po.YVector;
 
 // Referenced classes of package y.po:
 // _cls79, _cls172, _cls86, _cls174,
@@ -363,6 +366,160 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 	 * colBalls.removeAllElements(); computeAim0(m_ball, m_cue); wb();
 	 * aim.invalidate(); }
 	 */
+
+	private float clamp(float value, float min, float max) {
+		if (value < min)
+			return min;
+		if (value > max)
+			return max;
+		return value;
+	}
+
+	private YPoint extendToBounds(YPoint start, YVector direction) {
+		float dx = direction.x;
+		float dy = direction.y;
+		float minT = Float.MAX_VALUE;
+		YPoint end = new YPoint(start.x, start.y);
+		float left = PoolMath.yintToFloat(playAreaBalls.left);
+		float top = PoolMath.yintToFloat(playAreaBalls.top);
+		float right = left + PoolMath.yintToFloat(playAreaBalls.width);
+		float bottom = top + PoolMath.yintToFloat(playAreaBalls.height);
+
+		if (dx > 0.0001F)
+			minT = Math.min(minT, (right - start.x) / dx);
+		else if (dx < -0.0001F)
+			minT = Math.min(minT, (left - start.x) / dx);
+		if (dy > 0.0001F)
+			minT = Math.min(minT, (bottom - start.y) / dy);
+		else if (dy < -0.0001F)
+			minT = Math.min(minT, (top - start.y) / dy);
+
+		if (minT == Float.MAX_VALUE || minT < 0.0F)
+			minT = 0.0F;
+
+		end.setCoords(start.x + dx * minT, start.y + dy * minT);
+		end.x = clamp(end.x, left, right);
+		end.y = clamp(end.y, top, bottom);
+		return end;
+	}
+
+	public void clearAim() {
+		aim.clear();
+		aim.invalidate();
+	}
+
+	public void computeAim(PoolBall selectedBall) {
+		aim.clear();
+		colBalls.removeAllElements();
+		ballColided = false;
+		index = -1;
+		firstColl.setCoords(0, 0);
+
+		if (selectedBall == null || selectedBall.inSlot()) {
+			aim.invalidate();
+			return;
+		}
+
+		float cueX = selectedBall.getYIntX();
+		float cueY = selectedBall.getYIntY();
+		float dirX = PoolMath.yintToFloat(selectedBall.vel.a);
+		float dirY = PoolMath.yintToFloat(selectedBall.vel.b);
+		float dirLength = (float) Math.sqrt(dirX * dirX + dirY * dirY);
+		if (dirLength <= 0.0001F) {
+			aim.invalidate();
+			return;
+		}
+		dirX /= dirLength;
+		dirY /= dirLength;
+
+		PoolBall hitBall = null;
+		float hitDistance = Float.MAX_VALUE;
+		float contactX = 0.0F;
+		float contactY = 0.0F;
+		float targetTravelX = 0.0F;
+		float targetTravelY = 0.0F;
+
+		Vector<IBall> balls = table.getBallInPlayArea();
+		for (int i = 0; i < balls.size(); i++) {
+			IBall current = balls.elementAt(i);
+			if (current == null || current.getIndex() == selectedBall.getIndex() || current.inSlot())
+				continue;
+
+			float otherX = current.getYIntX();
+			float otherY = current.getYIntY();
+			float relX = otherX - cueX;
+			float relY = otherY - cueY;
+			float along = relX * dirX + relY * dirY;
+			if (along <= 0.0F)
+				continue;
+
+			float radius = PoolMath.yintToFloat(selectedBall.radius + current.getRadius());
+			float perpSq = relX * relX + relY * relY - along * along;
+			float radiusSq = radius * radius;
+			if (perpSq > radiusSq)
+				continue;
+
+			float offset = (float) Math.sqrt(Math.max(0.0D, radiusSq - perpSq));
+			float candidateDistance = along - offset;
+			if (candidateDistance < 0.0F || candidateDistance >= hitDistance)
+				continue;
+
+			hitDistance = candidateDistance;
+			contactX = cueX + dirX * candidateDistance;
+			contactY = cueY + dirY * candidateDistance;
+			hitBall = cloneBall((PoolBall) current);
+			index = current.getIndex();
+
+			float normalX = otherX - contactX;
+			float normalY = otherY - contactY;
+			float normalLength = (float) Math.sqrt(normalX * normalX + normalY * normalY);
+			if (normalLength > 0.0001F) {
+				targetTravelX = normalX / normalLength;
+				targetTravelY = normalY / normalLength;
+			}
+		}
+
+		YPoint cueStart = new YPoint(cueX, cueY);
+		YLine cueLine;
+		YLine targetLine = new YLine();
+		YLine deflectionLine = new YLine();
+		YPoint marker;
+
+		if (hitBall != null) {
+			ballColided = true;
+			firstColl.setCoords(PoolMath.floatToYInt(contactX), PoolMath.floatToYInt(contactY));
+			marker = new YPoint(contactX, contactY);
+			cueLine = new YLine((int) Math.rint(cueX), (int) Math.rint(cueY),
+					(int) Math.rint(contactX), (int) Math.rint(contactY));
+
+			YPoint targetStart = new YPoint(hitBall.getYIntX(), hitBall.getYIntY());
+			YPoint targetEnd = extendToBounds(targetStart, new YVector(targetTravelX, targetTravelY));
+			targetLine = new YLine();
+			targetLine.setCoords(targetStart, targetEnd);
+
+			float dot = dirX * targetTravelX + dirY * targetTravelY;
+			float cueDeflectX = dirX - targetTravelX * dot;
+			float cueDeflectY = dirY - targetTravelY * dot;
+			float cueDeflectLength = (float) Math.sqrt(cueDeflectX * cueDeflectX + cueDeflectY * cueDeflectY);
+			if (cueDeflectLength > 0.0001F) {
+				cueDeflectX /= cueDeflectLength;
+				cueDeflectY /= cueDeflectLength;
+				YPoint deflectStart = new YPoint(contactX, contactY);
+				YPoint deflectEnd = extendToBounds(deflectStart, new YVector(cueDeflectX, cueDeflectY));
+				deflectionLine = new YLine();
+				deflectionLine.setCoords(deflectStart, deflectEnd);
+			}
+		}
+		else {
+			YPoint cueEnd = extendToBounds(cueStart, new YVector(dirX, dirY));
+			cueLine = new YLine();
+			cueLine.setCoords(cueStart, cueEnd);
+			marker = cueEnd;
+		}
+
+		aim.add(cueLine, targetLine, deflectionLine, marker);
+		aim.invalidate();
+	}
 
 	public void fs(BallSprite a_pcls31[]) {
 		for (BallSprite _lcls31 : a_pcls31) {

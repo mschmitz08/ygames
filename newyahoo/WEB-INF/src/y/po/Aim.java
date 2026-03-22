@@ -30,7 +30,7 @@ public class Aim extends YahooComponent {
 		super(j, k);
 		line = new Vector<YLine>();
 		path = new Vector<YPoint>();
-		a_e = new Color(99, 142, 38);
+		a_e = new Color(232, 204, 73);
 		a_f = YahooPoolImageList.loadImages().q;
 		a_g = l;
 		table = _pcls29;
@@ -59,9 +59,11 @@ public class Aim extends YahooComponent {
 			for (int i = 0; i < line.size(); i++) {
 				YLine b = line.elementAt(i);
 				yahooGraphics.drawLine(b.a, b.b, b.c, b.d);
+				yahooGraphics.drawLine(b.a + 1, b.b, b.c + 1, b.d);
 			}
 			for (int i = 0; i < path.size(); i++) {
 				YPoint h = path.elementAt(i);
+				yahooGraphics.drawOval((int) h.x - 8, (int) h.y - 8, 16, 16);
 				yahooGraphics.drawImage(a_f, (int) h.x - 10, (int) h.y - 10,
 						null);
 			}

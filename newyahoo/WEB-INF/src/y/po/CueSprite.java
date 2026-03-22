@@ -742,10 +742,10 @@ public class CueSprite extends YahooComponent implements YData {
 			selectedBall.start(cueDist, englishDist, new YIPoint(), -1);
 			selectedBall.vel.setFrom(new YIPoint(m_cue.x, m_cue.y));
 			selectedBall.vel.neg();
-			// TODO resolver isso aqui urgente!!!
-			// y.computeAim(selectedBall);
-			// y.computeAim(selectedBall);
+			cs_y.computeAim(selectedBall);
 		}
+		else
+			cs_y.clearAim();
 		changed = true;
 		Dn();
 		invalidate();

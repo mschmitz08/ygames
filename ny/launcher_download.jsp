@@ -65,7 +65,7 @@
         webBase += ":" + request.getServerPort();
     webBase += request.getContextPath();
     if (launcherVersion == null || launcherVersion.length() == 0)
-        launcherVersion = "0.7.2";
+        launcherVersion = "0.7.3";
     if (game == null || game.length() == 0)
         game = "pool";
     if (room == null || room.length() == 0)

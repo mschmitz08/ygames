@@ -366,6 +366,7 @@ body {
 }
 .room-name {
     font-size: 20px;
+    color: #23170f;
 }
 .room-slug {
     display: block;
