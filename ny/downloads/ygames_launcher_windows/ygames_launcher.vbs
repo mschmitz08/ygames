@@ -8,8 +8,15 @@ Set fso = CreateObject("Scripting.FileSystemObject")
 Dim baseDir
 baseDir = fso.GetParentFolderName(WScript.ScriptFullName)
 
+Dim templateAppDir
+templateAppDir = fso.BuildPath(baseDir, "app\newyahoo")
+
+Dim sitesRootDir
+sitesRootDir = fso.BuildPath(baseDir, "sites")
+EnsureFolder sitesRootDir
+
 Dim appDir
-appDir = fso.BuildPath(baseDir, "app\newyahoo")
+appDir = templateAppDir
 
 Dim launchDir
 launchDir = fso.BuildPath(baseDir, "launches")
@@ -28,6 +35,10 @@ Dim appletHeight
 Dim openSettings
 Dim widthSpecified
 Dim heightSpecified
+Dim expectedClientHash
+Dim stableInstallDir
+Dim siteId
+Dim siteRootDir
 
 game = "pool"
 room = "corner_pocket"
@@ -42,13 +53,40 @@ appletHeight = "900"
 openSettings = False
 widthSpecified = False
 heightSpecified = False
+expectedClientHash = ""
+stableInstallDir = shell.ExpandEnvironmentStrings("%LocalAppData%\YGamesLauncher")
+siteId = ""
+siteRootDir = baseDir
 
 ParseArguments
+ConfigureSitePaths
+EnsureSiteBundle
 LoadLauncherSettings
+
+If ShouldWarnPortableLaunch() Then
+    ShowPortableLaunchWarning
+End If
 
 If openSettings Then
     ConfigureLauncherSettings
     WScript.Quit 0
+End If
+
+If expectedClientHash <> "" Then
+    Dim localClientHash
+    localClientHash = GetFileSha256(fso.BuildPath(appDir, "client.jar"))
+    If siteId <> "" And LCase(localClientHash) <> LCase(expectedClientHash) Then
+        Dim templateClientHash
+        templateClientHash = GetFileSha256(fso.BuildPath(templateAppDir, "client.jar"))
+        If templateClientHash <> "" And LCase(templateClientHash) = LCase(expectedClientHash) Then
+            CopyFolderContents templateAppDir, appDir
+            localClientHash = GetFileSha256(fso.BuildPath(appDir, "client.jar"))
+        End If
+    End If
+    If localClientHash = "" Or LCase(localClientHash) <> LCase(expectedClientHash) Then
+        ShowClientMismatch expectedClientHash, localClientHash
+        WScript.Quit 1
+    End If
 End If
 
 If launcherVersion <> "" Then
@@ -86,7 +124,8 @@ WritePolicyFile policyPath
 WriteAppletHtml htmlPath
 
 Dim command
-command = Quote(appletViewerPath) & " -J-Djava.security.policy=" & Quote(policyPath) & " " & Quote(htmlPath)
+command = Quote(appletViewerPath) & " -J-Djava.security.policy=" & Quote(policyPath) _
+    & " -J-Dsun.java2d.dpiaware=false " & Quote(htmlPath)
 shell.CurrentDirectory = appDir
 shell.Run command, 0, False
 
@@ -152,6 +191,12 @@ Sub ParseNamedArgs()
         ElseIf name = "--settings" Then
             openSettings = True
             i = i + 1
+        ElseIf name = "--expected_client_hash" Then
+            expectedClientHash = value
+            i = i + 2
+        ElseIf name = "--site_id" Then
+            siteId = value
+            i = i + 2
         Else
             i = i + 1
         End If
@@ -204,9 +249,69 @@ Sub ParseUri(uri)
                 End If
             ElseIf key = "action" And LCase(value) = "settings" Then
                 openSettings = True
+            ElseIf key = "expected_client_hash" Then
+                expectedClientHash = value
+            ElseIf key = "site_id" Then
+                siteId = value
             End If
         End If
     Next
+End Sub
+
+Sub ConfigureSitePaths()
+    If siteId = "" Then
+        launchDir = fso.BuildPath(baseDir, "launches")
+        EnsureFolder launchDir
+        appDir = templateAppDir
+        siteRootDir = baseDir
+        Exit Sub
+    End If
+
+    siteId = CleanFileName(siteId)
+    siteRootDir = fso.BuildPath(sitesRootDir, siteId)
+    EnsureFolder siteRootDir
+    EnsureFolder fso.BuildPath(siteRootDir, "app")
+    appDir = fso.BuildPath(siteRootDir, "app\newyahoo")
+    launchDir = fso.BuildPath(siteRootDir, "launches")
+    EnsureFolder launchDir
+End Sub
+
+Sub EnsureSiteBundle()
+    If siteId = "" Then
+        Exit Sub
+    End If
+
+    Dim siteClientJar
+    siteClientJar = fso.BuildPath(appDir, "client.jar")
+    If fso.FileExists(siteClientJar) Then
+        Exit Sub
+    End If
+
+    If Not fso.FolderExists(templateAppDir) Then
+        Exit Sub
+    End If
+
+    CopyFolderContents templateAppDir, appDir
+End Sub
+
+Function ShouldWarnPortableLaunch()
+    Dim lowerBase
+    lowerBase = LCase(baseDir)
+    ShouldWarnPortableLaunch = False
+    If LCase(baseDir) = LCase(stableInstallDir) Then
+        Exit Function
+    End If
+    If InStr(lowerBase, "\downloads\") > 0 Or InStr(lowerBase, "\temp\") > 0 _
+            Or InStr(lowerBase, "\temporary") > 0 Then
+        ShouldWarnPortableLaunch = True
+    End If
+End Function
+
+Sub ShowPortableLaunchWarning()
+    MsgBox "This launcher appears to be running from:" & vbCrLf & baseDir & vbCrLf & vbCrLf & _
+        "That often means it was opened from Downloads or a temporary extracted folder." & vbCrLf & _
+        "For reliable updates, run install_launcher.bat so Windows uses the stable launcher folder:" & vbCrLf & _
+        stableInstallDir, vbExclamation, "Y! Games Launcher Install Reminder"
 End Sub
 
 Function FindAppletViewer()
@@ -304,6 +409,9 @@ Function GetAppletViewerDiagnostics()
     report = "Y! Games Launcher diagnostics" & vbCrLf
     report = report & "Time: " & Now & vbCrLf
     report = report & "Launcher folder: " & baseDir & vbCrLf
+    report = report & "Stable install folder: " & stableInstallDir & vbCrLf
+    report = report & "Site id: " & siteId & vbCrLf
+    report = report & "Site root folder: " & siteRootDir & vbCrLf
     report = report & "Game folder: " & appDir & vbCrLf & vbCrLf
 
     Dim javaHome
@@ -322,6 +430,8 @@ Function GetAppletViewerDiagnostics()
     report = report & DescribeWhereLookup()
     report = report & vbCrLf & "Current request:" & vbCrLf
     report = report & "installed_launcher_version=" & installedLauncherVersion & vbCrLf
+    report = report & "expected_client_hash=" & expectedClientHash & vbCrLf
+    report = report & "local_client_hash=" & GetFileSha256(fso.BuildPath(appDir, "client.jar")) & vbCrLf
     report = report & "game=" & game & vbCrLf
     report = report & "room=" & room & vbCrLf
     report = report & "host=" & host & vbCrLf
@@ -335,9 +445,61 @@ Function GetAppletViewerDiagnostics()
     GetAppletViewerDiagnostics = report
 End Function
 
+Function GetFileSha256(filePath)
+    If Not fso.FileExists(filePath) Then
+        GetFileSha256 = ""
+        Exit Function
+    End If
+
+    Dim exec
+    Dim report
+    report = ""
+    On Error Resume Next
+    Set exec = shell.Exec("cmd /c certutil -hashfile " & Quote(filePath) & " SHA256")
+    If Err.Number <> 0 Then
+        Err.Clear
+        On Error GoTo 0
+        GetFileSha256 = ""
+        Exit Function
+    End If
+    On Error GoTo 0
+
+    Do While Not exec.StdOut.AtEndOfStream
+        Dim line
+        line = Trim(exec.StdOut.ReadLine)
+        If line <> "" And InStr(line, "SHA256") = 0 And InStr(line, "CertUtil:") = 0 Then
+            report = report & Replace(line, " ", "")
+        End If
+    Loop
+    GetFileSha256 = LCase(report)
+End Function
+
+Sub CopyFolderContents(sourcePath, targetPath)
+    If Not fso.FolderExists(sourcePath) Then
+        Exit Sub
+    End If
+
+    If Not fso.FolderExists(targetPath) Then
+        fso.CreateFolder targetPath
+    End If
+
+    Dim sourceFolder
+    Set sourceFolder = fso.GetFolder(sourcePath)
+
+    Dim file
+    For Each file In sourceFolder.Files
+        fso.CopyFile file.Path, fso.BuildPath(targetPath, file.Name), True
+    Next
+
+    Dim subFolder
+    For Each subFolder In sourceFolder.SubFolders
+        CopyFolderContents subFolder.Path, fso.BuildPath(targetPath, subFolder.Name)
+    Next
+End Sub
+
 Sub LoadLauncherSettings()
     Dim settingsPath
-    settingsPath = fso.BuildPath(baseDir, "launcher_settings.ini")
+    settingsPath = fso.BuildPath(siteRootDir, "launcher_settings.ini")
     If Not fso.FileExists(settingsPath) Then
         Exit Sub
     End If
@@ -406,7 +568,7 @@ End Sub
 Sub SaveLauncherSettings()
     Dim settingsPath
     Dim file
-    settingsPath = fso.BuildPath(baseDir, "launcher_settings.ini")
+    settingsPath = fso.BuildPath(siteRootDir, "launcher_settings.ini")
     Set file = fso.CreateTextFile(settingsPath, True)
     file.WriteLine "# Y! Games Launcher window size"
     file.WriteLine "width=" & appletWidth
@@ -552,6 +714,19 @@ Sub ShowUpdateRequired(requiredVersion)
         "Installed launcher version: " & installedLauncherVersion & vbCrLf & _
         "Website expects version: " & requiredVersion & vbCrLf & vbCrLf & _
         "Please download the newer launcher package from the site and run install_launcher.bat again." & vbCrLf & vbCrLf & _
+        "Launcher folder:" & vbCrLf & baseDir
+    MsgBox message, vbExclamation, "Y! Games Launcher Update Needed"
+End Sub
+
+Sub ShowClientMismatch(requiredHash, localHash)
+    Dim message
+    If localHash = "" Then
+        localHash = "(unable to read local client.jar hash)"
+    End If
+    message = "This launcher's bundled game files do not match what the website expects." & vbCrLf & vbCrLf & _
+        "Expected client hash: " & requiredHash & vbCrLf & _
+        "Local client hash: " & localHash & vbCrLf & vbCrLf & _
+        "Please download the latest launcher package and run install_launcher.bat again." & vbCrLf & vbCrLf & _
         "Launcher folder:" & vbCrLf & baseDir
     MsgBox message, vbExclamation, "Y! Games Launcher Update Needed"
 End Sub

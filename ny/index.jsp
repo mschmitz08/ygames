@@ -1,5 +1,5 @@
 <%@page pageEncoding="Cp1252" contentType="text/html; charset=Cp1252"%>
-<%@page import="core.*, data.*, java.sql.*, java.util.*"%>
+<%@page import="core.*, data.*, java.sql.*, java.util.*, java.io.*, java.security.*"%>
 <%!
     private String jsEscape(String value) {
         if (value == null)
@@ -26,6 +26,61 @@
         return host.length() == 0 || "127.0.0.1".equals(host) || "localhost".equals(host)
                 || "::1".equals(host) || "0:0:0:0:0:0:0:1".equals(host);
     }
+
+    private String sha256Hex(File file) {
+        if (file == null || !file.exists())
+            return "";
+        FileInputStream input = null;
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            input = new FileInputStream(file);
+            byte[] buffer = new byte[8192];
+            int read;
+            while ((read = input.read(buffer)) != -1)
+                digest.update(buffer, 0, read);
+            byte[] result = digest.digest();
+            StringBuffer hex = new StringBuffer();
+            for (int i = 0; i < result.length; i++) {
+                String part = Integer.toHexString(result[i] & 0xff);
+                if (part.length() == 1)
+                    hex.append('0');
+                hex.append(part);
+            }
+            return hex.toString();
+        }
+        catch (Exception e) {
+            return "";
+        }
+        finally {
+            if (input != null) {
+                try {
+                    input.close();
+                }
+                catch (IOException ignore) {
+                }
+            }
+        }
+    }
+
+    private String sha256Text(String value) {
+        if (value == null)
+            value = "";
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] result = digest.digest(value.getBytes("UTF-8"));
+            StringBuffer hex = new StringBuffer();
+            for (int i = 0; i < result.length; i++) {
+                String part = Integer.toHexString(result[i] & 0xff);
+                if (part.length() == 1)
+                    hex.append('0');
+                hex.append(part);
+            }
+            return hex.toString();
+        }
+        catch (Exception e) {
+            return "";
+        }
+    }
 %>
 <%
     String launcherVersion = "0.7.2";
@@ -40,6 +95,12 @@
     webBase += request.getContextPath();
     Vector<String[]> checkersRooms = new Vector<String[]>();
     Vector<String[]> poolRooms = new Vector<String[]>();
+    File launcherClientJar = new File(application.getRealPath("/downloads/ygames_launcher_windows/app/newyahoo/client.jar"));
+    String expectedClientHash = sha256Hex(launcherClientJar);
+    String siteIdentitySource = webBase.toLowerCase();
+    String siteId = sha256Text(siteIdentitySource);
+    if (siteId.length() > 16)
+        siteId = siteId.substring(0, 16);
 
     if (Initializer.selfInstance != null) {
         String configuredHost = Initializer.selfInstance.getGameHost();
@@ -253,8 +314,18 @@ body {
 .size-grid {
     display: grid;
     grid-template-columns: 1fr 0.8fr 0.8fr;
+    align-items: end;
     gap: 12px;
     margin-bottom: 16px;
+}
+.size-grid .field-label {
+    white-space: nowrap;
+}
+.helper-copy {
+    margin: -4px 0 16px 0;
+    font-size: 12px;
+    line-height: 1.45;
+    color: #6c5538;
 }
 .connection-input {
     width: 100%;
@@ -427,14 +498,6 @@ function applySizePreset() {
     heightField.value = values.height;
 }
 
-function launcherSettings() {
-    var protocolUrl = 'nygames://launch?action=settings'
-        + '&launcher_version=' + encodeURIComponent(launcherVersion)
-        + '&webbase=' + encodeURIComponent(webBase);
-    window.location.href = protocolUrl;
-    return false;
-}
-
 function launch(mode) {
     var game = selectedGame();
     var room = document.getElementById('room').value;
@@ -452,6 +515,8 @@ function launch(mode) {
         + '&port=' + encodeURIComponent(port)
         + '&width=' + encodeURIComponent(width)
         + '&height=' + encodeURIComponent(height)
+        + '&site_id=' + encodeURIComponent('<%=siteId%>')
+        + '&expected_client_hash=' + encodeURIComponent('<%=expectedClientHash%>')
         + '&launcher_version=' + encodeURIComponent(launcherVersion)
         + '&webbase=' + encodeURIComponent(webBase);
     if (mode && mode.length > 0)
@@ -463,6 +528,8 @@ function launch(mode) {
         + '&port=' + encodeURIComponent(port)
         + '&width=' + encodeURIComponent(width)
         + '&height=' + encodeURIComponent(height)
+        + '&site_id=' + encodeURIComponent('<%=siteId%>')
+        + '&expected_client_hash=' + encodeURIComponent('<%=expectedClientHash%>')
         + '&launcher_version=' + encodeURIComponent(launcherVersion);
     if (mode && mode.length > 0)
         downloadUrl += '&account_mode=' + encodeURIComponent(mode);
@@ -526,7 +593,7 @@ function launch(mode) {
                 </div>
                 <div class="size-grid">
                     <div>
-                        <label class="field-label" for="sizePreset">Window Size</label>
+                        <label class="field-label" for="sizePreset">Preset</label>
                         <select id="sizePreset" class="room-select" onchange="applySizePreset()">
                             <option value="roomy" selected="selected">Roomy (1400x900)</option>
                             <option value="standard">Standard (1024x768)</option>
@@ -544,11 +611,11 @@ function launch(mode) {
                         <input id="height" class="connection-input" type="text" value="900"/>
                     </div>
                 </div>
+                <p class="helper-copy">Preset and custom size affect the applet window launched from this page. You can change these before each launch.</p>
                 <div class="action-stack">
                     <button class="action-button action-primary" onclick="return launch('')">Play Now</button>
                     <button class="action-button action-secondary" onclick="return launch('register')">Register In Applet</button>
                     <button class="action-button action-tertiary" onclick="return launch('change_password')">Change Password</button>
-                    <button class="action-button action-secondary" onclick="return launcherSettings()">Launcher Settings</button>
                 </div>
                 <p class="microcopy">The tiny version tag on this screen and the in-applet welcome dialog makes it easy to see which launcher build you are testing as the flow evolves.</p>
             </div>

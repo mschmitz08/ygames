@@ -23,13 +23,17 @@ public class Cue implements YData {
 		cueTip.read(input);
 		cueTipOffset.read(input);
 		power = input.readInt();
+		if (power < 0)
+			power = 0;
+		if (power > 120)
+			power = 120;
 	}
 
 	public void write(DataOutput output) throws IOException {
 		output.writeInt(20);
 		cueTip.write(output);
 		cueTipOffset.write(output);
-		output.writeInt(power);
+		output.writeInt(power < 0 ? 0 : power > 120 ? 120 : power);
 	}
 
 }

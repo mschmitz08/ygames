@@ -84,6 +84,10 @@ public class PowerBar extends YahooComponent {
 	}
 
 	public void setPower(int i1) {
+		if (i1 < 0)
+			i1 = 0;
+		if (i1 > h)
+			i1 = h;
 		pb_g = i1 * pb_c / h;
 		invalidate();
 	}

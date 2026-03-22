@@ -1,4 +1,5 @@
 <%@page pageEncoding="Cp1252" contentType="text/html; charset=Cp1252"%>
+<%@page import="java.io.*, java.security.*"%>
 <%!
     private boolean isLoopbackHost(String host) {
         if(host == null)
@@ -6,6 +7,41 @@
         host = host.trim().toLowerCase();
         return host.length() == 0 || "127.0.0.1".equals(host) || "localhost".equals(host)
                 || "::1".equals(host) || "0:0:0:0:0:0:0:1".equals(host);
+    }
+
+    private String sha256Hex(File file) {
+        if (file == null || !file.exists())
+            return "";
+        FileInputStream input = null;
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            input = new FileInputStream(file);
+            byte[] buffer = new byte[8192];
+            int read;
+            while ((read = input.read(buffer)) != -1)
+                digest.update(buffer, 0, read);
+            byte[] result = digest.digest();
+            StringBuffer hex = new StringBuffer();
+            for (int i = 0; i < result.length; i++) {
+                String part = Integer.toHexString(result[i] & 0xff);
+                if (part.length() == 1)
+                    hex.append('0');
+                hex.append(part);
+            }
+            return hex.toString();
+        }
+        catch (Exception e) {
+            return "";
+        }
+        finally {
+            if (input != null) {
+                try {
+                    input.close();
+                }
+                catch (IOException ignore) {
+                }
+            }
+        }
     }
 %>
 <%
@@ -20,6 +56,8 @@
     String port = request.getParameter("port");
     String width = request.getParameter("width");
     String height = request.getParameter("height");
+    String siteId = request.getParameter("site_id");
+    String expectedClientHash = request.getParameter("expected_client_hash");
     String accountMode = request.getParameter("account_mode");
     String webBase = request.getScheme() + "://" + request.getServerName();
     if (!(request.getScheme().equals("http") && request.getServerPort() == 80)
@@ -42,6 +80,12 @@
         height = "900";
     if (accountMode == null)
         accountMode = "";
+    if (siteId == null)
+        siteId = "";
+    if (expectedClientHash == null || expectedClientHash.length() == 0) {
+        File launcherClientJar = new File(application.getRealPath("/downloads/ygames_launcher_windows/app/newyahoo/client.jar"));
+        expectedClientHash = sha256Hex(launcherClientJar);
+    }
     String launcherPackageName = "ygames_launcher_windows_" + launcherVersion + ".zip";
 %>
 <html>
@@ -141,6 +185,8 @@ function tryLaunchAgain() {
         + '&port=' + encodeURIComponent('<%=port%>')
         + '&width=' + encodeURIComponent('<%=width%>')
         + '&height=' + encodeURIComponent('<%=height%>')
+        + '&site_id=' + encodeURIComponent('<%=siteId%>')
+        + '&expected_client_hash=' + encodeURIComponent('<%=expectedClientHash%>')
         + '&webbase=' + encodeURIComponent('<%=webBase%>');
 <%
     if (accountMode.length() > 0) {
@@ -152,11 +198,8 @@ function tryLaunchAgain() {
     return false;
 }
 
-function openLauncherSettings() {
-    var protocolUrl = 'nygames://launch?action=settings'
-        + '&launcher_version=' + encodeURIComponent('<%=launcherVersion%>')
-        + '&webbase=' + encodeURIComponent('<%=webBase%>');
-    window.location.href = protocolUrl;
+function goBackToLauncher() {
+    window.location.href = '<%=webBase%>/index.jsp';
     return false;
 }
 </script>
@@ -193,7 +236,8 @@ function openLauncherSettings() {
                     Size: <%=width%> x <%=height%>
                 </div>
                 <p style="margin-top:20px;"><a class="button button-secondary" href="#" onclick="return tryLaunchAgain()">Launch Again</a></p>
-                <p style="margin-top:12px;"><a class="button button-secondary" href="#" onclick="return openLauncherSettings()">Open Launcher Settings</a></p>
+                <p style="margin-top:12px;"><a class="button button-secondary" href="#" onclick="return goBackToLauncher()">Back To Launcher</a></p>
+                <p style="margin-top:10px; font-size:13px; line-height:1.45;">Use Back To Launcher if you want to pick a different game, room, or window size before trying again.</p>
             </div>
         </div>
     </div>

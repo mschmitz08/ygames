@@ -8,8 +8,7 @@ echo Copying launcher files to:
 echo %TARGET%
 echo.
 
-if exist "%TARGET%" rmdir /S /Q "%TARGET%"
-mkdir "%TARGET%"
+if not exist "%TARGET%" mkdir "%TARGET%"
 xcopy "%BASE%*" "%TARGET%\" /E /I /Y >nul
 
 reg add "HKCU\Software\Classes\nygames" /ve /d "URL:Y! Games Launcher Protocol" /f >nul
@@ -23,5 +22,6 @@ echo.
 echo The website can now hand off nygames:// links to this launcher.
 echo Future reinstalls will refresh this stable launcher folder:
 echo %TARGET%
+echo Existing site-specific bundles under %TARGET%\sites are preserved.
 echo.
 pause
