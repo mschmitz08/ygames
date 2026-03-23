@@ -178,12 +178,16 @@ public class PoolBall extends YIPoint implements IBall {
 	}
 
 	public void checkSlots(Slot[] slots) {
+		if (slots == null)
+			return;
 		if (pocketArea != null
 				&& pocketArea.containsPoint(
 						(int) PoolMath.yintToFloat(super.a), (int) PoolMath
 								.yintToFloat(super.b)) || !isMoving())
 			return;
 		for (Slot slot2 : slots) {
+			if (slot2 == null)
+				continue;
 			if (slot2.Qy(this)) {
 				Mv(slot2);
 				break;

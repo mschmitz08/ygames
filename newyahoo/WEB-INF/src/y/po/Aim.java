@@ -63,9 +63,24 @@ public class Aim extends YahooComponent {
 			}
 			for (int i = 0; i < path.size(); i++) {
 				YPoint h = path.elementAt(i);
-				yahooGraphics.drawOval((int) h.x - 8, (int) h.y - 8, 16, 16);
-				yahooGraphics.drawImage(a_f, (int) h.x - 10, (int) h.y - 10,
-						null);
+				int lineIndex = Math.min(i * 3, line.size() - 1);
+				YLine guideLine = lineIndex >= 0 ? line.elementAt(lineIndex) : null;
+				int markerSize = 16;
+				int imageSize = 20;
+				if (guideLine != null) {
+					double dx = guideLine.c - guideLine.a;
+					double dy = guideLine.d - guideLine.b;
+					double guideLength = Math.sqrt(dx * dx + dy * dy);
+					double shrink = Math.min(1.0D, guideLength / 220D);
+					markerSize = Math.max(8, (int) Math.round(16D - 8D * shrink));
+					imageSize = markerSize + 4;
+				}
+				int markerRadius = markerSize / 2;
+				int imageRadius = imageSize / 2;
+				yahooGraphics.drawOval((int) h.x - markerRadius, (int) h.y - markerRadius,
+						markerSize, markerSize);
+				yahooGraphics.drawImage(a_f, (int) h.x - imageRadius,
+						(int) h.y - imageRadius, imageSize, imageSize, null);
 			}
 		}
 	}

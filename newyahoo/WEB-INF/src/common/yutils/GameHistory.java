@@ -83,6 +83,7 @@ public class GameHistory extends IOBuffer {
 		players = null;
 		oldRating = null;
 		newRating = null;
+		result = null;
 	}
 
 	public void endWrite() {
@@ -107,7 +108,7 @@ public class GameHistory extends IOBuffer {
 	}
 
 	/**
-	 * @return array das pontuações posteriores ao jogo
+	 * @return array das pontuacoes posteriores ao jogo
 	 */
 	public int[] getNewRatings() {
 		return newRating;
@@ -121,7 +122,7 @@ public class GameHistory extends IOBuffer {
 	}
 
 	/**
-	 * @return array das pontuações anteriores ao jogo
+	 * @return array das pontuacoes anteriores ao jogo
 	 */
 	public int[] getOldRatings() {
 		return oldRating;
@@ -169,6 +170,7 @@ public class GameHistory extends IOBuffer {
 			players = new String[len];
 			oldRating = new int[len];
 			newRating = new int[len];
+			result = new int[len];
 			for (int i = 0; i < len; i++) {
 				players[i] = input.readUTF();
 				oldRating[i] = input.readInt();
@@ -215,10 +217,10 @@ public class GameHistory extends IOBuffer {
 		if (players != null) {
 			output.writeInt(players.length);
 			for (int i = 0; i < players.length; i++) {
-				output.writeUTF(players[i]);
-				output.writeInt(oldRating[i]);
-				output.writeInt(newRating[i]);
-				output.writeInt(result[i]);
+				output.writeUTF(players[i] != null ? players[i] : "");
+				output.writeInt(oldRating != null && i < oldRating.length ? oldRating[i] : 0);
+				output.writeInt(newRating != null && i < newRating.length ? newRating[i] : 0);
+				output.writeInt(result != null && i < result.length ? result[i] : 0);
 			}
 		}
 		else

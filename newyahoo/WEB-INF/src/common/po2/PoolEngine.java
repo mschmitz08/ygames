@@ -81,20 +81,21 @@ public class PoolEngine implements ClockHandler, TimerHandler {
 	 */
 	@Override
 	public void handleTimer(long l) {
-		if (active) {
-			if (iteratePlayArea() && handler != null)
-				handler.handleIterate();
-			if (iterateBallInSlot() && handler != null)
-				handler.handleIterate();
-			if (t++ == u) {
-				N();
-				t = 0;
-			}
-			boolean moving1 = movingExist();
-			if (!moving1 && moving && handler != null)
-				handler.handleStop();
-			moving = moving1;
+		if (!active || ballInPlayArea == null || ballInSlot == null || q == null
+				|| r == null || s == null || slots == null)
+			return;
+		if (iteratePlayArea() && handler != null)
+			handler.handleIterate();
+		if (iterateBallInSlot() && handler != null)
+			handler.handleIterate();
+		if (t++ == u) {
+			N();
+			t = 0;
 		}
+		boolean moving1 = movingExist();
+		if (!moving1 && moving && handler != null)
+			handler.handleStop();
+		moving = moving1;
 	}
 
 	/*
@@ -126,6 +127,8 @@ public class PoolEngine implements ClockHandler, TimerHandler {
 	}
 
 	public boolean iterateBallInSlot() {
+		if (s == null || q == null)
+			return false;
 		if (s.isEmpty())
 			return false;
 		Vector<IBall> vector = new Vector<IBall>();
@@ -163,6 +166,9 @@ public class PoolEngine implements ClockHandler, TimerHandler {
 	}
 
 	public synchronized boolean iteratePlayArea() {
+		if (ballInPlayArea == null || ballInSlot == null || slots == null
+				|| obstacles == null)
+			return false;
 		float minTimeToCollBall = 1;
 		float minTimeToObstacle = 1;
 		float tnTick = 1;
@@ -172,6 +178,8 @@ public class PoolEngine implements ClockHandler, TimerHandler {
 				addPhysicsLog(iterateAreaCounter + " tnTick=" + tnTick);
 			for (int l1 = 0; l1 < ballInPlayArea.size(); l1++) {
 				IBall currBall = ballInPlayArea.elementAt(l1);
+				if (currBall == null)
+					continue;
 				currBall.checkSlots(slots);
 				if (currBall.inSlot()) {
 					ballInPlayArea.removeElement(currBall);
@@ -187,6 +195,8 @@ public class PoolEngine implements ClockHandler, TimerHandler {
 			IBall cb1 = null;
 			for (int j2 = 0; j2 < ballInPlayArea.size(); j2++) {
 				IBall ballj2 = ballInPlayArea.elementAt(j2);
+				if (ballj2 == null)
+					continue;
 				float currTime1 = ballj2.timeToObstacle(obstacles);
 				if (currTime1 < minTimeToObstacle && currTime1 < tnTick
 						&& currTime1 >= 0) {
@@ -197,6 +207,8 @@ public class PoolEngine implements ClockHandler, TimerHandler {
 				}
 				for (int i3 = 0; i3 < j2; i3++) {
 					IBall balli3 = ballInPlayArea.elementAt(i3);
+					if (balli3 == null)
+						continue;
 					float currTime2 = ballj2.timeToBall(balli3);
 					if (logMessages && currTime2 < 1 && currTime2 > 0)
 						addPhysicsLog("ttc " + ballj2.getIndex() + " "
@@ -222,7 +234,8 @@ public class PoolEngine implements ClockHandler, TimerHandler {
 			if (logMessages && cE < 1)
 				addPhysicsLog(iterateAreaCounter + " cE=" + cE);
 			for (int j3 = 0; j3 < ballInPlayArea.size(); j3++)
-				if (ballInPlayArea.elementAt(j3).Kv(cE))
+				if (ballInPlayArea.elementAt(j3) != null
+						&& ballInPlayArea.elementAt(j3).Kv(cE))
 					flag = true;
 
 			if (currFlag && !flag) {

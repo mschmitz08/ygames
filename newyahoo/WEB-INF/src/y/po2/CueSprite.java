@@ -192,10 +192,10 @@ public class CueSprite extends YahooComponent implements YData {
 			doResetCue();
 			return;
 		}
-		double d1 = 0.0040000001899898052D;
+		double d1 = 0.0020000000949949026D;
 		if (i1 == 1006) // set para esquerda
 			d1 *= -1D;
-		if (event.modifiers == 1)
+		if ((event.modifiers & Event.SHIFT_MASK) != 0)
 			d1 *= 20D;
 		rotate(d1);
 	}
@@ -256,7 +256,7 @@ public class CueSprite extends YahooComponent implements YData {
 			doChangeDirection(event, key);
 		if (key == 1004 || key == 1005) // setas para baixo e para cima
 			doChangePower(event, key);
-		if (key == 32) // espaço
+		if (key == 32) // espaï¿½o
 			doStrike(event, key);
 		if (key == 27)
 			doResetCue();

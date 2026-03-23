@@ -59,6 +59,8 @@ public class PoolEngine implements ClockHandler, TimerHandler {
 	 * 
 	 */
 	public void close() {
+		active = false;
+		moving = false;
 		handler = null;
 		ball = null;
 		if (ballInPlayArea != null) {
@@ -123,20 +125,21 @@ public class PoolEngine implements ClockHandler, TimerHandler {
 	 */
 	@Override
 	public void handleTimer(long l) {
-		if (active) {
-			if (iteratePlayArea() && handler != null)
-				handler.handleIterate();
-			if (iterateBallInSlot() && handler != null)
-				handler.handleIterate();
-			if (t++ == u) {
-				N();
-				t = 0;
-			}
-			boolean moving1 = movingExist();
-			if (!moving1 && moving && handler != null)
-				handler.handleStop();
-			moving = moving1;
+		if (!active || ballInPlayArea == null || ballInSlot == null || q == null
+				|| r == null || s == null || slots == null)
+			return;
+		if (iteratePlayArea() && handler != null)
+			handler.handleIterate();
+		if (iterateBallInSlot() && handler != null)
+			handler.handleIterate();
+		if (t++ == u) {
+			N();
+			t = 0;
 		}
+		boolean moving1 = movingExist();
+		if (!moving1 && moving && handler != null)
+			handler.handleStop();
+		moving = moving1;
 	}
 
 	/*
@@ -168,6 +171,8 @@ public class PoolEngine implements ClockHandler, TimerHandler {
 	}
 
 	public boolean iterateBallInSlot() {
+		if (s == null || q == null)
+			return false;
 		if (s.isEmpty())
 			return false;
 		Vector<IBall> vector = new Vector<IBall>();
@@ -205,6 +210,9 @@ public class PoolEngine implements ClockHandler, TimerHandler {
 	}
 
 	public synchronized boolean iteratePlayArea() {
+		if (ballInPlayArea == null || ballInSlot == null || slots == null
+				|| obstacles == null)
+			return false;
 		int minTimeToCollBall = PoolMath.n_1;
 		int minTimeToObstacle = PoolMath.n_1;
 		int tnTick = PoolMath.n_1;
@@ -214,6 +222,8 @@ public class PoolEngine implements ClockHandler, TimerHandler {
 				addPhysicsLog(iterateAreaCounter + " tnTick=" + tnTick);
 			for (int l1 = 0; l1 < ballInPlayArea.size(); l1++) {
 				IBall currBall = ballInPlayArea.elementAt(l1);
+				if (currBall == null)
+					continue;
 				currBall.checkSlots(slots);
 				if (currBall.inSlot()) {
 					ballInPlayArea.removeElement(currBall);
@@ -229,6 +239,8 @@ public class PoolEngine implements ClockHandler, TimerHandler {
 			IBall cb1 = null;
 			for (int j2 = 0; j2 < ballInPlayArea.size(); j2++) {
 				IBall ballj2 = ballInPlayArea.elementAt(j2);
+				if (ballj2 == null)
+					continue;
 				int currTime1 = ballj2.timeToObstacle(obstacles);
 				if (currTime1 < minTimeToObstacle && currTime1 < tnTick
 						&& currTime1 >= 0) {
@@ -239,6 +251,8 @@ public class PoolEngine implements ClockHandler, TimerHandler {
 				}
 				for (int i3 = 0; i3 < j2; i3++) {
 					IBall balli3 = ballInPlayArea.elementAt(i3);
+					if (balli3 == null)
+						continue;
 					int currTime2 = ballj2.timeToBall(balli3);
 					if (logMessages && currTime2 < PoolMath.n_1
 							&& currTime2 > 0)
@@ -265,14 +279,19 @@ public class PoolEngine implements ClockHandler, TimerHandler {
 			if (logMessages && cE < PoolMath.n_1)
 				addPhysicsLog(iterateAreaCounter + " cE=" + cE);
 			for (int j3 = 0; j3 < ballInPlayArea.size(); j3++)
-				if (ballInPlayArea.elementAt(j3).Kv(cE))
+				if (ballInPlayArea.elementAt(j3) != null
+						&& ballInPlayArea.elementAt(j3).Kv(cE))
 					flag = true;
 
 			if (currFlag && !flag) {
 				for (int l3 = 0; l3 < ballInPlayArea.size() - 1; l3++) {
 					IBall currBall = ballInPlayArea.elementAt(l3);
+					if (currBall == null)
+						continue;
 					for (int i4 = l3 + 1; i4 < ballInPlayArea.size(); i4++) {
 						IBall _lcls124_8 = ballInPlayArea.elementAt(i4);
+						if (_lcls124_8 == null)
+							continue;
 						if (currBall.distance((YIPoint) _lcls124_8) < PoolMath
 								.intToYInt(20)) {
 							addPhysicsLog("shiftFromIntersect " + currBall);

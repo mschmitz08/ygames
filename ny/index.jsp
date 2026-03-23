@@ -83,7 +83,7 @@
     }
 %>
 <%
-    String launcherVersion = "0.7.3";
+    String launcherVersion = "0.7.4";
     String requestedGame = request.getParameter("game");
     if (!"checkers".equalsIgnoreCase(requestedGame))
         requestedGame = "pool";
