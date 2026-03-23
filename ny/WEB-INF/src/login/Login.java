@@ -12,16 +12,6 @@ import java.security.SecureRandom;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.Date;
-import java.util.Properties;
-
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
@@ -267,45 +257,8 @@ public class Login {
 		ids.assyncInsert(new Object[] { name, currentTimestamp, 0, 192, 0, hashPassword(password),
 				ycookie, email, ip1, cookieExpires, currentTimestamp, 1, null,
 				null, 1, 2, 1, 0, 0, 1});
-
-		Properties p = new Properties();
-		p.put("mail.smtp.host", "smtp.pro-cheats.com");
-
-		Session session = Session.getInstance(p, null);
-		MimeMessage msg = new MimeMessage(session);
-
-		String emailMsg = "\r\n";
-		emailMsg += "Click (or copy and paste in your web browser) the follow link for confirm your register\r\n";
-		emailMsg += "\r\n";
-		emailMsg += "http://www.pro-cheats.com/ny/register.jsp?action=confirm&username="
-				+ name + "&uid=" + ycookie + "\r\n";
-		emailMsg += "\r\n";
-
-		try {
-			// "de" e "para"!!
-			msg.setFrom(new InternetAddress("webmaster@pro-cheats.com"));
-			msg.setRecipient(Message.RecipientType.TO, new InternetAddress(
-					email));
-
-			// nao esqueca da data!
-			// ou ira 31/12/1969 !!!
-			msg.setSentDate(new Date());
-
-			msg.setSubject("Register Confirmation");
-
-			msg.setText(emailMsg);
-
-			// evniando mensagem (tentando)
-			Transport.send(msg);
-		}
-		catch (AddressException e) {
-			e.printStackTrace();
-			return 5;
-		}
-		catch (MessagingException e) {
-			e.printStackTrace();
-			return 6;
-		}
+		ids.assyncUpdate(new String[] {"name"}, new Object[] {name},
+				new String[] {"status"}, new Object[] {1});
 
 		return 0;
 	}
