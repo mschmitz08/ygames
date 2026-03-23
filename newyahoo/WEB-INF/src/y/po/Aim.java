@@ -20,7 +20,7 @@ import common.po.YPoint;
 
 public class Aim extends YahooComponent {
 	Color			a_e;
-	Image			a_f;
+	Color			a_h;
 	int				a_g;
 	PoolAreaHandler	table;
 	Vector<YLine>	line;
@@ -30,8 +30,8 @@ public class Aim extends YahooComponent {
 		super(j, k);
 		line = new Vector<YLine>();
 		path = new Vector<YPoint>();
-		a_e = new Color(232, 204, 73);
-		a_f = YahooPoolImageList.loadImages().q;
+		a_e = new Color(245, 245, 245);
+		a_h = new Color(245, 245, 245);
 		a_g = l;
 		table = _pcls29;
 		Sn(true);
@@ -51,6 +51,15 @@ public class Aim extends YahooComponent {
 		path.clear();
 	}
 
+	private void drawGhostRing(YahooGraphics yahooGraphics, int centerX,
+			int centerY, int radius) {
+		int diameter = radius * 2;
+		yahooGraphics.drawOval(centerX - radius, centerY - radius, diameter,
+				diameter);
+		yahooGraphics.drawOval(centerX - radius + 1, centerY - radius + 1,
+				diameter - 2, diameter - 2);
+	}
+
 	@Override
 	public synchronized void paint(YahooGraphics yahooGraphics) {
 		super.paint(yahooGraphics);
@@ -61,26 +70,10 @@ public class Aim extends YahooComponent {
 				yahooGraphics.drawLine(b.a, b.b, b.c, b.d);
 				yahooGraphics.drawLine(b.a + 1, b.b, b.c + 1, b.d);
 			}
+			yahooGraphics.setColor(a_h);
 			for (int i = 0; i < path.size(); i++) {
 				YPoint h = path.elementAt(i);
-				int lineIndex = Math.min(i * 3, line.size() - 1);
-				YLine guideLine = lineIndex >= 0 ? line.elementAt(lineIndex) : null;
-				int markerSize = 16;
-				int imageSize = 20;
-				if (guideLine != null) {
-					double dx = guideLine.c - guideLine.a;
-					double dy = guideLine.d - guideLine.b;
-					double guideLength = Math.sqrt(dx * dx + dy * dy);
-					double shrink = Math.min(1.0D, guideLength / 220D);
-					markerSize = Math.max(8, (int) Math.round(16D - 8D * shrink));
-					imageSize = markerSize + 4;
-				}
-				int markerRadius = markerSize / 2;
-				int imageRadius = imageSize / 2;
-				yahooGraphics.drawOval((int) h.x - markerRadius, (int) h.y - markerRadius,
-						markerSize, markerSize);
-				yahooGraphics.drawImage(a_f, (int) h.x - imageRadius,
-						(int) h.y - imageRadius, imageSize, imageSize, null);
+				drawGhostRing(yahooGraphics, (int) h.x, (int) h.y, 8);
 			}
 		}
 	}
