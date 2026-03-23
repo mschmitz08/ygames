@@ -80,7 +80,7 @@ class PoolTableCreatorDialog extends YahooDialog {
 		chkRated.setChecked(true);
 		chkTimer = new YahooCheckBox("");
 		i.addChildObject(chkTimer, 17, 0, 0, 1, 1, 0, 1);
-		chkForceForfeit = new YahooCheckBox("Forçar derrota");
+		chkForceForfeit = new YahooCheckBox("Forfeit");
 		chkForceForfeit.setChecked(true);
 		i.addChildObject(chkForceForfeit, 17, 0, 0, 2, 1, 0, 2);
 		j = new YahooControl(2);

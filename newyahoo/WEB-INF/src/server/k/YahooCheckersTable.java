@@ -524,7 +524,7 @@ public class YahooCheckersTable extends YahooTable implements BoardGameHandler,
 			if (isHost(id))
 				doRated(rated);
 			else
-				room.alert(id, "Você não é o host da mesa!");
+				room.alert(id, "You are not the host of the table!");
 			break;
 		case 'L': // set time
 			boolean useTimePerMove = input.readBoolean();
@@ -533,7 +533,7 @@ public class YahooCheckersTable extends YahooTable implements BoardGameHandler,
 			if (isHost(id))
 				doChangeTime(useTimePerMove, initialTime, incrementTime);
 			else
-				room.alert(id, "Você não é o host da mesa!");
+				room.alert(id, "You are not the host of the table!");
 			break;
 		case 'M': // move
 			Move move = new Move();

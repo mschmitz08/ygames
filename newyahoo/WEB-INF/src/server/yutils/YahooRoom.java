@@ -632,7 +632,7 @@ public abstract class YahooRoom {
 				return true;
 			}
 		DebugLog.log("YahooRoom.doMakeTable failed no free table");
-		alert(id, "O número máximo de mesas já foi atingido");
+		alert(id, "The maximum number of tables has already been reached");
 		return false;
 	}
 

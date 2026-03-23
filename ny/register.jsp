@@ -27,7 +27,7 @@
 				switch(result){
 				case 0:
 %>
-  Foi enviado um e-mail de confirmação para
+  A confirmation email was sent to
   <%out.print(email);%>
   .<br>
   <br>
@@ -35,23 +35,23 @@
 <%
 					return;		
 				case 1:
-					msgError = "Login inválido";
+					msgError = "Invalid username";
 					break;
 				case 2:
-					msgError = "Senha inválida";
+					msgError = "Invalid password";
 					break;
 				case 3:
-					msgError = "e-mail inválido";
+					msgError = "Invalid email";
 					break;
 				case 4:
-					msgError = "Login indisponível";
+					msgError = "Username unavailable";
 					break;
 				default:
-					msgError = "Erro interno do servidor";
+					msgError = "Internal server error";
 				}
 			}
 			else{
-				msgError = "Senhas não conferem";
+				msgError = "Passwords do not match";
 				result = 5;
 			}
 		}
@@ -61,7 +61,7 @@
 			switch(result){
 			case 0:
 %>
-  Email verificado com sucesso.<br>
+  Email verified successfully.<br>
   <br>
   <a href="index.jsp">Home</a>
 <%

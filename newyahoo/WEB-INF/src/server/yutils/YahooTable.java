@@ -250,7 +250,7 @@ public abstract class YahooTable implements GameHandler {
 			return false;
 		}
 		booteds.put(name, name);
-		doTableLog(name + " foi expulso da mesa por " + id.getName());
+		doTableLog(name + " was booted from the table by " + id.getName());
 		room.doBoot(id, number, name);
 		return true;
 	}
@@ -686,7 +686,7 @@ public abstract class YahooTable implements GameHandler {
 		if (wonTurn == null)
 			return;
 		if (System.currentTimeMillis() - currGameLogEntry.getTime() < 30000) {
-			doTableLog("O tempo deste jogo foi muito curto para a pontuação");
+			doTableLog("This game was too short for rating");
 			return;
 		}
 
@@ -791,12 +791,12 @@ public abstract class YahooTable implements GameHandler {
 		if (privacy == 2 && !name.equals(host) && !inviteds.containsKey(name)) {
 			room
 			.alert(id,
-			"Você não pode entrar em uma mesa no qual não foi convidado.");
+			"You cannot join a table you were not invited to.");
 			return false;
 		}
 		if (booteds.containsKey(id.getName())) {
 			room.alert(id,
-			"Você não pode entrar em uma mesa na qual foi expulso!");
+			"You cannot join a table you were booted from!");
 			return false;
 		}
 

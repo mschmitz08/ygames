@@ -28,22 +28,22 @@
 				msgError = "Login inválido";
 				break;
 			case 2:
-				msgError = "Senha inválida";
+				msgError = "Invalid password";
 				break;
 			case 3:
-				msgError = "Login não existe";
+				msgError = "Login does not exist";
 				break;
 			case 4:
-				msgError = "Senha incorreta";
+				msgError = "Incorrect password";
 				break;
 			case 5:
-				msgError = "Confirmação por e-mail pendente";
+				msgError = "Email confirmation pending";
 				break;
 			case 6:
-				msgError = "Login desativado";
+				msgError = "Login disabled";
 				break;
 			default:
-				msgError = "Erro interno do servidor";
+				msgError = "Internal server error";
 			}
 		}
 		else if(action.equals("logout")){
