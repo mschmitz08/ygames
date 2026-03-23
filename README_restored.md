@@ -123,14 +123,12 @@ SOURCE <INSTALL_PATH>/ny-master/database_creation.sql;
 
 ### 6. Fix the `ids` Table for MySQL 8
 
-The stock SQL uses old zero-date timestamp defaults that MySQL 8 rejects.
+Older copies of this project used zero-date timestamp defaults that MySQL 8 rejects.
 
-If `database_creation.sql` fails on the `ids` table, recreate or alter it so these columns use `NULL DEFAULT NULL` instead of `0000-00-00 00:00:00`:
+The checked-in `database_creation.sql` has already been updated for MySQL 8 compatibility. If you are importing an older copy of the schema, fix these columns:
 
 - `cookie_expires`
 - `last_access`
-
-This is a required compatibility fix.
 
 ### 7. Fix the `ids.ip` Column Length
 
@@ -178,6 +176,12 @@ To replace an existing Pool room list with the larger historical Yahoo Pool set,
 
 ```sql
 SOURCE <INSTALL_PATH>/ygames2/sql/replace_pool_rooms_historical.sql;
+```
+
+To replace an existing Checkers room list with the recovered Yahoo Checkers set, run:
+
+```sql
+SOURCE <INSTALL_PATH>/ygames2/sql/replace_checkers_rooms_historical.sql;
 ```
 
 Known working room names:
