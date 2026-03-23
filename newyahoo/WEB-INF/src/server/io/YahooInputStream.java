@@ -10,6 +10,7 @@ import java.io.InputStream;
 
 import common.yutils.Translater;
 import common.yutils.YahooUtils;
+import core.DebugLog;
 
 // Referenced classes of package y.po:
 // _cls34, _cls117, _cls41, _cls102
@@ -109,8 +110,10 @@ public class YahooInputStream extends InputStream {
 	}
 
 	public boolean isValidIntCommand(int index) throws IOException {
-		if (!isExpectedPacketLength())
+		if (!isExpectedPacketLength()) {
+			logUnexpectedPacketLength("int", index, 9);
 			throw new IOException("Unexepected packet length");
+		}
 		if (c - p1 < 9)
 			return false;
 		if (a[p1] != 101)
@@ -128,8 +131,10 @@ public class YahooInputStream extends InputStream {
 	}
 
 	public boolean isValidShortCommand(int index) throws IOException {
-		if (!isExpectedPacketLength())
+		if (!isExpectedPacketLength()) {
+			logUnexpectedPacketLength("short", index, 7);
 			throw new IOException("Unexepected packet length");
+		}
 		if (c - p1 < 7)
 			return false;
 		if (a[p1] != 100)
@@ -180,6 +185,33 @@ public class YahooInputStream extends InputStream {
 		int i = YahooUtils.readInt(a, p1);
 		p1 += 4;
 		return i;
+	}
+
+	private void logUnexpectedPacketLength(String type, int expectedIndex,
+			int minimumHeaderBytes) {
+		try {
+			int remaining = pend - p1;
+			int available = c - p1;
+			int commandByte = available > 0 ? a[p1] & 0xff : -1;
+			int packetIndex = available >= 5 ? YahooUtils.readInt(a, p1 + 1) : -1;
+			int declaredLength = -1;
+			if ("int".equals(type) && available >= minimumHeaderBytes)
+				declaredLength = YahooUtils.readInt(a, p1 + 5);
+			else if ("short".equals(type) && available >= minimumHeaderBytes)
+				declaredLength = YahooUtils.readShort(a, p1 + 5);
+			DebugLog.log("YahooInputStream unexpected packet length type=" + type
+					+ " expectedIndex=" + expectedIndex + " commandByte="
+					+ commandByte + " commandChar="
+					+ (commandByte >= 32 && commandByte <= 126 ? String
+							.valueOf((char) commandByte) : "?") + " packetIndex="
+					+ packetIndex + " declaredLength=" + declaredLength + " p1="
+					+ p1 + " pend=" + pend + " c=" + c + " remaining="
+					+ remaining + " available=" + available);
+		}
+		catch (Throwable t) {
+			DebugLog.log("YahooInputStream unexpected packet length logging failed",
+					t);
+		}
 	}
 
 	public int readIntLength() throws IOException {
