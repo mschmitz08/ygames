@@ -31,8 +31,8 @@ public class Aim extends YahooComponent {
 		super(j, k);
 		line = new Vector<YLine>();
 		path = new Vector<YPoint>();
-		a_e = new Color(214, 224, 170);
-		a_h = new Color(166, 185, 104);
+		a_e = new Color(196, 204, 132);
+		a_h = new Color(150, 168, 92);
 		a_f = YahooPoolImageList.loadImages().q;
 		a_g = l;
 		table = _pcls29;
