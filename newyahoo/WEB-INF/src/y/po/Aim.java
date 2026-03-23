@@ -21,6 +21,7 @@ import common.po.YPoint;
 public class Aim extends YahooComponent {
 	Color			a_e;
 	Color			a_h;
+	Image			a_f;
 	int				a_g;
 	PoolAreaHandler	table;
 	Vector<YLine>	line;
@@ -30,8 +31,9 @@ public class Aim extends YahooComponent {
 		super(j, k);
 		line = new Vector<YLine>();
 		path = new Vector<YPoint>();
-		a_e = new Color(245, 245, 245);
-		a_h = new Color(245, 245, 245);
+		a_e = new Color(214, 224, 170);
+		a_h = new Color(166, 185, 104);
+		a_f = YahooPoolImageList.loadImages().q;
 		a_g = l;
 		table = _pcls29;
 		Sn(true);
@@ -51,29 +53,22 @@ public class Aim extends YahooComponent {
 		path.clear();
 	}
 
-	private void drawGhostRing(YahooGraphics yahooGraphics, int centerX,
-			int centerY, int radius) {
-		int diameter = radius * 2;
-		yahooGraphics.drawOval(centerX - radius, centerY - radius, diameter,
-				diameter);
-		yahooGraphics.drawOval(centerX - radius + 1, centerY - radius + 1,
-				diameter - 2, diameter - 2);
-	}
-
 	@Override
 	public synchronized void paint(YahooGraphics yahooGraphics) {
 		super.paint(yahooGraphics);
 		if (table.cueActive()) {
-			yahooGraphics.setColor(a_e);
 			for (int i = 0; i < line.size(); i++) {
 				YLine b = line.elementAt(i);
+				if (i % 3 == 0)
+					yahooGraphics.setColor(a_e);
+				else
+					yahooGraphics.setColor(a_h);
 				yahooGraphics.drawLine(b.a, b.b, b.c, b.d);
 				yahooGraphics.drawLine(b.a + 1, b.b, b.c + 1, b.d);
 			}
-			yahooGraphics.setColor(a_h);
 			for (int i = 0; i < path.size(); i++) {
 				YPoint h = path.elementAt(i);
-				drawGhostRing(yahooGraphics, (int) h.x, (int) h.y, 8);
+				yahooGraphics.drawImage(a_f, (int) h.x - 10, (int) h.y - 10, null);
 			}
 		}
 	}

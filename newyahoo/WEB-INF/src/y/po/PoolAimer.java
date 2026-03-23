@@ -495,9 +495,13 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 			marker = new YPoint(contactX, contactY);
 			cueLine = new YLine((int) Math.rint(cueX), (int) Math.rint(cueY),
 					(int) Math.rint(contactX), (int) Math.rint(contactY));
+			float distanceScale = 1.0F - Math.min(0.6F, hitDistance / 220.0F * 0.6F);
+			float targetPreviewLength = 70.0F * distanceScale;
+			float deflectionPreviewLength = 55.0F * distanceScale;
 
 			YPoint targetStart = new YPoint(hitBallX, hitBallY);
-			YPoint targetEnd = extendDistance(targetStart, new YVector(targetTravelX, targetTravelY), 70.0F);
+			YPoint targetEnd = extendDistance(targetStart, new YVector(targetTravelX, targetTravelY),
+					targetPreviewLength);
 			targetLine = new YLine();
 			targetLine.setCoords(targetStart, targetEnd);
 
@@ -509,7 +513,8 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 				cueDeflectX /= cueDeflectLength;
 				cueDeflectY /= cueDeflectLength;
 				YPoint deflectStart = new YPoint(contactX, contactY);
-				YPoint deflectEnd = extendDistance(deflectStart, new YVector(cueDeflectX, cueDeflectY), 55.0F);
+				YPoint deflectEnd = extendDistance(deflectStart, new YVector(cueDeflectX, cueDeflectY),
+						deflectionPreviewLength);
 				deflectionLine = new YLine();
 				deflectionLine.setCoords(deflectStart, deflectEnd);
 			}
