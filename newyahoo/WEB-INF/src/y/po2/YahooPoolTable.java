@@ -679,7 +679,6 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 			Xc(1);
 			logState("notifyTStat.");
 			pool.doNotifyTStat(J, false);
-			logMessage("***moving off", Color.green);
 			break;
 
 		case -105: // 97: change time
@@ -856,7 +855,6 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 			YPoint englishDist = new YPoint(poolArea.english.getPos());
 			YPoint firstColl = new YPoint(poolAimer.getFirstColl());
 			int collBall = poolAimer.getIndex();
-			logMessage("***moving on", Color.green);
 			boolean flag = pool.Bj(selectedBall);
 			if (flag) {
 				YVector u = new YVector((YPoint) selectedBall, cueDist);
@@ -907,7 +905,6 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 
 	public void updatePB(int i1, float j1, float k1) {
 		if (isMyTurn() && pool.isRunning() && pool.getCurrentState() == 0) {
-			logMessage("***ball index=" + i1, Color.blue);
 			send('\uFF9A', i1, j1, k1);
 		}
 	}

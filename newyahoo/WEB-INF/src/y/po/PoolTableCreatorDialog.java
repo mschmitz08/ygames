@@ -55,9 +55,7 @@ class PoolTableCreatorDialog extends YahooDialog {
 				&& !category.equals("social"));
 		addChildObject(chkTraining, 17, 0, 0, 2, 1, 0, 0);
 		chkTraining.setChecked(false);
-		chkEightBallGame = new YahooCheckBox(_pcls97.getApplet().lookupString(
-				0x66501401), chkTraining, category != null
-				&& !category.equals("social"));
+		chkEightBallGame = new YahooCheckBox("8-Ball", chkTraining, category != null && !category.equals("social"));
 		addChildObject(chkEightBallGame, 17, 0, 0, 2, 1, 0, 1);
 		chkEightBallGame.setChecked(true);
 		chkNineBallGame = new YahooCheckBox(_pcls97.getApplet().lookupString(
@@ -68,7 +66,7 @@ class PoolTableCreatorDialog extends YahooDialog {
 				&& _pcls97.getApplet().lookupString(0x6650179d).equals("y"))
 			addChildObject(chkNineBallGame, 17, 0, 0, 2, 1, 0, 2);
 		chkNineBallGame.setChecked(false);
-		chkAutomat = new YahooCheckBox("Automat.", null, category != null
+		chkAutomat = new YahooCheckBox("Automatic", null, category != null
 				&& !category.equals("social"));
 		chkAutomat.setChecked(false);
 		h = new YahooControl(2);
@@ -80,7 +78,7 @@ class PoolTableCreatorDialog extends YahooDialog {
 		chkRated.setChecked(true);
 		chkTimer = new YahooCheckBox("");
 		i.addChildObject(chkTimer, 17, 0, 0, 1, 1, 0, 1);
-		chkForceForfeit = new YahooCheckBox("Forfeit");
+		chkForceForfeit = new YahooCheckBox("Allow Force Forfeit");
 		chkForceForfeit.setChecked(true);
 		i.addChildObject(chkForceForfeit, 17, 0, 0, 2, 1, 0, 2);
 		j = new YahooControl(2);
@@ -91,8 +89,7 @@ class PoolTableCreatorDialog extends YahooDialog {
 		_lcls79.addChildObject(new YahooLabel(_pcls97.getApplet().lookupString(
 				0x6650140a)), 13, 0, 0, 1, 1, 2, 0);
 		txtTimer.setEnabled(true);
-		j.addChildObject(new YahooLabel(_pcls97.getApplet().lookupString(
-				0x665013fd)), 0);
+		j.addChildObject(new YahooLabel("Shot timer"), 0);
 		j.addChildObject(_lcls79, 1);
 		j.qo(0);
 		i.addChildObject(j, 17, 0, 0, 1, 1, 1, 1);
