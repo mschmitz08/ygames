@@ -758,7 +758,9 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 				myAvatar = avatar;
 				notifyFlagsAvatar();
 			}
-			idList.putAvatarSquare(avatar, id.idListItem, 0);
+			if (!(this instanceof CustomYahooGamesApplet)
+					|| !(((CustomYahooGamesApplet) this).ratingmilestones || ((CustomYahooGamesApplet) this).isladder))
+				idList.putAvatarSquare(avatar, id.idListItem, 0);
 		}
 	}
 

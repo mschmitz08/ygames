@@ -254,7 +254,7 @@ public class Login {
 		
 		Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
 		
-		ids.assyncInsert(new Object[] { name, currentTimestamp, 0, 192, 0, hashPassword(password),
+		ids.assyncInsert(new Object[] { name, currentTimestamp, 0, 0, 0, hashPassword(password),
 				ycookie, email, ip1, cookieExpires, currentTimestamp, 1, null,
 				null, 1, 2, 1, 0, 0, 1});
 		ids.assyncUpdate(new String[] {"name"}, new Object[] {name},
@@ -276,7 +276,7 @@ public class Login {
 				* 60 * 60 * 1000);
 		Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
 		String sessionCookie = buildSessionCookie(password);
-		ids.assyncInsert(new Object[] { name, currentTimestamp, 1, 192, 0,
+		ids.assyncInsert(new Object[] { name, currentTimestamp, 1, 0, 0,
 				hashPassword(password), sessionCookie, "", ip1, cookieExpires,
 				currentTimestamp, 1, null, null, 1, 2, 1, 0, 0, 1 });
 		if (ycookie != null && ycookie.length > 0)

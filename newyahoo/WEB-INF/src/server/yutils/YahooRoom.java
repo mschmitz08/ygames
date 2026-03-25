@@ -141,6 +141,8 @@ public abstract class YahooRoom {
 			}
 
 			YahooConnectionId[] sits = tables[i].getSits();
+			if (sits == null)
+				continue;
 			for (int j = 0; j < sits.length; j++) {
 				if (sits[j] == null)
 					continue;

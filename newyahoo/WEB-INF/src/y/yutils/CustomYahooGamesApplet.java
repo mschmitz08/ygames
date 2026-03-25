@@ -54,9 +54,17 @@ public class CustomYahooGamesApplet extends AbstractYahooGamesApplet implements
 	 * 
 	 */
 	private static final long	serialVersionUID	= -4559604370901277417L;
-	static Color				ratingColor[]		= { new Color(200, 48, 48),
-			new Color(248, 162, 96), new Color(152, 100, 200),
-			new Color(96, 152, 200), new Color(96, 152, 96) };
+	static final Color			RATING_RED		= new Color(200, 48, 48);
+	static final Color			RATING_ORANGE	= new Color(248, 162, 96);
+	static final Color			RATING_PURPLE	= new Color(152, 100, 200);
+	static final Color			RATING_BLUE		= new Color(96, 152, 200);
+	static final Color			RATING_GRAY		= new Color(160, 160, 160);
+	static final Color			RATING_GREEN	= new Color(96, 152, 96);
+	static Color				ratingColor[]		= { RATING_RED,
+			RATING_ORANGE, RATING_PURPLE, RATING_BLUE, RATING_GRAY,
+			RATING_GREEN };
+	static final int[]			DEFAULT_RATING_MILESTONES = { 2100, 1800, 1500,
+			1300, 1200 };
 	public Image				cyga_a;
 	public Image				cyga_b;
 	public Image				voiceImage;
@@ -85,6 +93,22 @@ public class CustomYahooGamesApplet extends AbstractYahooGamesApplet implements
 		j = new YahooComponent();
 		component = null;
 		last_tablead_time = 0L;
+	}
+
+	Color getRatingColor(int rating) {
+		if (rating == YahooUtils.provisional)
+			return RATING_GRAY;
+		if (rating >= 2100)
+			return RATING_RED;
+		if (rating >= 1800)
+			return RATING_ORANGE;
+		if (rating >= 1500)
+			return RATING_PURPLE;
+		if (rating >= 1300)
+			return RATING_BLUE;
+		if (rating >= 1200)
+			return RATING_GRAY;
+		return RATING_GREEN;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -240,16 +264,7 @@ public class CustomYahooGamesApplet extends AbstractYahooGamesApplet implements
 		if (!closed && (ratingmilestones || isladder)) {
 			id.rating = rating;
 			if (ratingmilestones) {
-				int j1;
-				if (rating < 0)
-					j1 = ratingColor.length - 1;
-				else
-					for (j1 = 0; j1 < cyga_r.length; j1++)
-						if (rating >= cyga_r[j1])
-							break;
-
-				Color color = rating != YahooUtils.provisional ? ratingColor[j1]
-						: Color.gray;
+				Color color = getRatingColor(rating);
 				idList.putRatingSquare(color, id.idListItem, 0);
 				super.inviteList.putRatingSquare(color, id.inviteListItem, 0);
 				tableList.rx(id, color);
@@ -427,7 +442,7 @@ public class CustomYahooGamesApplet extends AbstractYahooGamesApplet implements
 			catch (NumberFormatException _ex) {
 			}
 		lblConnectionStatus = new YahooLabel();
-		ratingmilestones = getParameter("ratingmilestones") != null;
+		ratingmilestones = true;
 		isladder = getParameter("isladder") != null;
 		super.initProperties();
 		provisional = lookupString(0x665000f4);// provisional
@@ -472,23 +487,13 @@ public class CustomYahooGamesApplet extends AbstractYahooGamesApplet implements
 			YahooPannel _lcls38 = new YahooPannel(lookupString(0x66500128),
 					_lcls79_1, YahooTable.c, Color.white);
 			_lcls79_1.setBackColor(Color.white);
-			StringTokenizer stringtokenizer = new StringTokenizer(
-					getParameter("ratingmilestones"), "|");
-			cyga_r = new int[stringtokenizer.countTokens()];
-			for (int i1 = 0; i1 < ratingColor.length; i1++) {
+			cyga_r = new int[DEFAULT_RATING_MILESTONES.length];
+			for (int i1 = 0; i1 < DEFAULT_RATING_MILESTONES.length; i1++) {
+				cyga_r[i1] = DEFAULT_RATING_MILESTONES[i1];
 				Object obj = new YahooComponent(8, 8);
 				((YahooComponent) obj).setBackColor(ratingColor[i1]);
 				_lcls79_1.addChildObject(((YahooComponent) obj), 13, 0, 0, 1,
 						1, 0, i1, 0, 4, 0, 0);
-				try {
-					cyga_r[i1] = Integer.parseInt(stringtokenizer.nextToken());
-				}
-				catch (NoSuchElementException _ex) {
-					_ex.printStackTrace();
-				}
-				catch (NumberFormatException _ex) {
-					_ex.printStackTrace();
-				}
 				if (i1 == 0)
 					obj = new YahooLabel(cyga_r[i1] + "+");
 				else
@@ -499,10 +504,10 @@ public class CustomYahooGamesApplet extends AbstractYahooGamesApplet implements
 			}
 
 			Object obj1 = new YahooImage(null, 8, 8);
-			((YahooComponent) obj1).setBackColor(Color.gray);
+			((YahooComponent) obj1).setBackColor(RATING_GREEN);
 			_lcls79_1.addChildObject(((YahooComponent) obj1), 13, 0, 0, 1, 1,
 					0, ratingColor.length, 0, 4, 0, 0);
-			obj1 = new YahooLabel(lookupString(0x665000f4));
+			obj1 = new YahooLabel("<1200");
 			_lcls79_1.addChildObject(((YahooComponent) obj1), 17, 0, 0, 1, 1,
 					1, ratingColor.length);
 			if (getParameter("small") == null && !isSmallWindows())

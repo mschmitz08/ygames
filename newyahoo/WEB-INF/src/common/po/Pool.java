@@ -663,7 +663,7 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 		type1 = 0;
 		m_aimStateInit = true;
 		selectedSlotIndex = -1;
-		int i1 = 16;
+		int i1 = setup.getBallCount();
 		for (int j1 = 0; j1 < i1; j1++) {
 			PoolSetup poolSetup = (PoolSetup) setup;
 			YIPoint p = poolSetup.getInitPos(j1);

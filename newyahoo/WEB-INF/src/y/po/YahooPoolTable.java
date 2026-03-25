@@ -19,7 +19,6 @@ import y.utils.TimerEntry;
 import y.utils.TimerHandler;
 import y.ycontrols.SaveCancel;
 import y.ycontrols.TableControlContainer;
-import y.ydialogs.AllStarDialog;
 import y.yutils.YahooGamesTable;
 
 import common.io.YData;
@@ -722,11 +721,6 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		}
 	}
 
-	public void pd() {
-		new AllStarDialog(getApplet(), poolArea.getContainer(), getApplet()
-				.lookupString(0x6650169c));
-	}
-
 	private void playPoolSound() {
 		if (!soundEnabled())
 			return;
@@ -826,14 +820,6 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 
 	@Override
 	public void sit(int i1) {
-		if (pool.getSetup() instanceof NineBallSetup) {
-			if (getApplet().idPropertyContains(8L)
-					|| ((YahooPool) getApplet()).yp_d)
-				super.sit(i1);
-			else
-				pd();
-			return;
-		}
 		super.sit(i1);
 		return;
 	}

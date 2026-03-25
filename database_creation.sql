@@ -65,7 +65,7 @@ CREATE TABLE `ids` (
   `name` varchar(32) NOT NULL DEFAULT '',
   `creation_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `status` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `flags` bigint(20) unsigned NOT NULL DEFAULT '192',
+  `flags` bigint(20) unsigned NOT NULL DEFAULT '0',
   `more_flags` int(10) unsigned NOT NULL DEFAULT '0',
   `password` varchar(255) NOT NULL,
   `ycookie` varchar(72) NOT NULL DEFAULT '0',

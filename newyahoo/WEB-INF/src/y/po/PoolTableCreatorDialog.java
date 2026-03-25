@@ -14,7 +14,6 @@ import y.controls.YahooNumericTextBox;
 import y.dialogs.YahooDialog;
 import y.ycontrols.TableCreator;
 import y.ycontrols.TableDescription;
-import y.ydialogs.AllStarDialog;
 
 // Referenced classes of package y.po:
 // _cls27, _cls56, _cls97, _cls3,
@@ -61,9 +60,7 @@ class PoolTableCreatorDialog extends YahooDialog {
 		chkNineBallGame = new YahooCheckBox(_pcls97.getApplet().lookupString(
 				0x66501694), chkTraining, category != null
 				&& !category.equals("social"));
-		if ((((YahooPool) _pcls97.getApplet()).show_9ball_option || ((YahooPool) _pcls97
-				.getApplet()).yp_d)
-				&& _pcls97.getApplet().lookupString(0x6650179d).equals("y"))
+		if (_pcls97.getApplet().lookupString(0x6650179d).equals("y"))
 			addChildObject(chkNineBallGame, 17, 0, 0, 2, 1, 0, 2);
 		chkNineBallGame.setChecked(false);
 		chkAutomat = new YahooCheckBox("Automatic", null, category != null
@@ -131,13 +128,6 @@ class PoolTableCreatorDialog extends YahooDialog {
 				flag = true;
 				if (chkTimer.isChecked())
 					tableCreator.addProperty("timer", txtTimer.getText());
-			}
-			if (flag && !tableCreator.getApplet().idPropertyContains(8L)
-					&& !((YahooPool) tableCreator.getApplet()).yp_d) {
-				close();
-				new AllStarDialog(tableCreator.getApplet(), ptc_n, tableCreator
-						.getApplet().lookupString(0x6650169c));
-				return true;
 			}
 			if (ptc_o != null)
 				ptc_o.Qa(tableCreator);

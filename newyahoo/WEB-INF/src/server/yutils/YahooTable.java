@@ -886,36 +886,49 @@ public abstract class YahooTable implements GameHandler {
 			Hashtable<String, String> hashtable) {
 		if (!free)
 			return false;
-		free = false;
-		properties = hashtable;
-		game = createGame();
-		game.initialize(hashtable, this, hashtable.containsKey("training")
-				|| hashtable.containsKey("automat") ? 1 : 2);
-		game.setup();
-		int count = getSitCount();
-		sits = new YahooConnectionId[count];
-		sitTime = new long[count];
-		sitState = new boolean[count];
-		for (int i = 0; i < count; i++) {
-			sits[i] = null;
-			sitTime[i] = 0;
-			sitState[i] = false;
-		}
-		if (host == null)
-			return true;
-
-		SynchronizedVector<YahooConnectionId> roomIds = room.getIds();
-		roomIds.readLock();
 		try {
-			for (YahooConnectionId id1 : roomIds)
-				room.makeTable(id1, number, hashtable, false);
+			properties = hashtable;
+			game = createGame();
+			game.initialize(hashtable, this, hashtable.containsKey("training")
+					|| hashtable.containsKey("automat") ? 1 : 2);
+			game.setup();
+			int count = getSitCount();
+			sits = new YahooConnectionId[count];
+			sitTime = new long[count];
+			sitState = new boolean[count];
+			for (int i = 0; i < count; i++) {
+				sits[i] = null;
+				sitTime[i] = 0;
+				sitState[i] = false;
+			}
+			free = false;
+			if (host == null)
+				return true;
+			SynchronizedVector<YahooConnectionId> roomIds = room.getIds();
+			roomIds.readLock();
+			try {
+				for (YahooConnectionId id1 : roomIds)
+					room.makeTable(id1, number, hashtable, false);
+			}
+			finally {
+				roomIds.readUnlock();
+			}
+			joinId(host);
+			return true;
 		}
-		finally {
-			roomIds.readUnlock();
+		catch (Throwable t) {
+			free = true;
+			properties = null;
+			sits = null;
+			sitTime = null;
+			sitState = null;
+			if (game != null) {
+				game.close();
+				game = null;
+			}
+			t.printStackTrace();
+			return false;
 		}
-
-		joinId(host);
-		return true;
 	}
 
 	public void parseData(YahooConnectionId id, int byte0, DataInputStream input)

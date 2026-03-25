@@ -286,9 +286,9 @@ public class YahooPoolTable extends YahooTable implements PoolHandler {
 	@Override
 	public int getGameId() {
 		if (properties != null) {
-			if (properties.containsKey("eightBall"))
+			if (properties.containsKey("eightBall") || properties.containsKey("eightBallGame"))
 				return 0;
-			else if (properties.containsKey("nineBall"))
+			else if (properties.containsKey("nineBall") || properties.containsKey("nineBallGame"))
 				return 1;
 			else if (properties.containsKey("training"))
 				return 2;
