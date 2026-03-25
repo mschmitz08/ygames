@@ -48,9 +48,9 @@ cd /d "%NEWHYAHOO_ROOT%"
 jar cf client.jar -C WEB-INF\classes . -C . yog
 if errorlevel 1 exit /b %errorlevel%
 
-for /f %%V in ('powershell -NoProfile -Command "$text = Get-Content '%REPO_ROOT%\ny\index.jsp' -Raw; if ($text -match 'String launcherVersion = ""([0-9.]+)""') { $matches[1] }"') do set "LAUNCHER_VERSION=%%V"
+for /f %%V in ('powershell -NoProfile -Command "$value = (Get-Content '%REPO_ROOT%\ny\downloads\ygames_launcher_windows\launcher_version.txt' -Raw).Trim(); if ($value) { $value }"') do set "LAUNCHER_VERSION=%%V"
 if not defined LAUNCHER_VERSION (
-    echo Could not determine launcher version from "%REPO_ROOT%\ny\index.jsp".
+    echo Could not determine launcher version from "%REPO_ROOT%\ny\downloads\ygames_launcher_windows\launcher_version.txt".
     exit /b 1
 )
 echo Launcher version is %LAUNCHER_VERSION%

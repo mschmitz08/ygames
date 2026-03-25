@@ -47,7 +47,7 @@ port = "11998"
 accountMode = ""
 launcherVersion = ""
 webBase = "http://127.0.0.1:8080/ny"
-installedLauncherVersion = "0.7.4"
+installedLauncherVersion = ""
 appletWidth = "1400"
 appletHeight = "900"
 openSettings = False
@@ -57,6 +57,8 @@ expectedClientHash = ""
 stableInstallDir = shell.ExpandEnvironmentStrings("%LocalAppData%\YGamesLauncher")
 siteId = ""
 siteRootDir = baseDir
+
+installedLauncherVersion = ReadLauncherVersion()
 
 ParseArguments
 ConfigureSitePaths
@@ -75,11 +77,16 @@ End If
 If expectedClientHash <> "" Then
     Dim localClientHash
     localClientHash = GetFileSha256(fso.BuildPath(appDir, "client.jar"))
-    If siteId <> "" And LCase(localClientHash) <> LCase(expectedClientHash) Then
+    If LCase(localClientHash) <> LCase(expectedClientHash) Then
         Dim templateClientHash
         templateClientHash = GetFileSha256(fso.BuildPath(templateAppDir, "client.jar"))
         If templateClientHash <> "" And LCase(templateClientHash) = LCase(expectedClientHash) Then
             CopyFolderContents templateAppDir, appDir
+            localClientHash = GetFileSha256(fso.BuildPath(appDir, "client.jar"))
+        End If
+    End If
+    If localClientHash = "" Or LCase(localClientHash) <> LCase(expectedClientHash) Then
+        If TryRefreshClientJarFromWeb(expectedClientHash) Then
             localClientHash = GetFileSha256(fso.BuildPath(appDir, "client.jar"))
         End If
     End If
@@ -477,6 +484,143 @@ Function GetFileSha256(filePath)
     GetFileSha256 = LCase(report)
 End Function
 
+Function ReadLauncherVersion()
+    Dim versionPath
+    versionPath = fso.BuildPath(baseDir, "launcher_version.txt")
+
+    On Error Resume Next
+    If fso.FileExists(versionPath) Then
+        Dim file
+        Dim value
+        Set file = fso.OpenTextFile(versionPath, 1)
+        value = Trim(file.ReadAll)
+        file.Close
+        If Err.Number = 0 And value <> "" Then
+            ReadLauncherVersion = value
+            On Error GoTo 0
+            Exit Function
+        End If
+        Err.Clear
+    End If
+    On Error GoTo 0
+
+    ReadLauncherVersion = "0.7.4"
+End Function
+
+Function TryRefreshClientJarFromWeb(requiredHash)
+    TryRefreshClientJarFromWeb = False
+
+    If webBase = "" Then
+        Exit Function
+    End If
+
+    Dim remoteJarUrl
+    remoteJarUrl = BuildWebUrl("/downloads/ygames_launcher_windows/app/newyahoo/client.jar")
+    If remoteJarUrl = "" Then
+        Exit Function
+    End If
+
+    EnsureFolder appDir
+
+    Dim tempJarPath
+    tempJarPath = fso.BuildPath(appDir, "client.jar.download")
+    If fso.FileExists(tempJarPath) Then
+        On Error Resume Next
+        fso.DeleteFile tempJarPath, True
+        On Error GoTo 0
+    End If
+
+    If Not DownloadBinaryFile(remoteJarUrl, tempJarPath) Then
+        Exit Function
+    End If
+
+    Dim downloadedHash
+    downloadedHash = GetFileSha256(tempJarPath)
+    If downloadedHash = "" Then
+        SafeDeleteFile tempJarPath
+        Exit Function
+    End If
+
+    If requiredHash <> "" And LCase(downloadedHash) <> LCase(requiredHash) Then
+        SafeDeleteFile tempJarPath
+        Exit Function
+    End If
+
+    Dim targetJarPath
+    targetJarPath = fso.BuildPath(appDir, "client.jar")
+    On Error Resume Next
+    If fso.FileExists(targetJarPath) Then
+        fso.DeleteFile targetJarPath, True
+    End If
+    fso.MoveFile tempJarPath, targetJarPath
+    If Err.Number <> 0 Then
+        Err.Clear
+        On Error GoTo 0
+        SafeDeleteFile tempJarPath
+        Exit Function
+    End If
+    On Error GoTo 0
+
+    TryRefreshClientJarFromWeb = True
+End Function
+
+Function DownloadBinaryFile(url, destinationPath)
+    DownloadBinaryFile = False
+
+    Dim http
+    Set http = CreateObject("MSXML2.XMLHTTP")
+    On Error Resume Next
+    http.Open "GET", url, False
+    http.Send
+    If Err.Number <> 0 Then
+        Err.Clear
+        On Error GoTo 0
+        Exit Function
+    End If
+    On Error GoTo 0
+
+    If http.Status < 200 Or http.Status >= 300 Then
+        Exit Function
+    End If
+
+    Dim stream
+    Set stream = CreateObject("ADODB.Stream")
+    stream.Type = 1
+    stream.Open
+    stream.Write http.responseBody
+    stream.SaveToFile destinationPath, 2
+    stream.Close
+
+    DownloadBinaryFile = True
+End Function
+
+Function BuildWebUrl(relativePath)
+    Dim normalizedBase
+    normalizedBase = webBase
+    Do While Right(normalizedBase, 1) = "/"
+        normalizedBase = Left(normalizedBase, Len(normalizedBase) - 1)
+    Loop
+
+    If normalizedBase = "" Then
+        BuildWebUrl = ""
+        Exit Function
+    End If
+
+    If Left(relativePath, 1) <> "/" Then
+        relativePath = "/" & relativePath
+    End If
+
+    BuildWebUrl = normalizedBase & relativePath
+End Function
+
+Sub SafeDeleteFile(filePath)
+    On Error Resume Next
+    If fso.FileExists(filePath) Then
+        fso.DeleteFile filePath, True
+    End If
+    On Error GoTo 0
+End Sub
+
 Sub CopyFolderContents(sourcePath, targetPath)
     If Not fso.FolderExists(sourcePath) Then
         Exit Sub
@@ -731,6 +875,7 @@ Sub ShowClientMismatch(requiredHash, localHash)
     message = "This launcher's bundled game files do not match what the website expects." & vbCrLf & vbCrLf & _
         "Expected client hash: " & requiredHash & vbCrLf & _
         "Local client hash: " & localHash & vbCrLf & vbCrLf & _
+        "The launcher tried to refresh client.jar automatically, but the local files still do not match." & vbCrLf & _
         "Please download the latest launcher package and run install_launcher.bat again." & vbCrLf & vbCrLf & _
         "Launcher folder:" & vbCrLf & baseDir
     MsgBox message, vbExclamation, "Y! Games Launcher Update Needed"

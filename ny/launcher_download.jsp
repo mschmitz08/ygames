@@ -1,6 +1,42 @@
 <%@page pageEncoding="Cp1252" contentType="text/html; charset=Cp1252"%>
 <%@page import="java.io.*, java.security.*"%>
 <%!
+    private String readLauncherVersion(javax.servlet.ServletContext context, String defaultValue) {
+        if (context == null)
+            return defaultValue;
+        FileInputStream input = null;
+        try {
+            String realPath = context.getRealPath("/downloads/ygames_launcher_windows/launcher_version.txt");
+            if (realPath == null)
+                return defaultValue;
+            File file = new File(realPath);
+            if (!file.exists())
+                return defaultValue;
+            input = new FileInputStream(file);
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            byte[] buffer = new byte[256];
+            int read;
+            while ((read = input.read(buffer)) != -1)
+                output.write(buffer, 0, read);
+            String value = new String(output.toByteArray(), "UTF-8").trim();
+            if (value.length() == 0)
+                return defaultValue;
+            return value;
+        }
+        catch (Exception e) {
+            return defaultValue;
+        }
+        finally {
+            if (input != null) {
+                try {
+                    input.close();
+                }
+                catch (IOException ignore) {
+                }
+            }
+        }
+    }
+
     private boolean isLoopbackHost(String host) {
         if(host == null)
             return true;
@@ -65,7 +101,7 @@
         webBase += ":" + request.getServerPort();
     webBase += request.getContextPath();
     if (launcherVersion == null || launcherVersion.length() == 0)
-        launcherVersion = "0.7.4";
+        launcherVersion = readLauncherVersion(application, "0.7.4");
     if (game == null || game.length() == 0)
         game = "pool";
     if (room == null || room.length() == 0)
