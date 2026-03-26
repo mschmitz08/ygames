@@ -62,6 +62,8 @@ public class YahooConnectionId implements YahooProfileIdListener, DataOutput {
 	private FloodRecord					tableChatFloodRecord;
 	private FloodRecord					focusFloodRecord;
 	private FloodRecord					startFloodRecord;
+	private volatile boolean			closeRequested;
+	private final Object				closeStateLock = new Object();
 
 	public YahooConnectionId(YahooSocket yahooSocket, YahooOutputStream out,
 			YahooBufferedOutputStream bufOut) {
@@ -208,40 +210,53 @@ public class YahooConnectionId implements YahooProfileIdListener, DataOutput {
 	}
 
 	public void close() {
-		if (room != null) {
-			room.doExitId(this);
-			if (bufOut != null) {
-				try {
-					bufOut.close(room.getIndex());
-				}
-				catch (IOException e1) {
-				}
+		synchronized (closeStateLock) {
+			if (room == null && socket == null && profileId == null)
+				return;
+			closeRequested = true;
+			YahooRoom currentRoom = room;
+			YahooBufferedOutputStream currentBufOut = bufOut;
+			YahooSocket currentSocket = socket;
+			if (currentRoom != null) {
+				room = null;
 				bufOut = null;
+				try {
+					currentRoom.doExitId(this);
+				}
+				finally {
+					if (currentBufOut != null) {
+						try {
+							currentBufOut.close(currentRoom.getIndex());
+						}
+						catch (IOException e1) {
+						}
+					}
+				}
 			}
-			room = null;
+			if (profileId != null) {
+				if (currentSocket != null)
+					currentSocket.releaseProfileId(this, profileId.getName());
+				profileId = null;
+			}
+			if (tables != null) {
+				tables.clear();
+				tables = null;
+			}
+			if (friends != null) {
+				friends.clear();
+				friends = null;
+			}
+			if (ignoreds != null) {
+				ignoreds.clear();
+				ignoreds = null;
+			}
+			if (currentSocket != null) {
+				socket = null;
+				currentSocket.close(this);
+			}
+			out = null;
+			setState(0);
 		}
-		if (profileId != null) {
-			socket.releaseProfileId(this, profileId.getName());
-			profileId = null;
-		}
-		if (tables != null) {
-			tables.clear();
-			tables = null;
-		}
-		if (friends != null) {
-			friends.clear();
-			friends = null;
-		}
-		if (ignoreds != null) {
-			ignoreds.clear();
-			ignoreds = null;
-		}
-		if (socket != null) {
-			socket.close(this);
-			socket = null;
-		}
-		out = null;
-		setState(0);
 	}
 
 	/*
@@ -276,12 +291,33 @@ public class YahooConnectionId implements YahooProfileIdListener, DataOutput {
 	}
 
 	public void flush() {
+		YahooBufferedOutputStream currentBufOut = bufOut;
+		YahooRoom currentRoom = room;
+		if (currentBufOut == null || currentRoom == null)
+			return;
 		try {
-			bufOut.send(room.getIndex());
+			currentBufOut.send(currentRoom.getIndex());
 		}
 		catch (IOException e) {
-			close();
+			requestClose();
 		}
+	}
+	private void requestClose() {
+		if (closeRequested)
+			return;
+		synchronized (closeStateLock) {
+			if (closeRequested)
+				return;
+			closeRequested = true;
+		}
+		Thread closeThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				close();
+			}
+		}, "YahooConnectionId-close");
+		closeThread.setDaemon(true);
+		closeThread.start();
 	}
 
 	public void friend(String name) {
