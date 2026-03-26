@@ -189,7 +189,15 @@ $localesPath = Join-Path $repoRoot 'ny\WEB-INF\i18n\locales.txt'
 
 $checkersRows = Read-DictRows $checkersUsPath
 $poolRows = Read-DictRows $poolUsPath
-$uiBaseRows = (Read-UiRows $uiMessagesPath | Where-Object { $_.Locale -eq 'us' })
+$uiBaseRowsRaw = (Read-UiRows $uiMessagesPath | Where-Object { $_.Locale -eq 'us' })
+$uiBaseRows = @()
+$seenUiKeys = @{}
+foreach ($row in $uiBaseRowsRaw) {
+    if (-not $seenUiKeys.ContainsKey($row.Key)) {
+        $seenUiKeys[$row.Key] = $true
+        $uiBaseRows += $row
+    }
+}
 
 $uniqueTexts = New-Object System.Collections.Generic.List[string]
 $seenTexts = @{}
