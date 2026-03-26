@@ -1,0 +1,241 @@
+﻿# key_hex	key_dec	text
+0x0000	0	Fadakarwa
+0x0001	1	KO
+0x0017	23	Zauna
+0x0018	24	na wucin gadi
+0x0031	49	Wannan wasan \\n ne ya kawo muku ta:
+0x0032	50	Wasan Karshe
+0x0034	52	Zabuka
+0x0035	53	Nau'in Tebur
+0x0041	65	Ee
+0x0042	66	A'a
+0x0048	72	Dakatar da kunnawa kuma soke sakamakon wannan wasan (dole ne abokin hamayya ya yarda).
+0x0049	73	Kar ka damu
+0x004a	74	Bar Tabbatarwa
+0x004b	75	Barka kuma Rasa:
+0x004c	76	A daina kuma Soke
+0x004d	77	Barka da Kashe
+0x004e	78	Tsaya kuma bar wasan.
+0x004f	79	Tsaya kuma Ajiye:
+0x0050	80	Bar kuma Soke:
+0x0051	81	Dakatar da wasa kuma ajiye wasan\\n (dole ne abokin hamayya ya yarda).
+0x0052	82	Kuna barin wasan da ba a kammala ba:
+0x0053	83	Tsaya kuma Ajiye
+0x0079	121	Karba
+0x007b	123	Karɓi Duk Gayyatar
+0x007c	124	An gayyata
+0x007d	125	\\n \\n Zaɓuɓɓukan Wasanni:
+0x007e	126	Dalili:
+0x007f	127	(na zaɓi)
+0x0080	128	ya gayyace ku zuwa tebur #
+0x0081	129	\\n \\n Kuna so ku shiga?
+0x0082	130	Karya
+0x0083	131	Bada izinin saƙonnin take daga abokai na kawai.
+0x0084	132	Yi watsi da shi
+0x0085	133	Daga:
+0x0086	134	ya fara
+0x0087	135	Bayanan martaba
+0x0088	136	Aika
+0x0089	137	Kusa
+0x008a	138	Yi motsi kuma idan
+0x008b	139	Danna 'Play Robot' don kunna kwamfutar.
+0x008d	141	- Daki:
+0x008e	142	baya dawowa, za'a baka zabin tilasta yin murabus.
+0x008f	143	*** Ajiye nema.
+0x0090	144	Karewa
+0x0091	145	ya nemi a ceci wannan wasan.\\nAn yarda da wannan?
+0x0092	146	Na sirri
+0x0093	147	ku
+0x0094	148	Danna maɓallin 'Sit' don shiga wasan.
+0x0095	149	ya nemi a soke wannan wasan.\\nAn yarda da wannan?
+0x0096	150	soke.
+0x0097	151	Tashi
+0x0098	152	abokin hamayya
+0x0099	153	A nawa
+0x009b	155	*** Kowa na iya shiga teburin ku yanzu.
+0x009c	156	s.
+0x009d	157	Jiran kishiya
+0x009e	158	Bar
+0x009f	159	ya shiga tebirin.
+0x00a0	160	Danna 'Fara Wasan' don farawa.
+0x00a1	161	Taimako
+0x00a2	162	ya bar teburin.
+0x00a3	163	*** Mutanen da ka gayyata ne kawai za su iya wasa a ko kallon teburin ku yanzu.
+0x00a4	164	Fara Wasan
+0x00a5	165	Sauti a kunna
+0x00a6	166	- Mai watsa shiri:
+0x00a7	167	Jama'a
+0x00a8	168	Kunna Robot
+0x00aa	170	Boot
+0x00ab	171	*** An so soke.
+0x00ac	172	*** Mutanen da ka gayyata ne kawai za su iya wasa a teburin ku yanzu.
+0x00ae	174	- Tebur:
+0x00af	175	*** Kai ne masaukin wannan tebur.
+0x00b0	176	Wasan:
+0x00b1	177	Naku
+0x00b2	178	Jiran abokin gaba don danna 'Fara'.
+0x00b4	180	ya bar wasan da ba a kammala ba.\\n
+0x00b5	181	*** Wasan
+0x00b6	182	ceto.
+0x00b7	183	Gayyata
+0x00b8	184	abokin tarayya
+0x00b9	185	Sauti
+0x00ba	186	Idan
+0x00bf	191	Shigar Suna:
+0x00c0	192	Zaɓi Daga Lissafi
+0x00c1	193	- ko -
+0x00c9	201	Ping
+0x00ca	202	Bayanin mai kunnawa don
+0x00cb	203	Aika saƙon take:
+0x00cc	204	seconds.
+0x00ce	206	mintuna.
+0x00cf	207	Lokacin aiki:
+0x00e1	225	Tebur
+0x00e2	226	Wanene ke Kallon
+0x00e3	227	zažužžukan:
+0x00e4	228	SHIGA
+0x00e8	232	ta
+0x00e9	233	Rtng
+0x00ea	234	seconds.\\nMy net jinkiri:
+0x00eb	235	ya gayyace ku ku zauna.
+0x00f0	240	Kuna da tsohon sigar abokin ciniki a cikin ma'ajin ku.
+0x00f2	242	Ping ya aika... yana jiran amsa.
+0x00f4	244	na wucin gadi
+0x00f5	245	Suna
+0x00f6	246	Ƙoƙarin haɗi zuwa uwar garken wasanni
+0x00f7	247	Kunna Yanzu
+0x00f9	249	Fita Wasanni
+0x00fb	251	net jinkiri:
+0x00fd	253	Ka ce:
+0x00ff	255	Tuntuɓar uwar garken wasanni...
+0x0102	258	Kuskure: Daga cikin albarkatun tsarin.\\nRufe kowane windows da aikace-aikacen da ba a buƙata ba.\\nSai kuma rufe taga wasannin kuma sake gwadawa.
+0x0105	261	Ba za a iya haɗawa da uwar garken ba.\\n ɗaya daga cikin abubuwa huɗu zai iya haifar da wannan:\\n1) Kuna bayan Firewall.\\n2)Ba a haɗa ku da intanit
+0x0106	262	Ƙirƙiri Tebur
+0x0108	264	Ƙananan windows
+0x0109	265	Tbl
+0x010b	267	An ciro ku daga tebur
+0x010c	268	An cire haɗin daga uwar garken ... Yayi tsayi da yawa
+0x0111	273	IMs daga \\nabokai kawai
+0x0115	277	... zazzage yanayin dakin
+0x0118	280	Kuskuren shiga uwar garken.
+0x0119	281	Karkatar da duk gayyatan \\n
+0x011c	284	Gudu
+0x011d	285	Ba za ku iya yin watsi da kanku ba.
+0x0123	291	An cire haɗin daga uwar garken
+0x0125	293	Haɗa zuwa uwar garken wasanni kamar
+0x0128	296	Mahimman ƙima
+0x0129	297	to\\n yi murabus wasan.
+0x012a	298	dawo.
+0x012b	299	Jira naku
+0x012c	300	Tilasta ka
+0x012d	301	Ajiye Wasan
+0x012e	302	Soke Wasan:
+0x012f	303	Soke Wasan
+0x0130	304	Ƙarfafa Ƙarfafawa:
+0x0131	305	Jira
+0x0132	306	Tsaya wasa kuma ajiye wasan.
+0x0133	307	ya watsar da wasan da ba a kammala ba:
+0x0134	308	Dakatar da wasa kuma kar a yi rikodin sakamakon wannan wasan.
+0x0135	309	Ajiye Wasan:
+0x0136	310	Tilasta Karɓa
+0x0137	311	Jira:
+0x0140	320	KO
+0x0142	322	Jijjiga Audio
+0x0164	356	Fadakarwa
+0x0165	357	KO
+0x0168	360	Soke
+0x016c	364	Yi watsi da shi
+0x016d	365	Bayanan martaba
+0x016e	366	Aika
+0x016f	367	Kusa
+0x0179	377	Boot
+0x017c	380	seconds.
+0x0180	384	Gayyata
+0x01f5	501	ya ƙi gayyatar ku.\\nDalilin:
+0x0b48	2888	Ƙara Koyi
+0x0b4c	2892	Nuna hanyar haɗi zuwa wasana a cikin\\nmy Yahoo!
+0x0b4d	2893	Ƙara Koyi
+0x0b80	2944	Kalli
+0x0c5b	3163	Naku
+0x0d35	3381	Zabuka
+0x0d36	3382	Anyi
+0x0d43	3395	Zabuka
+0x0d44	3396	Kalli
+0x0dde	3550	Avatars:
+0x0de8	3560	Tace batsa:
+0x0e0c	3596	minti.
+0x0e1b	3611	Babu
+0x0e1c	3612	Mai ƙarfi
+0x0e1d	3613	Mai rauni
+0x111f	4383	Wasa ya ƙare:
+0x1129	4393	Lokacin Hagu:
+0x1131	4401	Talla:
+0x11bf	4543	Zaɓi Nau'in
+0x11c0	4544	KO
+0x11c1	4545	m
+0x11c2	4546	tsiri
+0x11c6	4550	yana da ball a hannu.
+0x1213	4627	Zaɓi aljihu.
+0x1214	4628	Danna kwallon da kake son bugawa.
+0x1217	4631	Jawo alama tare da maɓallin linzamin kwamfuta na hagu.
+0x1225	4645	Zalunci!
+0x1243	4675	Danna sarari don harba.
+0x1244	4676	Ja da Shift+ maɓallin linzamin kwamfuta na hagu don harba.
+0x1245	4677	Ja da maɓallin linzamin kwamfuta na dama don harba.
+0x1252	4690	Tsage!
+0x1253	4691	Harba Sake!
+0x1254	4692	Harba!
+0x125c	4700	Wane nau'in ball kuke so ku kunna?
+0x125d	4701	Kuna iya matsar da ƙwallon ƙafa kafin yin harbi.
+0x12b5	4789	sake saiti
+0x132c	4908	30 seconds.
+0x132d	4909	babu lokaci.
+0x132e	4910	rated.
+0x132f	4911	dakika
+0x1338	4920	Turanci
+0x136c	4972	Ƙarfi
+0x13fc	5116	Lokaci kowane motsi:
+0x13fd	5117	Mai ƙidayar lokaci
+0x1400	5120	Soke
+0x1401	5121	Wasan Kwallo Takwas
+0x1402	5122	Zaɓuɓɓukan Wasanni
+0x1403	5123	Wasan kima.
+0x1404	5124	Fara
+0x1405	5125	Horowa.
+0x140a	5130	dakika
+0x1413	5139	ya lashe wasan.
+0x158a	5514	Dandalin Macintosh baya goyan bayan rubutun rai.
+0x159b	5531	Murya
+0x1605	5637	Lokacin fara wasa:
+0x1629	5673	kwana 1
+0x162a	5674	awa 1
+0x162b	5675	Minti 1
+0x162c	5676	Minti 10
+0x162d	5677	Minti 15
+0x162e	5678	3 hours
+0x162f	5679	Minti 30
+0x1630	5680	Minti 5
+0x1631	5681	Ban
+0x1632	5682	Harba
+0x1633	5683	Yi shiru
+0x1634	5684	Gudanar da Daki:
+0x1676	5750	Soke
+0x1677	5751	Ƙara Koyi
+0x1694	5780	Wasan Kwallo Tara
+0x1696	5782	9-ball pool yana samuwa ga Yahoo!
+0x169c	5788	9-ball pool yana samuwa ga Yahoo!
+0x16b2	5810	8-ball.
+0x16b3	5811	9-kwallo.
+0x16b5	5813	8-ball.
+0x16b6	5814	9-kwallo.
+0x16b7	5815	Horowa.
+0x16b8	5816	Bayani:\\n(na zaɓi)
+0x16b9	5817	Nuna Ƙungiyar Duk-Star\\n
+0x16ba	5818	Murya
+0x1761	5985	Soke
+0x1762	5986	Zaɓuɓɓukan Wasanni
+0x1763	5987	Fara
+0x179d	6045	y
+0x18cd	6349	Musanya
+0x18ce	6350	An kasa buɗe taga tebur.\\nDa fatan a saita burauzar ku don ba da damar faɗowa don wannan rukunin yanar gizon kuma a sake gwadawa.
+0x18cf	6351	Ana ƙoƙarin tashi taga tebur...

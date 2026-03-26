@@ -1,0 +1,234 @@
+# key_hex	key_dec	text
+0x0000	0	Alert
+0x0001	1	OK
+0x0017	23	Sit
+0x0018	24	provisional
+0x0031	49	This game was\nbrought to you by:
+0x0032	50	Game Over
+0x0034	52	Options
+0x0035	53	Table Type
+0x0041	65	Yes
+0x0042	66	No
+0x0048	72	Stop playing and cancel the result\nof this game (opponent must agree).
+0x0049	73	Never Mind
+0x004a	74	Quit Confirmation
+0x004b	75	Quit and Forfeit:
+0x004c	76	Quit and Cancel
+0x004d	77	Quit and Forfeit
+0x004e	78	Quit and forfeit the game.
+0x004f	79	Quit and Save:
+0x0050	80	Quit and Cancel:
+0x0051	81	Stop playing and save the\ngame (opponent must agree).
+0x0052	82	You are quitting an unfinished rated game:
+0x0053	83	Quit and Save
+0x0079	121	Accept
+0x007b	123	Decline All Invitations
+0x007c	124	Invited
+0x007d	125	\n \nGame options: 
+0x007e	126	Reason:
+0x007f	127	(optional)
+0x0080	128	 has invited you to table #
+0x0081	129	\n \nWould you like to join?
+0x0082	130	Decline
+0x0083	131	Allow instant messages from my friends only.
+0x0084	132	Ignore
+0x0085	133	From: 
+0x0086	134	 started 
+0x0087	135	Profile
+0x0088	136	Send
+0x0089	137	Close
+0x008a	138	Make your move and if
+0x008b	139	  Press 'Play Robot' to play the computer.
+0x008d	141	 - Room: 
+0x008e	142	 does not return, you\nwill be given the option to force a resignation.
+0x008f	143	*** Save requested.
+0x0090	144	Protected
+0x0091	145	 has requested that this game be saved.\nIs this acceptable?
+0x0092	146	Private
+0x0093	147	 your 
+0x0094	148	Click a 'Sit' button to join the game.
+0x0095	149	 has requested that this game be canceled.\nIs this acceptable?
+0x0096	150	canceled.
+0x0097	151	Stand Up
+0x0098	152	opponent
+0x0099	153	On my turn
+0x009b	155	*** Anyone may join your table now.
+0x009c	156	s.
+0x009d	157	Waiting for opponent
+0x009e	158	Quit
+0x009f	159	 has joined the table.
+0x00a0	160	Click 'Start Game' to begin.
+0x00a1	161	Help
+0x00a2	162	 has left the table.
+0x00a3	163	*** Only people you have invited may play at or watch your table now.
+0x00a4	164	Start Game
+0x00a5	165	Audio on turn
+0x00a6	166	 - Host: 
+0x00a7	167	Public
+0x00a8	168	Play  Robot
+0x00aa	170	Boot
+0x00ab	171	*** Cancel requested.
+0x00ac	172	*** Only people you have invited may play at your table now.
+0x00ae	174	 - Table: 
+0x00af	175	*** You are host of this table.  This gives you the power to invite people to (or boot people from) your table.  You may also limit other players' access to your table by selecting its 'Table Type'.
+0x00b0	176	Game: 
+0x00b1	177	Your 
+0x00b2	178	Waiting for opponent to click 'Start'.
+0x00b4	180	 has left an unfinished rated game.\n
+0x00b5	181	*** Game 
+0x00b6	182	saved.
+0x00b7	183	Invite
+0x00b8	184	partner
+0x00b9	185	Sound
+0x00ba	186	If
+0x00bf	191	Enter Name:
+0x00c0	192	Select From List
+0x00c1	193	- or -
+0x00c9	201	Ping
+0x00ca	202	Player information for 
+0x00cb	203	Send instant message:
+0x00cc	204	 seconds.
+0x00ce	206	 minutes. 
+0x00cf	207	Idle time: 
+0x00e1	225	Table
+0x00e2	226	Who is Watching
+0x00e3	227	options: 
+0x00e4	228	JOIN
+0x00e8	232	 by 
+0x00e9	233	Rtng
+0x00ea	234	 seconds.\nMy net delay: 
+0x00eb	235	 has invited you to take a seat.
+0x00f0	240	You have an old version of the client in your cache.  You will need to restart\nyour browser and come back to retreive the current version.  If restarting does\nnot work, manually clearing your browser's cache should fix the problem.
+0x00f2	242	Ping dispatched ... waiting for response.
+0x00f4	244	provisional
+0x00f5	245	Name
+0x00f6	246	Attempting to connect to the games server
+0x00f7	247	Play Now
+0x00f9	249	Exit Games
+0x00fb	251	's net delay: 
+0x00fd	253	Say:
+0x00ff	255	Contacting games server ...
+0x0102	258	Error:  Out of system resources.\nClose any unneeded windows and applications.\nThen close the games window and try again.
+0x0105	261	Unable to connect to server.\nOne of four things could have caused this:\n1)You are behind a firewall.\n2)You are not connected to the internet.\n3)The games server is down.\n4)You have a stale page in your cache.
+0x0106	262	Create Table
+0x0108	264	Small Windows
+0x0109	265	Tbl
+0x010b	267	You have been booted from table 
+0x010c	268	Disconnected from server ... Idle too long
+0x0111	273	IMs from\nfriends only
+0x0115	277	 ... downloading room state
+0x0118	280	Error logging into server.
+0x0119	281	Decline all\ninvitations
+0x011c	284	Rung
+0x011d	285	You cannot ignore yourself.
+0x0123	291	Disconnected from server
+0x0125	293	Connected to games server as 
+0x0128	296	Ratings
+0x0129	297	 to\nresign the game.
+0x012a	298	 to return.
+0x012b	299	Wait for your 
+0x012c	300	Force your 
+0x012d	301	Save Game
+0x012e	302	Cancel Game:
+0x012f	303	Cancel Game
+0x0130	304	Force Forfeit:
+0x0131	305	Wait
+0x0132	306	Stop playing and save the game.
+0x0133	307	 has abandoned an unfinished rated game:
+0x0134	308	Stop playing and do not\nrecord the result of this game.
+0x0135	309	Save Game:
+0x0136	310	Force Forfeit
+0x0137	311	Wait:
+0x0140	320	OK
+0x0142	322	Audio Alert
+0x0164	356	Alert
+0x0165	357	OK
+0x0168	360	Cancel
+0x016c	364	Ignore
+0x016d	365	Profile
+0x016e	366	Send
+0x016f	367	Close
+0x0179	377	Boot
+0x017c	380	 seconds.
+0x0180	384	Invite
+0x01f5	501	 has declined your invitation.\nReason: 
+0x072c	1836	Invalid time specified.
+0x072d	1837	Increment: 
+0x072e	1838	minutes
+0x072f	1839	Initial time: 
+0x0730	1840	Cancel
+0x0731	1841	seconds
+0x0732	1842	OK
+0x0733	1843	At most 
+0x0734	1844	Set Timer
+0x0735	1845	 minutes per move
+0x0736	1846	No timer
+0x073b	1851	Last Move
+0x073c	1852	A draw has been offered by your opponent.\nDo you accept?
+0x073d	1853	Rated Game
+0x073e	1854	Offer Draw
+0x073f	1855	Your opponent has requested that his or her previous move be taken back.\nIs this acceptable?
+0x0740	1856	Undo Turn
+0x0741	1857	*** Draw offer declined.
+0x0742	1858	Are you sure you want to resign?
+0x0743	1859	 wins the game.
+0x0744	1860	*** undo requested
+0x0745	1861	Draw
+0x0746	1862	*** undo granted
+0x0747	1863	 minute initial time. 
+0x0748	1864	 second increment.
+0x074a	1866	 no time limit.
+0x0751	1873	None
+0x0752	1874	 min./move
+0x0753	1875	Set Timer
+0x0754	1876	Only the host of a table may set the timers.
+0x0755	1877	Timer: 
+0x0756	1878	Time: 
+0x0760	1888	 rated.
+0x0761	1889	 unrated.
+0x08da	2266	Red
+0x08db	2267	White
+0x08dd	2269	Red
+0x08de	2270	White
+0x0b48	2888	Learn More
+0x0b4c	2892	Show a link to my game in\nmy Yahoo! Messenger status.
+0x0b4d	2893	Learn More
+0x0b80	2944	Watch
+0x0c5b	3163	Your 
+0x0c60	3168	Time: 
+0x0d35	3381	Options
+0x0d36	3382	Done
+0x0d43	3395	Options
+0x0d44	3396	Watch
+0x0dde	3550	Avatars:
+0x0de8	3560	Profanity Filter:
+0x0e0c	3596	 minute. 
+0x0e1b	3611	None
+0x0e1c	3612	Strong
+0x0e1d	3613	Weak
+0x111f	4383	Game Over:
+0x1129	4393	Time Left: 
+0x1131	4401	Advertisement:
+0x1143	4419	Resign
+0x158a	5514	The Macintosh platform does not support livescript.
+0x159b	5531	Voice
+0x1605	5637	Time to game start: 
+0x1629	5673	1 day
+0x162a	5674	1 hour
+0x162b	5675	1 minute
+0x162c	5676	10 minutes
+0x162d	5677	15 minutes
+0x162e	5678	3 hours
+0x162f	5679	30 minutes
+0x1630	5680	5 minutes
+0x1631	5681	Ban
+0x1632	5682	Kick
+0x1633	5683	Mute
+0x1634	5684	Room Administration:
+0x16b8	5816	Description:\n(optional)
+0x16b9	5817	Show All-Star\nmembership
+0x16ba	5818	Voice
+0x1761	5985	Cancel
+0x1762	5986	Game Options
+0x1763	5987	Start
+0x18cd	6349	Swap

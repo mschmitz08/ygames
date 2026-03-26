@@ -229,7 +229,8 @@ public class TableControlContainer extends YahooControl {
 		else if (event.target == table.btnResign) {
 			String message = table.getApplet().lookupString(0x66500742);
 			if (message.equals("X"))
-				message = "Do you really want to forfeit this game?";
+				message = table.getApplet().uiText("forfeit_confirm",
+						"Do you really want to forfeit this game?");
 			if (table.resignDialog == null)
 				table.resignDialog = new YesNoDialog(table.getApplet(), this,
 						message, table);

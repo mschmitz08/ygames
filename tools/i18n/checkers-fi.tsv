@@ -1,0 +1,234 @@
+﻿# key_hex	key_dec	text
+0x0000	0	Varoitus
+0x0001	1	OK
+0x0017	23	Istua
+0x0018	24	väliaikainen
+0x0031	49	Tämän pelin \\ntoi sinulle:
+0x0032	50	Peli ohi
+0x0034	52	Vaihtoehdot
+0x0035	53	Taulukon tyyppi
+0x0041	65	Kyllä
+0x0042	66	Ei
+0x0048	72	Lopeta pelaaminen ja peruuta tämän pelin tulos\\n (vastustajan on hyväksyttävä).
+0x0049	73	Älä välitä
+0x004a	74	Lopeta vahvistus
+0x004b	75	Lopeta ja menetä:
+0x004c	76	Lopeta ja peruuta
+0x004d	77	Lopeta ja menettää
+0x004e	78	Lopeta ja menetä peli.
+0x004f	79	Lopeta ja tallenna:
+0x0050	80	Lopeta ja peruuta:
+0x0051	81	Lopeta pelaaminen ja tallenna \\n-peli (vastustajan on hyväksyttävä).
+0x0052	82	Lopetat keskeneräisen arvioidun pelin:
+0x0053	83	Lopeta ja tallenna
+0x0079	121	Hyväksyä
+0x007b	123	Hylkää kaikki kutsut
+0x007c	124	Kutsuttu
+0x007d	125	\\n \\nPelivaihtoehdot:
+0x007e	126	Syy:
+0x007f	127	(valinnainen)
+0x0080	128	on kutsunut sinut pöytään #
+0x0081	129	\\n \\nHaluatko liittyä?
+0x0082	130	Hylkää
+0x0083	131	Salli pikaviestit vain ystäviltäni.
+0x0084	132	Sivuuttaa
+0x0085	133	Lähettäjä:
+0x0086	134	alkoi
+0x0087	135	Profiili
+0x0088	136	Lähetä
+0x0089	137	Lähellä
+0x008a	138	Tee siirtosi ja jos
+0x008b	139	Paina 'Play Robot' pelataksesi tietokonetta.
+0x008d	141	- Huone:
+0x008e	142	ei palaa, sinulle\\n annetaan mahdollisuus pakottaa eroamaan.
+0x008f	143	*** Tallennus pyydetty.
+0x0090	144	Suojattu
+0x0091	145	on pyytänyt tämän pelin tallentamista.\\nOnko tämä hyväksyttävää?
+0x0092	146	Yksityinen
+0x0093	147	sinun
+0x0094	148	Napsauta "Istu" -painiketta liittyäksesi peliin.
+0x0095	149	on pyytänyt tämän pelin peruuttamista.\\nOnko tämä hyväksyttävää?
+0x0096	150	peruutettu.
+0x0097	151	Nouse ylös
+0x0098	152	vastustaja
+0x0099	153	Minun vuorollani
+0x009b	155	*** Kuka tahansa voi liittyä pöytääsi nyt.
+0x009c	156	s.
+0x009d	157	Vastustajaa odotellessa
+0x009e	158	Lopettaa
+0x009f	159	on liittynyt pöytään.
+0x00a0	160	Aloita napsauttamalla 'Aloita peli'.
+0x00a1	161	Auttaa
+0x00a2	162	on poistunut pöydästä.
+0x00a3	163	*** Vain kutsumasi ihmiset voivat pelata tai katsella pöytääsi nyt.
+0x00a4	164	Aloita peli
+0x00a5	165	Ääni päällä
+0x00a6	166	- Isäntä:
+0x00a7	167	Julkinen
+0x00a8	168	Pelaa Robottia
+0x00aa	170	Boot
+0x00ab	171	*** Peruutuspyyntö.
+0x00ac	172	*** Vain kutsumasi ihmiset voivat pelata pöydässäsi nyt.
+0x00ae	174	- Taulukko:
+0x00af	175	*** Olet tämän pöydän isäntä.
+0x00b0	176	Peli:
+0x00b1	177	Sinun
+0x00b2	178	Odotetaan, että vastustaja napsauttaa 'Aloita'.
+0x00b4	180	on jättänyt kesken arvostetun pelin.\\n
+0x00b5	181	*** Peli
+0x00b6	182	tallennettu.
+0x00b7	183	Kutsu
+0x00b8	184	kumppani
+0x00b9	185	Ääni
+0x00ba	186	Jos
+0x00bf	191	Anna nimi:
+0x00c0	192	Valitse luettelosta
+0x00c1	193	- tai -
+0x00c9	201	Ping
+0x00ca	202	Pelaajan tiedot
+0x00cb	203	Lähetä pikaviesti:
+0x00cc	204	sekuntia.
+0x00ce	206	minuuttia.
+0x00cf	207	Joutoaika:
+0x00e1	225	Taulukko
+0x00e2	226	Kuka katsoo
+0x00e3	227	vaihtoehdot:
+0x00e4	228	LIITY
+0x00e8	232	kirjoittaja
+0x00e9	233	Rtng
+0x00ea	234	sekuntia.\\nOma nettoviive:
+0x00eb	235	on kutsunut sinut istumaan.
+0x00f0	240	Sinulla on vanha versio asiakasohjelmasta välimuistissasi.
+0x00f2	242	Ping lähetetty ... odottaa vastausta.
+0x00f4	244	väliaikainen
+0x00f5	245	Nimi
+0x00f6	246	Yritetään muodostaa yhteyttä pelipalvelimeen
+0x00f7	247	Pelaa nyt
+0x00f9	249	Poistu peleistä
+0x00fb	251	nettoviive:
+0x00fd	253	Sanoa:
+0x00ff	255	Otetaan yhteyttä pelipalvelimeen...
+0x0102	258	Virhe: Järjestelmäresurssit loppuvat.\\nSulje kaikki tarpeettomat ikkunat ja sovellukset.\\nSulje sitten peliikkuna ja yritä uudelleen.
+0x0105	261	Ei voida muodostaa yhteyttä palvelimeen.\\nYksi neljästä asiasta saattoi aiheuttaa tämän:\\n1)Olet palomuurin takana.\\n2)Et ole yhteydessä Internetiin.\\n3)Pelipalvelin ei toimi.\\n4)Välimuistissasi on vanhentunut sivu.
+0x0106	262	Luo taulukko
+0x0108	264	Pienet ikkunat
+0x0109	265	Tbl
+0x010b	267	Sinut on käynnistetty pöydästä
+0x010c	268	Yhteys palvelimeen katkaistu... Liian kauan tyhjäkäynti
+0x0111	273	Pikaviestit vain \\nystäviltä
+0x0115	277	... ladataan huoneen tilaa
+0x0118	280	Virhe kirjautuessa palvelimelle.
+0x0119	281	Hylkää kaikki\\n-kutsut
+0x011c	284	Rung
+0x011d	285	Et voi sivuuttaa itseäsi.
+0x0123	291	Yhteys palvelimeen katkaistu
+0x0125	293	Yhdistetty pelipalvelimeen nimellä
+0x0128	296	Arviot
+0x0129	297	to\\n erota peli.
+0x012a	298	palata.
+0x012b	299	Odota omaasi
+0x012c	300	Pakota sinun
+0x012d	301	Tallenna peli
+0x012e	302	Peru peli:
+0x012f	303	Peruuta peli
+0x0130	304	Force Forfeit:
+0x0131	305	Odota
+0x0132	306	Lopeta pelaaminen ja tallenna peli.
+0x0133	307	on hylännyt keskeneräisen arvioidun pelin:
+0x0134	308	Lopeta pelaaminen äläkä tallenna tämän pelin tulosta.
+0x0135	309	Tallenna peli:
+0x0136	310	Force Forfeit
+0x0137	311	Odota:
+0x0140	320	OK
+0x0142	322	Äänihälytys
+0x0164	356	Varoitus
+0x0165	357	OK
+0x0168	360	Peruuttaa
+0x016c	364	Sivuuttaa
+0x016d	365	Profiili
+0x016e	366	Lähetä
+0x016f	367	Lähellä
+0x0179	377	Boot
+0x017c	380	sekuntia.
+0x0180	384	Kutsu
+0x01f5	501	on hylännyt kutsusi.\\nSyy:
+0x072c	1836	Virheellinen aika määritetty.
+0x072d	1837	Lisäys:
+0x072e	1838	minuuttia
+0x072f	1839	Alkuaika:
+0x0730	1840	Peruuttaa
+0x0731	1841	sekuntia
+0x0732	1842	OK
+0x0733	1843	Enintään
+0x0734	1844	Aseta ajastin
+0x0735	1845	minuuttia per liike
+0x0736	1846	Ei ajastinta
+0x073b	1851	Viimeinen siirto
+0x073c	1852	Vastustajasi on tarjonnut tasapeliä.\\nHyväksytkö?
+0x073d	1853	Arvosteltu peli
+0x073e	1854	Tarjous arvonta
+0x073f	1855	Vastustajasi on pyytänyt, että hänen edellinen siirtonsa peruutetaan.\\nOnko tämä hyväksyttävää?
+0x0740	1856	Kumoa käännös
+0x0741	1857	*** Arvontatarjous hylätty.
+0x0742	1858	Oletko varma, että haluat erota?
+0x0743	1859	voittaa pelin.
+0x0744	1860	*** perua pyydetty
+0x0745	1861	Piirrä
+0x0746	1862	*** peruutus myönnetty
+0x0747	1863	minuutin aloitusaika.
+0x0748	1864	toinen lisäys.
+0x074a	1866	ei aikarajaa.
+0x0751	1873	Ei mitään
+0x0752	1874	min/liike
+0x0753	1875	Aseta ajastin
+0x0754	1876	Vain pöydän isäntä voi asettaa ajastimet.
+0x0755	1877	Ajastin:
+0x0756	1878	Aika:
+0x0760	1888	arvioitu.
+0x0761	1889	luokittelematon.
+0x08da	2266	Punainen
+0x08db	2267	Valkoinen
+0x08dd	2269	Punainen
+0x08de	2270	Valkoinen
+0x0b48	2888	Lisätietoja
+0x0b4c	2892	Näytä linkki peliini in\\nmy Yahoo!
+0x0b4d	2893	Lisätietoja
+0x0b80	2944	Katsella
+0x0c5b	3163	Sinun
+0x0c60	3168	Aika:
+0x0d35	3381	Vaihtoehdot
+0x0d36	3382	Tehty
+0x0d43	3395	Vaihtoehdot
+0x0d44	3396	Katsella
+0x0dde	3550	Avatarit:
+0x0de8	3560	Kiroilusuodatin:
+0x0e0c	3596	minuutti.
+0x0e1b	3611	Ei mitään
+0x0e1c	3612	Vahva
+0x0e1d	3613	Heikko
+0x111f	4383	Peli päättyy:
+0x1129	4393	Aikaa jäljellä:
+0x1131	4401	Mainos:
+0x1143	4419	Eroa
+0x158a	5514	Macintosh-alusta ei tue livescriptiä.
+0x159b	5531	Ääni
+0x1605	5637	Pelin alkamisaika:
+0x1629	5673	1 päivä
+0x162a	5674	1 tunti
+0x162b	5675	1 minuutti
+0x162c	5676	10 minuuttia
+0x162d	5677	15 minuuttia
+0x162e	5678	3 tuntia
+0x162f	5679	30 minuuttia
+0x1630	5680	5 minuuttia
+0x1631	5681	Kieltää
+0x1632	5682	Potkia
+0x1633	5683	Mykistä
+0x1634	5684	Huoneen hallinto:
+0x16b8	5816	Kuvaus:\\n (valinnainen)
+0x16b9	5817	Näytä All-Star\\n-jäsenyys
+0x16ba	5818	Ääni
+0x1761	5985	Peruuttaa
+0x1762	5986	Pelivaihtoehdot
+0x1763	5987	Aloita
+0x18cd	6349	Vaihtaa

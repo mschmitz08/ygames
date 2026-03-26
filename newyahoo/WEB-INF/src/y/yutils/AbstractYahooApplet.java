@@ -5,12 +5,17 @@
 package y.yutils;
 
 import java.applet.Applet;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.Hashtable;
 
 import core.DebugLog;
 
@@ -74,7 +79,13 @@ public abstract class AbstractYahooApplet extends Applet implements
 			"@@ \uFF72\uAEED\uFF72\uACEC\uFF69\uA6E7\uFF6F\uABEC\uFF6A\uA8E7\uFF6A\uA6EC\uFF66\uA7E7\uFF70\uADEC\uFF73\uAAEB\uFF68\uA7EE\uFF68\uA7EC\uFF72\uADF0\uFF70\uA7E8\uFF65\uA8EC\uFF73\uAFEE\uFF72\uABEF\uFF69\uA7E9\uFF69\uA5ED\uFF73\uADED\uFF73\uADEC\uFF6A\uA5F1\uFF74\uADED\uFF70\uACEE\uFF6B\uA7EF\uFF71\uAEF0\uFF70\uACEA\uFF71\uAEED\uFF74\uABEB\uFF67\uA6EB\uFF6B\uA5EE\uFF6C\uA9EC\uFF6C\uA7EE\000\000\000\000\030\000\000\000\000\000\000\000\000~\t\000\000\000\000\000\000\0000\002\000\000\000\000\000\0000\000\000\000\000\000p\177\177\177w\037\177\177\177\037\000\000@`\001\001\000\000\000\000\000`8\001p\000\000\000\000\000\0000\002X\000\000\000\000\000\000 \003`\002\000\000\000\000\000x\006\000;\000\000\000\000\0000\000@h\000\000\000\000\000(\013\000w\001\000\000\000 (\006\000J\001\000\000\000@`\003\000<\000\000\000\000`8\001\000\000\020\002\000\000\0000\002\000\000`\000\000\000\000 \003\000\000@@\000\000\000x\006\000\000\000I\001\000\0000\000\000\000\0002\001\000\000(\013\000\000\0008\003\000 (\006\000\000\000`\005\000@`\003\000\000\000P\003\000`8\001\000\000\000\000@\030\0000\002\000\000\000\000\000\033\000 \003\000\000\000\000\000L\001x\006\000\000\000\000\000|\0060\000\000\000\000\000\000X\025(\013\000\000\000\000\000p|(\006\000\000\000\000\000 pa\003\000\000\000\000\000\000wc\001\000\000\000\000\000\000F1\003\000\000\000\000\000\000\000\016\005\000\000\000\000\000\000T\r\005\000\000\000\000\000\000\000\f\030\000\000\000\000\000\000@\016\000\000\000\000\000\000\000\000\005\000\000\000\000\000\000\000@\f\000\000\000\000\000\000\000\000\037\000 \007\000\000\000\000F\007\002 \r\000\000\000\000\000\006\004\000\021\000\000\000\000T\005\000\000\024\000\000\000\000\000\f\000\000P\000\000\000\000@\016\000\000@\000\000\000\000\000\005\000\000\000\000\000\000\000@\f\000\000\000\000\000\000\000\000\037\006\000\000\000\035\000\000`\017\002\000\000\0005\000\000\b\016\004\000\000\000D\000\0008\r\000\000\000\000P\000\000`\001\000\000\000\000@\002\000\020\017\000\000\000\000\000\002\000 \r\000\000\000\000\000\000\000@\b\000\000\000\000\000\000\000\000\007\006\000\000\000\000\000}|\017\002\000\000\000\000\000xa\017\004\000\000\000\000\0006\006\b\000\000\000\000\000\000\\\001\004\000\000\000\000\000\000XB\016\000\000\000\000\000\0000\000\007\000\000\000\000\000\000\000`\b\000\000\000\000\000\000\000p\005\006\000\000@\177\177\177\177\177\177\177\177\177\177\177\177\177\023x\177\177\177\001\000\000\000\b*\005\000\000\000\000\000\000\000x\001\000\000\000\000\000\000xk\024\000\000\000x\177\177OI{\177\177\177\017\000\000\000\024\000\000\000\000`\177\177?|?~\177\177\177\177\177\037\\~\017\177\177\177\177\177\177}}?{\177\177\177\177w=|\177\177\177\177\177\177\177yy_O\177\177\177\177\177<\177\177\032\177\177\177\177\177]t\177z~\177\177\177_}y\177M\177\177\177\177?y|\177g\177\177\177\177\037\\~\177\177?t\177\177\177}}\177\177_K\177\177w=|\177\177\177f\177\177\177yy\177\177\1779~\177\177<\177\177\177\177s|\177\177]t\177\177\177{{\177_}y\177\177\1777|\177?y|\177\177\177?x\177\037\\~\177\177\177\177\177C\177}}\177\177\177\177\177gv=|\177\177\177\177\177?~yy\177\177\177\177\177ky<\177\177\177\177\177\177oc]t\177\177\177\177\177?\016}y\177\177\177\177\177\1779x|\177\177\177\177\177?gX~\177\177\177\177\177\177y~|\177\177\177\177\177\177\177}z\177\177\177\177\177\177+zw\177\177\177\177\177\177\177}|\177\177\177\177\177\177?\037Y\177\177\177\177\177\177\177\034v\177\177\177\177\177\177\177?8\177\177\177\177\177\177\1778x/x\177\177\177\177y>}\177w\177\177\177\177\177={\177o\177\177\177\177+\032w?^\177\177\177\177\177=o?{\177\177\177\177??\177\177n~\177\177\177\177\034\177\177]\177\177\177\177\177?\177\177C\177\177\177\177\1778`}\177?a\177\177_\037}\177\177\177_\177\177w={\177\177\177?\177\177G\032w\177\177\177y~\177\037<n\177\177\177m\177\177o\036\177\177\177\177;{\177_\034\177\177\177\177w~\177\177?\177\177\177\177\017~\177\177\031`\177\177\177\177?}t\037}\177\177\177\177\177~q<{\177\177\177\177\177y\004\036w\177\177\177\177\177c\031=n\177\177\177\177\177'{\036\177\177\177\177\177\177Om\037\177\177\177\177\177\177\1777\035\177\177\177\177\177\177?\016\036a\177\177?\000\000\000\000\\\001\000\000\000\177\177\177\037x\177\177\177\177\001\000\000\000`&\001\000\000\000~\177\177\177Yw\177\177\177\003\000\000\000O\034\000\000\000\000\000\000\020J9\000\000\000p\177\177\177~_\177\177\177\037\000\000\000\033!\000\000\000\000\000\000\000$\000<\004\000\000\000\000\000\f\000h\000\000\000\000\000\b\036\0000\003\000\000\000\000\000\000\000@\r\000\000\000\000\000\r\000\000r\000\000\000\000\0004\b\000\\\001\000\000\000\000\024\000\000B\002\000\000\000\000\032\000\000H\007\000\000\000\000$\000\000\000p\001\000\000\000\f\000\000\000\000\005\000\000\b\036\000\000\000\000^\000\000\000\000\000\000\000\000\020\000\000\000\r\000\000\000\000P\003\000\0004\b\000\000\000\000\006\000\000\024\000\000\000\000@\t\000\000\032\000\000\000\000@\033\000\000$\000\000\000\000\000@\025\000\f\000\000\000\000\000\000\r\b\036\000\000\000\000\000\000\026\000\000\000\000\000\000\000\000D\000\r\000\000\000\000\000\000P\n4\b\000\000\000\000\000@\n\024\000\000\000\000\000\000 (\032\000\000\000\000\000\000\000v\030\001\000\000\000\000\000\000\000\016\002\000\000\000\000\000\000\000r\001\000\000\000\000\000\000\020t\002\000\000\000\000\000\000\0000\004\000\000\000\000\000\000\000\020\032\000\000\000\000\000\000\000\030H\000\000\000\000\000\000\0000D\000\000\000\000\000\000\000&\003\b\006\000\000\000\000\000X\000P\b\000\000\000\000\000:\000@\002\000\000\000\000\020\034\b@\n\000\000\000\000\0000\021@(\000\000\000\000\0000\000\000!\000\000\000\000\000X\000\000\"\003\000\000\000\0000\000\000<\000\000\000\000\000&\031\002\000 \030\000\000 P\000\000\000@\"\000\000\b2\000\000\000\000\n\000\0008\024\b\000\000\000*\000\000`=\021\000\000\000\"\001\000\020\021\000\000\000\000\004\001\000 P\000\000\000\000\b\r\000\0004\000\000\000\000p\001\000\000\036\030\000\000\000\000@0\004P\000\000\000\000\000\000F\0013\000\000\000\000\000\000N\004\026\b\000\000\000\000\0000\001=\021\000\000\000\000\000@I\020\000\000\000\000\000\000\000\fY\000\000\000\000\000\000\000\020T\000\000\000\000\000\000@qX\030\000\000@\177\177\177\177_}\177\177\177\177\177\177?l\177\177\177\177\001\000\000\000\0000\004\000\000\000\000\000\000\000~\b\000\000\000\000\000\000xX\006\000\000\000x\177\177\177[W\177\177\177\177\177\177\177\036`\177\177\177\177\177\177\177o>\177\177\177\177\177\177\177\024\000H{\177\177\177\177\177-\000 {\177\177\177\177\177/\000\020\177\177\177\177\177\177a\000@|\177\177\177\177\177=\000\000\022\177\177\177\177\177\005\000\000H~\177\177\177\177%\000\000\000~\177\177\177\177k\000\000Dy\177\177\177\177\024\000\000\000pg\177\177\177-\000\000\000\000O\177\177\177/\000\000\000\000|\177\177\177a\000\000\000\000p\177\177\177=\000\000\000\000@~\177\177\005\000\000\000\000\000~\177\177%\000\000\000\000\000x\177\177k\000\000\000\000\020`\177\177\024\000\000\000\000\000\000\017\177-\000\000\000\000\000\000t~/\000\000\000\000\000\000r\177a\000\000\000\000\000\000@\177=\000\000\000\000\000\000\b~\005\000\000\000\000\000\000\020x%\000\000\000\000\000\000 `k\000\000\000\000\000\000@aS\000\000\000\000\000\000\000\000,\000\000\000\000\000\000\000\0004\000\000\000\000\000\000\000\000h\004\000\000\000\000\000\000\000|\034\000\000\000\000\000\000\000\026+\000\000\000\000\000\000\000\024~\000\000\000\000\000\000\0004|\001\000\000\000\000\000\000({?\000\000\000\000\000\000v\177\037\001\000\000\000\000\0004\177\177\000\000\000\000\000\000\020\177\177\022\000\000\000\000\000<~\177K\000\000\000\000\0006\177\177/\001\000\000\000\000T\177\177\177\003\000\000\000\0004\177\177\177\007\000\000\000\000(\177\177\177\177\001\000\000\000V\177\177\177\177\004\000\000\0004\177\177\177\177\003\000\000\000\020\177\177\177\177K\000\000\0000\177\177\177\177/\002\000\000\026\177\177\177\177?\005\000\000T\177\177\177\177\177\017\000\0000\177\177\177\177\177\037\000\000\020~\177\177\177\177?~\000V\177\177\177\177\177\177z\0014\177\177\177\177\177\177i\000\026\177\177\177\177\177\177/\0001\177\177\177\177\177\177?\t\026\177\177\177\177\177\177\177\025V\177\177\177\177\177\177\177\027P\177\177\177\177\177\177\177\017T\177\177\177\177\177\177\177\177\037|\177\177\177\000\000\000\006\b\000\000\000\000\000\177\177\177\027qz\177\177\177\177\177\177\177\001w\177\177\177\177\177\177\0078f\177\177\177\007\000\000\000\036\036\000\000\000p\177\177\177g\037\177\177\177\037\000\000\000\033\036\001\000\000\000\000\000\000g~\017\000\000\000\000\000\000N}'\004\000\000\000\000\b\036|\017\003\000\000\000\000\000\006y\037\f\000\000\000\000\000\017\177\177\020\000\000\000\000\000v|\177F\000\000\000\000\000Vy\177\017\002\000\000\000\000\036|\177+\006\000\000\000\000g~\177\177o\t\000\000\000N}\177\177\0375\000\000\b\036|\177\177\177^\000\000\000\006y\177\177\177\021\000\000\000\017\177\177\177\177C\002\000\000v|\177\177\177{\006\000\000Vy\177\177\177w\t\000\000\036|\177\177\177o\033\000\000g~\177\177\177\177?%\000N}\177\177\177\177\177\004\t\036|\177\177\177\177\177\021\000\006y\177\177\177\177\177O\000\017\177\177\177\177\177\177?\nv|\177\177\177\177\177\177\nVy\177\177\177\177\177_)\036|\177\177\177\177\177\177\020L\177\177\177\177\177\177\177yN~\177\177\177\177\177\177\177s{\177\177\177\177\177\177;vr\177\177\177\177\177\177\1771g\177\177\177\177\177\177?q~\177\177\177\177\177\177\177xI\177\177\177\177\177\177\177sG~\177\177\177\177\177\177f\007\030~\177\177\177\177yX\000P~\177\177\177\177\177{\000@n\177\177\177\177;~\b@K\177\177\177\177\177q\020@,\177\177\177\177?q\000\0001\177\177\177\177\177x\000\000\"\177\177\177\177\177s\000\000<x\177\177\177\177f\031\002\000`x\177\177\177q\000\000\000@z\177\177\177s\000\000\000\000:\177\177\177v\b\000\000\000.~\177\177}\021\000\000\0002}\177\177q\000\000\000\000D}\177\177p\000\000\000\000\b}\177\177w\000\000\000\000pa\177\177\177\031\000\000\000\000\000\002pq\000\000\000\000\000\000\007ps\000\000\000\000\000\000\b\000p\b\000\000\000\000\000 \030x\021\000\000\000\000\000\0001p\000\000\000\000\000\000\000~x\000\000\000\000\000\000\000\030u\000\000\000\000\000\000@\001z\030\000\000\000\000\000\000\000r\003\000\000\000\177\177\177_\013x\177\177\177\001" };
 
 	public static boolean isLocalPath(String path) {
-		return path != null && path.startsWith("c:\\");
+		if (path == null)
+			return false;
+		path = path.trim().replace('/', '\\');
+		if (path.startsWith("\\\\"))
+			return true;
+		return path.length() > 2 && Character.isLetter(path.charAt(0))
+				&& path.charAt(1) == ':' && path.charAt(2) == '\\';
 	}
 
 	public UrlProcessQueue		urlProcessQueue;
@@ -89,6 +100,7 @@ public abstract class AbstractYahooApplet extends Applet implements
 	public boolean				q;
 	public boolean				r;
 	public boolean				s;
+	private static Hashtable	localizedUiByLocale	= new Hashtable();
 
 	public AbstractYahooApplet() {
 		urlProcessQueue = new UrlProcessQueue(this);
@@ -207,6 +219,153 @@ public abstract class AbstractYahooApplet extends Applet implements
 		return stringLookuper.lookupString(i1);
 	}
 
+	private String normalizeLocaleCode(String locale) {
+		if (locale == null || locale.trim().length() == 0)
+			return "us";
+		return locale.trim().toLowerCase().replace('-', '_');
+	}
+
+	private Hashtable getUiMessages(String locale) {
+		locale = normalizeLocaleCode(locale);
+		Hashtable messages = (Hashtable) localizedUiByLocale.get(locale);
+		if (messages != null)
+			return messages;
+		messages = loadUiMessages(locale);
+		localizedUiByLocale.put(locale, messages);
+		return messages;
+	}
+
+	private Hashtable loadUiMessages(String locale) {
+		Hashtable messages = new Hashtable();
+		BufferedReader reader = null;
+		try {
+			InputStream input = getClass().getClassLoader().getResourceAsStream(
+					"yog/i18n/ui_messages.tsv");
+			if (input == null)
+				return messages;
+			reader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
+			String line;
+			while ((line = reader.readLine()) != null) {
+				if (line.length() == 0 || line.startsWith("#"))
+					continue;
+				int first = line.indexOf('\t');
+				if (first < 0)
+					continue;
+				int second = line.indexOf('\t', first + 1);
+				if (second < 0)
+					continue;
+				String lang = line.substring(0, first).trim();
+				if (!locale.equalsIgnoreCase(lang))
+					continue;
+				String key = line.substring(first + 1, second).trim();
+				String value = line.substring(second + 1);
+				messages.put(key, value);
+			}
+		}
+		catch (IOException _ex) {
+		}
+		finally {
+			if (reader != null) {
+				try {
+					reader.close();
+				}
+				catch (IOException _ex) {
+				}
+			}
+		}
+		return messages;
+	}
+
+	private byte[] readAllBytes(InputStream input) throws IOException {
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+		byte[] buffer = new byte[4096];
+		int read;
+		while ((read = input.read(buffer)) != -1)
+			output.write(buffer, 0, read);
+		return output.toByteArray();
+	}
+
+	private String getBundledDictionaryResource(String locale) {
+		String normalized = normalizeLocaleCode(locale);
+		String className = getClass().getName();
+		String prefix = null;
+		String suffix = null;
+		if (className.indexOf(".po.") != -1) {
+			prefix = "yog/y/po/";
+			suffix = "-ti.ldict";
+		}
+		else if (className.indexOf(".k.") != -1) {
+			prefix = "yog/y/k/";
+			suffix = "-t4.ldict";
+		}
+		if (prefix == null || suffix == null)
+			return null;
+		String resource = prefix + normalized + suffix;
+		if (getClass().getClassLoader().getResource(resource) != null)
+			return resource;
+		if (!"us".equals(normalized)) {
+			resource = prefix + "us" + suffix;
+			if (getClass().getClassLoader().getResource(resource) != null)
+				return resource;
+		}
+		return null;
+	}
+
+	private byte[] loadBundledDictionaryBytes() throws IOException {
+		String resource = getBundledDictionaryResource(intl_code);
+		if (resource == null)
+			return null;
+		debugLog("loading bundled dictionary resource " + resource);
+		InputStream input = null;
+		try {
+			input = getClass().getClassLoader().getResourceAsStream(resource);
+			if (input == null)
+				return null;
+			return readAllBytes(input);
+		}
+		finally {
+			if (input != null)
+				input.close();
+		}
+	}
+
+	public String uiText(String key, String fallback) {
+		Hashtable localized = getUiMessages(normalizeLocaleCode(intl_code));
+		String value = localized == null ? null : (String) localized.get(key);
+		if ((value == null || value.length() == 0)
+				&& !"us".equalsIgnoreCase(normalizeLocaleCode(intl_code))) {
+			Hashtable english = getUiMessages("us");
+			value = english == null ? null : (String) english.get(key);
+		}
+		if (value == null || value.length() == 0)
+			value = fallback;
+		return value;
+	}
+
+	public String uiText(String key, String fallback, String arg0) {
+		String value = uiText(key, fallback);
+		if (arg0 != null)
+			value = replaceAll(value, "{0}", arg0);
+		return value;
+	}
+
+	private String replaceAll(String value, String token, String replacement) {
+		if (value == null || token == null || token.length() == 0)
+			return value;
+		if (replacement == null)
+			replacement = "";
+		StringBuffer buffer = new StringBuffer();
+		int index = 0;
+		int next;
+		while ((next = value.indexOf(token, index)) >= 0) {
+			buffer.append(value.substring(index, next));
+			buffer.append(replacement);
+			index = next + token.length();
+		}
+		buffer.append(value.substring(index));
+		return buffer.toString();
+	}
+
 	public void onSoundOff() {
 		i = false;
 	}
@@ -229,16 +388,41 @@ public abstract class AbstractYahooApplet extends Applet implements
 		case 0: // '\0'
 			String ldict_url = getParameter("ldict_url");
 			String loading_messsage = getParameter("loading_messsage");
+			byte[] bundledDictionary = null;
 			debugLog("process case 0 entered");
 			debugLog("ldict_url=" + ldict_url);
 			debugLog("loading_messsage=" + loading_messsage);
-			if (ldict_url != null) {
+			if (ldict_url != null || getBundledDictionaryResource(intl_code) != null) {
 				processor.defaultContainer.addChildObject(
 						lblStatus = new YahooLabel(
 								loading_messsage != null ? loading_messsage
-										: "Loading text", YahooLabel.yl_a), 1,
+										: uiText("loading_text", "Loading text"), YahooLabel.yl_a), 1,
 						1, 0, 0, true);
-				if (!isLocalPath(ldict_url)) {
+				if (ldict_url == null || isLocalPath(ldict_url)) {
+					try {
+						bundledDictionary = loadBundledDictionaryBytes();
+					}
+					catch (IOException _ex) {
+						debugLog("bundled dictionary load FAILED", _ex);
+					}
+					if (bundledDictionary != null) {
+						try {
+							stringLookuper.read(bundledDictionary);
+							debugLog("bundled dictionary loaded OK");
+							processor.defaultContainer.removeChildObject(lblStatus);
+							q = true;
+							Gi();
+							if (r)
+								bz();
+							processor.defaultContainer.Gn(true);
+							break;
+						}
+						catch (IOException _ex) {
+							debugLog("bundled dictionary parse FAILED", _ex);
+						}
+					}
+				}
+				if (ldict_url != null && !isLocalPath(ldict_url)) {
 					debugLog("ldict_url treated as remote path");
 					loadText(ldict_url, 0, urlProcessQueue, true);
 				} else {
@@ -265,9 +449,10 @@ public abstract class AbstractYahooApplet extends Applet implements
 						_ex.printStackTrace();
 					}
 					try {
-						lblStatus.setCaption("Malformed text data from "
-								+ InetAddress.getByName(getParameter("host"))
-										.toString());
+						lblStatus.setCaption(uiText("malformed_text_data_from",
+								"Malformed text data from {0}",
+								InetAddress.getByName(getParameter("host"))
+										.toString()));
 					}
 					catch (UnknownHostException _ex) {
 					}
@@ -312,9 +497,10 @@ public abstract class AbstractYahooApplet extends Applet implements
 						_ex.printStackTrace();
 					}
 					try {
-						lblStatus.setCaption("Malformed text data from "
-								+ InetAddress.getByName(getParameter("host"))
-										.toString());
+						lblStatus.setCaption(uiText("malformed_text_data_from",
+								"Malformed text data from {0}",
+								InetAddress.getByName(getParameter("host"))
+										.toString()));
 					}
 					catch (UnknownHostException _ex) {
 					}
@@ -322,8 +508,9 @@ public abstract class AbstractYahooApplet extends Applet implements
 				else {
 					debugLog("remote dictionary content missing; exception="
 							+ (_lcls93.exception != null ? _lcls93.exception.toString() : "no data"));
-					lblStatus.setCaption("Error loading text: "
-							+ (_lcls93.exception != null ? _lcls93.exception
+					lblStatus.setCaption(uiText("error_loading_text",
+							"Error loading text: {0}",
+							_lcls93.exception != null ? _lcls93.exception
 									.toString() : "no data"));
 				}
 			}

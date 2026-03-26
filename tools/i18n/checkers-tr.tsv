@@ -1,0 +1,234 @@
+﻿# key_hex	key_dec	text
+0x0000	0	Uyarı
+0x0001	1	TAMAM
+0x0017	23	Oturmak
+0x0018	24	geçici
+0x0031	49	Bu oyun size \\n tarafından sağlanmıştır:
+0x0032	50	Oyun bitti
+0x0034	52	Seçenekler
+0x0035	53	Masa Tipi
+0x0041	65	Evet
+0x0042	66	HAYIR
+0x0048	72	Oynamayı bırakın ve bu oyunun sonucunu iptal edin\\n (rakip kabul etmelidir).
+0x0049	73	Boş ver
+0x004a	74	Onaydan Çık
+0x004b	75	Vazgeç ve Kaybet:
+0x004c	76	Çık ve İptal Et
+0x004d	77	Vazgeç ve Kaybet
+0x004e	78	Oyunu bırakın ve hükmen mağlup olun.
+0x004f	79	Çık ve Kaydet:
+0x0050	80	Çık ve İptal Et:
+0x0051	81	Oynamayı bırakın ve \\n oyununu kaydedin (rakip kabul etmelidir).
+0x0052	82	Bitmemiş derecelendirilmiş bir oyundan çıkıyorsunuz:
+0x0053	83	Çık ve Kaydet
+0x0079	121	Kabul etmek
+0x007b	123	Tüm Davetiyeleri Reddet
+0x007c	124	Davet edildi
+0x007d	125	\\n \\nOyun seçenekleri:
+0x007e	126	Sebep:
+0x007f	127	(isteğe bağlı)
+0x0080	128	seni masaya davet etti #
+0x0081	129	\\n \\nKatılmak ister misiniz?
+0x0082	130	Reddetmek
+0x0083	131	Yalnızca arkadaşlarımdan gelen anlık mesajlara izin ver.
+0x0084	132	Görmezden gelmek
+0x0085	133	İtibaren:
+0x0086	134	başladı
+0x0087	135	Profil
+0x0088	136	Göndermek
+0x0089	137	Kapalı
+0x008a	138	Hareketinizi yapın ve eğer
+0x008b	139	Bilgisayarı oynamak için 'Robot Oyna'ya basın.
+0x008d	141	- Oda:
+0x008e	142	geri dönmezseniz, size istifayı zorlama seçeneği sunulacaktır.
+0x008f	143	*** Kaydetme istendi.
+0x0090	144	Korumalı
+0x0091	145	bu oyunun kaydedilmesini talep etti.\\nBu kabul edilebilir mi?
+0x0092	146	Özel
+0x0093	147	senin
+0x0094	148	Oyuna katılmak için 'Otur' düğmesine tıklayın.
+0x0095	149	bu oyunun iptal edilmesini talep etti.\\nBu kabul edilebilir mi?
+0x0096	150	iptal edildi.
+0x0097	151	Ayağa kalk
+0x0098	152	rakip
+0x0099	153	benim sıramda
+0x009b	155	*** Artık herkes masanıza katılabilir.
+0x009c	156	S.
+0x009d	157	Rakip bekleniyor
+0x009e	158	Çıkış yapmak
+0x009f	159	masaya katıldı.
+0x00a0	160	Başlamak için 'Oyunu Başlat'ı tıklayın.
+0x00a1	161	Yardım
+0x00a2	162	masadan ayrıldı.
+0x00a3	163	*** Artık yalnızca davet ettiğiniz kişiler masanızda oynayabilir veya masanızı izleyebilir.
+0x00a4	164	Oyunu Başlat
+0x00a5	165	Ses açık
+0x00a6	166	- Ev sahibi:
+0x00a7	167	Halk
+0x00a8	168	Robotu Oyna
+0x00aa	170	Bot
+0x00ab	171	*** İptal istendi.
+0x00ac	172	*** Artık sadece davet ettiğiniz kişiler masanızda oynayabilir.
+0x00ae	174	- Masa:
+0x00af	175	*** Bu masanın sunucusu sizsiniz.
+0x00b0	176	Oyun:
+0x00b1	177	Senin
+0x00b2	178	Rakibin 'Başlat'a tıklaması bekleniyor.
+0x00b4	180	tamamlanmamış bir derecelendirilmiş oyun bıraktı.\\n
+0x00b5	181	*** Oyun
+0x00b6	182	kaydedildi.
+0x00b7	183	Davet etmek
+0x00b8	184	ortak
+0x00b9	185	Ses
+0x00ba	186	Eğer
+0x00bf	191	Ad Girin:
+0x00c0	192	Listeden Seç
+0x00c1	193	- veya -
+0x00c9	201	ping
+0x00ca	202	Oyuncu bilgileri
+0x00cb	203	Anlık mesaj gönder:
+0x00cc	204	saniye.
+0x00ce	206	dakika.
+0x00cf	207	Boşta kalma süresi:
+0x00e1	225	Masa
+0x00e2	226	Kim izliyor
+0x00e3	227	seçenekler:
+0x00e4	228	KATILMAK
+0x00e8	232	ile
+0x00e9	233	Rtng
+0x00ea	234	saniye.\\nNet gecikmem:
+0x00eb	235	sizi oturmaya davet etti.
+0x00f0	240	Önbelleğinizde istemcinin eski bir sürümü var.
+0x00f2	242	Ping gönderildi... yanıt bekleniyor.
+0x00f4	244	geçici
+0x00f5	245	İsim
+0x00f6	246	Oyun sunucusuna bağlanmaya çalışılıyor
+0x00f7	247	Şimdi Oyna
+0x00f9	249	Oyunlardan Çık
+0x00fb	251	net gecikmesi:
+0x00fd	253	Söylemek:
+0x00ff	255	Oyun sunucusuyla iletişim kuruluyor...
+0x0102	258	Hata: Sistem kaynakları yetersiz.\\nGereksiz tüm pencereleri ve uygulamaları kapatın.\\nArdından oyun penceresini kapatın ve tekrar deneyin.
+0x0105	261	Sunucuya bağlanılamıyor.\\nBuna dört şeyden biri neden olmuş olabilir:\\n1)Bir güvenlik duvarı arkasındasınız.\\n2)İnternete bağlı değilsiniz.\\n3)Oyun sunucusu kapalı.\\n4)Önbelleğinizde eski bir sayfa var.
+0x0106	262	Tablo Oluştur
+0x0108	264	Küçük Pencereler
+0x0109	265	Tbl
+0x010b	267	Tablodan başlatıldınız
+0x010c	268	Sunucuyla bağlantı kesildi... Çok uzun süre boşta kaldı
+0x0111	273	Yalnızca \\narkadaşlarından anlık iletiler
+0x0115	277	... oda durumu indiriliyor
+0x0118	280	Sunucuya giriş yaparken hata oluştu.
+0x0119	281	Tümünü Reddet\\nDavetiyeleri
+0x011c	284	Basamak
+0x011d	285	Kendinizi görmezden gelemezsiniz.
+0x0123	291	Sunucuyla bağlantı kesildi
+0x0125	293	Oyun sunucusuna şu şekilde bağlanıldı:
+0x0128	296	Derecelendirmeler
+0x0129	297	to\\noyundan istifa edin.
+0x012a	298	geri dönmek için.
+0x012b	299	Senin için bekle
+0x012c	300	zorla
+0x012d	301	Oyunu Kaydet
+0x012e	302	Oyunu İptal Et:
+0x012f	303	Oyunu İptal Et
+0x0130	304	Zorunlu Fesih:
+0x0131	305	Beklemek
+0x0132	306	Oynamayı bırakın ve oyunu kaydedin.
+0x0133	307	tamamlanmamış bir derecelendirilmiş oyunu terk etti:
+0x0134	308	Oynamayı bırakın ve bu oyunun sonucunu kaydetmeyin.
+0x0135	309	Oyunu Kaydet:
+0x0136	310	Zorunlu Fesih
+0x0137	311	Beklemek:
+0x0140	320	TAMAM
+0x0142	322	Sesli Uyarı
+0x0164	356	Uyarı
+0x0165	357	TAMAM
+0x0168	360	İptal etmek
+0x016c	364	Görmezden gelmek
+0x016d	365	Profil
+0x016e	366	Göndermek
+0x016f	367	Kapalı
+0x0179	377	Bot
+0x017c	380	saniye.
+0x0180	384	Davet etmek
+0x01f5	501	davetinizi reddetti.\\nNedeni:
+0x072c	1836	Geçersiz zaman belirtildi.
+0x072d	1837	Artış:
+0x072e	1838	dakika
+0x072f	1839	Başlangıç ​​zamanı:
+0x0730	1840	İptal etmek
+0x0731	1841	saniye
+0x0732	1842	TAMAM
+0x0733	1843	En fazla
+0x0734	1844	Zamanlayıcıyı Ayarla
+0x0735	1845	hareket başına dakika
+0x0736	1846	Zamanlayıcı yok
+0x073b	1851	Son Hareket
+0x073c	1852	Rakibiniz tarafından bir beraberlik teklif edildi.\\nKabul ediyor musunuz?
+0x073d	1853	Puanlı Oyun
+0x073e	1854	Teklif Çekilişi
+0x073f	1855	Rakibiniz önceki hamlesinin geri alınmasını talep etti.\\nBu kabul edilebilir mi?
+0x0740	1856	Dönüşü Geri Al
+0x0741	1857	*** Beraberlik teklifi reddedildi.
+0x0742	1858	İstifa etmek istediğinizden emin misiniz?
+0x0743	1859	oyunu kazanır.
+0x0744	1860	*** isteği geri al
+0x0745	1861	Çizmek
+0x0746	1862	*** geri alma işlemi onaylandı
+0x0747	1863	dakika başlangıç ​​zamanı.
+0x0748	1864	ikinci artış.
+0x074a	1866	zaman sınırı yok.
+0x0751	1873	Hiçbiri
+0x0752	1874	dk./hareket
+0x0753	1875	Zamanlayıcıyı Ayarla
+0x0754	1876	Zamanlayıcıları yalnızca tablonun sahibi ayarlayabilir.
+0x0755	1877	Zamanlayıcı:
+0x0756	1878	Zaman:
+0x0760	1888	derecelendirildi.
+0x0761	1889	derecelendirilmemiş.
+0x08da	2266	Kırmızı
+0x08db	2267	Beyaz
+0x08dd	2269	Kırmızı
+0x08de	2270	Beyaz
+0x0b48	2888	Daha fazla bilgi edin
+0x0b4c	2892	Oyunumun bağlantısını \\nYahoo'mda göster!
+0x0b4d	2893	Daha fazla bilgi edin
+0x0b80	2944	Kol saati
+0x0c5b	3163	Senin
+0x0c60	3168	Zaman:
+0x0d35	3381	Seçenekler
+0x0d36	3382	Tamamlamak
+0x0d43	3395	Seçenekler
+0x0d44	3396	Kol saati
+0x0dde	3550	Avatarlar:
+0x0de8	3560	Küfür Filtresi:
+0x0e0c	3596	dakika.
+0x0e1b	3611	Hiçbiri
+0x0e1c	3612	Güçlü
+0x0e1d	3613	Zayıf
+0x111f	4383	Oyun bitti:
+0x1129	4393	Kalan zaman:
+0x1131	4401	Reklamcılık:
+0x1143	4419	İstifa etmek
+0x158a	5514	Macintosh platformu livescript'i desteklemez.
+0x159b	5531	Ses
+0x1605	5637	Oyunun başlama zamanı:
+0x1629	5673	1 gün
+0x162a	5674	1 saat
+0x162b	5675	1 dakika
+0x162c	5676	10 dakika
+0x162d	5677	15 dakika
+0x162e	5678	3 saat
+0x162f	5679	30 dakika
+0x1630	5680	5 dakika
+0x1631	5681	Yasak
+0x1632	5682	Tekme atmak
+0x1633	5683	Sesini kapatmak
+0x1634	5684	Oda Yönetimi:
+0x16b8	5816	Açıklama:\\n(isteğe bağlı)
+0x16b9	5817	All-Star\\n üyeliğini göster
+0x16ba	5818	Ses
+0x1761	5985	İptal etmek
+0x1762	5986	Oyun Seçenekleri
+0x1763	5987	Başlangıç
+0x18cd	6349	Takas

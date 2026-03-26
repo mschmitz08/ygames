@@ -1,0 +1,241 @@
+﻿# key_hex	key_dec	text
+0x0000	0	Éber
+0x0001	1	RENDBEN
+0x0017	23	Ül
+0x0018	24	ideiglenes
+0x0031	49	Ezt a játékot\\n hozta neked:
+0x0032	50	Játék vége
+0x0034	52	Opciók
+0x0035	53	Táblázat típusa
+0x0041	65	Igen
+0x0042	66	Nem
+0x0048	72	Hagyja abba a játékot, és törölje a játék eredményét\\n (az ellenfélnek bele kell egyeznie).
+0x0049	73	Mindegy
+0x004a	74	Lépjen ki a Megerősítésből
+0x004b	75	Kilépés és felmondás:
+0x004c	76	Lépjen ki és mégse
+0x004d	77	Kilépés és Forfeit
+0x004e	78	Lépjen ki és hagyja abba a játékot.
+0x004f	79	Kilépés és mentés:
+0x0050	80	Kilépés és lemondás:
+0x0051	81	Hagyd abba a játékot és mentsd el a\\njátékot (az ellenfélnek bele kell egyeznie).
+0x0052	82	Kilépsz egy befejezetlen minősített játékból:
+0x0053	83	Kilépés és mentés
+0x0079	121	Elfogadás
+0x007b	123	Minden meghívó elutasítása
+0x007c	124	Meghívott
+0x007d	125	\\n \\nJátéklehetőségek:
+0x007e	126	Ok:
+0x007f	127	(választható)
+0x0080	128	meghívott a # asztalhoz
+0x0081	129	\\n \\nSzeretnél csatlakozni?
+0x0082	130	Hanyatlás
+0x0083	131	Csak az ismerőseimtől érkező azonnali üzenetek engedélyezése.
+0x0084	132	Figyelmen kívül hagyni
+0x0085	133	Tól:
+0x0086	134	elindult
+0x0087	135	Profil
+0x0088	136	Elküld
+0x0089	137	Közeli
+0x008a	138	Tedd meg a lépésedet, és ha
+0x008b	139	Nyomja meg a „Play Robot” gombot a számítógépes lejátszáshoz.
+0x008d	141	- Szoba:
+0x008e	142	nem tér vissza, akkor lehetőséget kap a lemondásra.
+0x008f	143	*** Mentés kérve.
+0x0090	144	Védett
+0x0091	145	kérte ennek a játéknak a mentését.\\nElfogadható ez?
+0x0092	146	Magán
+0x0093	147	a te
+0x0094	148	A játékhoz való csatlakozáshoz kattintson a „Sit” gombra.
+0x0095	149	kérte ennek a játéknak a törlését.\\nElfogadható ez?
+0x0096	150	törölve.
+0x0097	151	Feláll
+0x0098	152	ellenfél
+0x0099	153	Az én körömön
+0x009b	155	*** Most bárki csatlakozhat az asztalához.
+0x009c	156	s.
+0x009d	157	Várja az ellenfelet
+0x009e	158	Kilép
+0x009f	159	csatlakozott az asztalhoz.
+0x00a0	160	Kattintson a „Játék indítása” gombra a kezdéshez.
+0x00a1	161	Segítség
+0x00a2	162	elhagyta az asztalt.
+0x00a3	163	*** Csak az Ön által meghívott személyek játszhatnak vagy nézhetik az asztalát.
+0x00a4	164	Játék indítása
+0x00a5	165	Hang bekapcsolva
+0x00a6	166	- Házigazda:
+0x00a7	167	Nyilvános
+0x00a8	168	Játssz Robot
+0x00aa	170	Csomagtartó
+0x00ab	171	*** Törlés kérve.
+0x00ac	172	*** Most csak az Ön által meghívott személyek játszhatnak az asztalánál.
+0x00ae	174	- Táblázat:
+0x00af	175	*** Ön ennek az asztalnak a házigazdája.
+0x00b0	176	Játék:
+0x00b1	177	A te
+0x00b2	178	Várakozás, amíg az ellenfél a 'Start' gombra kattint.
+0x00b4	180	befejezetlen minősített játékot hagyott hátra.\\n
+0x00b5	181	*** Játék
+0x00b6	182	mentve.
+0x00b7	183	Meghív
+0x00b8	184	partner
+0x00b9	185	Hang
+0x00ba	186	Ha
+0x00bf	191	Írja be a nevet:
+0x00c0	192	Válassza a Listából lehetőséget
+0x00c1	193	- vagy -
+0x00c9	201	Ping
+0x00ca	202	Játékos információ a számára
+0x00cb	203	Azonnali üzenet küldése:
+0x00cc	204	másodpercig.
+0x00ce	206	jegyzőkönyv.
+0x00cf	207	Holtidő:
+0x00e1	225	Táblázat
+0x00e2	226	Ki figyel
+0x00e3	227	opciók:
+0x00e4	228	CSATLAKOZIK
+0x00e8	232	által
+0x00e9	233	Rtng
+0x00ea	234	másodperc.\\nA nettó késleltetésem:
+0x00eb	235	meghívta, hogy foglaljon helyet.
+0x00f0	240	A gyorsítótárban az ügyfél régi verziója van.
+0x00f2	242	A ping elküldve... válaszra vár.
+0x00f4	244	ideiglenes
+0x00f5	245	Név
+0x00f6	246	Megpróbál csatlakozni a játékszerverhez
+0x00f7	247	Játssz most
+0x00f9	249	Kilépés a játékokból
+0x00fb	251	nettó késése:
+0x00fd	253	Mondd:
+0x00ff	255	Kapcsolatfelvétel a játékszerverrel...
+0x0102	258	Hiba: Elfogytak a rendszererőforrások.\\nZárja be a szükségtelen ablakokat és alkalmazásokat.\\nEzután zárja be a játékok ablakát, és próbálkozzon újra.
+0x0105	261	Nem lehet csatlakozni a szerverhez.\\nNégy dolog egyike okozhatta ezt:\\n1)Tűzfal mögött van.\\n2)Nem csatlakozik az internethez.\\n3)A játékszerver nem működik.\\n4)Egy elavult oldal van a gyorsítótárban.
+0x0106	262	Táblázat létrehozása
+0x0108	264	Kis ablakok
+0x0109	265	Tbl
+0x010b	267	El lettél indítva az asztaltól
+0x010c	268	Leválasztva a szerverről... Túl sokáig tétlen
+0x0111	273	Csak a \\nbarátoktól származó azonnali üzenetek
+0x0115	277	... szoba állapotának letöltése
+0x0118	280	Hiba a szerverre való bejelentkezéskor.
+0x0119	281	Az összes\\nmeghívás elutasítása
+0x011c	284	Rung
+0x011d	285	Nem hagyhatod figyelmen kívül magad.
+0x0123	291	Megszakadt a kapcsolat a szerverrel
+0x0125	293	Csatlakozva a játékszerverhez mint
+0x0128	296	Értékelések
+0x0129	297	to\\nlemondani a játékot.
+0x012a	298	hogy visszatérjen.
+0x012b	299	Várd meg a tiédet
+0x012c	300	Kényszerítsd
+0x012d	301	Játék mentése
+0x012e	302	Játék lemondása:
+0x012f	303	Mégse játék
+0x0130	304	Force Forfeit:
+0x0131	305	Várjon
+0x0132	306	Hagyja abba a játékot, és mentse el a játékot.
+0x0133	307	felhagyott egy befejezetlen minősített játékkal:
+0x0134	308	Hagyja abba a játékot, és ne rögzítse ennek a játéknak az eredményét.
+0x0135	309	Játék mentése:
+0x0136	310	Force Forfeit
+0x0137	311	Várjon:
+0x0140	320	RENDBEN
+0x0142	322	Hangos figyelmeztetés
+0x0164	356	Éber
+0x0165	357	RENDBEN
+0x0168	360	Mégsem
+0x016c	364	Figyelmen kívül hagyni
+0x016d	365	Profil
+0x016e	366	Elküld
+0x016f	367	Közeli
+0x0179	377	Csomagtartó
+0x017c	380	másodpercig.
+0x0180	384	Meghív
+0x01f5	501	visszautasította a meghívását.\\nIndok:
+0x0b48	2888	További információ
+0x0b4c	2892	Mutasson linket a játékomhoz a Yahoo!-ban \\nmy Yahoo!
+0x0b4d	2893	További információ
+0x0b80	2944	Óra
+0x0c5b	3163	A te
+0x0d35	3381	Opciók
+0x0d36	3382	Kész
+0x0d43	3395	Opciók
+0x0d44	3396	Óra
+0x0dde	3550	Avatarok:
+0x0de8	3560	Trágárság szűrő:
+0x0e0c	3596	perc.
+0x0e1b	3611	Egyik sem
+0x0e1c	3612	Erős
+0x0e1d	3613	Gyenge
+0x111f	4383	A játék vége:
+0x1129	4393	Hátralévő idő:
+0x1131	4401	Hirdetés:
+0x11bf	4543	Válassza a Típus lehetőséget
+0x11c0	4544	RENDBEN
+0x11c1	4545	szilárd
+0x11c2	4546	csík
+0x11c6	4550	labda van a kezében.
+0x1213	4627	Válasszon zsebet.
+0x1214	4628	Kattintson egy labdára, amelyet el szeretne ütni.
+0x1217	4631	Húzza a dákót a bal egérgombbal.
+0x1225	4645	Rossz!
+0x1243	4675	Nyomja meg a space lőni.
+0x1244	4676	Húzza a Shift + bal egérgombbal a lövéshez.
+0x1245	4677	Húzza meg jobb egérgombbal a lövéshez.
+0x1252	4690	Karcolás!
+0x1253	4691	Lőj újra!
+0x1254	4692	Lő!
+0x125c	4700	Melyik típusú labdával szeretnél játszani?
+0x125d	4701	A dákógolyót lövés előtt mozgathatja.
+0x12b5	4789	reset
+0x132c	4908	30 mp.
+0x132d	4909	nincs időzítő.
+0x132e	4910	névleges.
+0x132f	4911	mp.
+0x1338	4920	angol
+0x136c	4972	Hatalom
+0x13fc	5116	Egy lépés ideje:
+0x13fd	5117	Időzítő
+0x1400	5120	Mégsem
+0x1401	5121	Nyolclabdás játék
+0x1402	5122	Játéklehetőségek
+0x1403	5123	Értékelt játék.
+0x1404	5124	Indul
+0x1405	5125	Edzés.
+0x140a	5130	mp.
+0x1413	5139	megnyeri a játékot.
+0x158a	5514	A Macintosh platform nem támogatja a livescriptet.
+0x159b	5531	Hang
+0x1605	5637	A játék kezdetének ideje:
+0x1629	5673	1 nap
+0x162a	5674	1 óra
+0x162b	5675	1 perc
+0x162c	5676	10 perc
+0x162d	5677	15 perc
+0x162e	5678	3 óra
+0x162f	5679	30 perc
+0x1630	5680	5 perc
+0x1631	5681	Tilalom
+0x1632	5682	Rúgás
+0x1633	5683	Néma
+0x1634	5684	Szoba adminisztráció:
+0x1676	5750	Mégsem
+0x1677	5751	További információ
+0x1694	5780	Kilenc labdás játék
+0x1696	5782	A 9 golyós medence elérhető a Yahoo!
+0x169c	5788	A 9 golyós medence elérhető a Yahoo!
+0x16b2	5810	8-labdás.
+0x16b3	5811	9-labdás.
+0x16b5	5813	8-labdás.
+0x16b6	5814	9-labdás.
+0x16b7	5815	Edzés.
+0x16b8	5816	Leírás: \\n (opcionális)
+0x16b9	5817	Az All-Star\\n-tagság megjelenítése
+0x16ba	5818	Hang
+0x1761	5985	Mégsem
+0x1762	5986	Játéklehetőségek
+0x1763	5987	Indul
+0x179d	6045	y
+0x18cd	6349	Csere
+0x18ce	6350	Nem sikerült megnyitni a táblázat ablakát.\\nKérjük, állítsa be böngészőjét úgy, hogy engedélyezze az előugró ablakokat ezen a webhelyen, és próbálja újra.
+0x18cf	6351	Megpróbál előugró táblázat ablakot...

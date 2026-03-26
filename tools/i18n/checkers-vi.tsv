@@ -1,0 +1,234 @@
+﻿# key_hex	key_dec	text
+0x0000	0	Báo động
+0x0001	1	ĐƯỢC RỒI
+0x0017	23	Ngồi
+0x0018	24	tạm thời
+0x0031	49	Trò chơi này được\\n mang đến cho bạn bởi:
+0x0032	50	Trò chơi kết thúc
+0x0034	52	Tùy chọn
+0x0035	53	Loại bảng
+0x0041	65	Đúng
+0x0042	66	KHÔNG
+0x0048	72	Dừng chơi và hủy kết quả\\n của ván này (đối thủ phải đồng ý).
+0x0049	73	Đừng bận tâm
+0x004a	74	Thoát xác nhận
+0x004b	75	Bỏ cuộc và bị mất:
+0x004c	76	Thoát và hủy
+0x004d	77	Bỏ cuộc và bị mất
+0x004e	78	Bỏ cuộc và bỏ cuộc chơi.
+0x004f	79	Thoát và lưu:
+0x0050	80	Thoát và hủy:
+0x0051	81	Dừng chơi và lưu trò chơi \\n (đối thủ phải đồng ý).
+0x0052	82	Bạn đang bỏ một trò chơi được xếp hạng chưa hoàn thành:
+0x0053	83	Thoát và lưu
+0x0079	121	Chấp nhận
+0x007b	123	Từ chối tất cả lời mời
+0x007c	124	Được mời
+0x007d	125	\\n \\nCác tùy chọn trò chơi:
+0x007e	126	Lý do:
+0x007f	127	(không bắt buộc)
+0x0080	128	đã mời bạn vào bàn #
+0x0081	129	\\n \\nBạn có muốn tham gia không?
+0x0082	130	Sự suy sụp
+0x0083	131	Chỉ cho phép tin nhắn tức thời từ bạn bè của tôi.
+0x0084	132	Phớt lờ
+0x0085	133	Từ:
+0x0086	134	bắt đầu
+0x0087	135	Hồ sơ
+0x0088	136	Gửi
+0x0089	137	Đóng
+0x008a	138	Hãy di chuyển và nếu
+0x008b	139	Nhấn 'Play Robot' để chơi trên máy tính.
+0x008d	141	- Phòng:
+0x008e	142	không quay trở lại, bạn\\nsẽ được cung cấp tùy chọn buộc từ chức.
+0x008f	143	*** Lưu yêu cầu.
+0x0090	144	Được bảo vệ
+0x0091	145	đã yêu cầu lưu trò chơi này.\\nĐiều này có được chấp nhận không?
+0x0092	146	Riêng tư
+0x0093	147	của bạn
+0x0094	148	Nhấp vào nút 'Ngồi' để tham gia trò chơi.
+0x0095	149	đã yêu cầu hủy trò chơi này.\\nĐiều này có được chấp nhận không?
+0x0096	150	bị hủy bỏ.
+0x0097	151	đứng lên
+0x0098	152	đối thủ
+0x0099	153	Đến lượt tôi
+0x009b	155	*** Bất kỳ ai cũng có thể tham gia bàn của bạn ngay bây giờ.
+0x009c	156	S.
+0x009d	157	Chờ đợi đối thủ
+0x009e	158	Từ bỏ
+0x009f	159	đã tham gia vào bảng.
+0x00a0	160	Nhấp vào 'Bắt ​​đầu trò chơi' để bắt đầu.
+0x00a1	161	Giúp đỡ
+0x00a2	162	đã rời khỏi bàn.
+0x00a3	163	*** Chỉ những người bạn đã mời mới có thể chơi hoặc xem bàn của bạn bây giờ.
+0x00a4	164	Bắt đầu trò chơi
+0x00a5	165	Bật âm thanh
+0x00a6	166	- Chủ nhà:
+0x00a7	167	Công cộng
+0x00a8	168	Chơi Robot
+0x00aa	170	Khởi động
+0x00ab	171	*** Yêu cầu hủy.
+0x00ac	172	*** Bây giờ chỉ những người bạn đã mời mới có thể chơi tại bàn của bạn.
+0x00ae	174	- Bàn:
+0x00af	175	*** Bạn là chủ bàn này.
+0x00b0	176	Trò chơi:
+0x00b1	177	Của bạn
+0x00b2	178	Đang chờ đối thủ nhấp vào 'Bắt ​​đầu'.
+0x00b4	180	đã để lại một trò chơi được xếp hạng chưa hoàn thành.\\n
+0x00b5	181	*** Trò chơi
+0x00b6	182	đã lưu.
+0x00b7	183	Mời
+0x00b8	184	cộng sự
+0x00b9	185	Âm thanh
+0x00ba	186	Nếu như
+0x00bf	191	Nhập tên:
+0x00c0	192	Chọn từ danh sách
+0x00c1	193	- hoặc -
+0x00c9	201	Ping
+0x00ca	202	Thông tin người chơi cho
+0x00cb	203	Gửi tin nhắn tức thì:
+0x00cc	204	giây.
+0x00ce	206	phút.
+0x00cf	207	Thời gian nhàn rỗi:
+0x00e1	225	Bàn
+0x00e2	226	Ai đang xem
+0x00e3	227	tùy chọn:
+0x00e4	228	THAM GIA
+0x00e8	232	qua
+0x00e9	233	Rtng
+0x00ea	234	giây.\\nĐộ trễ ròng của tôi:
+0x00eb	235	đã mời bạn ngồi.
+0x00f0	240	Bạn có phiên bản cũ của máy khách trong bộ đệm của mình.
+0x00f2	242	Ping đã gửi đi... chờ phản hồi.
+0x00f4	244	tạm thời
+0x00f5	245	Tên
+0x00f6	246	Đang cố gắng kết nối với máy chủ trò chơi
+0x00f7	247	Chơi ngay
+0x00f9	249	Thoát trò chơi
+0x00fb	251	độ trễ ròng của:
+0x00fd	253	Nói:
+0x00ff	255	Đang liên hệ với máy chủ trò chơi...
+0x0102	258	Lỗi: Hết tài nguyên hệ thống.\\nĐóng mọi cửa sổ và ứng dụng không cần thiết.\\nSau đó đóng cửa sổ trò chơi và thử lại.
+0x0105	261	Không thể kết nối với máy chủ.\\nMột trong bốn nguyên nhân có thể đã gây ra điều này:\\n1)Bạn đang ở phía sau tường lửa.\\n2)Bạn chưa kết nối với Internet.\\n3)Máy chủ trò chơi không hoạt động.\\n4)Bạn có một trang cũ trong bộ nhớ đệm của mình.
+0x0106	262	Tạo bảng
+0x0108	264	Cửa sổ nhỏ
+0x0109	265	tbl
+0x010b	267	Bạn đã được khởi động từ bảng
+0x010c	268	Đã ngắt kết nối với máy chủ ... Không hoạt động quá lâu
+0x0111	273	IM từ\\nchỉ bạn bè
+0x0115	277	... tải trạng thái phòng
+0x0118	280	Lỗi đăng nhập vào máy chủ.
+0x0119	281	Từ chối tất cả\\nlời mời
+0x011c	284	Thanh ngang
+0x011d	285	Bạn không thể bỏ qua chính mình.
+0x0123	291	Đã ngắt kết nối khỏi máy chủ
+0x0125	293	Đã kết nối với máy chủ trò chơi dưới dạng
+0x0128	296	Xếp hạng
+0x0129	297	to\\ntừ bỏ trò chơi.
+0x012a	298	để trở lại.
+0x012b	299	Đợi bạn
+0x012c	300	Buộc bạn
+0x012d	301	Lưu trò chơi
+0x012e	302	Hủy trò chơi:
+0x012f	303	Hủy trò chơi
+0x0130	304	Buộc tịch thu:
+0x0131	305	Chờ đợi
+0x0132	306	Dừng chơi và lưu trò chơi.
+0x0133	307	đã từ bỏ một trò chơi được xếp hạng chưa hoàn thành:
+0x0134	308	Dừng chơi và không\\nghi lại kết quả của trò chơi này.
+0x0135	309	Lưu trò chơi:
+0x0136	310	Buộc tịch thu
+0x0137	311	Chờ đợi:
+0x0140	320	ĐƯỢC RỒI
+0x0142	322	Cảnh báo âm thanh
+0x0164	356	Báo động
+0x0165	357	ĐƯỢC RỒI
+0x0168	360	Hủy bỏ
+0x016c	364	Phớt lờ
+0x016d	365	Hồ sơ
+0x016e	366	Gửi
+0x016f	367	Đóng
+0x0179	377	Khởi động
+0x017c	380	giây.
+0x0180	384	Mời
+0x01f5	501	đã từ chối lời mời của bạn.\\nLý do:
+0x072c	1836	Thời gian được chỉ định không hợp lệ.
+0x072d	1837	Tăng:
+0x072e	1838	phút
+0x072f	1839	Thời gian ban đầu:
+0x0730	1840	Hủy bỏ
+0x0731	1841	giây
+0x0732	1842	ĐƯỢC RỒI
+0x0733	1843	Nhiều nhất
+0x0734	1844	Đặt hẹn giờ
+0x0735	1845	phút mỗi lần di chuyển
+0x0736	1846	Không có bộ đếm thời gian
+0x073b	1851	Nước đi cuối cùng
+0x073c	1852	Đối thủ của bạn đã đưa ra một kết quả hòa.\\nBạn có chấp nhận không?
+0x073d	1853	Trò chơi được xếp hạng
+0x073e	1854	Ưu đãi rút thăm
+0x073f	1855	Đối thủ của bạn đã yêu cầu rút lại nước đi trước đó của họ.\\nĐiều này có được chấp nhận không?
+0x0740	1856	Hoàn tác lượt
+0x0741	1857	*** Ưu đãi rút thăm bị từ chối.
+0x0742	1858	Bạn có chắc chắn muốn từ chức không?
+0x0743	1859	thắng trò chơi.
+0x0744	1860	*** hoàn tác yêu cầu
+0x0745	1861	Vẽ tranh
+0x0746	1862	*** hoàn tác đã được cấp
+0x0747	1863	phút thời gian ban đầu.
+0x0748	1864	tăng thứ hai.
+0x074a	1866	không có giới hạn thời gian.
+0x0751	1873	Không có
+0x0752	1874	phút./di chuyển
+0x0753	1875	Đặt hẹn giờ
+0x0754	1876	Chỉ người chủ bàn mới có thể đặt bộ hẹn giờ.
+0x0755	1877	Hẹn giờ:
+0x0756	1878	Thời gian:
+0x0760	1888	được xếp hạng.
+0x0761	1889	chưa được xếp hạng.
+0x08da	2266	Màu đỏ
+0x08db	2267	Trắng
+0x08dd	2269	Màu đỏ
+0x08de	2270	Trắng
+0x0b48	2888	Tìm hiểu thêm
+0x0b4c	2892	Hiển thị liên kết tới trò chơi của tôi trong\\nMy Yahoo!
+0x0b4d	2893	Tìm hiểu thêm
+0x0b80	2944	Đồng hồ
+0x0c5b	3163	Của bạn
+0x0c60	3168	Thời gian:
+0x0d35	3381	Tùy chọn
+0x0d36	3382	Xong
+0x0d43	3395	Tùy chọn
+0x0d44	3396	Đồng hồ
+0x0dde	3550	Hình đại diện:
+0x0de8	3560	Bộ lọc tục tĩu:
+0x0e0c	3596	phút.
+0x0e1b	3611	Không có
+0x0e1c	3612	Mạnh
+0x0e1d	3613	Yếu đuối
+0x111f	4383	Trò chơi kết thúc:
+0x1129	4393	Thời gian còn lại:
+0x1131	4401	Quảng cáo:
+0x1143	4419	Từ chức
+0x158a	5514	Nền tảng Macintosh không hỗ trợ livescript.
+0x159b	5531	Tiếng nói
+0x1605	5637	Thời gian bắt đầu trò chơi:
+0x1629	5673	1 ngày
+0x162a	5674	1 giờ
+0x162b	5675	1 phút
+0x162c	5676	10 phút
+0x162d	5677	15 phút
+0x162e	5678	3 giờ
+0x162f	5679	30 phút
+0x1630	5680	5 phút
+0x1631	5681	Cấm
+0x1632	5682	Đá
+0x1633	5683	Tắt tiếng
+0x1634	5684	Quản lý phòng:
+0x16b8	5816	Mô tả:\\n(tùy chọn)
+0x16b9	5817	Hiển thị tư cách thành viên All-Star\\n
+0x16ba	5818	Tiếng nói
+0x1761	5985	Hủy bỏ
+0x1762	5986	Tùy chọn trò chơi
+0x1763	5987	Bắt đầu
+0x18cd	6349	Tráo đổi

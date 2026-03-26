@@ -1,0 +1,234 @@
+﻿# key_hex	key_dec	text
+0x0000	0	Alarm
+0x0001	1	OK
+0x0017	23	Sitzen
+0x0018	24	vorläufig
+0x0031	49	Dieses Spiel wurde Ihnen präsentiert von:
+0x0032	50	Spiel vorbei
+0x0034	52	Optionen
+0x0035	53	Tabellentyp
+0x0041	65	Ja
+0x0042	66	NEIN
+0x0048	72	Stoppen Sie das Spiel und annullieren Sie das Ergebnis\\ndieses Spiels (Gegner muss zustimmen).
+0x0049	73	Egal
+0x004a	74	Beenden Sie die Bestätigung
+0x004b	75	Aufgeben und verfallen:
+0x004c	76	Beenden und abbrechen
+0x004d	77	Aufgeben und verfallen
+0x004e	78	Beende das Spiel und verliere es.
+0x004f	79	Beenden und speichern:
+0x0050	80	Beenden und abbrechen:
+0x0051	81	Hören Sie auf zu spielen und speichern Sie das Spiel (der Gegner muss zustimmen).
+0x0052	82	Sie beenden ein unvollendetes bewertetes Spiel:
+0x0053	83	Beenden und speichern
+0x0079	121	Akzeptieren
+0x007b	123	Alle Einladungen ablehnen
+0x007c	124	Eingeladen
+0x007d	125	\\n \\nSpieloptionen:
+0x007e	126	Grund:
+0x007f	127	(optional)
+0x0080	128	hat Sie zu Tisch # eingeladen
+0x0081	129	\\n \\nMöchten Sie mitmachen?
+0x0082	130	Abfall
+0x0083	131	Erlaube nur Sofortnachrichten von meinen Freunden.
+0x0084	132	Ignorieren
+0x0085	133	Aus:
+0x0086	134	begonnen
+0x0087	135	Profil
+0x0088	136	Schicken
+0x0089	137	Schließen
+0x008a	138	Machen Sie Ihren Schritt und wenn
+0x008b	139	Drücken Sie „Roboter spielen“, um den Computer zu spielen.
+0x008d	141	- Zimmer:
+0x008e	142	Wenn Ihr Arbeitgeber nicht zurückkommt, erhalten Sie die Möglichkeit, einen Rücktritt zu erzwingen.
+0x008f	143	*** Speichern angefordert.
+0x0090	144	Geschützt
+0x0091	145	hat darum gebeten, dass dieses Spiel gespeichert wird.\\nIIst das akzeptabel?
+0x0092	146	Privat
+0x0093	147	dein
+0x0094	148	Klicken Sie auf die Schaltfläche „Sitzen“, um am Spiel teilzunehmen.
+0x0095	149	hat beantragt, dass dieses Spiel abgesagt wird.\\nIIst das akzeptabel?
+0x0096	150	abgesagt.
+0x0097	151	Aufstehen
+0x0098	152	Gegner
+0x0099	153	Ich bin dran
+0x009b	155	*** Jeder kann sich jetzt an Ihren Tisch setzen.
+0x009c	156	S.
+0x009d	157	Warten auf den Gegner
+0x009e	158	Aufhören
+0x009f	159	hat sich an den Tisch gesetzt.
+0x00a0	160	Klicken Sie auf „Spiel starten“, um zu beginnen.
+0x00a1	161	Helfen
+0x00a2	162	hat den Tisch verlassen.
+0x00a3	163	*** Nur von Ihnen eingeladene Personen dürfen jetzt an Ihrem Tisch spielen oder zuschauen.
+0x00a4	164	Spiel starten
+0x00a5	165	Audio an der Reihe
+0x00a6	166	- Gastgeber:
+0x00a7	167	Öffentlich
+0x00a8	168	Spielen Sie Roboter
+0x00aa	170	Stiefel
+0x00ab	171	*** Stornierung beantragt.
+0x00ac	172	*** Nur von Ihnen eingeladene Personen dürfen jetzt an Ihrem Tisch spielen.
+0x00ae	174	- Tisch:
+0x00af	175	*** Sie sind Gastgeber dieser Tabelle.
+0x00b0	176	Spiel:
+0x00b1	177	Dein
+0x00b2	178	Warten darauf, dass der Gegner auf „Start“ klickt.
+0x00b4	180	hat ein unvollendetes bewertetes Spiel hinterlassen.\\n
+0x00b5	181	*** Spiel
+0x00b6	182	gespeichert.
+0x00b7	183	Einladen
+0x00b8	184	Partner
+0x00b9	185	Klang
+0x00ba	186	Wenn
+0x00bf	191	Namen eingeben:
+0x00c0	192	Wählen Sie Aus Liste aus
+0x00c1	193	- oder -
+0x00c9	201	Klingeln
+0x00ca	202	Spielerinformationen für
+0x00cb	203	Sofortnachricht senden:
+0x00cc	204	Sekunden.
+0x00ce	206	Minuten.
+0x00cf	207	Leerlaufzeit:
+0x00e1	225	Tisch
+0x00e2	226	Wer schaut zu?
+0x00e3	227	Optionen:
+0x00e4	228	VERBINDEN
+0x00e8	232	von
+0x00e9	233	Rtng
+0x00ea	234	Sekunden.\\nMeine Nettoverzögerung:
+0x00eb	235	hat Sie eingeladen, Platz zu nehmen.
+0x00f0	240	Sie haben eine alte Version des Clients in Ihrem Cache.
+0x00f2	242	Ping gesendet ... wartet auf Antwort.
+0x00f4	244	vorläufig
+0x00f5	245	Name
+0x00f6	246	Es wird versucht, eine Verbindung zum Spieleserver herzustellen
+0x00f7	247	jetzt spielen
+0x00f9	249	Spiele beenden
+0x00fb	251	Nettoverzögerung:
+0x00fd	253	Sagen:
+0x00ff	255	Kontakt zum Spieleserver herstellen ...
+0x0102	258	Fehler: Nicht genügend Systemressourcen.\\nSchließen Sie alle nicht benötigten Fenster und Anwendungen.\\nSchließen Sie dann das Spielefenster und versuchen Sie es erneut.
+0x0105	261	Es konnte keine Verbindung zum Server hergestellt werden.\\nEine von vier Ursachen könnte dies verursacht haben:\\n1)Sie befinden sich hinter einer Firewall.\\n2)Sie sind nicht mit dem Internet verbunden.\\n3)Der Spieleserver ist ausgefallen.\\n4)Sie haben eine veraltete Seite in Ihrem Cache.
+0x0106	262	Tabelle erstellen
+0x0108	264	Kleine Fenster
+0x0109	265	Tbl
+0x010b	267	Sie wurden vom Tisch gebootet
+0x010c	268	Vom Server getrennt ... Zu lange im Leerlauf
+0x0111	273	IMs nur von\\nFreunden
+0x0115	277	... Raumstatus herunterladen
+0x0118	280	Fehler beim Anmelden am Server.
+0x0119	281	Lehnen Sie alle\\nEinladungen ab
+0x011c	284	Sprosse
+0x011d	285	Du kannst dich selbst nicht ignorieren.
+0x0123	291	Vom Server getrennt
+0x0125	293	Mit Spieleserver verbunden als
+0x0128	296	Bewertungen
+0x0129	297	to\\ndas Spiel aufgeben.
+0x012a	298	zurückkehren.
+0x012b	299	Warte auf deine
+0x012c	300	Erzwinge deine
+0x012d	301	Spiel speichern
+0x012e	302	Spiel abbrechen:
+0x012f	303	Spiel abbrechen
+0x0130	304	Forfait erzwingen:
+0x0131	305	Warten
+0x0132	306	Hören Sie auf zu spielen und speichern Sie das Spiel.
+0x0133	307	hat ein unvollendetes bewertetes Spiel aufgegeben:
+0x0134	308	Hören Sie auf zu spielen und zeichnen Sie das Ergebnis dieses Spiels nicht auf.
+0x0135	309	Spiel speichern:
+0x0136	310	Verfall erzwingen
+0x0137	311	Warten:
+0x0140	320	OK
+0x0142	322	Audioalarm
+0x0164	356	Alarm
+0x0165	357	OK
+0x0168	360	Stornieren
+0x016c	364	Ignorieren
+0x016d	365	Profil
+0x016e	366	Schicken
+0x016f	367	Schließen
+0x0179	377	Stiefel
+0x017c	380	Sekunden.
+0x0180	384	Einladen
+0x01f5	501	hat Ihre Einladung abgelehnt.\\nGrund:
+0x072c	1836	Ungültige Zeit angegeben.
+0x072d	1837	Inkrement:
+0x072e	1838	Minuten
+0x072f	1839	Erstzeit:
+0x0730	1840	Stornieren
+0x0731	1841	Sekunden
+0x0732	1842	OK
+0x0733	1843	Maximal
+0x0734	1844	Timer einstellen
+0x0735	1845	Minuten pro Zug
+0x0736	1846	Kein Timer
+0x073b	1851	Letzter Zug
+0x073c	1852	Ihr Gegner hat Ihnen ein Unentschieden angeboten.\\nAkzeptieren Sie?
+0x073d	1853	Bewertetes Spiel
+0x073e	1854	Angebotsverlosung
+0x073f	1855	Ihr Gegner hat darum gebeten, dass sein vorheriger Zug zurückgenommen wird.\\nIIst das akzeptabel?
+0x0740	1856	Drehung rückgängig machen
+0x0741	1857	*** Ziehungsangebot abgelehnt.
+0x0742	1858	Sind Sie sicher, dass Sie zurücktreten möchten?
+0x0743	1859	gewinnt das Spiel.
+0x0744	1860	*** Rückgängigmachen angefordert
+0x0745	1861	Ziehen
+0x0746	1862	*** Rückgängigmachen gewährt
+0x0747	1863	Minute Anfangszeit.
+0x0748	1864	zweites Inkrement.
+0x074a	1866	keine zeitliche Begrenzung.
+0x0751	1873	Keiner
+0x0752	1874	Min./Zug
+0x0753	1875	Timer einstellen
+0x0754	1876	Nur der Gastgeber eines Tisches darf die Timer einstellen.
+0x0755	1877	Timer:
+0x0756	1878	Zeit:
+0x0760	1888	bewertet.
+0x0761	1889	ohne Bewertung.
+0x08da	2266	Rot
+0x08db	2267	Weiß
+0x08dd	2269	Rot
+0x08de	2270	Weiß
+0x0b48	2888	Erfahren Sie mehr
+0x0b4c	2892	Zeige einen Link zu meinem Spiel in\\nmein Yahoo!
+0x0b4d	2893	Erfahren Sie mehr
+0x0b80	2944	Betrachten
+0x0c5b	3163	Dein
+0x0c60	3168	Zeit:
+0x0d35	3381	Optionen
+0x0d36	3382	Erledigt
+0x0d43	3395	Optionen
+0x0d44	3396	Betrachten
+0x0dde	3550	Avatare:
+0x0de8	3560	Obszönitätsfilter:
+0x0e0c	3596	Minute.
+0x0e1b	3611	Keiner
+0x0e1c	3612	Stark
+0x0e1d	3613	Schwach
+0x111f	4383	Spiel vorbei:
+0x1129	4393	Übrige Zeit:
+0x1131	4401	Werbung:
+0x1143	4419	Zurücktreten
+0x158a	5514	Die Macintosh-Plattform unterstützt kein Livescript.
+0x159b	5531	Stimme
+0x1605	5637	Zeit bis Spielbeginn:
+0x1629	5673	1 Tag
+0x162a	5674	1 Stunde
+0x162b	5675	1 Minute
+0x162c	5676	10 Minuten
+0x162d	5677	15 Minuten
+0x162e	5678	3 Stunden
+0x162f	5679	30 Minuten
+0x1630	5680	5 Minuten
+0x1631	5681	Verbot
+0x1632	5682	Kick
+0x1633	5683	Stumm
+0x1634	5684	Raumverwaltung:
+0x16b8	5816	Beschreibung:\\n(optional)
+0x16b9	5817	All-Star\\nMitgliedschaft anzeigen
+0x16ba	5818	Stimme
+0x1761	5985	Stornieren
+0x1762	5986	Spieloptionen
+0x1763	5987	Start
+0x18cd	6349	Tauschen

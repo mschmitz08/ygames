@@ -1,0 +1,234 @@
+﻿# key_hex	key_dec	text
+0x0000	0	Waarschuw
+0x0001	1	OK
+0x0017	23	Zitten
+0x0018	24	voorlopig
+0x0031	49	Dit spel is\\naangeboden door:
+0x0032	50	Spel voorbij
+0x0034	52	Opties
+0x0035	53	Tabeltype
+0x0041	65	Ja
+0x0042	66	Nee
+0x0048	72	Stop met spelen en annuleer het resultaat\\nvan dit spel (tegenstander moet akkoord gaan).
+0x0049	73	Laat maar zitten
+0x004a	74	Bevestiging afsluiten
+0x004b	75	Stoppen en opgeven:
+0x004c	76	Afsluiten en annuleren
+0x004d	77	Stoppen en opgeven
+0x004e	78	Sluit af en verlies het spel.
+0x004f	79	Afsluiten en opslaan:
+0x0050	80	Afsluiten en annuleren:
+0x0051	81	Stop met spelen en sla het \\n-spel op (tegenstander moet akkoord gaan).
+0x0052	82	Je verlaat een onvoltooide beoordeelde game:
+0x0053	83	Afsluiten en opslaan
+0x0079	121	Accepteren
+0x007b	123	Weiger alle uitnodigingen
+0x007c	124	Uitgenodigd
+0x007d	125	\\n \\nSpelopties:
+0x007e	126	Reden:
+0x007f	127	(optioneel)
+0x0080	128	heeft je uitgenodigd aan tafel #
+0x0081	129	\\n \\nWil je meedoen?
+0x0082	130	Afwijzen
+0x0083	131	Alleen expresberichten van mijn vrienden toestaan.
+0x0084	132	Negeren
+0x0085	133	Van:
+0x0086	134	begonnen
+0x0087	135	Profiel
+0x0088	136	Versturen
+0x0089	137	Dichtbij
+0x008a	138	Maak uw zet en of
+0x008b	139	Druk op 'Play Robot' om de computer af te spelen.
+0x008d	141	- Kamer:
+0x008e	142	niet terugkeert, krijgt u de mogelijkheid om uw ontslag af te dwingen.
+0x008f	143	*** Opslaan aangevraagd.
+0x0090	144	Beschermd
+0x0091	145	heeft verzocht dit spel op te slaan.\\nIs dit acceptabel?
+0x0092	146	Privé
+0x0093	147	jouw
+0x0094	148	Klik op een 'Zit'-knop om mee te doen aan het spel.
+0x0095	149	heeft verzocht om annulering van deze game.\\nIs dit acceptabel?
+0x0096	150	geannuleerd.
+0x0097	151	Sta op
+0x0098	152	tegenstander
+0x0099	153	Op mijn beurt
+0x009b	155	*** Iedereen kan nu aan tafel komen.
+0x009c	156	S.
+0x009d	157	Wachten op tegenstander
+0x009e	158	Ontslag nemen
+0x009f	159	is aan tafel gekomen.
+0x00a0	160	Klik op 'Start Game' om te beginnen.
+0x00a1	161	Hulp
+0x00a2	162	heeft de tafel verlaten.
+0x00a3	163	*** Alleen mensen die u heeft uitgenodigd, kunnen nu aan uw tafel spelen of kijken.
+0x00a4	164	Spel starten
+0x00a5	165	Audio aan de beurt
+0x00a6	166	- Gastheer:
+0x00a7	167	Openbaar
+0x00a8	168	Speel Robot
+0x00aa	170	Laars
+0x00ab	171	*** Annuleren aangevraagd.
+0x00ac	172	*** Alleen mensen die jij hebt uitgenodigd, mogen nu aan jouw tafel spelen.
+0x00ae	174	- Tafel:
+0x00af	175	*** Jij bent gastheer van deze tafel.
+0x00b0	176	Spel:
+0x00b1	177	Jouw
+0x00b2	178	Wachten tot de tegenstander op 'Start' klikt.
+0x00b4	180	heeft een onvoltooide beoordeelde game achtergelaten.\\n
+0x00b5	181	*** Spel
+0x00b6	182	opgeslagen.
+0x00b7	183	Uitnodiging
+0x00b8	184	partner
+0x00b9	185	Geluid
+0x00ba	186	Als
+0x00bf	191	Voer naam in:
+0x00c0	192	Selecteer uit lijst
+0x00c1	193	- of -
+0x00c9	201	Ping
+0x00ca	202	Spelerinformatie voor
+0x00cb	203	Direct bericht verzenden:
+0x00cc	204	seconden.
+0x00ce	206	notulen.
+0x00cf	207	Inactieve tijd:
+0x00e1	225	Tafel
+0x00e2	226	Wie kijkt
+0x00e3	227	opties:
+0x00e4	228	MEEDOEN
+0x00e8	232	door
+0x00e9	233	Rtng
+0x00ea	234	seconden.\\nMijn netto vertraging:
+0x00eb	235	heeft u uitgenodigd plaats te nemen.
+0x00f0	240	Je hebt een oude versie van de client in je cache.
+0x00f2	242	Ping verzonden... wacht op reactie.
+0x00f4	244	voorlopig
+0x00f5	245	Naam
+0x00f6	246	Er wordt geprobeerd verbinding te maken met de gameserver
+0x00f7	247	Speel nu
+0x00f9	249	Sluit Spellen af
+0x00fb	251	's netto vertraging:
+0x00fd	253	Inspraak:
+0x00ff	255	Contact opnemen met de gameserver...
+0x0102	258	Fout: Geen systeembronnen beschikbaar.\\nSluit alle onnodige vensters en toepassingen.\\nSluit vervolgens het spelvenster en probeer het opnieuw.
+0x0105	261	Kan geen verbinding maken met de server.\\nEen van de volgende vier dingen kan dit hebben veroorzaakt:\\n1)Je bevindt je achter een firewall.\\n2)Je hebt geen verbinding met internet.\\n3)De gameserver is offline.\\n4)Je hebt een verouderde pagina in je cache.
+0x0106	262	Tabel maken
+0x0108	264	Kleine ramen
+0x0109	265	Tbl
+0x010b	267	U bent opgestart vanaf de tabel
+0x010c	268	Verbinding met server verbroken... Te lang inactief
+0x0111	273	Alleen chatberichten van \\nvrienden
+0x0115	277	... kamerstatus downloaden
+0x0118	280	Fout bij inloggen op de server.
+0x0119	281	Alle \\n-uitnodigingen afwijzen
+0x011c	284	Sport
+0x011d	285	Je kunt jezelf niet negeren.
+0x0123	291	Verbinding met server verbroken
+0x0125	293	Verbonden met de gameserver als
+0x0128	296	Beoordelingen
+0x0129	297	naar\\nhet spel opgeven.
+0x012a	298	terug te keren.
+0x012b	299	Wacht op jouw
+0x012c	300	Forceer uw
+0x012d	301	Spel opslaan
+0x012e	302	Spel annuleren:
+0x012f	303	Spel annuleren
+0x0130	304	Forceer verbeurdverklaring:
+0x0131	305	Wachten
+0x0132	306	Stop met spelen en sla het spel op.
+0x0133	307	heeft een onvoltooid beoordeeld spel verlaten:
+0x0134	308	Stop met spelen en noteer het resultaat van dit spel niet\\n.
+0x0135	309	Spel opslaan:
+0x0136	310	Forceer verbeurdverklaring
+0x0137	311	Wachten:
+0x0140	320	OK
+0x0142	322	Audiowaarschuwing
+0x0164	356	Waarschuw
+0x0165	357	OK
+0x0168	360	Annuleren
+0x016c	364	Negeren
+0x016d	365	Profiel
+0x016e	366	Versturen
+0x016f	367	Dichtbij
+0x0179	377	Laars
+0x017c	380	seconden.
+0x0180	384	Uitnodiging
+0x01f5	501	heeft uw uitnodiging afgewezen.\\nReden:
+0x072c	1836	Ongeldige tijd opgegeven.
+0x072d	1837	Verhoging:
+0x072e	1838	notulen
+0x072f	1839	Initiële tijd:
+0x0730	1840	Annuleren
+0x0731	1841	seconden
+0x0732	1842	OK
+0x0733	1843	Hoogstens
+0x0734	1844	Timer instellen
+0x0735	1845	minuten per zet
+0x0736	1846	Geen timer
+0x073b	1851	Laatste zet
+0x073c	1852	Uw tegenstander heeft remise aangeboden.\\nAccepteert u dit?
+0x073d	1853	Beoordeeld spel
+0x073e	1854	Aanbieding gelijkspel
+0x073f	1855	Uw tegenstander heeft verzocht om zijn of haar vorige zet terug te nemen.\\nIs dit acceptabel?
+0x0740	1856	Draaiing ongedaan maken
+0x0741	1857	*** Gelijkspelaanbod afgewezen.
+0x0742	1858	Weet u zeker dat u ontslag wilt nemen?
+0x0743	1859	wint het spel.
+0x0744	1860	*** ongedaan maken gevraagd
+0x0745	1861	Tekenen
+0x0746	1862	*** ongedaan maken toegestaan
+0x0747	1863	minuut initiële tijd.
+0x0748	1864	tweede verhoging.
+0x074a	1866	geen tijdslimiet.
+0x0751	1873	Geen
+0x0752	1874	min./beweging
+0x0753	1875	Timer instellen
+0x0754	1876	Alleen de gastheer van een tafel mag de timers instellen.
+0x0755	1877	Timer:
+0x0756	1878	Tijd:
+0x0760	1888	beoordeeld.
+0x0761	1889	niet beoordeeld.
+0x08da	2266	Rood
+0x08db	2267	Wit
+0x08dd	2269	Rood
+0x08de	2270	Wit
+0x0b48	2888	Meer informatie
+0x0b4c	2892	Een link naar mijn spel weergeven in\\nmy Yahoo!
+0x0b4d	2893	Meer informatie
+0x0b80	2944	Horloge
+0x0c5b	3163	Jouw
+0x0c60	3168	Tijd:
+0x0d35	3381	Opties
+0x0d36	3382	Klaar
+0x0d43	3395	Opties
+0x0d44	3396	Horloge
+0x0dde	3550	Avatars:
+0x0de8	3560	Godslasteringfilter:
+0x0e0c	3596	minuut.
+0x0e1b	3611	Geen
+0x0e1c	3612	Sterk
+0x0e1d	3613	Zwak
+0x111f	4383	Spel voorbij:
+0x1129	4393	Resterende tijd:
+0x1131	4401	Advertentie:
+0x1143	4419	Ontslag nemen
+0x158a	5514	Het Macintosh-platform ondersteunt geen livescript.
+0x159b	5531	Stem
+0x1605	5637	Tijd om te beginnen met spelen:
+0x1629	5673	1 dag
+0x162a	5674	1 uur
+0x162b	5675	1 minuut
+0x162c	5676	10 minuten
+0x162d	5677	15 minuten
+0x162e	5678	3 uur
+0x162f	5679	30 minuten
+0x1630	5680	5 minuten
+0x1631	5681	Verbod
+0x1632	5682	Trap
+0x1633	5683	Stom
+0x1634	5684	Kameradministratie:
+0x16b8	5816	Beschrijving:\\n(optioneel)
+0x16b9	5817	Toon All-Star\\n-lidmaatschap
+0x16ba	5818	Stem
+0x1761	5985	Annuleren
+0x1762	5986	Spelopties
+0x1763	5987	Begin
+0x18cd	6349	Ruil

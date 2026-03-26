@@ -1,0 +1,241 @@
+﻿# key_hex	key_dec	text
+0x0000	0	Alerta
+0x0001	1	OK
+0x0017	23	Sentar
+0x0018	24	provisório
+0x0031	49	Este jogo foi\\ntrazido a você por:
+0x0032	50	Game Over
+0x0034	52	Opções
+0x0035	53	Tipo de tabela
+0x0041	65	Sim
+0x0042	66	Não
+0x0048	72	Pare de jogar e cancele o resultado \\n deste jogo (o oponente deve concordar).
+0x0049	73	Deixa para lá
+0x004a	74	Sair da confirmação
+0x004b	75	Desistir e desistir:
+0x004c	76	Sair e cancelar
+0x004d	77	Desistir e desistir
+0x004e	78	Saia e perca o jogo.
+0x004f	79	Sair e salvar:
+0x0050	80	Sair e cancelar:
+0x0051	81	Pare de jogar e salve o jogo \\n (o oponente deve concordar).
+0x0052	82	Você está saindo de um jogo classificado inacabado:
+0x0053	83	Sair e salvar
+0x0079	121	Aceitar
+0x007b	123	Recusar todos os convites
+0x007c	124	Convidado
+0x007d	125	\\n \\nOpções de jogo:
+0x007e	126	Razão:
+0x007f	127	(opcional)
+0x0080	128	convidou você para a mesa #
+0x0081	129	\\n \\nVocê gostaria de participar?
+0x0082	130	Declínio
+0x0083	131	Permitir mensagens instantâneas apenas de meus amigos.
+0x0084	132	Ignorar
+0x0085	133	De:
+0x0086	134	iniciado
+0x0087	135	Perfil
+0x0088	136	Enviar
+0x0089	137	Fechar
+0x008a	138	Faça a sua jogada e se
+0x008b	139	Pressione 'Play Robot' para jogar no computador.
+0x008d	141	- Sala:
+0x008e	142	não retornar, você\\n terá a opção de forçar uma demissão.
+0x008f	143	*** Salvar solicitado.
+0x0090	144	Protegido
+0x0091	145	solicitou que este jogo fosse salvo.\\nIsso é aceitável?
+0x0092	146	Privado
+0x0093	147	seu
+0x0094	148	Clique no botão 'Sentar' para entrar no jogo.
+0x0095	149	solicitou que este jogo fosse cancelado.\\nIsso é aceitável?
+0x0096	150	cancelado.
+0x0097	151	Ficar de pé
+0x0098	152	adversário
+0x0099	153	Na minha vez
+0x009b	155	*** Qualquer pessoa pode entrar na sua mesa agora.
+0x009c	156	S.
+0x009d	157	Esperando pelo oponente
+0x009e	158	Desistir
+0x009f	159	juntou-se à mesa.
+0x00a0	160	Clique em 'Iniciar jogo' para começar.
+0x00a1	161	Ajuda
+0x00a2	162	saiu da mesa.
+0x00a3	163	*** Somente as pessoas que você convidou podem jogar ou assistir sua mesa agora.
+0x00a4	164	Iniciar jogo
+0x00a5	165	Áudio ligado
+0x00a6	166	- Hospedar:
+0x00a7	167	Público
+0x00a8	168	Jogar Robô
+0x00aa	170	Bota
+0x00ab	171	*** Cancelamento solicitado.
+0x00ac	172	*** Somente as pessoas que você convidou podem jogar na sua mesa agora.
+0x00ae	174	- Mesa:
+0x00af	175	*** Você é o anfitrião desta mesa.
+0x00b0	176	Jogo:
+0x00b1	177	Seu
+0x00b2	178	Esperando que o oponente clique em 'Iniciar'.
+0x00b4	180	deixou um jogo classificado inacabado.\\n
+0x00b5	181	*** Jogo
+0x00b6	182	salvo.
+0x00b7	183	Convidar
+0x00b8	184	parceiro
+0x00b9	185	Som
+0x00ba	186	Se
+0x00bf	191	Digite o nome:
+0x00c0	192	Selecione da lista
+0x00c1	193	- ou -
+0x00c9	201	Pingar
+0x00ca	202	Informações do jogador para
+0x00cb	203	Enviar mensagem instantânea:
+0x00cc	204	segundos.
+0x00ce	206	minutos.
+0x00cf	207	Tempo ocioso:
+0x00e1	225	Mesa
+0x00e2	226	Quem está assistindo
+0x00e3	227	opções:
+0x00e4	228	JUNTAR
+0x00e8	232	por
+0x00e9	233	Rtng
+0x00ea	234	segundos.\\nMeu atraso líquido:
+0x00eb	235	convidou você para se sentar.
+0x00f0	240	Você tem uma versão antiga do cliente em seu cache.
+0x00f2	242	Ping despachado... aguardando resposta.
+0x00f4	244	provisório
+0x00f5	245	Nome
+0x00f6	246	Tentando se conectar ao servidor de jogos
+0x00f7	247	Jogue agora
+0x00f9	249	Sair dos jogos
+0x00fb	251	atraso líquido de:
+0x00fd	253	Dizer:
+0x00ff	255	Entrando em contato com o servidor de jogos...
+0x0102	258	Erro: Sem recursos do sistema.\\nFeche todas as janelas e aplicativos desnecessários.\\nEm seguida, feche a janela do jogo e tente novamente.
+0x0105	261	Não é possível conectar-se ao servidor.\\nUma das quatro coisas pode ter causado isso:\\n1)Você está atrás de um firewall.\\n2)Você não está conectado à Internet.\\n3)O servidor de jogos está inoperante.\\n4)Você tem uma página obsoleta em seu cache.
+0x0106	262	Criar tabela
+0x0108	264	Janelas pequenas
+0x0109	265	Tbl
+0x010b	267	Você foi inicializado da tabela
+0x010c	268	Desconectado do servidor... Inativo por muito tempo
+0x0111	273	Mensagens instantâneas de \\n apenas amigos
+0x0115	277	... baixando o estado da sala
+0x0118	280	Erro ao fazer login no servidor.
+0x0119	281	Recusar todos os convites \\n
+0x011c	284	Degrau
+0x011d	285	Você não pode ignorar a si mesmo.
+0x0123	291	Desconectado do servidor
+0x0125	293	Conectado ao servidor de jogos como
+0x0128	296	Avaliações
+0x0129	297	para\\ndesistir do jogo.
+0x012a	298	para retornar.
+0x012b	299	Espere pelo seu
+0x012c	300	Forçar o seu
+0x012d	301	Salvar jogo
+0x012e	302	Cancelar jogo:
+0x012f	303	Cancelar jogo
+0x0130	304	Forçar Perda:
+0x0131	305	Espere
+0x0132	306	Pare de jogar e salve o jogo.
+0x0133	307	abandonou um jogo classificado inacabado:
+0x0134	308	Pare de jogar e não registre o resultado deste jogo.
+0x0135	309	Salvar jogo:
+0x0136	310	Forçar Perda
+0x0137	311	Espere:
+0x0140	320	OK
+0x0142	322	Alerta de áudio
+0x0164	356	Alerta
+0x0165	357	OK
+0x0168	360	Cancelar
+0x016c	364	Ignorar
+0x016d	365	Perfil
+0x016e	366	Enviar
+0x016f	367	Fechar
+0x0179	377	Bota
+0x017c	380	segundos.
+0x0180	384	Convidar
+0x01f5	501	recusou seu convite.\\nMotivo:
+0x0b48	2888	Saber mais
+0x0b4c	2892	Mostrar um link para meu jogo em\\nmy Yahoo!
+0x0b4d	2893	Saber mais
+0x0b80	2944	Assistir
+0x0c5b	3163	Seu
+0x0d35	3381	Opções
+0x0d36	3382	Feito
+0x0d43	3395	Opções
+0x0d44	3396	Assistir
+0x0dde	3550	Avatares:
+0x0de8	3560	Filtro de palavrões:
+0x0e0c	3596	minuto.
+0x0e1b	3611	Nenhum
+0x0e1c	3612	Forte
+0x0e1d	3613	Fraco
+0x111f	4383	Game Over:
+0x1129	4393	Tempo restante:
+0x1131	4401	Anúncio:
+0x11bf	4543	Escolha o tipo
+0x11c0	4544	OK
+0x11c1	4545	sólido
+0x11c2	4546	listra
+0x11c6	4550	tem bola na mão.
+0x1213	4627	Escolha o bolso.
+0x1214	4628	Clique na bola que deseja golpear.
+0x1217	4631	Arraste o taco com o botão esquerdo do mouse.
+0x1225	4645	Falta!
+0x1243	4675	Pressione espaço para atirar.
+0x1244	4676	Puxe com Shift + botão esquerdo do mouse para atirar.
+0x1245	4677	Puxe com o botão direito do mouse para atirar.
+0x1252	4690	Arranhar!
+0x1253	4691	Atire novamente!
+0x1254	4692	Atirar!
+0x125c	4700	Qual tipo de bola você gostaria de jogar?
+0x125d	4701	Você pode mover a bola branca antes de arremessar.
+0x12b5	4789	reiniciar
+0x132c	4908	30 seg.
+0x132d	4909	sem temporizador.
+0x132e	4910	avaliado.
+0x132f	4911	seg.
+0x1338	4920	Inglês
+0x136c	4972	Poder
+0x13fc	5116	Tempo por movimento:
+0x13fd	5117	Temporizador
+0x1400	5120	Cancelar
+0x1401	5121	Jogo de oito bolas
+0x1402	5122	Opções de jogo
+0x1403	5123	Jogo avaliado.
+0x1404	5124	Começar
+0x1405	5125	Treinamento.
+0x140a	5130	seg.
+0x1413	5139	ganha o jogo.
+0x158a	5514	A plataforma Macintosh não suporta livescript.
+0x159b	5531	Voz
+0x1605	5637	Hora de começar o jogo:
+0x1629	5673	1 dia
+0x162a	5674	1 hora
+0x162b	5675	1 minuto
+0x162c	5676	10 minutos
+0x162d	5677	15 minutos
+0x162e	5678	3 horas
+0x162f	5679	30 minutos
+0x1630	5680	5 minutos
+0x1631	5681	Proibir
+0x1632	5682	Chute
+0x1633	5683	Mudo
+0x1634	5684	Administração de Sala:
+0x1676	5750	Cancelar
+0x1677	5751	Saber mais
+0x1694	5780	Jogo de Nove Bolas
+0x1696	5782	O sinuca de 9 bolas está disponível para o Yahoo!
+0x169c	5788	O sinuca de 9 bolas está disponível para o Yahoo!
+0x16b2	5810	Bola 8.
+0x16b3	5811	Bola 9.
+0x16b5	5813	Bola 8.
+0x16b6	5814	Bola 9.
+0x16b7	5815	Treinamento.
+0x16b8	5816	Descrição:\\n(opcional)
+0x16b9	5817	Mostrar associação ao All-Star\\n
+0x16ba	5818	Voz
+0x1761	5985	Cancelar
+0x1762	5986	Opções de jogo
+0x1763	5987	Começar
+0x179d	6045	sim
+0x18cd	6349	Trocar
+0x18ce	6350	Não foi possível abrir a janela da tabela.\\nConfigure seu navegador para permitir pop-ups para este site e tente novamente.
+0x18cf	6351	Tentando abrir a janela da tabela...

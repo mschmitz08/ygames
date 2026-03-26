@@ -1,0 +1,234 @@
+﻿# key_hex	key_dec	text
+0x0000	0	Alarm
+0x0001	1	OK
+0x0017	23	Siedzieć
+0x0018	24	tymczasowy
+0x0031	49	Ta gra została\\n dostarczona przez:
+0x0032	50	Koniec gry
+0x0034	52	Opcje
+0x0035	53	Typ tabeli
+0x0041	65	Tak
+0x0042	66	NIE
+0x0048	72	Przestań grać i anuluj wynik\\n tej gry (przeciwnik musi się zgodzić).
+0x0049	73	Nieważne
+0x004a	74	Wyjdź z potwierdzenia
+0x004b	75	Wyjdź i zrezygnuj:
+0x004c	76	Zakończ i anuluj
+0x004d	77	Zrezygnuj i zrezygnuj
+0x004e	78	Wyjdź i poddaj grę.
+0x004f	79	Wyjdź i zapisz:
+0x0050	80	Zakończ i anuluj:
+0x0051	81	Przestań grać i zapisz grę\\n (przeciwnik musi się zgodzić).
+0x0052	82	Opuszczasz niedokończoną grę z oceną:
+0x0053	83	Wyjdź i zapisz
+0x0079	121	Przyjąć
+0x007b	123	Odrzuć wszystkie zaproszenia
+0x007c	124	Zaproszony
+0x007d	125	\\n \\nOpcje gry:
+0x007e	126	Powód:
+0x007f	127	(fakultatywny)
+0x0080	128	zaprosił Cię do stolika #
+0x0081	129	\\n \\nChcesz dołączyć?
+0x0082	130	Spadek
+0x0083	131	Zezwalaj na wiadomości błyskawiczne tylko od moich znajomych.
+0x0084	132	Ignorować
+0x0085	133	Z:
+0x0086	134	zaczął
+0x0087	135	Profil
+0x0088	136	Wysłać
+0x0089	137	Zamknąć
+0x008a	138	Wykonaj swój ruch i jeśli
+0x008b	139	Naciśnij „Zagraj w robota”, aby zagrać na komputerze.
+0x008d	141	- Pokój:
+0x008e	142	nie wróci, Ty\\n będziesz mieć możliwość wymuszenia rezygnacji.
+0x008f	143	*** Poproszono o zapisanie.
+0x0090	144	Chroniony
+0x0091	145	zażądał zapisania tej gry.\\nCzy jest to dopuszczalne?
+0x0092	146	Prywatny
+0x0093	147	twój
+0x0094	148	Kliknij przycisk „Usiądź”, aby dołączyć do gry.
+0x0095	149	zażądał anulowania tej gry.\\nCzy jest to dopuszczalne?
+0x0096	150	odwołany.
+0x0097	151	Wstać
+0x0098	152	przeciwnik
+0x0099	153	Na moją kolej
+0x009b	155	*** Każdy może teraz dołączyć do Twojego stołu.
+0x009c	156	S.
+0x009d	157	Czekam na przeciwnika
+0x009e	158	Zrezygnować
+0x009f	159	dołączył do stołu.
+0x00a0	160	Aby rozpocząć, kliknij „Rozpocznij grę”.
+0x00a1	161	Pomoc
+0x00a2	162	odszedł od stołu.
+0x00a3	163	*** Tylko zaproszone przez Ciebie osoby mogą teraz grać lub oglądać Twój stół.
+0x00a4	164	Rozpocznij grę
+0x00a5	165	Dźwięk na zakręcie
+0x00a6	166	- Gospodarz:
+0x00a7	167	Publiczny
+0x00a8	168	Zagraj w Robota
+0x00aa	170	Uruchomić
+0x00ab	171	*** Zażądano anulowania.
+0x00ac	172	*** Tylko zaproszone przez Ciebie osoby mogą teraz grać przy Twoim stole.
+0x00ae	174	- Tabela:
+0x00af	175	*** Jesteś gospodarzem tego stołu.
+0x00b0	176	Gra:
+0x00b1	177	Twój
+0x00b2	178	Czekam, aż przeciwnik kliknie „Start”.
+0x00b4	180	opuścił niedokończoną ocenioną grę.\\n
+0x00b5	181	*** Gra
+0x00b6	182	zapisane.
+0x00b7	183	Zapraszać
+0x00b8	184	partner
+0x00b9	185	Dźwięk
+0x00ba	186	Jeśli
+0x00bf	191	Wpisz nazwę:
+0x00c0	192	Wybierz z listy
+0x00c1	193	- Lub -
+0x00c9	201	Świst
+0x00ca	202	Informacje o graczu dla
+0x00cb	203	Wyślij wiadomość błyskawiczną:
+0x00cc	204	towary drugiej jakości.
+0x00ce	206	protokół.
+0x00cf	207	Czas bezczynności:
+0x00e1	225	Tabela
+0x00e2	226	Kto ogląda
+0x00e3	227	opcje:
+0x00e4	228	DOŁĄCZYĆ
+0x00e8	232	przez
+0x00e9	233	Rtng
+0x00ea	234	sekundy.\\nMoje opóźnienie sieciowe:
+0x00eb	235	zaprosił Cię, abyś usiadł.
+0x00f0	240	Masz starą wersję klienta w pamięci podręcznej.
+0x00f2	242	Ping wysłany. Czekam na odpowiedź.
+0x00f4	244	tymczasowy
+0x00f5	245	Nazwa
+0x00f6	246	Próba połączenia z serwerem gier
+0x00f7	247	Zagraj teraz
+0x00f9	249	Wyjdź z gier
+0x00fb	251	opóźnienie netto:
+0x00fd	253	Mowić:
+0x00ff	255	Łączę się z serwerem gier...
+0x0102	258	Błąd: Brak zasobów systemowych.\\nZamknij wszystkie niepotrzebne okna i aplikacje.\\nNastępnie zamknij okno gier i spróbuj ponownie.
+0x0105	261	Nie można połączyć się z serwerem.\\nMogła to być jedna z czterech przyczyn:\\n1)Jesteś za zaporą sieciową.\\n2)Nie masz połączenia z Internetem.\\n3)Serwer gier nie działa.\\n4)Masz nieaktualną stronę w pamięci podręcznej.
+0x0106	262	Utwórz tabelę
+0x0108	264	Małe okna
+0x0109	265	Tbl
+0x010b	267	Zostałeś wystartowany ze stołu
+0x010c	268	Odłączono od serwera... Zbyt długi czas bezczynności
+0x0111	273	Wiadomości błyskawiczne tylko od znajomych \\n
+0x0115	277	...pobieranie stanu pokoju
+0x0118	280	Błąd logowania do serwera.
+0x0119	281	Odrzuć wszystkie zaproszenia \\n
+0x011c	284	Szczebel drabiny
+0x011d	285	Nie możesz siebie ignorować.
+0x0123	291	Rozłączono z serwerem
+0x0125	293	Połączono z serwerem gier jako
+0x0128	296	Oceny
+0x0129	297	aby\\npodpisać grę.
+0x012a	298	wrócić.
+0x012b	299	Poczekaj na swoje
+0x012c	300	Zmuś swoje
+0x012d	301	Zapisz grę
+0x012e	302	Anuluj grę:
+0x012f	303	Anuluj grę
+0x0130	304	Wymuś rezygnację:
+0x0131	305	Czekać
+0x0132	306	Przestań grać i zapisz grę.
+0x0133	307	porzucił niedokończoną ocenioną grę:
+0x0134	308	Przestań grać i NIE\\nzapisuj wyniku tej gry.
+0x0135	309	Zapisz grę:
+0x0136	310	Wymuś rezygnację
+0x0137	311	Czekać:
+0x0140	320	OK
+0x0142	322	Alarm dźwiękowy
+0x0164	356	Alarm
+0x0165	357	OK
+0x0168	360	Anulować
+0x016c	364	Ignorować
+0x016d	365	Profil
+0x016e	366	Wysłać
+0x016f	367	Zamknąć
+0x0179	377	Uruchomić
+0x017c	380	towary drugiej jakości.
+0x0180	384	Zapraszać
+0x01f5	501	odrzucił Twoje zaproszenie.\\nPowód:
+0x072c	1836	Podano nieprawidłowy czas.
+0x072d	1837	Przyrost:
+0x072e	1838	protokół
+0x072f	1839	Czas początkowy:
+0x0730	1840	Anulować
+0x0731	1841	towary drugiej jakości
+0x0732	1842	OK
+0x0733	1843	Najwyżej
+0x0734	1844	Ustaw minutnik
+0x0735	1845	minut na ruch
+0x0736	1846	Brak timera
+0x073b	1851	Ostatni ruch
+0x073c	1852	Twój przeciwnik zaproponował remis. \\nCzy akceptujesz?
+0x073d	1853	Oceniana gra
+0x073e	1854	Losowanie ofert
+0x073f	1855	Twój przeciwnik poprosił o cofnięcie swojego poprzedniego ruchu.\\nCzy jest to dopuszczalne?
+0x0740	1856	Cofnij obrót
+0x0741	1857	*** Oferta losowania odrzucona.
+0x0742	1858	Czy na pewno chcesz zrezygnować?
+0x0743	1859	wygrywa grę.
+0x0744	1860	*** Poproszono o cofnięcie
+0x0745	1861	Rysować
+0x0746	1862	*** Cofnięcie przyznane
+0x0747	1863	minuta czasu początkowego.
+0x0748	1864	drugi przyrost.
+0x074a	1866	bez limitu czasu.
+0x0751	1873	Nic
+0x0752	1874	min./ruch
+0x0753	1875	Ustaw minutnik
+0x0754	1876	Tylko gospodarz stołu może ustawiać liczniki czasu.
+0x0755	1877	Regulator czasowy:
+0x0756	1878	Czas:
+0x0760	1888	ocenione.
+0x0761	1889	bez oceny.
+0x08da	2266	Czerwony
+0x08db	2267	Biały
+0x08dd	2269	Czerwony
+0x08de	2270	Biały
+0x0b48	2888	Dowiedz się więcej
+0x0b4c	2892	Pokaż link do mojej gry w \\nmy Yahoo!
+0x0b4d	2893	Dowiedz się więcej
+0x0b80	2944	Oglądać
+0x0c5b	3163	Twój
+0x0c60	3168	Czas:
+0x0d35	3381	Opcje
+0x0d36	3382	Zrobione
+0x0d43	3395	Opcje
+0x0d44	3396	Oglądać
+0x0dde	3550	Awatary:
+0x0de8	3560	Filtr wulgaryzmów:
+0x0e0c	3596	chwila.
+0x0e1b	3611	Nic
+0x0e1c	3612	Mocny
+0x0e1d	3613	Słaby
+0x111f	4383	Koniec gry:
+0x1129	4393	Pozostały czas:
+0x1131	4401	Reklama:
+0x1143	4419	Rezygnować
+0x158a	5514	Platforma Macintosh nie obsługuje skryptu na żywo.
+0x159b	5531	Głos
+0x1605	5637	Czas rozpocząć grę:
+0x1629	5673	1 dzień
+0x162a	5674	1 godzina
+0x162b	5675	1 minuta
+0x162c	5676	10 minut
+0x162d	5677	15 minut
+0x162e	5678	3 godziny
+0x162f	5679	30 minut
+0x1630	5680	5 minut
+0x1631	5681	Zakaz
+0x1632	5682	Rzut
+0x1633	5683	Niemy
+0x1634	5684	Administracja pokoju:
+0x16b8	5816	Opis: \\n (opcjonalnie)
+0x16b9	5817	Pokaż członkostwo All-Star\\n
+0x16ba	5818	Głos
+0x1761	5985	Anulować
+0x1762	5986	Opcje gry
+0x1763	5987	Start
+0x18cd	6349	Zamieniać

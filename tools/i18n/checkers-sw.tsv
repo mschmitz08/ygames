@@ -1,0 +1,234 @@
+﻿# key_hex	key_dec	text
+0x0000	0	Tahadhari
+0x0001	1	Sawa
+0x0017	23	Keti
+0x0018	24	ya muda
+0x0031	49	Mchezo huu \\n umeletwa kwako na:
+0x0032	50	Mchezo Umekwisha
+0x0034	52	Chaguo
+0x0035	53	Aina ya Jedwali
+0x0041	65	Ndiyo
+0x0042	66	Hapana
+0x0048	72	Acha kucheza na ghairi matokeo\\nya mchezo huu (mpinzani lazima akubali).
+0x0049	73	Usijali
+0x004a	74	Acha Uthibitisho
+0x004b	75	Kuacha na Kupoteza:
+0x004c	76	Acha na Ghairi
+0x004d	77	Acha na Upoteze
+0x004e	78	Acha na upoteze mchezo.
+0x004f	79	Acha na Uhifadhi:
+0x0050	80	Acha na Ghairi:
+0x0051	81	Acha kucheza na uhifadhi mchezo wa\\n (mpinzani lazima akubali).
+0x0052	82	Unaacha mchezo uliokadiriwa ambao haujakamilika:
+0x0053	83	Acha na Uhifadhi
+0x0079	121	Kubali
+0x007b	123	Kataa Mialiko Yote
+0x007c	124	Umealikwa
+0x007d	125	\\n \\nQChaguo za mchezo:
+0x007e	126	Sababu:
+0x007f	127	(si lazima)
+0x0080	128	amekualika kumeza #
+0x0081	129	\\n \\nUngependa kujiunga?
+0x0082	130	Kataa
+0x0083	131	Ruhusu ujumbe wa papo hapo kutoka kwa marafiki zangu pekee.
+0x0084	132	Puuza
+0x0085	133	Kutoka:
+0x0086	134	ilianza
+0x0087	135	Wasifu
+0x0088	136	Tuma
+0x0089	137	Funga
+0x008a	138	Fanya hoja yako na ikiwa
+0x008b	139	Bonyeza 'Cheza Roboti' ili kucheza kompyuta.
+0x008d	141	- Chumba:
+0x008e	142	haitarudi, wewe\\nutapewa chaguo la kulazimisha kujiuzulu.
+0x008f	143	*** Hifadhi imeombwa.
+0x0090	144	Imelindwa
+0x0091	145	ameomba kwamba mchezo huu uhifadhiwe.\\nJe, hii inakubalika?
+0x0092	146	Privat
+0x0093	147	yako
+0x0094	148	Bofya kitufe cha 'Keti' ili kujiunga na mchezo.
+0x0095	149	ameomba kwamba mchezo huu ughairiwe.\\nJe, hili linakubalika?
+0x0096	150	imeghairiwa.
+0x0097	151	Simama
+0x0098	152	mpinzani
+0x0099	153	Kwa upande wangu
+0x009b	155	*** Mtu yeyote anaweza kujiunga na meza yako sasa.
+0x009c	156	s.
+0x009d	157	Kusubiri kwa mpinzani
+0x009e	158	Acha
+0x009f	159	amejiunga na meza.
+0x00a0	160	Bofya 'Anza Mchezo' ili kuanza.
+0x00a1	161	Msaada
+0x00a2	162	ameondoka mezani.
+0x00a3	163	*** Watu ulioalika pekee ndio wanaweza kucheza au kutazama meza yako sasa.
+0x00a4	164	Anza Mchezo
+0x00a5	165	Sauti imewashwa
+0x00a6	166	- Mwenyeji:
+0x00a7	167	Hadharani
+0x00a8	168	Cheza Robot
+0x00aa	170	Boot
+0x00ab	171	*** Ghairi ombi.
+0x00ac	172	*** Watu ulioalika pekee ndio wanaweza kucheza kwenye meza yako sasa.
+0x00ae	174	- Jedwali:
+0x00af	175	*** Wewe ni mwenyeji wa meza hii.
+0x00b0	176	Mchezo:
+0x00b1	177	Wako
+0x00b2	178	Inasubiri mpinzani kubofya 'Anza'.
+0x00b4	180	imeacha mchezo uliokadiriwa ambao haujakamilika.\\n
+0x00b5	181	*** Mchezo
+0x00b6	182	kuokolewa.
+0x00b7	183	Alika
+0x00b8	184	mshirika
+0x00b9	185	Sauti
+0x00ba	186	Kama
+0x00bf	191	Ingiza Jina:
+0x00c0	192	Chagua Kutoka kwenye Orodha
+0x00c1	193	- au -
+0x00c9	201	Ping
+0x00ca	202	Maelezo ya mchezaji
+0x00cb	203	Tuma ujumbe wa papo hapo:
+0x00cc	204	sekunde.
+0x00ce	206	dakika.
+0x00cf	207	Muda wa kutofanya kitu:
+0x00e1	225	Jedwali
+0x00e2	226	Nani Anayetazama
+0x00e3	227	chaguzi:
+0x00e4	228	JIUNGE
+0x00e8	232	kwa
+0x00e9	233	Rtng
+0x00ea	234	sekunde.\\nKuchelewa kwangu kwa wavu:
+0x00eb	235	amekualika uketi.
+0x00f0	240	Una toleo la zamani la mteja kwenye akiba yako.
+0x00f2	242	Ping imetumwa ... inasubiri majibu.
+0x00f4	244	ya muda
+0x00f5	245	Jina
+0x00f6	246	Inajaribu kuunganisha kwenye seva ya michezo
+0x00f7	247	Cheza Sasa
+0x00f9	249	Ondoka kwenye Michezo
+0x00fb	251	kuchelewa kwa wavu:
+0x00fd	253	Sema:
+0x00ff	255	Inawasiliana na seva ya michezo...
+0x0102	258	Hitilafu: Nje ya rasilimali za mfumo.\\nFunga madirisha na programu zozote zisizohitajika.\\nKisha funga dirisha la michezo na ujaribu tena.
+0x0105	261	Haiwezi kuunganisha kwenye seva.\\nOOne kati ya mambo manne lingeweza kusababisha hili:\\n1)Uko nyuma ya ngome.\\n2)Hujaunganishwa kwenye mtandao.\\n3)Seva ya michezo iko chini.\\n4)Una ukurasa wa zamani kwenye akiba yako.
+0x0106	262	Tengeneza Jedwali
+0x0108	264	Windows ndogo
+0x0109	265	Tbl
+0x010b	267	Umetolewa kutoka kwa meza
+0x010c	268	Imetenganishwa na seva ... Haitumiki kwa muda mrefu sana
+0x0111	273	Ujumbe kutoka kwa\\nMarafiki pekee
+0x0115	277	... kupakua hali ya chumba
+0x0118	280	Hitilafu katika kuingia kwenye seva.
+0x0119	281	Kataa mialiko yote\\nQ
+0x011c	284	Rung
+0x011d	285	Huwezi kujipuuza.
+0x0123	291	Imetenganishwa na seva
+0x0125	293	Imeunganishwa kwa seva ya michezo kama
+0x0128	296	Ukadiriaji
+0x0129	297	to\\nacha mchezo.
+0x012a	298	kurudi.
+0x012b	299	Subiri yako
+0x012c	300	Lazimisha yako
+0x012d	301	Hifadhi Mchezo
+0x012e	302	Ghairi Mchezo:
+0x012f	303	Ghairi Mchezo
+0x0130	304	Lazimisha Kupoteza:
+0x0131	305	Subiri
+0x0132	306	Acha kucheza na uhifadhi mchezo.
+0x0133	307	ameacha mchezo uliokadiriwa ambao haujakamilika:
+0x0134	308	Acha kucheza na \\nRekodi matokeo ya mchezo huu.
+0x0135	309	Hifadhi Mchezo:
+0x0136	310	Lazimisha Kupoteza
+0x0137	311	Subiri:
+0x0140	320	Sawa
+0x0142	322	Arifa ya Sauti
+0x0164	356	Tahadhari
+0x0165	357	Sawa
+0x0168	360	Ghairi
+0x016c	364	Puuza
+0x016d	365	Wasifu
+0x016e	366	Tuma
+0x016f	367	Funga
+0x0179	377	Boot
+0x017c	380	sekunde.
+0x0180	384	Alika
+0x01f5	501	amekataa mwaliko wako.\\nSababu:
+0x072c	1836	Muda batili umebainishwa.
+0x072d	1837	Ongezeko:
+0x072e	1838	dakika
+0x072f	1839	Wakati wa awali:
+0x0730	1840	Ghairi
+0x0731	1841	sekunde
+0x0732	1842	Sawa
+0x0733	1843	Zaidi
+0x0734	1844	Weka Kipima Muda
+0x0735	1845	dakika kwa hoja
+0x0736	1846	Hakuna kipima muda
+0x073b	1851	Hoja ya Mwisho
+0x073c	1852	Sare imetolewa na mpinzani wako.\\nUnakubali?
+0x073d	1853	Mchezo Uliokadiriwa
+0x073e	1854	Toa Droo
+0x073f	1855	Mpinzani wako ameomba kwamba hoja yake ya awali irudishwe.\\nJe, hili linakubalika?
+0x0740	1856	Tendua Zamu
+0x0741	1857	*** Ofa ya sare imekataliwa.
+0x0742	1858	Je, una uhakika unataka kujiuzulu?
+0x0743	1859	inashinda mchezo.
+0x0744	1860	*** kutendua ombi
+0x0745	1861	Chora
+0x0746	1862	*** kutendua imetolewa
+0x0747	1863	dakika ya muda wa awali.
+0x0748	1864	nyongeza ya pili.
+0x074a	1866	hakuna kikomo cha wakati.
+0x0751	1873	Hakuna
+0x0752	1874	min./sogeza
+0x0753	1875	Weka Kipima Muda
+0x0754	1876	Ni mwenyeji wa jedwali pekee ndiye anayeweza kuweka vipima muda.
+0x0755	1877	Kipima muda:
+0x0756	1878	Saa:
+0x0760	1888	imekadiriwa.
+0x0761	1889	haijakadiriwa.
+0x08da	2266	Nyekundu
+0x08db	2267	Nyeupe
+0x08dd	2269	Nyekundu
+0x08de	2270	Nyeupe
+0x0b48	2888	Jifunze Zaidi
+0x0b4c	2892	Onyesha kiungo cha mchezo wangu katika\\nmy Yahoo!
+0x0b4d	2893	Jifunze Zaidi
+0x0b80	2944	Tazama
+0x0c5b	3163	Wako
+0x0c60	3168	Saa:
+0x0d35	3381	Chaguo
+0x0d36	3382	Imekamilika
+0x0d43	3395	Chaguo
+0x0d44	3396	Tazama
+0x0dde	3550	Ishara:
+0x0de8	3560	Kichujio cha lugha chafu:
+0x0e0c	3596	dakika.
+0x0e1b	3611	Hakuna
+0x0e1c	3612	Nguvu
+0x0e1d	3613	Dhaifu
+0x111f	4383	Mchezo Umekwisha:
+0x1129	4393	Wakati Uliobaki:
+0x1131	4401	Tangazo:
+0x1143	4419	Kujiuzulu
+0x158a	5514	Mfumo wa Macintosh hautumii hati ya moja kwa moja.
+0x159b	5531	Sauti
+0x1605	5637	Wakati wa kuanza kwa mchezo:
+0x1629	5673	siku 1
+0x162a	5674	Saa 1
+0x162b	5675	Dakika 1
+0x162c	5676	Dakika 10
+0x162d	5677	Dakika 15
+0x162e	5678	Saa 3
+0x162f	5679	Dakika 30
+0x1630	5680	Dakika 5
+0x1631	5681	Piga marufuku
+0x1632	5682	Kick
+0x1633	5683	Nyamazisha
+0x1634	5684	Utawala wa Chumba:
+0x16b8	5816	Maelezo:\\n(hiari)
+0x16b9	5817	Onyesha Uanachama Wote-Star\\n
+0x16ba	5818	Sauti
+0x1761	5985	Ghairi
+0x1762	5986	Chaguzi za Mchezo
+0x1763	5987	Anza
+0x18cd	6349	Badili

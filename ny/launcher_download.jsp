@@ -92,6 +92,18 @@
     String port = request.getParameter("port");
     String width = request.getParameter("width");
     String height = request.getParameter("height");
+    String intlCode = request.getParameter("intl_code");
+    if ((intlCode == null || intlCode.length() == 0)) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (int i = 0; i < cookies.length; i++) {
+                if ("intl_code".equals(cookies[i].getName())) {
+                    intlCode = cookies[i].getValue();
+                    break;
+                }
+            }
+        }
+    }
     String siteId = request.getParameter("site_id");
     String expectedClientHash = request.getParameter("expected_client_hash");
     String accountMode = request.getParameter("account_mode");
@@ -114,6 +126,8 @@
         width = "1400";
     if (height == null || height.length() == 0)
         height = "900";
+    if (intlCode == null || intlCode.length() == 0)
+        intlCode = "us";
     if (accountMode == null)
         accountMode = "";
     if (siteId == null)
@@ -221,6 +235,7 @@ function tryLaunchAgain() {
         + '&port=' + encodeURIComponent('<%=port%>')
         + '&width=' + encodeURIComponent('<%=width%>')
         + '&height=' + encodeURIComponent('<%=height%>')
+        + '&intl_code=' + encodeURIComponent('<%=intlCode%>')
         + '&site_id=' + encodeURIComponent('<%=siteId%>')
         + '&expected_client_hash=' + encodeURIComponent('<%=expectedClientHash%>')
         + '&webbase=' + encodeURIComponent('<%=webBase%>');
@@ -235,7 +250,7 @@ function tryLaunchAgain() {
 }
 
 function goBackToLauncher() {
-    window.location.href = '<%=webBase%>/index.jsp';
+    window.location.href = '<%=webBase%>/index.jsp?intl_code=<%=intlCode%>';
     return false;
 }
 </script>

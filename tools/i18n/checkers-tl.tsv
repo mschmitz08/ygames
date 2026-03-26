@@ -1,0 +1,234 @@
+﻿# key_hex	key_dec	text
+0x0000	0	Alerto
+0x0001	1	OK
+0x0017	23	Umupo
+0x0018	24	pansamantala
+0x0031	49	Ang larong ito ay\\nDala sa iyo ni:
+0x0032	50	Tapos na ang laro
+0x0034	52	Mga pagpipilian
+0x0035	53	Uri ng Talahanayan
+0x0041	65	Oo
+0x0042	66	Hindi
+0x0048	72	Itigil ang paglalaro at kanselahin ang resulta\\nng larong ito (dapat sumang-ayon ang kalaban).
+0x0049	73	Hindi bale
+0x004a	74	Tumigil sa Kumpirmasyon
+0x004b	75	Mag-quit at Forfeit:
+0x004c	76	Umalis at Kanselahin
+0x004d	77	Quit at Forfeit
+0x004e	78	Tumigil at mawala ang laro.
+0x004f	79	Umalis at I-save:
+0x0050	80	Umalis at Kanselahin:
+0x0051	81	Itigil ang paglalaro at i-save ang \\ngame (dapat sumang-ayon ang kalaban).
+0x0052	82	Aalis ka sa isang hindi natapos na na-rate na laro:
+0x0053	83	Umalis at I-save
+0x0079	121	Tanggapin
+0x007b	123	Tanggihan ang Lahat ng Imbitasyon
+0x007c	124	Inimbitahan
+0x007d	125	\\n \\nMga pagpipilian sa laro:
+0x007e	126	Dahilan:
+0x007f	127	(opsyonal)
+0x0080	128	inimbitahan ka sa table #
+0x0081	129	\\n \\nGusto mo bang sumali?
+0x0082	130	Tanggihan
+0x0083	131	Payagan ang mga instant na mensahe mula sa aking mga kaibigan lamang.
+0x0084	132	Huwag pansinin
+0x0085	133	mula kay:
+0x0086	134	nagsimula
+0x0087	135	Profile
+0x0088	136	Ipadala
+0x0089	137	Isara
+0x008a	138	Gawin ang iyong paglipat at kung
+0x008b	139	Pindutin ang 'Play Robot' para maglaro ng computer.
+0x008d	141	- Kwarto:
+0x008e	142	ay hindi babalik, ikaw\\nay bibigyan ng opsyon na puwersahin ang pagbibitiw.
+0x008f	143	*** Hiniling ang pag-save.
+0x0090	144	Pinoprotektahan
+0x0091	145	ay humiling na ang larong ito ay i-save.\\nKatanggap-tanggap ba ito?
+0x0092	146	Pribado
+0x0093	147	iyong
+0x0094	148	I-click ang pindutang 'Umupo' upang sumali sa laro.
+0x0095	149	ay humiling na kanselahin ang larong ito.\\nKatanggap-tanggap ba ito?
+0x0096	150	kinansela.
+0x0097	151	Tumayo ka
+0x0098	152	kalaban
+0x0099	153	Sa turn ko
+0x009b	155	*** Sinuman ay maaaring sumali sa iyong talahanayan ngayon.
+0x009c	156	s.
+0x009d	157	Naghihintay ng kalaban
+0x009e	158	quit
+0x009f	159	ay sumali sa mesa.
+0x00a0	160	I-click ang 'Start Game' para magsimula.
+0x00a1	161	Tulong
+0x00a2	162	umalis na sa mesa.
+0x00a3	163	*** Tanging ang mga taong inimbitahan mo ang maaaring maglaro o manood ng iyong mesa ngayon.
+0x00a4	164	Simulan ang Laro
+0x00a5	165	Audio sa turn
+0x00a6	166	- Host:
+0x00a7	167	Pampubliko
+0x00a8	168	Maglaro ng Robot
+0x00aa	170	Boot
+0x00ab	171	*** Hiniling ang pagkansela.
+0x00ac	172	*** Tanging ang mga taong inimbitahan mo ang maaaring maglaro sa iyong mesa ngayon.
+0x00ae	174	- Talahanayan:
+0x00af	175	*** Ikaw ang host ng table na ito.
+0x00b0	176	Laro:
+0x00b1	177	Iyong
+0x00b2	178	Naghihintay para sa kalaban na i-click ang 'Start'.
+0x00b4	180	ay nag-iwan ng hindi natapos na na-rate na laro.\\n
+0x00b5	181	*** Laro
+0x00b6	182	nailigtas.
+0x00b7	183	Mag-imbita
+0x00b8	184	partner
+0x00b9	185	Tunog
+0x00ba	186	Kung
+0x00bf	191	Ilagay ang Pangalan:
+0x00c0	192	Piliin Mula sa Listahan
+0x00c1	193	- o -
+0x00c9	201	Ping
+0x00ca	202	Impormasyon ng manlalaro para sa
+0x00cb	203	Magpadala ng instant message:
+0x00cc	204	segundo.
+0x00ce	206	minuto.
+0x00cf	207	Idle time:
+0x00e1	225	mesa
+0x00e2	226	Sino ang Nanonood
+0x00e3	227	mga pagpipilian:
+0x00e4	228	SUMALI
+0x00e8	232	sa pamamagitan ng
+0x00e9	233	Rtng
+0x00ea	234	segundo.\\nMy net delay:
+0x00eb	235	ay nag-imbita sa iyo na umupo.
+0x00f0	240	Mayroon kang lumang bersyon ng kliyente sa iyong cache.
+0x00f2	242	Nagpadala si Ping ... naghihintay ng tugon.
+0x00f4	244	pansamantala
+0x00f5	245	Pangalan
+0x00f6	246	Sinusubukang kumonekta sa server ng mga laro
+0x00f7	247	Maglaro Ngayon
+0x00f9	249	Lumabas sa Mga Laro
+0x00fb	251	netong pagkaantala:
+0x00fd	253	Sabihin:
+0x00ff	255	Nakikipag-ugnayan sa server ng mga laro...
+0x0102	258	Error: Wala sa mga mapagkukunan ng system.\\nIsara ang anumang hindi kinakailangang mga window at application.\\nPagkatapos isara ang window ng mga laro at subukang muli.
+0x0105	261	Hindi makakonekta sa server.\\nIsa sa apat na bagay ang maaaring naging sanhi nito:\\n1)Nasa likod ka ng firewall.\\n2)Hindi ka nakakonekta sa internet.\\n3)Nasira ang server ng mga laro.\\n4)Mayroon kang lipas na page sa iyong cache.
+0x0106	262	Lumikha ng Talahanayan
+0x0108	264	Maliit na Windows
+0x0109	265	Tbl
+0x010b	267	Na-boot ka mula sa mesa
+0x010c	268	Nadiskonekta sa server ... Masyadong mahaba ang idle
+0x0111	273	Mga IM mula kay\\nkaibigan lang
+0x0115	277	... nagda-download ng room state
+0x0118	280	Error sa pag-log in sa server.
+0x0119	281	Tanggihan ang lahat ng \\ninvitations
+0x011c	284	Rung
+0x011d	285	Hindi mo maaaring balewalain ang iyong sarili.
+0x0123	291	Nadiskonekta sa server
+0x0125	293	Nakakonekta sa server ng mga laro bilang
+0x0128	296	Mga rating
+0x0129	297	to\\nbitiwan ang laro.
+0x012a	298	upang bumalik.
+0x012b	299	Maghintay para sa iyong
+0x012c	300	Pilitin ang iyong
+0x012d	301	I-save ang Laro
+0x012e	302	Kanselahin ang Laro:
+0x012f	303	Kanselahin ang Laro
+0x0130	304	Force Forfeit:
+0x0131	305	Teka
+0x0132	306	Itigil ang paglalaro at i-save ang laro.
+0x0133	307	ay inabandona ang isang hindi natapos na na-rate na laro:
+0x0134	308	Itigil ang paglalaro at huwag \\nitala ang resulta ng larong ito.
+0x0135	309	I-save ang Laro:
+0x0136	310	Force Forfeit
+0x0137	311	Maghintay:
+0x0140	320	OK
+0x0142	322	Audio Alert
+0x0164	356	Alerto
+0x0165	357	OK
+0x0168	360	Kanselahin
+0x016c	364	Huwag pansinin
+0x016d	365	Profile
+0x016e	366	Ipadala
+0x016f	367	Isara
+0x0179	377	Boot
+0x017c	380	segundo.
+0x0180	384	Mag-imbita
+0x01f5	501	tinanggihan ang iyong imbitasyon.\\nDahilan:
+0x072c	1836	Hindi wastong oras ang tinukoy.
+0x072d	1837	Pagtaas:
+0x072e	1838	minuto
+0x072f	1839	Paunang oras:
+0x0730	1840	Kanselahin
+0x0731	1841	segundo
+0x0732	1842	OK
+0x0733	1843	Sa karamihan
+0x0734	1844	Itakda ang Timer
+0x0735	1845	minuto bawat galaw
+0x0736	1846	Walang timer
+0x073b	1851	Huling Paglipat
+0x073c	1852	Isang draw ang inaalok ng iyong kalaban.\\nTinatanggap mo ba?
+0x073d	1853	Na-rate na Laro
+0x073e	1854	Alok na Draw
+0x073f	1855	Hiniling ng iyong kalaban na bawiin ang kanyang nakaraang paglipat.\\nKatanggap-tanggap ba ito?
+0x0740	1856	I-undo ang Pagliko
+0x0741	1857	*** Tinanggihan ang alok sa draw.
+0x0742	1858	Sigurado ka bang gusto mong magbitiw?
+0x0743	1859	panalo sa laro.
+0x0744	1860	*** hiniling ang pag-undo
+0x0745	1861	Gumuhit
+0x0746	1862	*** ipinagkaloob ang pag-undo
+0x0747	1863	minutong paunang oras.
+0x0748	1864	pangalawang pagtaas.
+0x074a	1866	walang limitasyon sa oras.
+0x0751	1873	wala
+0x0752	1874	min./move
+0x0753	1875	Itakda ang Timer
+0x0754	1876	Tanging ang host ng isang talahanayan ang maaaring magtakda ng mga timer.
+0x0755	1877	Timer:
+0x0756	1878	Oras:
+0x0760	1888	na-rate.
+0x0761	1889	walang rating.
+0x08da	2266	Pula
+0x08db	2267	Puti
+0x08dd	2269	Pula
+0x08de	2270	Puti
+0x0b48	2888	Matuto pa
+0x0b4c	2892	Magpakita ng link sa aking laro sa\\nmy Yahoo!
+0x0b4d	2893	Matuto pa
+0x0b80	2944	Panoorin
+0x0c5b	3163	Iyong
+0x0c60	3168	Oras:
+0x0d35	3381	Mga pagpipilian
+0x0d36	3382	Tapos na
+0x0d43	3395	Mga pagpipilian
+0x0d44	3396	Panoorin
+0x0dde	3550	Mga Avatar:
+0x0de8	3560	Filter ng kabastusan:
+0x0e0c	3596	minuto.
+0x0e1b	3611	wala
+0x0e1c	3612	Malakas
+0x0e1d	3613	Mahina
+0x111f	4383	Tapos na ang laro:
+0x1129	4393	Natitirang Oras:
+0x1131	4401	Advertisement:
+0x1143	4419	Magbitiw
+0x158a	5514	Hindi sinusuportahan ng Macintosh platform ang livescript.
+0x159b	5531	Boses
+0x1605	5637	Oras para magsimula ang laro:
+0x1629	5673	1 araw
+0x162a	5674	1 oras
+0x162b	5675	1 minuto
+0x162c	5676	10 minuto
+0x162d	5677	15 minuto
+0x162e	5678	3 oras
+0x162f	5679	30 minuto
+0x1630	5680	5 minuto
+0x1631	5681	Pagbabawal
+0x1632	5682	Sipa
+0x1633	5683	I-mute
+0x1634	5684	Pangangasiwa ng Kwarto:
+0x16b8	5816	Paglalarawan:\\n(opsyonal)
+0x16b9	5817	Ipakita ang All-Star\\nmembership
+0x16ba	5818	Boses
+0x1761	5985	Kanselahin
+0x1762	5986	Mga Pagpipilian sa Laro
+0x1763	5987	Magsimula
+0x18cd	6349	Magpalit

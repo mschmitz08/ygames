@@ -1,6 +1,11 @@
 <%@page pageEncoding="Cp1252" contentType="text/html; charset=Cp1252"%>
 <%@page import="core.*, data.*, java.sql.*, java.util.*, java.io.*, java.security.*"%>
 <%!
+    public static class LocaleOption {
+        public String code;
+        public String label;
+    }
+
     private String readLauncherVersion(javax.servlet.ServletContext context, String defaultValue) {
         if (context == null)
             return defaultValue;
@@ -117,6 +122,72 @@
             return "";
         }
     }
+
+    private Vector<LocaleOption> readLocaleOptions(javax.servlet.ServletContext context) {
+        Vector<LocaleOption> locales = new Vector<LocaleOption>();
+        BufferedReader reader = null;
+        try {
+            String realPath = context == null ? null : context.getRealPath("/WEB-INF/i18n/locales.txt");
+            if (realPath == null)
+                return locales;
+            File file = new File(realPath);
+            if (!file.exists())
+                return locales;
+            reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                line = line.trim();
+                if (line.length() == 0 || line.startsWith("#"))
+                    continue;
+                int split = line.indexOf('|');
+                if (split <= 0 || split >= line.length() - 1)
+                    continue;
+                LocaleOption option = new LocaleOption();
+                option.code = line.substring(0, split).trim();
+                option.label = line.substring(split + 1).trim();
+                if (option.code.length() == 0 || option.label.length() == 0)
+                    continue;
+                locales.add(option);
+            }
+        }
+        catch (Exception e) {
+            locales.clear();
+        }
+        finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                }
+                catch (IOException ignore) {
+                }
+            }
+        }
+        return locales;
+    }
+
+    private boolean hasLocale(Vector<LocaleOption> locales, String code) {
+        if (code == null || locales == null)
+            return false;
+        for (int i = 0; i < locales.size(); i++) {
+            LocaleOption option = locales.elementAt(i);
+            if (code.equalsIgnoreCase(option.code))
+                return true;
+        }
+        return false;
+    }
+
+    private String findCookieValue(javax.servlet.http.HttpServletRequest request, String name) {
+        if (request == null || name == null)
+            return null;
+        javax.servlet.http.Cookie[] cookies = request.getCookies();
+        if (cookies == null)
+            return null;
+        for (int i = 0; i < cookies.length; i++) {
+            if (name.equals(cookies[i].getName()))
+                return cookies[i].getValue();
+        }
+        return null;
+    }
 %>
 <%
     String launcherVersion = readLauncherVersion(application, "0.7.4");
@@ -127,6 +198,22 @@
     String requestedHost = request.getParameter("host");
     String requestedWidth = request.getParameter("width");
     String requestedHeight = request.getParameter("height");
+    String requestedIntlCode = request.getParameter("intl_code");
+    if (requestedIntlCode == null || requestedIntlCode.trim().length() == 0)
+        requestedIntlCode = findCookieValue(request, "intl_code");
+    if (requestedIntlCode == null || requestedIntlCode.trim().length() == 0)
+        requestedIntlCode = "us";
+    else
+        requestedIntlCode = requestedIntlCode.trim().toLowerCase();
+    Vector<LocaleOption> localeOptions = readLocaleOptions(application);
+    if (localeOptions.size() == 0) {
+        LocaleOption fallbackLocale = new LocaleOption();
+        fallbackLocale.code = "us";
+        fallbackLocale.label = "English";
+        localeOptions.add(fallbackLocale);
+    }
+    if (!hasLocale(localeOptions, requestedIntlCode))
+        requestedIntlCode = "us";
     String requestHost = request.getServerName();
     String defaultHost = requestHost;
     int defaultCheckersPort = 11999;
@@ -580,15 +667,29 @@ function applySizePreset() {
     heightField.value = values.height;
 }
 
+function persistIntlCode() {
+    var intlField = document.getElementById('intlCode');
+    if (!intlField)
+        return;
+    var expires = new Date();
+    expires.setFullYear(expires.getFullYear() + 1);
+    document.cookie = 'intl_code=' + encodeURIComponent(intlField.value)
+        + '; expires=' + expires.toUTCString()
+        + '; path=/';
+}
+
 function browseLiveRooms() {
     var game = selectedGame();
     var host = document.getElementById('host').value;
     var width = document.getElementById('width').value;
     var height = document.getElementById('height').value;
+    var intlCode = document.getElementById('intlCode').value;
+    persistIntlCode();
     window.location.href = '../newyahoo/status.jsp?game=' + encodeURIComponent(game)
         + '&host=' + encodeURIComponent(host)
         + '&width=' + encodeURIComponent(width)
-        + '&height=' + encodeURIComponent(height);
+        + '&height=' + encodeURIComponent(height)
+        + '&intl_code=' + encodeURIComponent(intlCode);
     return false;
 }
 
@@ -599,6 +700,8 @@ function launch(mode) {
     var port = document.getElementById('port').value;
     var width = document.getElementById('width').value;
     var height = document.getElementById('height').value;
+    var intlCode = document.getElementById('intlCode').value;
+    persistIntlCode();
     if (!room) {
         alert('Please choose a room first.');
         return false;
@@ -609,6 +712,7 @@ function launch(mode) {
         + '&port=' + encodeURIComponent(port)
         + '&width=' + encodeURIComponent(width)
         + '&height=' + encodeURIComponent(height)
+        + '&intl_code=' + encodeURIComponent(intlCode)
         + '&site_id=' + encodeURIComponent('<%=siteId%>')
         + '&expected_client_hash=' + encodeURIComponent('<%=expectedClientHash%>')
         + '&launcher_version=' + encodeURIComponent(launcherVersion)
@@ -622,6 +726,7 @@ function launch(mode) {
         + '&port=' + encodeURIComponent(port)
         + '&width=' + encodeURIComponent(width)
         + '&height=' + encodeURIComponent(height)
+        + '&intl_code=' + encodeURIComponent(intlCode)
         + '&site_id=' + encodeURIComponent('<%=siteId%>')
         + '&expected_client_hash=' + encodeURIComponent('<%=expectedClientHash%>')
         + '&launcher_version=' + encodeURIComponent(launcherVersion);
@@ -643,7 +748,7 @@ function launch(mode) {
 }
 </script>
 </head>
-<body onload="syncLauncher()">
+<body onload="syncLauncher(); persistIntlCode()">
 <div class="launcher-shell">
     <div class="launcher-card">
         <div class="hero">
@@ -655,7 +760,7 @@ function launch(mode) {
         <div class="content">
             <div class="panel panel-left">
                 <h2 class="section-title">Choose Your Game</h2>
-                <p class="section-copy">Pool comes up first now, but you can bounce between Pool and Checkers and keep the same polished launcher flow. Pool 2 is staying off this launcher for the moment.</p>
+                <p class="section-copy">Pool comes up first now, but you can bounce between Pool and Checkers and keep the same polished launcher flow. Pool 2 has been retired so the launcher stays leaner and the runtime only exposes the stable games.</p>
                 <div class="choice-grid">
                     <label class="game-choice<%="checkers".equals(requestedGame) ? " active" : ""%>" data-game="checkers">
                         <input type="radio" name="game" value="checkers" <%="checkers".equals(requestedGame) ? "checked=\"checked\"" : ""%> onclick="syncLauncher()"/>
@@ -675,6 +780,14 @@ function launch(mode) {
                 <label class="field-label" for="room">Room</label>
                 <select id="room" class="room-select"></select>
                 <p id="roomNote" class="room-note"></p>
+                <label class="field-label" for="intlCode">Language</label>
+                <select id="intlCode" class="room-select" onchange="persistIntlCode()">
+                    <% for (int localeIndex = 0; localeIndex < localeOptions.size(); localeIndex++) {
+                        LocaleOption localeOption = localeOptions.elementAt(localeIndex); %>
+                    <option value="<%=localeOption.code%>" <%=localeOption.code.equals(requestedIntlCode) ? "selected=\"selected\"" : ""%>><%=localeOption.label%></option>
+                    <% } %>
+                </select>
+                <p class="helper-copy">The launcher now exposes the top language set we plan to support. Any locale without a shipped dictionary still falls back to English until its translation files are added.</p>
                 <div class="connection-grid">
                     <div>
                         <label class="field-label" for="host">Connection Host</label>

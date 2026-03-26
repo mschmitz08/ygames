@@ -1,0 +1,234 @@
+﻿# key_hex	key_dec	text
+0x0000	0	Peringatan
+0x0001	1	OKE
+0x0017	23	Duduk
+0x0018	24	sementara
+0x0031	49	Game ini adalah \\n yang dipersembahkan oleh:
+0x0032	50	Permainan Berakhir
+0x0034	52	Pilihan
+0x0035	53	Tipe Tabel
+0x0041	65	Ya
+0x0042	66	TIDAK
+0x0048	72	Berhenti bermain dan batalkan hasil\\ndari permainan ini (lawan harus setuju).
+0x0049	73	Sudahlah
+0x004a	74	Keluar dari Konfirmasi
+0x004b	75	Keluar dan Hilang:
+0x004c	76	Keluar dan Batal
+0x004d	77	Keluar dan Hilang
+0x004e	78	Keluar dan kalahkan permainan.
+0x004f	79	Keluar dan Simpan:
+0x0050	80	Keluar dan Batalkan:
+0x0051	81	Berhenti bermain dan simpan permainan \\n (lawan harus setuju).
+0x0052	82	Anda keluar dari game berperingkat yang belum selesai:
+0x0053	83	Keluar dan Simpan
+0x0079	121	Menerima
+0x007b	123	Tolak Semua Undangan
+0x007c	124	Diundang
+0x007d	125	\\n \\nOpsi permainan:
+0x007e	126	Alasan:
+0x007f	127	(opsional)
+0x0080	128	telah mengundangmu ke meja #
+0x0081	129	\\n \\nApakah Anda ingin bergabung?
+0x0082	130	Menolak
+0x0083	131	Izinkan pesan instan hanya dari teman saya.
+0x0084	132	Mengabaikan
+0x0085	133	Dari:
+0x0086	134	dimulai
+0x0087	135	Profil
+0x0088	136	Mengirim
+0x0089	137	Menutup
+0x008a	138	Lakukan gerakan Anda dan jika
+0x008b	139	Tekan 'Mainkan Robot' untuk memainkan komputer.
+0x008d	141	- Ruang:
+0x008e	142	tidak kembali, Anda\\nakan diberikan opsi untuk memaksa pengunduran diri.
+0x008f	143	*** Simpan diminta.
+0x0090	144	Terlindung
+0x0091	145	telah meminta agar game ini disimpan.\\nApakah ini dapat diterima?
+0x0092	146	Pribadi
+0x0093	147	milikmu
+0x0094	148	Klik tombol 'Duduk' untuk bergabung dalam permainan.
+0x0095	149	telah meminta agar game ini dibatalkan.\\nApakah ini dapat diterima?
+0x0096	150	dibatalkan.
+0x0097	151	Berdiri
+0x0098	152	lawan
+0x0099	153	Pada giliranku
+0x009b	155	*** Siapa pun dapat bergabung di meja Anda sekarang.
+0x009c	156	S.
+0x009d	157	Menunggu lawan
+0x009e	158	Berhenti
+0x009f	159	telah bergabung ke meja.
+0x00a0	160	Klik 'Mulai Permainan' untuk memulai.
+0x00a1	161	Membantu
+0x00a2	162	telah meninggalkan meja.
+0x00a3	163	*** Hanya orang yang Anda undang yang boleh bermain atau mengawasi meja Anda sekarang.
+0x00a4	164	Mulai Permainan
+0x00a5	165	Audio aktif
+0x00a6	166	- Tuan rumah:
+0x00a7	167	Publik
+0x00a8	168	Mainkan Robot
+0x00aa	170	sepatu bot
+0x00ab	171	*** Pembatalan diminta.
+0x00ac	172	*** Hanya orang yang Anda undang yang boleh bermain di meja Anda sekarang.
+0x00ae	174	- Meja:
+0x00af	175	*** Anda adalah tuan rumah meja ini.
+0x00b0	176	Permainan:
+0x00b1	177	Milikmu
+0x00b2	178	Menunggu lawan mengklik 'Mulai'.
+0x00b4	180	telah meninggalkan game berperingkat yang belum selesai.\\n
+0x00b5	181	*** Permainan
+0x00b6	182	disimpan.
+0x00b7	183	Mengundang
+0x00b8	184	mitra
+0x00b9	185	Suara
+0x00ba	186	Jika
+0x00bf	191	Masukkan Nama:
+0x00c0	192	Pilih Dari Daftar
+0x00c1	193	- atau -
+0x00c9	201	Ping
+0x00ca	202	Informasi pemain untuk
+0x00cb	203	Kirim pesan instan:
+0x00cc	204	detik.
+0x00ce	206	menit.
+0x00cf	207	Waktu menganggur:
+0x00e1	225	Meja
+0x00e2	226	Siapa yang Menonton
+0x00e3	227	pilihan:
+0x00e4	228	BERGABUNG
+0x00e8	232	oleh
+0x00e9	233	Rtng
+0x00ea	234	detik.\\nPenundaan bersih saya:
+0x00eb	235	telah mengundang Anda untuk duduk.
+0x00f0	240	Anda memiliki klien versi lama di cache Anda.
+0x00f2	242	Ping dikirim...menunggu respon.
+0x00f4	244	sementara
+0x00f5	245	Nama
+0x00f6	246	Mencoba menyambung ke server game
+0x00f7	247	Mainkan Sekarang
+0x00f9	249	Keluar dari Permainan
+0x00fb	251	penundaan bersih:
+0x00fd	253	Mengatakan:
+0x00ff	255	Menghubungi server game ...
+0x0102	258	Kesalahan: Sumber daya sistem habis.\\nTutup semua jendela dan aplikasi yang tidak diperlukan.\\nKemudian tutup jendela permainan dan coba lagi.
+0x0105	261	Tidak dapat terhubung ke server.\\nSalah satu dari empat hal yang dapat menyebabkan hal ini:\\n1)Anda berada di belakang firewall.\\n2)Anda tidak terhubung ke internet.\\n3)Server game sedang down.\\n4)Anda memiliki halaman basi di cache Anda.
+0x0106	262	Buat Tabel
+0x0108	264	Jendela Kecil
+0x0109	265	Tbl
+0x010b	267	Anda telah di-boot dari tabel
+0x010c	268	Terputus dari server... Idle terlalu lama
+0x0111	273	IM dari \\n hanya teman
+0x0115	277	... mengunduh status ruangan
+0x0118	280	Kesalahan saat masuk ke server.
+0x0119	281	Tolak semua \\nundangan
+0x011c	284	Anak tangga
+0x011d	285	Anda tidak bisa mengabaikan diri sendiri.
+0x0123	291	Terputus dari server
+0x0125	293	Terhubung ke server game sebagai
+0x0128	296	Peringkat
+0x0129	297	to\\nmengundurkan diri dari permainan.
+0x012a	298	untuk kembali.
+0x012b	299	Tunggu milikmu
+0x012c	300	Paksa kamu
+0x012d	301	Simpan Permainan
+0x012e	302	Batalkan Permainan:
+0x012f	303	Batalkan Permainan
+0x0130	304	Kehilangan Paksa:
+0x0131	305	Tunggu
+0x0132	306	Berhenti bermain dan simpan permainan.
+0x0133	307	telah meninggalkan game berperingkat yang belum selesai:
+0x0134	308	Berhenti bermain dan jangan \\n mencatat hasil permainan ini.
+0x0135	309	Simpan Permainan:
+0x0136	310	Paksa Kehilangan
+0x0137	311	Tunggu:
+0x0140	320	OKE
+0x0142	322	Peringatan Audio
+0x0164	356	Peringatan
+0x0165	357	OKE
+0x0168	360	Membatalkan
+0x016c	364	Mengabaikan
+0x016d	365	Profil
+0x016e	366	Mengirim
+0x016f	367	Menutup
+0x0179	377	sepatu bot
+0x017c	380	detik.
+0x0180	384	Mengundang
+0x01f5	501	telah menolak undangan Anda.\\nAlasan:
+0x072c	1836	Waktu yang ditentukan tidak valid.
+0x072d	1837	Kenaikan:
+0x072e	1838	menit
+0x072f	1839	Waktu awal:
+0x0730	1840	Membatalkan
+0x0731	1841	detik
+0x0732	1842	OKE
+0x0733	1843	Paling banyak
+0x0734	1844	Setel Pengatur Waktu
+0x0735	1845	menit per gerakan
+0x0736	1846	Tidak ada pengatur waktu
+0x073b	1851	Langkah Terakhir
+0x073c	1852	Hasil imbang telah ditawarkan oleh lawan Anda.\\nApakah Anda menerimanya?
+0x073d	1853	Permainan yang Dinilai
+0x073e	1854	Tawaran Undian
+0x073f	1855	Lawan Anda telah meminta agar langkah sebelumnya diambil kembali.\\nApakah ini dapat diterima?
+0x0740	1856	Batalkan Putaran
+0x0741	1857	*** Tawaran undian ditolak.
+0x0742	1858	Apakah Anda yakin ingin mengundurkan diri?
+0x0743	1859	memenangkan permainan.
+0x0744	1860	*** batalkan permintaan
+0x0745	1861	Menggambar
+0x0746	1862	*** batalkan diberikan
+0x0747	1863	menit waktu awal.
+0x0748	1864	kenaikan kedua.
+0x074a	1866	tidak ada batas waktu.
+0x0751	1873	Tidak ada
+0x0752	1874	min./bergerak
+0x0753	1875	Setel Pengatur Waktu
+0x0754	1876	Hanya tuan rumah meja yang dapat mengatur pengatur waktunya.
+0x0755	1877	pengatur waktu:
+0x0756	1878	Waktu:
+0x0760	1888	dinilai.
+0x0761	1889	tidak diberi peringkat.
+0x08da	2266	Merah
+0x08db	2267	Putih
+0x08dd	2269	Merah
+0x08de	2270	Putih
+0x0b48	2888	Pelajari Lebih Lanjut
+0x0b4c	2892	Tampilkan tautan ke permainan saya di\\nMy Yahoo!
+0x0b4d	2893	Pelajari Lebih Lanjut
+0x0b80	2944	Jam tangan
+0x0c5b	3163	Milikmu
+0x0c60	3168	Waktu:
+0x0d35	3381	Pilihan
+0x0d36	3382	Selesai
+0x0d43	3395	Pilihan
+0x0d44	3396	Jam tangan
+0x0dde	3550	Avatar:
+0x0de8	3560	Filter Kata-kata Tidak Senonoh:
+0x0e0c	3596	menit.
+0x0e1b	3611	Tidak ada
+0x0e1c	3612	Kuat
+0x0e1d	3613	Lemah
+0x111f	4383	Permainan Berakhir:
+0x1129	4393	Waktu Tersisa:
+0x1131	4401	Iklan:
+0x1143	4419	Berhenti
+0x158a	5514	Platform Macintosh tidak mendukung skrip langsung.
+0x159b	5531	Suara
+0x1605	5637	Saatnya permainan dimulai:
+0x1629	5673	1 hari
+0x162a	5674	1 jam
+0x162b	5675	1 menit
+0x162c	5676	10 menit
+0x162d	5677	15 menit
+0x162e	5678	3 jam
+0x162f	5679	30 menit
+0x1630	5680	5 menit
+0x1631	5681	Melarang
+0x1632	5682	Menendang
+0x1633	5683	Bisu
+0x1634	5684	Administrasi Ruangan:
+0x16b8	5816	Deskripsi:\\n (opsional)
+0x16b9	5817	Tampilkan keanggotaan All-Star\\n
+0x16ba	5818	Suara
+0x1761	5985	Membatalkan
+0x1762	5986	Opsi Permainan
+0x1763	5987	Awal
+0x18cd	6349	Menukar

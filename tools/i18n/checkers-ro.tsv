@@ -1,0 +1,234 @@
+﻿# key_hex	key_dec	text
+0x0000	0	Alerta
+0x0001	1	Bine
+0x0017	23	Sta
+0x0018	24	provizoriu
+0x0031	49	Acest joc ți-a fost oferit de:
+0x0032	50	Joc încheiat
+0x0034	52	Opțiuni
+0x0035	53	Tip tabel
+0x0041	65	Da
+0x0042	66	Nu
+0x0048	72	Opriți jocul și anulați rezultatul\\nal acestui joc (adversarul trebuie să fie de acord).
+0x0049	73	Nu face nimic
+0x004a	74	Ieșiți din Confirmare
+0x004b	75	Renunțați și pierdeți:
+0x004c	76	Ieșiți și Anulați
+0x004d	77	Renunțați și pierdeți
+0x004e	78	Renunță și renunță la joc.
+0x004f	79	Ieșire și salvare:
+0x0050	80	Ieșire și anulare:
+0x0051	81	Opriți jocul și salvați jocul \\n (adversarul trebuie să fie de acord).
+0x0052	82	Renunțați la un joc evaluat neterminat:
+0x0053	83	Ieșiți și Salvați
+0x0079	121	Accepta
+0x007b	123	Refuzați toate invitațiile
+0x007c	124	Invitat
+0x007d	125	\\n \\nOpțiuni de joc:
+0x007e	126	Motiv:
+0x007f	127	(optional)
+0x0080	128	v-a invitat la masa #
+0x0081	129	\\n \\nDoriți să vă alăturați?
+0x0082	130	Declin
+0x0083	131	Permite mesaje instantanee numai de la prietenii mei.
+0x0084	132	Ignora
+0x0085	133	Din:
+0x0086	134	a început
+0x0087	135	Profil
+0x0088	136	Trimite
+0x0089	137	Aproape
+0x008a	138	Fă-ți mișcarea și dacă
+0x008b	139	Apăsați „Play Robot” pentru a reda computerul.
+0x008d	141	- Camera:
+0x008e	142	nu revine, vi se va oferi opțiunea de a forța demisia.
+0x008f	143	*** Salvare solicitată.
+0x0090	144	Protejat
+0x0091	145	a cerut ca acest joc să fie salvat.\\nEste acceptabil?
+0x0092	146	Privat
+0x0093	147	dvs
+0x0094	148	Faceți clic pe butonul „Stați” pentru a vă alătura jocului.
+0x0095	149	a cerut anularea acestui joc.\\nEste acceptabil?
+0x0096	150	anulat.
+0x0097	151	Ridice în picioare
+0x0098	152	adversar
+0x0099	153	La rândul meu
+0x009b	155	*** Oricine se poate alătura mesei tale acum.
+0x009c	156	s.
+0x009d	157	În așteptarea adversarului
+0x009e	158	Renunță
+0x009f	159	s-a alăturat mesei.
+0x00a0	160	Faceți clic pe „Începe jocul” pentru a începe.
+0x00a1	161	Ajutor
+0x00a2	162	a părăsit masa.
+0x00a3	163	*** Numai persoanele pe care le-ați invitat pot juca sau pot urmări masa acum.
+0x00a4	164	Începe jocul
+0x00a5	165	Audio la rând
+0x00a6	166	- Gazda:
+0x00a7	167	Public
+0x00a8	168	Joacă Robot
+0x00aa	170	Boot
+0x00ab	171	*** Se solicită anularea.
+0x00ac	172	*** Numai persoanele pe care le-ai invitat pot juca acum la masa ta.
+0x00ae	174	- Tabel:
+0x00af	175	*** Sunteți gazda acestui tabel.
+0x00b0	176	Joc:
+0x00b1	177	Dvs
+0x00b2	178	Se așteaptă ca adversarul să facă clic pe „Start”.
+0x00b4	180	a lăsat un joc evaluat neterminat.\\n
+0x00b5	181	*** Joc
+0x00b6	182	salvat.
+0x00b7	183	Invita
+0x00b8	184	partener
+0x00b9	185	Sunet
+0x00ba	186	Dacă
+0x00bf	191	Introdu numele:
+0x00c0	192	Selectați Din listă
+0x00c1	193	- sau -
+0x00c9	201	Ping
+0x00ca	202	Informații despre jucător pentru
+0x00cb	203	Trimite mesaj instant:
+0x00cc	204	secunde.
+0x00ce	206	minute.
+0x00cf	207	Timp inactiv:
+0x00e1	225	Masă
+0x00e2	226	Cine se uită
+0x00e3	227	optiuni:
+0x00e4	228	ÎNSCRIEȚI-VĂ
+0x00e8	232	de
+0x00e9	233	Rtng
+0x00ea	234	secunde.\\nÎntârzierea mea netă:
+0x00eb	235	v-a invitat să luați loc.
+0x00f0	240	Aveți o versiune veche a clientului în cache.
+0x00f2	242	Ping trimis... în așteptarea unui răspuns.
+0x00f4	244	provizoriu
+0x00f5	245	Nume
+0x00f6	246	Încercarea de conectare la serverul de jocuri
+0x00f7	247	Joacă acum
+0x00f9	249	Ieșiți din jocuri
+0x00fb	251	întârzierea netă a lui:
+0x00fd	253	Cuvânt:
+0x00ff	255	Se contactează serverul de jocuri...
+0x0102	258	Eroare: Resursele sistemului epuizate.\\nÎnchideți toate ferestrele și aplicațiile care nu sunt necesare.\\nApoi închideți fereastra de jocuri și încercați din nou.
+0x0105	261	Imposibil de conectat la server.\\nUnul dintre cele patru lucruri ar fi putut cauza acest lucru:\\n1)Sunteți în spatele unui firewall.\\n2)Nu sunteți conectat la internet.\\n3)Serverul de jocuri este oprit.\\n4)Aveți o pagină veche în memoria cache.
+0x0106	262	Creați tabel
+0x0108	264	Ferestre mici
+0x0109	265	Tbl
+0x010b	267	Ai fost pornit de la masă
+0x010c	268	Deconectat de la server... Inactiv prea mult timp
+0x0111	273	IM-uri de la \\ndoar prieteni
+0x0115	277	... se descarcă starea camerei
+0x0118	280	Eroare la conectare la server.
+0x0119	281	Refuzați toate invitațiile \\n
+0x011c	284	Treaptă
+0x011d	285	Nu te poți ignora.
+0x0123	291	Deconectat de la server
+0x0125	293	Conectat la serverul de jocuri ca
+0x0128	296	Evaluări
+0x0129	297	să \\nrenunțați la joc.
+0x012a	298	a reveni.
+0x012b	299	Așteaptă-ți
+0x012c	300	Forțați-vă
+0x012d	301	Salvați jocul
+0x012e	302	Anulează jocul:
+0x012f	303	Anulează jocul
+0x0130	304	Pierderea forțată:
+0x0131	305	Așteaptă
+0x0132	306	Nu mai jucați și salvați jocul.
+0x0133	307	a abandonat un joc evaluat neterminat:
+0x0134	308	Nu mai jucați și nu \\nînregistrați rezultatul acestui joc.
+0x0135	309	Salvare joc:
+0x0136	310	Pierderea forțată
+0x0137	311	Așteaptă:
+0x0140	320	Bine
+0x0142	322	Alertă audio
+0x0164	356	Alerta
+0x0165	357	Bine
+0x0168	360	Anula
+0x016c	364	Ignora
+0x016d	365	Profil
+0x016e	366	Trimite
+0x016f	367	Aproape
+0x0179	377	Boot
+0x017c	380	secunde.
+0x0180	384	Invita
+0x01f5	501	v-a refuzat invitația.\\nMotiv:
+0x072c	1836	Ora specificată nevalidă.
+0x072d	1837	Creştere:
+0x072e	1838	minute
+0x072f	1839	Ora inițială:
+0x0730	1840	Anula
+0x0731	1841	secunde
+0x0732	1842	Bine
+0x0733	1843	Cel mult
+0x0734	1844	Setați cronometrul
+0x0735	1845	minute pentru fiecare mutare
+0x0736	1846	Fără cronometru
+0x073b	1851	Ultima mutare
+0x073c	1852	Oponentul dumneavoastră a oferit o remiză.\\nAcceptați?
+0x073d	1853	Joc evaluat
+0x073e	1854	Tragere la sorti
+0x073f	1855	Adversarul tău a cerut ca mișcarea sa anterioară să fie reluată.\\nEste acceptabil?
+0x0740	1856	Anulați Turnul
+0x0741	1857	*** Oferta la tragere a fost refuzată.
+0x0742	1858	Ești sigur că vrei să-ți dai demisia?
+0x0743	1859	câștigă jocul.
+0x0744	1860	*** anulare solicitată
+0x0745	1861	Remiză
+0x0746	1862	*** anulare acordat
+0x0747	1863	minute timp inițial.
+0x0748	1864	al doilea increment.
+0x074a	1866	fără limită de timp.
+0x0751	1873	Nici unul
+0x0752	1874	min./deplasare
+0x0753	1875	Setați cronometrul
+0x0754	1876	Numai gazda unei mese poate seta cronometrele.
+0x0755	1877	Cronometru:
+0x0756	1878	Timp:
+0x0760	1888	evaluat.
+0x0761	1889	neevaluat.
+0x08da	2266	Roşu
+0x08db	2267	Alb
+0x08dd	2269	Roşu
+0x08de	2270	Alb
+0x0b48	2888	Află mai multe
+0x0b4c	2892	Afișează un link către jocul meu în\\nmy Yahoo!
+0x0b4d	2893	Află mai multe
+0x0b80	2944	Ceas
+0x0c5b	3163	Dvs
+0x0c60	3168	Timp:
+0x0d35	3381	Opțiuni
+0x0d36	3382	Făcut
+0x0d43	3395	Opțiuni
+0x0d44	3396	Ceas
+0x0dde	3550	Avatare:
+0x0de8	3560	Filtru de blasfemie:
+0x0e0c	3596	minut.
+0x0e1b	3611	Nici unul
+0x0e1c	3612	Puternic
+0x0e1d	3613	Slab
+0x111f	4383	Joc încheiat:
+0x1129	4393	Timp rămas:
+0x1131	4401	Publicitate:
+0x1143	4419	Demisiona
+0x158a	5514	Platforma Macintosh nu acceptă livescript.
+0x159b	5531	Voce
+0x1605	5637	Timpul până la începerea jocului:
+0x1629	5673	1 zi
+0x162a	5674	1 oră
+0x162b	5675	1 minut
+0x162c	5676	10 minute
+0x162d	5677	15 minute
+0x162e	5678	3 ore
+0x162f	5679	30 de minute
+0x1630	5680	5 minute
+0x1631	5681	Interzice
+0x1632	5682	Lovi cu piciorul
+0x1633	5683	Mut
+0x1634	5684	Administrarea camerei:
+0x16b8	5816	Descriere: \\n (opțional)
+0x16b9	5817	Afișați calitatea de membru All-Star\\n
+0x16ba	5818	Voce
+0x1761	5985	Anula
+0x1762	5986	Opțiuni de joc
+0x1763	5987	Început
+0x18cd	6349	Schimbați

@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServlet;
 import process.ProcessPool;
 import server.k.YahooCheckersServer;
 import server.po.YahooPoolServer;
-import server.po2.YahooPoolServer2;
 import server.yutils.YahooRoomHandler;
 import data.MySQLConnectionPool;
 import data.MySQLTable;
@@ -28,7 +27,6 @@ public class Initializer extends HttpServlet implements YahooRoomHandler {
     private static String dbPassword = "123456";
     private int poolPort = 11998;
     private int checkersPort = 11999;
-    private int pool2Port = 12002;
 
     public MySQLTable ids;
     public MySQLTable games;
@@ -37,11 +35,6 @@ public class Initializer extends HttpServlet implements YahooRoomHandler {
     public MySQLTable pool_ignoreds;
     public MySQLTable pool_profiles;
     public MySQLTable pool_games;
-
-    public MySQLTable pool2_rooms;
-    public MySQLTable pool2_ignoreds;
-    public MySQLTable pool2_profiles;
-    public MySQLTable pool2_games;
 
     public MySQLTable checkers_rooms;
     public MySQLTable checkers_ignoreds;
@@ -52,7 +45,6 @@ public class Initializer extends HttpServlet implements YahooRoomHandler {
     private ProcessPool processPool;
     private MySQLConnectionPool connectionPool;
     private YahooPoolServer poolServer;
-    private YahooPoolServer2 poolServer2;
     private YahooCheckersServer checkersServer;
 
     public int getPoolPort() {
@@ -63,16 +55,8 @@ public class Initializer extends HttpServlet implements YahooRoomHandler {
         return checkersPort;
     }
 
-    public int getPool2Port() {
-        return pool2Port;
-    }
-
     public YahooPoolServer getPoolServer() {
         return poolServer;
-    }
-
-    public YahooPoolServer2 getPoolServer2() {
-        return poolServer2;
     }
 
     public YahooCheckersServer getCheckersServer() {
@@ -130,11 +114,6 @@ public class Initializer extends HttpServlet implements YahooRoomHandler {
         pool_profiles = null;
         pool_games = null;
 
-        pool2_rooms = null;
-        pool2_ignoreds = null;
-        pool2_profiles = null;
-        pool2_games = null;
-
         checkers_rooms = null;
         checkers_ignoreds = null;
         checkers_profiles = null;
@@ -153,15 +132,6 @@ public class Initializer extends HttpServlet implements YahooRoomHandler {
             t.printStackTrace();
         }
         poolServer = null;
-
-        try {
-            if (poolServer2 != null) {
-                poolServer2.close();
-            }
-        } catch (Throwable t) {
-            t.printStackTrace();
-        }
-        poolServer2 = null;
 
         try {
             if (checkersServer != null) {
@@ -193,8 +163,6 @@ public class Initializer extends HttpServlet implements YahooRoomHandler {
             dbPassword = readConfig("newyahoo.db.password", dbPassword);
             poolPort = readConfigInt("newyahoo.port.pool", poolPort);
             checkersPort = readConfigInt("newyahoo.port.checkers", checkersPort);
-            pool2Port = readConfigInt("newyahoo.port.pool2", pool2Port);
-
             System.out.println("Creating ProcessPool");
             processPool = new ProcessPool();
 
@@ -221,16 +189,6 @@ public class Initializer extends HttpServlet implements YahooRoomHandler {
             tables.put("pool_profiles", pool_profiles);
             pool_games = new MySQLTable(connectionPool, "pool_games");
             tables.put("pool_games", pool_games);
-
-            System.out.println("Creating pool2 tables");
-            pool2_rooms = new MySQLTable(connectionPool, "pool2_rooms");
-            tables.put("pool2_rooms", pool2_rooms);
-            pool2_ignoreds = new MySQLTable(connectionPool, "pool2_ignoreds");
-            tables.put("pool2_ignoreds", pool2_ignoreds);
-            pool2_profiles = new MySQLTable(connectionPool, "pool2_profiles");
-            tables.put("pool2_profiles", pool2_profiles);
-            pool2_games = new MySQLTable(connectionPool, "pool2_games");
-            tables.put("pool2_games", pool2_games);
 
             System.out.println("Creating checkers tables");
             checkers_rooms = new MySQLTable(connectionPool, "checkers_rooms");
@@ -286,26 +244,7 @@ public class Initializer extends HttpServlet implements YahooRoomHandler {
             checkersServer = new YahooCheckersServer(this, checkersPort, yports);
             System.out.println("YahooCheckersServer created");
 
-            yports.clear();
-            try {
-                System.out.println("Loading pool2 room names");
-                rs = pool2_rooms.getAllValues();
-                while (rs.next()) {
-                    yports.add(rs.getString("name"));
-                }
-                System.out.println("Pool2 room count: " + yports.size());
-            } catch (SQLException e) {
-                e.printStackTrace();
-            } finally {
-                if (rs != null) {
-                    pool2_rooms.closeResultSet(rs);
-                    rs = null;
-                }
-            }
-
-            System.out.println("Starting YahooPoolServer2 on " + pool2Port);
-            poolServer2 = new YahooPoolServer2(this, pool2Port, yports);
-            System.out.println("YahooPoolServer2 created");
+            System.out.println("Pool 2 runtime is retired; skipping Pool 2 server startup");
 
             System.out.println("NEWYAHOO INIT END");
         } catch (Throwable t) {

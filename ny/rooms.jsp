@@ -32,11 +32,6 @@ MM_reloadPage(true);
             targetPage = "pool.jsp";
             roomsTable = Initializer.selfInstance.pool_rooms;
         }
-        else if("pool2".equalsIgnoreCase(game)){
-            pageTitle = "New Yahoo! Pool 2";
-            targetPage = "pool.jsp";
-            roomsTable = Initializer.selfInstance.pool2_rooms;
-        }
         else {
             game = "checkers";
             pageTitle = "New Yahoo! Checkers";

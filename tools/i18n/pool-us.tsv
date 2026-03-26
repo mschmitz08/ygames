@@ -1,0 +1,241 @@
+# key_hex	key_dec	text
+0x0000	0	Alert
+0x0001	1	OK
+0x0017	23	Sit
+0x0018	24	provisional
+0x0031	49	This game was\nbrought to you by:
+0x0032	50	Game Over
+0x0034	52	Options
+0x0035	53	Table Type
+0x0041	65	Yes
+0x0042	66	No
+0x0048	72	Stop playing and cancel the result\nof this game (opponent must agree).
+0x0049	73	Never Mind
+0x004a	74	Quit Confirmation
+0x004b	75	Quit and Forfeit:
+0x004c	76	Quit and Cancel
+0x004d	77	Quit and Forfeit
+0x004e	78	Quit and forfeit the game.
+0x004f	79	Quit and Save:
+0x0050	80	Quit and Cancel:
+0x0051	81	Stop playing and save the\ngame (opponent must agree).
+0x0052	82	You are quitting an unfinished rated game:
+0x0053	83	Quit and Save
+0x0079	121	Accept
+0x007b	123	Decline All Invitations
+0x007c	124	Invited
+0x007d	125	\n \nGame options: 
+0x007e	126	Reason:
+0x007f	127	(optional)
+0x0080	128	 has invited you to table #
+0x0081	129	\n \nWould you like to join?
+0x0082	130	Decline
+0x0083	131	Allow instant messages from my friends only.
+0x0084	132	Ignore
+0x0085	133	From: 
+0x0086	134	 started 
+0x0087	135	Profile
+0x0088	136	Send
+0x0089	137	Close
+0x008a	138	Make your move and if
+0x008b	139	  Press 'Play Robot' to play the computer.
+0x008d	141	 - Room: 
+0x008e	142	 does not return, you\nwill be given the option to force a resignation.
+0x008f	143	*** Save requested.
+0x0090	144	Protected
+0x0091	145	 has requested that this game be saved.\nIs this acceptable?
+0x0092	146	Private
+0x0093	147	 your 
+0x0094	148	Click a 'Sit' button to join the game.
+0x0095	149	 has requested that this game be canceled.\nIs this acceptable?
+0x0096	150	canceled.
+0x0097	151	Stand Up
+0x0098	152	opponent
+0x0099	153	On my turn
+0x009b	155	*** Anyone may join your table now.
+0x009c	156	s.
+0x009d	157	Waiting for opponent
+0x009e	158	Quit
+0x009f	159	 has joined the table.
+0x00a0	160	Click 'Start Game' to begin.
+0x00a1	161	Help
+0x00a2	162	 has left the table.
+0x00a3	163	*** Only people you have invited may play at or watch your table now.
+0x00a4	164	Start Game
+0x00a5	165	Audio on turn
+0x00a6	166	 - Host: 
+0x00a7	167	Public
+0x00a8	168	Play  Robot
+0x00aa	170	Boot
+0x00ab	171	*** Cancel requested.
+0x00ac	172	*** Only people you have invited may play at your table now.
+0x00ae	174	 - Table: 
+0x00af	175	*** You are host of this table.  This gives you the power to invite people to (or boot people from) your table.  You may also limit other players' access to your table by selecting its 'Table Type'.
+0x00b0	176	Game: 
+0x00b1	177	Your 
+0x00b2	178	Waiting for opponent to click 'Start'.
+0x00b4	180	 has left an unfinished rated game.\n
+0x00b5	181	*** Game 
+0x00b6	182	saved.
+0x00b7	183	Invite
+0x00b8	184	partner
+0x00b9	185	Sound
+0x00ba	186	If
+0x00bf	191	Enter Name:
+0x00c0	192	Select From List
+0x00c1	193	- or -
+0x00c9	201	Ping
+0x00ca	202	Player information for 
+0x00cb	203	Send instant message:
+0x00cc	204	 seconds.
+0x00ce	206	 minutes. 
+0x00cf	207	Idle time: 
+0x00e1	225	Table
+0x00e2	226	Who is Watching
+0x00e3	227	options: 
+0x00e4	228	JOIN
+0x00e8	232	 by 
+0x00e9	233	Rtng
+0x00ea	234	 seconds.\nMy net delay: 
+0x00eb	235	 has invited you to take a seat.
+0x00f0	240	You have an old version of the client in your cache.  You will need to restart\nyour browser and come back to retreive the current version.  If restarting does\nnot work, manually clearing your browser's cache should fix the problem.
+0x00f2	242	Ping dispatched ... waiting for response.
+0x00f4	244	provisional
+0x00f5	245	Name
+0x00f6	246	Attempting to connect to the games server
+0x00f7	247	Play Now
+0x00f9	249	Exit Games
+0x00fb	251	's net delay: 
+0x00fd	253	Say:
+0x00ff	255	Contacting games server ...
+0x0102	258	Error:  Out of system resources.\nClose any unneeded windows and applications.\nThen close the games window and try again.
+0x0105	261	Unable to connect to server.\nOne of four things could have caused this:\n1)You are behind a firewall.\n2)You are not connected to the internet.\n3)The games server is down.\n4)You have a stale page in your cache.
+0x0106	262	Create Table
+0x0108	264	Small Windows
+0x0109	265	Tbl
+0x010b	267	You have been booted from table 
+0x010c	268	Disconnected from server ... Idle too long
+0x0111	273	IMs from\nfriends only
+0x0115	277	 ... downloading room state
+0x0118	280	Error logging into server.
+0x0119	281	Decline all\ninvitations
+0x011c	284	Rung
+0x011d	285	You cannot ignore yourself.
+0x0123	291	Disconnected from server
+0x0125	293	Connected to games server as 
+0x0128	296	Ratings
+0x0129	297	 to\nresign the game.
+0x012a	298	 to return.
+0x012b	299	Wait for your 
+0x012c	300	Force your 
+0x012d	301	Save Game
+0x012e	302	Cancel Game:
+0x012f	303	Cancel Game
+0x0130	304	Force Forfeit:
+0x0131	305	Wait
+0x0132	306	Stop playing and save the game.
+0x0133	307	 has abandoned an unfinished rated game:
+0x0134	308	Stop playing and do not\nrecord the result of this game.
+0x0135	309	Save Game:
+0x0136	310	Force Forfeit
+0x0137	311	Wait:
+0x0140	320	OK
+0x0142	322	Audio Alert
+0x0164	356	Alert
+0x0165	357	OK
+0x0168	360	Cancel
+0x016c	364	Ignore
+0x016d	365	Profile
+0x016e	366	Send
+0x016f	367	Close
+0x0179	377	Boot
+0x017c	380	 seconds.
+0x0180	384	Invite
+0x01f5	501	 has declined your invitation.\nReason: 
+0x0b48	2888	Learn More
+0x0b4c	2892	Show a link to my game in\nmy Yahoo! Messenger status.
+0x0b4d	2893	Learn More
+0x0b80	2944	Watch
+0x0c5b	3163	Your 
+0x0d35	3381	Options
+0x0d36	3382	Done
+0x0d43	3395	Options
+0x0d44	3396	Watch
+0x0dde	3550	Avatars:
+0x0de8	3560	Profanity Filter:
+0x0e0c	3596	 minute. 
+0x0e1b	3611	None
+0x0e1c	3612	Strong
+0x0e1d	3613	Weak
+0x111f	4383	Game Over:
+0x1129	4393	Time Left: 
+0x1131	4401	Advertisement:
+0x11bf	4543	Choose Type
+0x11c0	4544	Ok
+0x11c1	4545	solid 
+0x11c2	4546	stripe
+0x11c6	4550	 has ball in hand.
+0x1213	4627	Choose pocket.
+0x1214	4628	Click a ball you wish to strike.
+0x1217	4631	Drag cue with left mouse button.
+0x1225	4645	Foul!
+0x1243	4675	Press space to shoot.
+0x1244	4676	Pull with Shift+left mouse button to shoot.
+0x1245	4677	Pull with right mouse button to shoot.
+0x1252	4690	Scratch!
+0x1253	4691	Shoot Again!
+0x1254	4692	Shoot!
+0x125c	4700	Which ball type would you like to play?
+0x125d	4701	You may move the cue ball before you shoot.
+0x12b5	4789	reset
+0x132c	4908	 30 sec. per move.
+0x132d	4909	 no timer.
+0x132e	4910	 rated.
+0x132f	4911	 sec. per move.
+0x1338	4920	English
+0x136c	4972	Power
+0x13fc	5116	 Time per move:
+0x13fd	5117	 Timer
+0x1400	5120	Cancel
+0x1401	5121	Eight Ball Game
+0x1402	5122	Game Options
+0x1403	5123	Rated game.
+0x1404	5124	Start
+0x1405	5125	Training.
+0x140a	5130	sec.
+0x1413	5139	 wins the game.
+0x158a	5514	The Macintosh platform does not support livescript.
+0x159b	5531	Voice
+0x1605	5637	Time to game start: 
+0x1629	5673	1 day
+0x162a	5674	1 hour
+0x162b	5675	1 minute
+0x162c	5676	10 minutes
+0x162d	5677	15 minutes
+0x162e	5678	3 hours
+0x162f	5679	30 minutes
+0x1630	5680	5 minutes
+0x1631	5681	Ban
+0x1632	5682	Kick
+0x1633	5683	Mute
+0x1634	5684	Room Administration:
+0x1676	5750	Cancel
+0x1677	5751	Learn More
+0x1694	5780	Nine Ball Game
+0x1696	5782	9-ball pool is available to Yahoo! Games All-Star members only.
+0x169c	5788	9-ball pool is available to Yahoo! Games All-Star members only.
+0x16b2	5810	8-ball.
+0x16b3	5811	9-ball.
+0x16b5	5813	8-ball.
+0x16b6	5814	9-ball.
+0x16b7	5815	Training.
+0x16b8	5816	Description:\n(optional)
+0x16b9	5817	Show All-Star\nmembership
+0x16ba	5818	Voice
+0x1761	5985	Cancel
+0x1762	5986	Game Options
+0x1763	5987	Start
+0x179d	6045	y
+0x18cd	6349	Swap
+0x18ce	6350	Could not open table window.\nPlease set your browser to allow pop-ups for this site and try again.
+0x18cf	6351	Attempting to pop up table window...

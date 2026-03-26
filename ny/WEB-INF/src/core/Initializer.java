@@ -23,13 +23,11 @@ public class Initializer extends HttpServlet {
     private String gameHost = "127.0.0.1";
     private int checkersPort = 11999;
     private int poolPort = 11998;
-    private int pool2Port = 12002;
 
     public MySQLTable ids;
     public MySQLTable games;
     public MySQLTable checkers_rooms;
     public MySQLTable pool_rooms;
-    public MySQLTable pool2_rooms;
 
     public ProcessPool processPool;
     public MySQLConnectionPool connectionPool;
@@ -49,10 +47,6 @@ public class Initializer extends HttpServlet {
 
     public int getPoolPort() {
         return poolPort;
-    }
-
-    public int getPool2Port() {
-        return pool2Port;
     }
 
     private String readConfig(String name, String defaultValue) {
@@ -100,7 +94,6 @@ public class Initializer extends HttpServlet {
         games = null;
         checkers_rooms = null;
         pool_rooms = null;
-        pool2_rooms = null;
 
         connectionPool.destroy();
         connectionPool = null;
@@ -121,7 +114,6 @@ public class Initializer extends HttpServlet {
         gameHost = readConfig("newyahoo.host", gameHost);
         checkersPort = readConfigInt("newyahoo.port.checkers", checkersPort);
         poolPort = readConfigInt("newyahoo.port.pool", poolPort);
-        pool2Port = readConfigInt("newyahoo.port.pool2", pool2Port);
 
         processPool = new ProcessPool();
         connectionPool = new MySQLConnectionPool(processPool, dbHost, dbPort, dbName, dbUsername, dbPassword);
@@ -134,7 +126,6 @@ public class Initializer extends HttpServlet {
             games = new MySQLTable(connectionPool, "games");
             checkers_rooms = new MySQLTable(connectionPool, "checkers_rooms");
             pool_rooms = new MySQLTable(connectionPool, "pool_rooms");
-            pool2_rooms = new MySQLTable(connectionPool, "pool2_rooms");
         } catch (Throwable t) {
             t.printStackTrace();
         }

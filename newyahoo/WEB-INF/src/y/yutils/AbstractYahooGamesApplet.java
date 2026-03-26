@@ -453,7 +453,7 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 			loginDialog = new AppletLoginDialog(this);
 		}
 		loginDialog.setBusy(false);
-		loginDialog.setMessage(message != null ? message : "Please sign in");
+		loginDialog.setMessage(message != null ? message : uiText("please_sign_in", "Please sign in"));
 		loginDialog.setUsername(extractIdFromCookie());
 		if ("register".equalsIgnoreCase(account_mode)) {
 			loginDialog.showRegister();
@@ -475,14 +475,14 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 			password = "";
 		username = username.trim();
 		if (username.length() == 0 || password.length() == 0) {
-			promptForAppletLogin("Enter user name and password");
+			promptForAppletLogin(uiText("enter_user_name_and_password", "Enter user name and password"));
 			return;
 		}
 		loginRequestInProgress = true;
 		loginErrorMessage = null;
 		if (loginDialog != null) {
 			loginDialog.setBusy(true);
-			loginDialog.setMessage("Signing in...");
+			loginDialog.setMessage(uiText("signing_in", "Signing in..."));
 		}
 		String postBody = encodeFormValue("username", username) + "&"
 				+ encodeFormValue("password", password);
@@ -512,7 +512,7 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 				|| confirmPassword.length() == 0) {
 			if (loginDialog != null) {
 				loginDialog.showRegister();
-				loginDialog.setMessage("Complete all registration fields");
+				loginDialog.setMessage(uiText("complete_registration_fields", "Complete all registration fields"));
 			}
 			return;
 		}
@@ -521,7 +521,7 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 		if (loginDialog != null) {
 			loginDialog.setBusy(true);
 			loginDialog.showRegister();
-			loginDialog.setMessage("Creating account...");
+			loginDialog.setMessage(uiText("creating_account", "Creating account..."));
 		}
 		String postBody = encodeFormValue("username", username) + "&"
 				+ encodeFormValue("password", password) + "&"
@@ -550,7 +550,7 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 				|| newPassword.length() == 0 || confirmPassword.length() == 0) {
 			if (loginDialog != null) {
 				loginDialog.showChangePassword();
-				loginDialog.setMessage("Complete all password fields");
+				loginDialog.setMessage(uiText("complete_password_fields", "Complete all password fields"));
 			}
 			return;
 		}
@@ -559,7 +559,7 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 		if (loginDialog != null) {
 			loginDialog.setBusy(true);
 			loginDialog.showChangePassword();
-			loginDialog.setMessage("Updating password...");
+			loginDialog.setMessage(uiText("updating_password", "Updating password..."));
 		}
 		String postBody = encodeFormValue("username", username) + "&"
 				+ encodeFormValue("current_password", currentPassword) + "&"
@@ -602,15 +602,15 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 	protected void processAppletLoginResponse(UrlProcessEntry entry) {
 		loginRequestInProgress = false;
 		if (entry == null) {
-			promptForAppletLogin("No login response");
+			promptForAppletLogin(uiText("no_login_response", "No login response"));
 			return;
 		}
 		if (entry.exception != null) {
-			promptForAppletLogin("Login request failed: " + entry.exception.toString());
+			promptForAppletLogin(uiText("login_request_failed", "Login request failed: {0}", entry.exception.toString()));
 			return;
 		}
 		if (entry.content == null) {
-			promptForAppletLogin("Login request returned no data");
+			promptForAppletLogin(uiText("login_request_returned_no_data", "Login request returned no data"));
 			return;
 		}
 		String response = entry.content;
@@ -627,7 +627,7 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 			else if (line.startsWith("message="))
 				message = line.substring("message=".length());
 			else if (line.startsWith("ERROR"))
-				message = "Invalid login";
+				message = uiText("invalid_login", "Invalid login");
 		}
 		if (responseCookie != null && responseYCookie != null) {
 			cookie = responseCookie;
@@ -640,7 +640,7 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 			connectToServer();
 		}
 		else {
-			promptForAppletLogin(message != null ? message : "Invalid login");
+			promptForAppletLogin(message != null ? message : uiText("invalid_login", "Invalid login"));
 		}
 	}
 
@@ -650,7 +650,7 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 			if (loginDialog != null) {
 				loginDialog.setBusy(false);
 				loginDialog.showRegister();
-				loginDialog.setMessage("No registration response");
+				loginDialog.setMessage(uiText("no_registration_response", "No registration response"));
 			}
 			return;
 		}
@@ -658,8 +658,8 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 			if (loginDialog != null) {
 				loginDialog.setBusy(false);
 				loginDialog.showRegister();
-				loginDialog.setMessage("Registration failed: "
-						+ entry.exception.toString());
+				loginDialog.setMessage(uiText("registration_failed",
+						"Registration failed: {0}", entry.exception.toString()));
 			}
 			return;
 		}
@@ -672,7 +672,7 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 			if (loginDialog != null) {
 				loginDialog.setBusy(false);
 				loginDialog.showChangePassword();
-				loginDialog.setMessage("No password change response");
+				loginDialog.setMessage(uiText("no_password_change_response", "No password change response"));
 			}
 			return;
 		}
@@ -680,8 +680,8 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 			if (loginDialog != null) {
 				loginDialog.setBusy(false);
 				loginDialog.showChangePassword();
-				loginDialog.setMessage("Password change failed: "
-						+ entry.exception.toString());
+				loginDialog.setMessage(uiText("password_change_failed",
+						"Password change failed: {0}", entry.exception.toString()));
 			}
 			return;
 		}
@@ -693,7 +693,7 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 		if (entry.content == null) {
 			if (loginDialog != null) {
 				loginDialog.setBusy(false);
-				loginDialog.setMessage("Request returned no data");
+				loginDialog.setMessage(uiText("request_returned_no_data", "Request returned no data"));
 			}
 			return;
 		}
@@ -726,7 +726,7 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 				else {
 					loginDialog.showSignIn();
 					loginDialog.setMessage(message != null ? message
-							: "Password changed. Sign in.");
+							: uiText("password_changed_sign_in", "Password changed. Sign in."));
 				}
 			}
 			if (connectOnSuccess)
@@ -737,7 +737,7 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 			loginDialog.setBusy(false);
 			if (returnToSignIn)
 				loginDialog.showSignIn();
-			loginDialog.setMessage(message != null ? message : "Request failed");
+			loginDialog.setMessage(message != null ? message : uiText("request_failed", "Request failed"));
 		}
 	}
 

@@ -1,0 +1,241 @@
+﻿# key_hex	key_dec	text
+0x0000	0	Varna
+0x0001	1	OK
+0x0017	23	Sitta
+0x0018	24	provisorisk
+0x0031	49	Detta spel kom \\n till dig av:
+0x0032	50	Game Over
+0x0034	52	Alternativ
+0x0035	53	Tabelltyp
+0x0041	65	Ja
+0x0042	66	Inga
+0x0048	72	Sluta spela och avbryt resultatet\\nav detta spel (motståndaren måste godkänna).
+0x0049	73	Strunt i det
+0x004a	74	Avsluta bekräftelse
+0x004b	75	Avsluta och förlora:
+0x004c	76	Avsluta och avbryt
+0x004d	77	Avsluta och förverka
+0x004e	78	Avsluta och förlora spelet.
+0x004f	79	Avsluta och spara:
+0x0050	80	Avsluta och avbryt:
+0x0051	81	Sluta spela och spara \\n-spelet (motståndaren måste acceptera).
+0x0052	82	Du avslutar ett oavslutat betygsatt spel:
+0x0053	83	Avsluta och spara
+0x0079	121	Acceptera
+0x007b	123	Avvisa alla inbjudningar
+0x007c	124	Inbjudna
+0x007d	125	\\n \\n Spelalternativ:
+0x007e	126	Resonera:
+0x007f	127	(frivillig)
+0x0080	128	har bjudit in dig till bord #
+0x0081	129	\\n \\nVill du vara med?
+0x0082	130	Nedgång
+0x0083	131	Tillåt bara snabbmeddelanden från mina vänner.
+0x0084	132	Ignorera
+0x0085	133	Från:
+0x0086	134	startade
+0x0087	135	Profil
+0x0088	136	Skicka
+0x0089	137	Nära
+0x008a	138	Gör ditt drag och om
+0x008b	139	Tryck på "Spela robot" för att spela datorn.
+0x008d	141	- Rum:
+0x008e	142	inte återvänder, kommer du att få möjlighet att tvinga fram en avgång.
+0x008f	143	*** Spara begärt.
+0x0090	144	Skyddad
+0x0091	145	har begärt att det här spelet ska sparas.\\nÄr detta acceptabelt?
+0x0092	146	Privat
+0x0093	147	din
+0x0094	148	Klicka på en "Sitt"-knapp för att gå med i spelet.
+0x0095	149	har begärt att det här spelet ska avbrytas.\\nÄr detta acceptabelt?
+0x0096	150	avbruten.
+0x0097	151	Stå upp
+0x0098	152	motståndare
+0x0099	153	På min tur
+0x009b	155	*** Vem som helst kan gå med i ditt bord nu.
+0x009c	156	s.
+0x009d	157	Väntar på motståndaren
+0x009e	158	Sluta
+0x009f	159	har anslutit sig till bordet.
+0x00a0	160	Klicka på "Starta spel" för att börja.
+0x00a1	161	Hjälp
+0x00a2	162	har lämnat bordet.
+0x00a3	163	*** Endast personer du har bjudit in får spela vid eller titta på ditt bord nu.
+0x00a4	164	Starta spelet
+0x00a5	165	Ljud på tur
+0x00a6	166	- Värd:
+0x00a7	167	Offentlig
+0x00a8	168	Spela Robot
+0x00aa	170	Känga
+0x00ab	171	*** Avbryt begärd.
+0x00ac	172	*** Endast personer du har bjudit in får spela vid ditt bord nu.
+0x00ae	174	- Bord:
+0x00af	175	*** Du är värd för detta bord.
+0x00b0	176	Spel:
+0x00b1	177	Din
+0x00b2	178	Väntar på att motståndaren ska klicka på "Start".
+0x00b4	180	har lämnat ett oavslutat betygsatt spel.\\n
+0x00b5	181	*** Spel
+0x00b6	182	sparat.
+0x00b7	183	Bjuda
+0x00b8	184	partner
+0x00b9	185	Ljud
+0x00ba	186	Om
+0x00bf	191	Ange namn:
+0x00c0	192	Välj Från lista
+0x00c1	193	- eller -
+0x00c9	201	Ping
+0x00ca	202	Spelarinformation för
+0x00cb	203	Skicka snabbmeddelande:
+0x00cc	204	sekunder.
+0x00ce	206	minuter.
+0x00cf	207	Inaktiv tid:
+0x00e1	225	Tabell
+0x00e2	226	Vem tittar
+0x00e3	227	alternativ:
+0x00e4	228	ANSLUTA SIG TILL
+0x00e8	232	av
+0x00e9	233	Rtng
+0x00ea	234	sekunder.\\nMin nettofördröjning:
+0x00eb	235	har bjudit in dig att ta plats.
+0x00f0	240	Du har en gammal version av klienten i din cache.
+0x00f2	242	Ping skickas ... väntar på svar.
+0x00f4	244	provisorisk
+0x00f5	245	Namn
+0x00f6	246	Försöker ansluta till spelservern
+0x00f7	247	Spela nu
+0x00f9	249	Avsluta spel
+0x00fb	251	s nettofördröjning:
+0x00fd	253	Säga:
+0x00ff	255	Kontakta spelserver ...
+0x0102	258	Fel: Systemresurserna är slut.\\nStäng alla onödiga fönster och applikationer.\\nStäng sedan spelfönstret och försök igen.
+0x0105	261	Det går inte att ansluta till servern.\\nEn av fyra saker kan ha orsakat detta:\\n1)Du ligger bakom en brandvägg.\\n2)Du är inte ansluten till internet.\\n3)Spelservern är nere.\\n4)Du har en inaktuell sida i din cache.
+0x0106	262	Skapa tabell
+0x0108	264	Små fönster
+0x0109	265	Tbl
+0x010b	267	Du har startat från bordet
+0x010c	268	Frånkopplad från servern ... Inaktiv för länge
+0x0111	273	Endast snabbmeddelanden från \\nvänner
+0x0115	277	... laddar ner rumsstatus
+0x0118	280	Fel vid inloggning på servern.
+0x0119	281	Avvisa alla \\ninbjudningar
+0x011c	284	Ringt
+0x011d	285	Du kan inte ignorera dig själv.
+0x0123	291	Frånkopplad från servern
+0x0125	293	Ansluten till spelserver som
+0x0128	296	Betyg
+0x0129	297	to\\navsluta spelet.
+0x012a	298	att återvända.
+0x012b	299	Vänta på din
+0x012c	300	Tvinga din
+0x012d	301	Spara spelet
+0x012e	302	Avbryt spel:
+0x012f	303	Avbryt spel
+0x0130	304	Tvångsförverkande:
+0x0131	305	Vänta
+0x0132	306	Sluta spela och spara spelet.
+0x0133	307	har övergett ett oavslutat betygsatt spel:
+0x0134	308	Sluta spela och spela inte in resultatet av det här spelet.
+0x0135	309	Spara spel:
+0x0136	310	Force Forfeit
+0x0137	311	Vänta:
+0x0140	320	OK
+0x0142	322	Ljudvarning
+0x0164	356	Varna
+0x0165	357	OK
+0x0168	360	Avboka
+0x016c	364	Ignorera
+0x016d	365	Profil
+0x016e	366	Skicka
+0x016f	367	Nära
+0x0179	377	Känga
+0x017c	380	sekunder.
+0x0180	384	Bjuda
+0x01f5	501	har tackat nej till din inbjudan.\\nReason:
+0x0b48	2888	Läs mer
+0x0b4c	2892	Visa en länk till mitt spel i\\nmy Yahoo!
+0x0b4d	2893	Läs mer
+0x0b80	2944	Titta
+0x0c5b	3163	Din
+0x0d35	3381	Alternativ
+0x0d36	3382	Gjort
+0x0d43	3395	Alternativ
+0x0d44	3396	Titta
+0x0dde	3550	Avatarer:
+0x0de8	3560	svordomsfilter:
+0x0e0c	3596	minut.
+0x0e1b	3611	Ingen
+0x0e1c	3612	Stark
+0x0e1d	3613	Svag
+0x111f	4383	Game Over:
+0x1129	4393	Tid kvar:
+0x1131	4401	Annons:
+0x11bf	4543	Välj Typ
+0x11c0	4544	OK
+0x11c1	4545	fast
+0x11c2	4546	rand
+0x11c6	4550	har bollen i handen.
+0x1213	4627	Välj ficka.
+0x1214	4628	Klicka på en boll som du vill slå.
+0x1217	4631	Dra kö med vänster musknapp.
+0x1225	4645	Ojust spel!
+0x1243	4675	Tryck på mellanslag för att skjuta.
+0x1244	4676	Dra med Shift+vänster musknapp för att skjuta.
+0x1245	4677	Dra med höger musknapp för att skjuta.
+0x1252	4690	Repa!
+0x1253	4691	Skjut igen!
+0x1254	4692	Skjuta!
+0x125c	4700	Vilken typ av boll skulle du vilja spela?
+0x125d	4701	Du kan flytta köbollen innan du skjuter.
+0x12b5	4789	återställa
+0x132c	4908	30 sek.
+0x132d	4909	ingen timer.
+0x132e	4910	betygsatt.
+0x132f	4911	sek.
+0x1338	4920	engelska
+0x136c	4972	Driva
+0x13fc	5116	Tid per drag:
+0x13fd	5117	Timer
+0x1400	5120	Avboka
+0x1401	5121	Åtta bollspel
+0x1402	5122	Spelalternativ
+0x1403	5123	Betygsatt spel.
+0x1404	5124	Start
+0x1405	5125	Utbildning.
+0x140a	5130	sek.
+0x1413	5139	vinner spelet.
+0x158a	5514	Macintosh-plattformen stöder inte livescript.
+0x159b	5531	Röst
+0x1605	5637	Tid till matchstart:
+0x1629	5673	1 dag
+0x162a	5674	1 timme
+0x162b	5675	1 minut
+0x162c	5676	10 minuter
+0x162d	5677	15 minuter
+0x162e	5678	3 timmar
+0x162f	5679	30 minuter
+0x1630	5680	5 minuter
+0x1631	5681	Förbjuda
+0x1632	5682	Sparka
+0x1633	5683	Stum
+0x1634	5684	Rumsadministration:
+0x1676	5750	Avboka
+0x1677	5751	Läs mer
+0x1694	5780	Spel med nio bollar
+0x1696	5782	9-bollspool är tillgänglig för Yahoo!
+0x169c	5788	9-bollspool är tillgänglig för Yahoo!
+0x16b2	5810	8-bollar.
+0x16b3	5811	9-bollar.
+0x16b5	5813	8-bollar.
+0x16b6	5814	9-bollar.
+0x16b7	5815	Utbildning.
+0x16b8	5816	Beskrivning: \\n (valfritt)
+0x16b9	5817	Visa All-Star\\n-medlemskap
+0x16ba	5818	Röst
+0x1761	5985	Avboka
+0x1762	5986	Spelalternativ
+0x1763	5987	Start
+0x179d	6045	y
+0x18cd	6349	Byta
+0x18ce	6350	Det gick inte att öppna tabellfönstret.\\n Ställ in din webbläsare på att tillåta popup-fönster för den här webbplatsen och försök igen.
+0x18cf	6351	Försöker öppna tabellfönstret...

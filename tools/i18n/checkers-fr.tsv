@@ -1,0 +1,234 @@
+﻿# key_hex	key_dec	text
+0x0000	0	Alerte
+0x0001	1	D'ACCORD
+0x0017	23	S'asseoir
+0x0018	24	provisoire
+0x0031	49	Ce jeu vous a été présenté par :
+0x0032	50	Jeu terminé
+0x0034	52	Possibilités
+0x0035	53	Type de tableau
+0x0041	65	Oui
+0x0042	66	Non
+0x0048	72	Arrêtez de jouer et annulez le résultat\\nde ce jeu (l'adversaire doit être d'accord).
+0x0049	73	Pas grave
+0x004a	74	Confirmation de quitter
+0x004b	75	Abandon et forfait :
+0x004c	76	Quitter et annuler
+0x004d	77	Abandonner et déclarer forfait
+0x004e	78	Quittez et abandonnez la partie.
+0x004f	79	Quitter et enregistrer :
+0x0050	80	Quitter et annuler :
+0x0051	81	Arrêtez de jouer et sauvegardez la partie \\n (l'adversaire doit être d'accord).
+0x0052	82	Vous quittez une partie notée inachevée :
+0x0053	83	Quitter et sauvegarder
+0x0079	121	Accepter
+0x007b	123	Refuser toutes les invitations
+0x007c	124	Invité
+0x007d	125	\\n \\nOptions de jeu :
+0x007e	126	Raison:
+0x007f	127	(facultatif)
+0x0080	128	vous a invité à table #
+0x0081	129	\\n \\nVoulez-vous nous rejoindre ?
+0x0082	130	Déclin
+0x0083	131	Autoriser uniquement les messages instantanés de mes amis.
+0x0084	132	Ignorer
+0x0085	133	Depuis:
+0x0086	134	commencé
+0x0087	135	Profil
+0x0088	136	Envoyer
+0x0089	137	Fermer
+0x008a	138	Faites votre déménagement et si
+0x008b	139	Appuyez sur « Jouer au robot » pour jouer à l'ordinateur.
+0x008d	141	- Chambre:
+0x008e	142	ne revient pas, vous aurez la possibilité de forcer votre démission.
+0x008f	143	*** Sauvegarde demandée.
+0x0090	144	Protégé
+0x0091	145	a demandé que ce jeu soit sauvegardé.\\nIEst-ce acceptable ?
+0x0092	146	Privé
+0x0093	147	ton
+0x0094	148	Cliquez sur un bouton « S'asseoir » pour rejoindre la partie.
+0x0095	149	a demandé que ce jeu soit annulé.\\nIest-ce acceptable ?
+0x0096	150	annulé.
+0x0097	151	Se lever
+0x0098	152	adversaire
+0x0099	153	A mon tour
+0x009b	155	*** Tout le monde peut désormais rejoindre votre table.
+0x009c	156	s.
+0x009d	157	En attendant l'adversaire
+0x009e	158	Quitter
+0x009f	159	s'est joint à la table.
+0x00a0	160	Cliquez sur « Démarrer le jeu » pour commencer.
+0x00a1	161	Aide
+0x00a2	162	a quitté la table.
+0x00a3	163	*** Seules les personnes que vous avez invitées peuvent jouer ou regarder votre table maintenant.
+0x00a4	164	Commencer le jeu
+0x00a5	165	Audio activé
+0x00a6	166	- Hôte:
+0x00a7	167	Publique
+0x00a8	168	Jouer aux robots
+0x00aa	170	Botte
+0x00ab	171	*** Annulation demandée.
+0x00ac	172	*** Seules les personnes que vous avez invitées peuvent désormais jouer à votre table.
+0x00ae	174	- Tableau:
+0x00af	175	*** Vous êtes l'hôte de cette table.
+0x00b0	176	Jeu:
+0x00b1	177	Ton
+0x00b2	178	Attendre que l'adversaire clique sur « Démarrer ».
+0x00b4	180	a laissé un jeu classé inachevé.\\n
+0x00b5	181	*** Jeu
+0x00b6	182	enregistré.
+0x00b7	183	Inviter
+0x00b8	184	partenaire
+0x00b9	185	Son
+0x00ba	186	Si
+0x00bf	191	Entrez le nom :
+0x00c0	192	Sélectionner dans la liste
+0x00c1	193	- ou -
+0x00c9	201	Ping
+0x00ca	202	Informations sur les joueurs pour
+0x00cb	203	Envoyer un message instantané :
+0x00cc	204	secondes.
+0x00ce	206	minutes.
+0x00cf	207	Temps d'inactivité :
+0x00e1	225	Tableau
+0x00e2	226	Qui regarde
+0x00e3	227	choix :
+0x00e4	228	REJOINDRE
+0x00e8	232	par
+0x00e9	233	Rtng
+0x00ea	234	secondes.\\nMon délai net :
+0x00eb	235	vous a invité à vous asseoir.
+0x00f0	240	Vous avez une ancienne version du client dans votre cache.
+0x00f2	242	Ping envoyé... en attente de réponse.
+0x00f4	244	provisoire
+0x00f5	245	Nom
+0x00f6	246	Tentative de connexion au serveur de jeux
+0x00f7	247	Jouez maintenant
+0x00f9	249	Quitter les jeux
+0x00fb	251	le retard net de :
+0x00fd	253	Dire:
+0x00ff	255	Contacter le serveur de jeux...
+0x0102	258	Erreur : ressources système insuffisantes.\\nFermez toutes les fenêtres et applications inutiles.\\nFermez ensuite la fenêtre des jeux et réessayez.
+0x0105	261	Impossible de se connecter au serveur.\\nL'une des quatre causes possibles est la suivante :\\n1)Vous êtes derrière un pare-feu.\\n2)Vous n'êtes pas connecté à Internet.\\n3)Le serveur de jeux est en panne.\\n4)Vous avez une page obsolète dans votre cache.
+0x0106	262	Créer un tableau
+0x0108	264	Petites fenêtres
+0x0109	265	Tbl
+0x010b	267	Vous avez été démarré à partir de la table
+0x010c	268	Déconnecté du serveur... Inactif trop longtemps
+0x0111	273	Messages instantanés provenant d'amis \\n uniquement
+0x0115	277	... téléchargement de l'état de la salle
+0x0118	280	Erreur de connexion au serveur.
+0x0119	281	Refuser toutes les invitations \\n
+0x011c	284	Échelon
+0x011d	285	Vous ne pouvez pas vous ignorer.
+0x0123	291	Déconnecté du serveur
+0x0125	293	Connecté au serveur de jeux en tant que
+0x0128	296	Notes
+0x0129	297	to\\nquitter la partie.
+0x012a	298	pour revenir.
+0x012b	299	Attends ton
+0x012c	300	Forcez votre
+0x012d	301	Sauvegarder la partie
+0x012e	302	Annuler le jeu :
+0x012f	303	Annuler le jeu
+0x0130	304	Forfait forfait :
+0x0131	305	Attendez
+0x0132	306	Arrêtez de jouer et sauvegardez la partie.
+0x0133	307	a abandonné un jeu classé inachevé :
+0x0134	308	Arrêtez de jouer et n'enregistrez pas le résultat de ce jeu.
+0x0135	309	Sauvegarder la partie :
+0x0136	310	Forçage du forfait
+0x0137	311	Attendez:
+0x0140	320	D'ACCORD
+0x0142	322	Alerte audio
+0x0164	356	Alerte
+0x0165	357	D'ACCORD
+0x0168	360	Annuler
+0x016c	364	Ignorer
+0x016d	365	Profil
+0x016e	366	Envoyer
+0x016f	367	Fermer
+0x0179	377	Botte
+0x017c	380	secondes.
+0x0180	384	Inviter
+0x01f5	501	a décliné votre invitation.\\nRaison :
+0x072c	1836	Heure spécifiée non valide.
+0x072d	1837	Incrément:
+0x072e	1838	minutes
+0x072f	1839	Heure initiale :
+0x0730	1840	Annuler
+0x0731	1841	secondes
+0x0732	1842	D'ACCORD
+0x0733	1843	Au plus
+0x0734	1844	Régler la minuterie
+0x0735	1845	minutes par coup
+0x0736	1846	Pas de minuterie
+0x073b	1851	Dernier coup
+0x073c	1852	Un match nul vous a été proposé par votre adversaire.\\nAcceptez-vous ?
+0x073d	1853	Jeu classé
+0x073e	1854	Tirage au sort
+0x073f	1855	Votre adversaire a demandé que son coup précédent soit repris.\\nIEst-ce acceptable ?
+0x0740	1856	Annuler le virage
+0x0741	1857	*** Offre de tirage refusée.
+0x0742	1858	Etes-vous sûr de vouloir démissionner ?
+0x0743	1859	gagne la partie.
+0x0744	1860	*** annulation demandée
+0x0745	1861	Dessiner
+0x0746	1862	*** annulation accordée
+0x0747	1863	minute heure initiale.
+0x0748	1864	deuxième incrément.
+0x074a	1866	aucune limite de temps.
+0x0751	1873	Aucun
+0x0752	1874	min./déplacement
+0x0753	1875	Régler la minuterie
+0x0754	1876	Seul l'hôte d'une table peut régler les minuteries.
+0x0755	1877	Minuteur:
+0x0756	1878	Temps:
+0x0760	1888	noté.
+0x0761	1889	non classé.
+0x08da	2266	Rouge
+0x08db	2267	Blanc
+0x08dd	2269	Rouge
+0x08de	2270	Blanc
+0x0b48	2888	Apprendre encore plus
+0x0b4c	2892	Afficher un lien vers mon jeu dans\\nmy Yahoo!
+0x0b4d	2893	Apprendre encore plus
+0x0b80	2944	Montre
+0x0c5b	3163	Ton
+0x0c60	3168	Temps:
+0x0d35	3381	Possibilités
+0x0d36	3382	Fait
+0x0d43	3395	Possibilités
+0x0d44	3396	Montre
+0x0dde	3550	Avatars :
+0x0de8	3560	Filtre de grossièretés :
+0x0e0c	3596	minute.
+0x0e1b	3611	Aucun
+0x0e1c	3612	Fort
+0x0e1d	3613	Faible
+0x111f	4383	Jeu terminé:
+0x1129	4393	Temps restant:
+0x1131	4401	Publicité:
+0x1143	4419	Démissionner
+0x158a	5514	La plateforme Macintosh ne prend pas en charge le livescript.
+0x159b	5531	Voix
+0x1605	5637	Heure de début du jeu :
+0x1629	5673	1 jour
+0x162a	5674	1 heure
+0x162b	5675	1 minute
+0x162c	5676	10 minutes
+0x162d	5677	15 minutes
+0x162e	5678	3 heures
+0x162f	5679	30 minutes
+0x1630	5680	5 minutes
+0x1631	5681	Interdire
+0x1632	5682	Coup
+0x1633	5683	Muet
+0x1634	5684	Administration de la salle :
+0x16b8	5816	Description : \\n (facultatif)
+0x16b9	5817	Afficher l'adhésion à All-Star\\n
+0x16ba	5818	Voix
+0x1761	5985	Annuler
+0x1762	5986	Options de jeu
+0x1763	5987	Commencer
+0x18cd	6349	Échanger

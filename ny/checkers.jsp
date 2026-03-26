@@ -1,6 +1,7 @@
 <%@page pageEncoding="Cp1252" contentType="text/html; charset=Cp1252"%>
 <%@page import="core.*"%>
 <%@page import="data.*"%>
+<%@page import="java.io.*"%>
 <%!
     private boolean isLoopbackHost(String host) {
         if(host == null)
@@ -28,6 +29,34 @@
         }
         return fallback;
     }
+
+    private String normalizeIntlCode(String value) {
+        if(value == null)
+            return "us";
+        value = value.trim().toLowerCase();
+        if(value.length() == 0)
+            return "us";
+        StringBuffer normalized = new StringBuffer();
+        for(int i = 0; i < value.length(); i++) {
+            char c = value.charAt(i);
+            if((c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c == '_' || c == '-')
+                normalized.append(c);
+        }
+        if(normalized.length() == 0)
+            return "us";
+        return normalized.toString();
+    }
+
+    private String resolveCheckersDictionary(javax.servlet.ServletContext context, String intlCode) {
+        String normalized = normalizeIntlCode(intlCode);
+        String candidate = "/yog/y/k/" + normalized + "-t4.ldict";
+        if(context != null) {
+            String realPath = context.getRealPath(candidate);
+            if(realPath != null && new File(realPath).exists())
+                return candidate;
+        }
+        return "/yog/y/k/us-t4.ldict";
+    }
 %>
 <html>
 <head>
@@ -36,13 +65,21 @@
     String agent = request.getHeader("agent");
     String room = request.getParameter("room");
     String intl_code = request.getParameter("intl_code");
+    Cookie[] intlCookies = request.getCookies();
     String accountMode = request.getParameter("account_mode");
     String launcherVersion = request.getParameter("launcher_version");
     String appletHost = request.getParameter("host");
     String portParam = request.getParameter("port");
     int appletPort = 11999;
-    if(intl_code == null)
-        intl_code = "us";
+    if((intl_code == null || intl_code.length() == 0) && intlCookies != null){
+        for(int i = 0; i < intlCookies.length; i++){
+            if("intl_code".equals(intlCookies[i].getName())){
+                intl_code = intlCookies[i].getValue();
+                break;
+            }
+        }
+    }
+    intl_code = normalizeIntlCode(intl_code);
     if(room == null)
         room = "badger_bridge";
     if(accountMode == null)
@@ -88,6 +125,7 @@
     String roomLabel = findRoomLabel(Initializer.selfInstance != null ? Initializer.selfInstance.checkers_rooms : null,
             room, "Badger Bridge");
     String pageTitle = "Yahoo Checkers - Room: " + roomLabel;
+    String dictionaryUrl = resolveCheckersDictionary(application, intl_code);
 %>
 <title><%=pageTitle%></title>
 </head>
@@ -108,7 +146,7 @@
 <param name="login_url" value="<%out.print(baseUrl);%>/applet_login.jsp">
 <param name="register_url" value="<%out.print(baseUrl);%>/applet_register.jsp">
 <param name="change_password_url" value="<%out.print(baseUrl);%>/applet_change_password.jsp">
-<param name="ldict_url" value="/yog/y/k/us-t4.ldict">
+<param name="ldict_url" value="<%out.print(dictionaryUrl);%>">
 <param name="host" value="<%out.print(appletHost);%>">
 <param name="ratingmilestones" value="2100|1800|1500|1200|0">
 <param name="intl_code" value="<%out.print(intl_code);%>">

@@ -26,6 +26,7 @@ Dim game
 Dim room
 Dim host
 Dim port
+Dim intlCode
 Dim accountMode
 Dim launcherVersion
 Dim webBase
@@ -44,6 +45,7 @@ game = "pool"
 room = "corner_pocket"
 host = "127.0.0.1"
 port = "11998"
+intlCode = "us"
 accountMode = ""
 launcherVersion = ""
 webBase = "http://127.0.0.1:8080/ny"
@@ -174,6 +176,9 @@ Sub ParseNamedArgs()
         ElseIf name = "--port" Then
             port = value
             i = i + 2
+        ElseIf name = "--intl_code" Then
+            intlCode = value
+            i = i + 2
         ElseIf name = "--account_mode" Then
             accountMode = value
             i = i + 2
@@ -238,6 +243,8 @@ Sub ParseUri(uri)
                 host = value
             ElseIf key = "port" Then
                 port = value
+            ElseIf key = "intl_code" Then
+                intlCode = value
             ElseIf key = "account_mode" Then
                 accountMode = value
             ElseIf key = "launcher_version" Then
@@ -446,6 +453,7 @@ Function GetAppletViewerDiagnostics()
     report = report & "room=" & room & vbCrLf
     report = report & "host=" & host & vbCrLf
     report = report & "port=" & port & vbCrLf
+    report = report & "intl_code=" & intlCode & vbCrLf
     report = report & "applet_width=" & appletWidth & vbCrLf
     report = report & "applet_height=" & appletHeight & vbCrLf
     report = report & "account_mode=" & accountMode & vbCrLf
@@ -903,20 +911,27 @@ End Sub
 Sub WriteAppletHtml(htmlPath)
     Dim appletCode
     Dim defaultPort
-    Dim dictPath
     Dim dictFilePath
 
     If LCase(game) = "checkers" Then
         appletCode = "y.k.YahooCheckers"
         defaultPort = "11999"
-        dictFilePath = fso.BuildPath(appDir, "yog\y\k\us-t4.ldict")
+        dictFilePath = fso.BuildPath(appDir, "yog\y\k\" & intlCode & "-t4.ldict")
+        If Not fso.FileExists(dictFilePath) Then
+            intlCode = "us"
+            dictFilePath = fso.BuildPath(appDir, "yog\y\k\us-t4.ldict")
+        End If
         If room = "" Then
             room = "badger_bridge"
         End If
     Else
         appletCode = "y.po.YahooPool"
         defaultPort = "11998"
-        dictFilePath = fso.BuildPath(appDir, "yog\y\po\us-ti.ldict")
+        dictFilePath = fso.BuildPath(appDir, "yog\y\po\" & intlCode & "-ti.ldict")
+        If Not fso.FileExists(dictFilePath) Then
+            intlCode = "us"
+            dictFilePath = fso.BuildPath(appDir, "yog\y\po\us-ti.ldict")
+        End If
         If room = "" Then
             room = "corner_pocket"
         End If
@@ -938,6 +953,7 @@ Sub WriteAppletHtml(htmlPath)
     file.WriteLine "      height=""" & HtmlEscape(appletHeight) & """>"
     file.WriteLine "      <param name=""host"" value=""" & HtmlEscape(host) & """>"
     file.WriteLine "      <param name=""port"" value=""" & HtmlEscape(port) & """>"
+    file.WriteLine "      <param name=""intl_code"" value=""" & HtmlEscape(intlCode) & """>"
     file.WriteLine "      <param name=""uselogin"" value=""0"">"
     file.WriteLine "      <param name=""logsentmessages"" value=""0"">"
     file.WriteLine "      <param name=""logreceivedmessages"" value=""0"">"

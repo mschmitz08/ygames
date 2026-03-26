@@ -39,6 +39,12 @@ public class AppletLoginDialog extends Dialog {
     private static final Color INK = new Color(44, 32, 24);
     private static final Color SUBTLE = new Color(110, 86, 58);
 
+    private Font bodyFont;
+    private Font labelFont;
+    private Font messageFont;
+    private Font modeButtonFont;
+    private Font actionButtonFont;
+
     protected AbstractYahooGamesApplet applet;
     protected Label lblMessage;
     protected Label lblField1;
@@ -60,8 +66,9 @@ public class AppletLoginDialog extends Dialog {
     protected int mode;
 
     public AppletLoginDialog(AbstractYahooGamesApplet applet) {
-        super(findOwnerFrame(applet), "Game Login", false);
+        super(findOwnerFrame(applet), applet.uiText("dialog_title", "Game Login"), false);
         this.applet = applet;
+        initializeFonts();
 
         setBackground(FRAME_BG);
         setLayout(new BorderLayout(10, 10));
@@ -74,9 +81,9 @@ public class AppletLoginDialog extends Dialog {
 
         Panel modeButtons = new Panel(new GridLayout(1, 3, 6, 0));
         modeButtons.setBackground(PANEL_BG);
-        btnSignInMode = new Button("Sign In");
-        btnRegisterMode = new Button("Register");
-        btnChangePasswordMode = new Button("Change Password");
+        btnSignInMode = new Button(applet.uiText("sign_in", "Sign In"));
+        btnRegisterMode = new Button(applet.uiText("register", "Register"));
+        btnChangePasswordMode = new Button(applet.uiText("change_password", "Change Password"));
         styleModeButton(btnSignInMode);
         styleModeButton(btnRegisterMode);
         styleModeButton(btnChangePasswordMode);
@@ -88,10 +95,10 @@ public class AppletLoginDialog extends Dialog {
         Panel center = new Panel(new BorderLayout(0, 8));
         center.setBackground(PANEL_BG);
 
-        lblMessage = new Label("Please sign in");
+        lblMessage = new Label(applet.uiText("please_sign_in", "Please sign in"));
         lblMessage.setForeground(INK);
         lblMessage.setBackground(PANEL_BG);
-        lblMessage.setFont(new Font("Dialog", Font.BOLD, 14));
+        lblMessage.setFont(messageFont);
         center.add(lblMessage, BorderLayout.NORTH);
 
         Panel fields = new Panel(new GridLayout(4, 1, 0, 8));
@@ -106,10 +113,10 @@ public class AppletLoginDialog extends Dialog {
         Panel row2 = new Panel(new GridLayout(1, 2, 8, 0));
         row2.setBackground(PANEL_BG);
 
-        lblField1 = createFieldLabel("User Name");
-        lblField2 = createFieldLabel("Password");
-        lblField3 = createFieldLabel("Confirm Password");
-        lblField4 = createFieldLabel("Email");
+        lblField1 = createFieldLabel(applet.uiText("user_name", "User Name"));
+        lblField2 = createFieldLabel(applet.uiText("password", "Password"));
+        lblField3 = createFieldLabel(applet.uiText("confirm_password", "Confirm Password"));
+        lblField4 = createFieldLabel(applet.uiText("email", "Email"));
 
         txtField1 = createField(false);
         txtField2 = createField(true);
@@ -134,8 +141,8 @@ public class AppletLoginDialog extends Dialog {
 
         Panel buttons = new Panel(new GridLayout(1, 2, 8, 0));
         buttons.setBackground(PANEL_BG);
-        btnPrimary = new Button("Enter Room");
-        btnCancel = new Button("Cancel");
+        btnPrimary = new Button(applet.uiText("enter_room", "Enter Room"));
+        btnCancel = new Button(applet.uiText("cancel", "Cancel"));
         stylePrimaryButton(btnPrimary);
         styleSecondaryButton(btnCancel);
         buttons.add(btnPrimary);
@@ -154,7 +161,7 @@ public class AppletLoginDialog extends Dialog {
         Label label = new Label(text);
         label.setForeground(INK);
         label.setBackground(PANEL_BG);
-        label.setFont(new Font("Dialog", Font.BOLD, 12));
+        label.setFont(labelFont);
         return label;
     }
 
@@ -162,7 +169,7 @@ public class AppletLoginDialog extends Dialog {
         TextField field = new TextField(24);
         field.setBackground(FIELD_BG);
         field.setForeground(INK);
-        field.setFont(new Font("Dialog", Font.PLAIN, 13));
+        field.setFont(bodyFont);
         if (password)
             field.setEchoChar('*');
         return field;
@@ -176,21 +183,96 @@ public class AppletLoginDialog extends Dialog {
     }
 
     private void styleModeButton(Button button) {
-        button.setFont(new Font("Dialog", Font.BOLD, 11));
+        button.setFont(modeButtonFont);
         button.setBackground(new Color(194, 180, 147));
         button.setForeground(INK);
     }
 
     private void stylePrimaryButton(Button button) {
-        button.setFont(new Font("Dialog", Font.BOLD, 12));
+        button.setFont(actionButtonFont);
         button.setBackground(ACCENT);
         button.setForeground(Color.white);
     }
 
     private void styleSecondaryButton(Button button) {
-        button.setFont(new Font("Dialog", Font.BOLD, 12));
+        button.setFont(actionButtonFont);
         button.setBackground(new Color(194, 180, 147));
         button.setForeground(INK);
+    }
+
+    private void initializeFonts() {
+        String sample = buildFontSample();
+        bodyFont = chooseUiFont(applet, sample, Font.PLAIN, 13);
+        labelFont = chooseUiFont(applet, sample, Font.BOLD, 12);
+        messageFont = chooseUiFont(applet, sample, Font.BOLD, 14);
+        modeButtonFont = chooseUiFont(applet, sample, Font.BOLD, 11);
+        actionButtonFont = chooseUiFont(applet, sample, Font.BOLD, 12);
+    }
+
+    private String buildFontSample() {
+        StringBuffer sample = new StringBuffer();
+        appendSample(sample, applet.uiText("dialog_title", "Game Login"));
+        appendSample(sample, applet.uiText("sign_in", "Sign In"));
+        appendSample(sample, applet.uiText("register", "Register"));
+        appendSample(sample, applet.uiText("change_password", "Change Password"));
+        appendSample(sample, applet.uiText("please_sign_in", "Please sign in"));
+        appendSample(sample, applet.uiText("user_name", "User Name"));
+        appendSample(sample, applet.uiText("password", "Password"));
+        appendSample(sample, applet.uiText("enter_room", "Enter Room"));
+        return sample.toString();
+    }
+
+    private void appendSample(StringBuffer sample, String text) {
+        if (text == null || text.length() == 0)
+            return;
+        if (sample.length() > 0)
+            sample.append(' ');
+        sample.append(text);
+    }
+
+    private static Font chooseUiFont(AbstractYahooGamesApplet applet,
+            String sampleText, int style, int size) {
+        String[] candidates = getFontCandidates(
+                applet != null ? applet.intl_code : null);
+        for (int i = 0; i < candidates.length; i++) {
+            Font font = new Font(candidates[i], style, size);
+            if (canDisplay(font, sampleText))
+                return font;
+        }
+        return new Font("Dialog", style, size);
+    }
+
+    private static boolean canDisplay(Font font, String sampleText) {
+        if (sampleText == null || sampleText.length() == 0)
+            return true;
+        return font.canDisplayUpTo(sampleText) == -1;
+    }
+
+    private static String[] getFontCandidates(String locale) {
+        if (locale == null)
+            locale = "us";
+        locale = locale.toLowerCase();
+        if (locale.startsWith("ja"))
+            return new String[] { "Yu Gothic UI", "Meiryo", "MS UI Gothic",
+                    "Dialog" };
+        if (locale.startsWith("zh_cn"))
+            return new String[] { "Microsoft YaHei UI", "Microsoft YaHei",
+                    "SimSun", "Dialog" };
+        if (locale.startsWith("zh_tw"))
+            return new String[] { "Microsoft JhengHei UI",
+                    "Microsoft JhengHei", "PMingLiU", "Dialog" };
+        if (locale.startsWith("ko"))
+            return new String[] { "Malgun Gothic", "Gulim", "Dotum",
+                    "Dialog" };
+        if (locale.startsWith("hi") || locale.startsWith("bn")
+                || locale.startsWith("gu") || locale.startsWith("kn")
+                || locale.startsWith("ml") || locale.startsWith("mr")
+                || locale.startsWith("or") || locale.startsWith("pa")
+                || locale.startsWith("ta") || locale.startsWith("te"))
+            return new String[] { "Nirmala UI", "Mangal", "Kokila",
+                    "Dialog" };
+        return new String[] { "Segoe UI", "Tahoma", "Arial Unicode MS",
+                "Dialog" };
     }
 
     protected static Frame findOwnerFrame(Applet applet) {
@@ -206,43 +288,44 @@ public class AppletLoginDialog extends Dialog {
     private void applyMode(int newMode) {
         mode = newMode;
         if (mode == MODE_SIGN_IN) {
-            lblField1.setText("User Name");
-            lblField2.setText("Password");
-            lblField3.setText("Confirm Password");
-            lblField4.setText("Email");
+            lblField1.setText(applet.uiText("user_name", "User Name"));
+            lblField2.setText(applet.uiText("password", "Password"));
+            lblField3.setText(applet.uiText("confirm_password", "Confirm Password"));
+            lblField4.setText(applet.uiText("email", "Email"));
             row3.setVisible(false);
             row4.setVisible(false);
             txtField2.setEchoChar('*');
             txtField3.setEchoChar('*');
             txtField4.setEchoChar((char) 0);
-            btnPrimary.setLabel("Enter Room");
+            btnPrimary.setLabel(applet.uiText("enter_room", "Enter Room"));
         }
         else if (mode == MODE_REGISTER) {
-            lblField1.setText("User Name");
-            lblField2.setText("Password");
-            lblField3.setText("Confirm Password");
-            lblField4.setText("Invite Code");
+            lblField1.setText(applet.uiText("user_name", "User Name"));
+            lblField2.setText(applet.uiText("password", "Password"));
+            lblField3.setText(applet.uiText("confirm_password", "Confirm Password"));
+            lblField4.setText(applet.uiText("invite_code", "Invite Code"));
             row3.setVisible(true);
             row4.setVisible(false);
             txtField2.setEchoChar('*');
             txtField3.setEchoChar('*');
             txtField4.setEchoChar((char) 0);
-            btnPrimary.setLabel("Create Account");
+            btnPrimary.setLabel(applet.uiText("create_account", "Create Account"));
             txtField3.setText("");
             txtField4.setText("");
         }
         else {
-            lblField1.setText("User Name");
-            lblField2.setText("Current Password");
-            lblField3.setText("New Password");
-            lblField4.setText("Confirm New Password");
+            lblField1.setText(applet.uiText("user_name", "User Name"));
+            lblField2.setText(applet.uiText("current_password", "Current Password"));
+            lblField3.setText(applet.uiText("new_password", "New Password"));
+            lblField4.setText(applet.uiText("confirm_new_password", "Confirm New Password"));
             row3.setVisible(true);
             row4.setVisible(true);
             txtField2.setEchoChar('*');
             txtField3.setEchoChar('*');
             txtField4.setEchoChar('*');
-            btnPrimary.setLabel("Update Password");
+            btnPrimary.setLabel(applet.uiText("update_password", "Update Password"));
         }
+        setTitle(applet.uiText("dialog_title", "Game Login"));
         refreshModeButtons();
         pack();
     }
@@ -335,7 +418,7 @@ public class AppletLoginDialog extends Dialog {
     }
 
     public void setMessage(String message) {
-        lblMessage.setText(message != null ? message : "Please sign in");
+        lblMessage.setText(message != null ? message : applet.uiText("please_sign_in", "Please sign in"));
     }
 
     public void setUsername(String username) {
@@ -474,16 +557,20 @@ public class AppletLoginDialog extends Dialog {
             g.fillRect(shimmerX, 24, 54, height - 48);
 
             g.setColor(Color.white);
-            g.setFont(new Font("Dialog", Font.BOLD, 24));
+            g.setFont(chooseUiFont(applet, roomTitle(), Font.BOLD, 24));
             g.drawString("Y! Games Revival", 34, 64);
 
             g.setColor(new Color(232, 220, 198));
-            g.setFont(new Font("Dialog", Font.PLAIN, 13));
+            g.setFont(chooseUiFont(applet, roomTitle(), Font.PLAIN, 13));
             g.drawString(roomTitle(), 36, 88);
 
             g.setColor(SUBTLE);
-            g.setFont(new Font("Dialog", Font.BOLD, 11));
-            g.drawString("PLAY, REGISTER, OR UPDATE YOUR ACCOUNT", 36, 108);
+            g.setFont(chooseUiFont(applet,
+                    applet.uiText("play_register_update_account",
+                            "PLAY, REGISTER, OR UPDATE YOUR ACCOUNT"),
+                    Font.BOLD, 11));
+            g.drawString(applet.uiText("play_register_update_account",
+                    "PLAY, REGISTER, OR UPDATE YOUR ACCOUNT"), 36, 108);
 
             String launcherVersion = applet.getParameter("launcher_version");
             if (launcherVersion != null && launcherVersion.length() > 0) {
@@ -511,7 +598,8 @@ public class AppletLoginDialog extends Dialog {
                     cap = c == ' ';
                 }
             }
-            return "Welcome back. Enter " + title.toString() + ".";
+            return applet.uiText("welcome_back_enter_room",
+                    "Welcome back. Enter {0}.", title.toString());
         }
 
         @Override

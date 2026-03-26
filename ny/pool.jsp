@@ -1,6 +1,7 @@
 <%@page pageEncoding="Cp1252" contentType="text/html; charset=Cp1252"%>
 <%@page import="core.*"%>
 <%@page import="data.*"%>
+<%@page import="java.io.*"%>
 <%!
     private boolean isLoopbackHost(String host) {
         if(host == null)
@@ -28,15 +29,50 @@
         }
         return fallback;
     }
+
+    private String normalizeIntlCode(String value) {
+        if(value == null)
+            return "us";
+        value = value.trim().toLowerCase();
+        if(value.length() == 0)
+            return "us";
+        StringBuffer normalized = new StringBuffer();
+        for(int i = 0; i < value.length(); i++) {
+            char c = value.charAt(i);
+            if((c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c == '_' || c == '-')
+                normalized.append(c);
+        }
+        if(normalized.length() == 0)
+            return "us";
+        return normalized.toString();
+    }
+
+    private String resolvePoolDictionary(javax.servlet.ServletContext context, String intlCode) {
+        String normalized = normalizeIntlCode(intlCode);
+        String candidate = "/yog/y/po/" + normalized + "-ti.ldict";
+        if(context != null) {
+            String realPath = context.getRealPath(candidate);
+            if(realPath != null && new File(realPath).exists())
+                return candidate;
+        }
+        return "/yog/y/po/us-ti.ldict";
+    }
 %>
 <%
-    String game = request.getParameter("game");
-    if(game == null)
-        game = "pool";
-
+    Cookie[] intlCookies = request.getCookies();
     String room = request.getParameter("room");
     if(room == null || room.length() == 0)
         room = "corner_pocket";
+    String intlCode = request.getParameter("intl_code");
+    if((intlCode == null || intlCode.length() == 0) && intlCookies != null){
+        for(int i = 0; i < intlCookies.length; i++){
+            if("intl_code".equals(intlCookies[i].getName())){
+                intlCode = intlCookies[i].getValue();
+                break;
+            }
+        }
+    }
+    intlCode = normalizeIntlCode(intlCode);
     String accountMode = request.getParameter("account_mode");
     String launcherVersion = request.getParameter("launcher_version");
     String appletHost = request.getParameter("host");
@@ -48,8 +84,7 @@
     if(launcherVersion == null)
         launcherVersion = "";
     if(Initializer.selfInstance != null)
-        port = "pool2".equalsIgnoreCase(game) ? Initializer.selfInstance.getPool2Port()
-                : Initializer.selfInstance.getPoolPort();
+        port = Initializer.selfInstance.getPoolPort();
     if(portParam != null && portParam.length() > 0){
         try{
             port = Integer.parseInt(portParam);
@@ -88,10 +123,8 @@
     String roomLabel = findRoomLabel(Initializer.selfInstance != null ? Initializer.selfInstance.pool_rooms : null,
             room, "Corner Pocket");
     String title = "Yahoo Pool";
-    if("pool2".equalsIgnoreCase(game)){
-        title = "Yahoo Pool 2";
-    }
     String pageTitle = title + " - Room: " + roomLabel;
+    String dictionaryUrl = resolvePoolDictionary(application, intlCode);
 %>
 <html>
 <head>
@@ -120,6 +153,8 @@
 <param name="change_password_url" value="<%out.print(baseUrl);%>/applet_change_password.jsp">
 <param name="path" value="/ny/servlet/YahooPoolServlet">
 <param name="update" value="1">
+<param name="intl_code" value="<%out.print(intlCode);%>">
+<param name="ldict_url" value="<%out.print(dictionaryUrl);%>">
 </applet>
 </body>
 </html>

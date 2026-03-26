@@ -1,0 +1,234 @@
+﻿# key_hex	key_dec	text
+0x0000	0	Itaniji
+0x0001	1	O DARA
+0x0017	23	Joko
+0x0018	24	ipese
+0x0031	49	Ere yii jẹ \\n mu wa si ọ nipasẹ:
+0x0032	50	Ere Lori
+0x0034	52	Awọn aṣayan
+0x0035	53	Table Type
+0x0041	65	Bẹẹni
+0x0042	66	Rara
+0x0048	72	Da ere duro ki o fagilee esi\\n ti ere yii (alatako gbọdọ gba).
+0x0049	73	Maṣe yọ nu
+0x004a	74	Jawọ Ìmúdájú
+0x004b	75	Pawọ ati Padanu:
+0x004c	76	Olodun-ati Fagilee
+0x004d	77	Olodun-ati Forfeit
+0x004e	78	Pawọ ati padanu ere naa.
+0x004f	79	Jade ati Fipamọ:
+0x0050	80	Jade ati Fagilee:
+0x0051	81	Da ere duro ati fi ere \\n pamọ (alatako gbọdọ gba).
+0x0052	82	O ti n jáwọ́ ninu ere ti wọn ni idiyele ti ko pari:
+0x0053	83	Jade ati Fipamọ
+0x0079	121	Gba
+0x007b	123	Kọ Gbogbo Awọn ifiwepe
+0x007c	124	Pe
+0x007d	125	Awọn aṣayan ere \\n \\n:
+0x007e	126	Idi:
+0x007f	127	(aṣayan)
+0x0080	128	ti pe e si tabili #
+0x0081	129	\\n \\n Ṣe iwọ yoo fẹ lati darapọ mọ?
+0x0082	130	Kọ silẹ
+0x0083	131	Gba awọn ifiranṣẹ lojukanna laaye lati ọdọ awọn ọrẹ mi nikan.
+0x0084	132	Foju
+0x0085	133	Lati:
+0x0086	134	bere
+0x0087	135	Profaili
+0x0088	136	Firanṣẹ
+0x0089	137	Sunmọ
+0x008a	138	Ṣe rẹ Gbe ati ti o ba
+0x008b	139	Tẹ 'Mu Robot' lati mu kọnputa ṣiṣẹ.
+0x008d	141	- Yara:
+0x008e	142	ko pada, o\\n yoo fun ọ ni aṣayan lati fi agbara mu ikọsilẹ.
+0x008f	143	*** Fipamọ beere.
+0x0090	144	Ni idaabobo
+0x0091	145	ti beere pe ki ere yii wa ni fipamọ.\\n Ṣe eyi jẹ itẹwọgba bi?
+0x0092	146	Ikọkọ
+0x0093	147	tirẹ
+0x0094	148	Tẹ bọtini 'Sit' kan lati darapọ mọ ere naa.
+0x0095	149	ti beere pe ki a fagilee ere yii.\\n Ṣe eyi jẹ itẹwọgba bi?
+0x0096	150	fagilee.
+0x0097	151	Dide
+0x0098	152	alatako
+0x0099	153	Lori mi Tan
+0x009b	155	*** Ẹnikẹni le darapọ mọ tabili rẹ ni bayi.
+0x009c	156	s.
+0x009d	157	Nduro fun alatako
+0x009e	158	Jade
+0x009f	159	ti darapo tabili.
+0x00a0	160	Tẹ 'Bẹrẹ Game' lati bẹrẹ.
+0x00a1	161	Egba Mi O
+0x00a2	162	ti lọ kuro ni tabili.
+0x00a3	163	*** Awọn eniyan nikan ti o ti pe le ṣere ni tabi wo tabili rẹ ni bayi.
+0x00a4	164	Bẹrẹ Ere
+0x00a5	165	Audio ni titan
+0x00a6	166	- Olugbalejo:
+0x00a7	167	Gbangba
+0x00a8	168	Play Robot
+0x00aa	170	Bata
+0x00ab	171	*** Fagilee beere.
+0x00ac	172	*** Awọn eniyan nikan ti o ti pe le ṣere ni tabili rẹ ni bayi.
+0x00ae	174	- Tabili:
+0x00af	175	*** Iwọ jẹ agbalejo tabili yii.
+0x00b0	176	Ere:
+0x00b1	177	Tirẹ
+0x00b2	178	Nduro fun alatako lati tẹ 'Bẹrẹ'.
+0x00b4	180	ti fi ere ti a ko pari sile.\\n
+0x00b5	181	*** Ere
+0x00b6	182	ti o ti fipamọ.
+0x00b7	183	Pe
+0x00b8	184	alabaṣepọ
+0x00b9	185	Ohun
+0x00ba	186	Ti o ba jẹ
+0x00bf	191	Tẹ Orukọ sii:
+0x00c0	192	Yan Lati Akojọ
+0x00c1	193	- tabi -
+0x00c9	201	Ping
+0x00ca	202	Player alaye fun
+0x00cb	203	Firanṣẹ lẹsẹkẹsẹ:
+0x00cc	204	iṣẹju-aaya.
+0x00ce	206	iseju.
+0x00cf	207	Àkókò tí kò ṣiṣẹ́:
+0x00e1	225	Tabili
+0x00e2	226	Ta ni Wiwo
+0x00e3	227	awọn aṣayan:
+0x00e4	228	Darapọ mọ
+0x00e8	232	nipasẹ
+0x00e9	233	Rtng
+0x00ea	234	aaya.\\nIdaduro nẹtiwọọki mi:
+0x00eb	235	ti pè yín láti jókòó.
+0x00f0	240	O ni ẹya atijọ ti alabara ninu kaṣe rẹ.
+0x00f2	242	Pingi firanṣẹ ... nduro fun esi.
+0x00f4	244	ipese
+0x00f5	245	Oruko
+0x00f6	246	Igbiyanju lati sopọ si olupin awọn ere
+0x00f7	247	Play Bayi
+0x00f9	249	Jade Awọn ere Awọn
+0x00fb	251	's net idaduro:
+0x00fd	253	Sọ pé:
+0x00ff	255	Olubasọrọ awọn ere…
+0x0102	258	Aṣiṣe: Ko si awọn orisun eto.\\nPa eyikeyi awọn ferese ati awọn ohun elo ti ko nilo.\\nLẹhinna tii awọn window awọn ere ki o tun gbiyanju lẹẹkansi.
+0x0105	261	Ko le sopọ mọ olupin.\\nỌkan ninu awọn nkan mẹrin le ti fa eyi:\\n1) O wa lẹhin ogiriina kan.\\n2) Iwọ ko sopọ mọ intanẹẹti.\\n3) olupin ere naa ti lọ silẹ.\\n4)O ni oju-iwe ti o duro ninu kaṣe rẹ.
+0x0106	262	Ṣẹda Table
+0x0108	264	Windows kekere
+0x0109	265	Tbl
+0x010b	267	O ti gbe soke lati tabili
+0x010c	268	Ge asopọ lati olupin ... Laišišẹ gun ju
+0x0111	273	Awọn IMs lati ọdọ awọn ọrẹ \\n nikan
+0x0115	277	... downloading yara ipinle
+0x0118	280	Aṣiṣe wíwọlé sinu olupin.
+0x0119	281	Kọ gbogbo awọn ifiwepe\\n
+0x011c	284	Aago
+0x011d	285	O ko le foju ara rẹ.
+0x0123	291	Ge asopọ lati olupin
+0x0125	293	Ti sopọ si olupin awọn ere bi
+0x0128	296	Awọn iwontun-wonsi
+0x0129	297	to\\nfisilẹ ere naa.
+0x012a	298	lati pada.
+0x012b	299	Duro fun tirẹ
+0x012c	300	Fi agbara mu rẹ
+0x012d	301	Fipamọ Ere
+0x012e	302	Fagilee Ere:
+0x012f	303	Fagilee Game
+0x0130	304	Fi agbara mu Padanu:
+0x0131	305	Duro
+0x0132	306	Duro ere ati fi ere naa pamọ.
+0x0133	307	ti kọ ere ti ko pari:
+0x0134	308	Duro ere ati ma ṣe ṣe igbasilẹ abajade ere yii.
+0x0135	309	Fi Ere pamọ:
+0x0136	310	Fi agbara mu
+0x0137	311	Duro:
+0x0140	320	O DARA
+0x0142	322	Itaniji ohun
+0x0164	356	Itaniji
+0x0165	357	O DARA
+0x0168	360	Fagilee
+0x016c	364	Foju
+0x016d	365	Profaili
+0x016e	366	Firanṣẹ
+0x016f	367	Sunmọ
+0x0179	377	Bata
+0x017c	380	iṣẹju-aaya.
+0x0180	384	Pe
+0x01f5	501	ti kọ ipe rẹ silẹ.\\nIdi:
+0x072c	1836	Akoko ti ko tọ pato.
+0x072d	1837	Ilọsi:
+0x072e	1838	iseju
+0x072f	1839	Àkókò àkọ́kọ́:
+0x0730	1840	Fagilee
+0x0731	1841	iṣẹju-aaya
+0x0732	1842	O DARA
+0x0733	1843	Ni julọ
+0x0734	1844	Ṣeto Aago
+0x0735	1845	iṣẹju fun Gbe
+0x0736	1846	Ko si aago
+0x073b	1851	Gbe kẹhin
+0x073c	1852	Iyaworan ti funni nipasẹ alatako rẹ.\\nṢe o gba bi?
+0x073d	1853	won won Game
+0x073e	1854	Pese Fa
+0x073f	1855	Alatako rẹ ti beere pe ki o gba igbesẹ rẹ tẹlẹ pada.\\n Ṣe eyi jẹ itẹwọgba bi?
+0x0740	1856	Yipada Yipada
+0x0741	1857	*** Fa ìfilọ kọ.
+0x0742	1858	Ṣe o da ọ loju pe o fẹ fi ipo silẹ?
+0x0743	1859	AamiEye game.
+0x0744	1860	*** yi pada beere
+0x0745	1861	Yiya
+0x0746	1862	*** yọọ kuro
+0x0747	1863	iṣẹju ibẹrẹ akoko.
+0x0748	1864	keji afikun.
+0x074a	1866	ko si akoko iye to.
+0x0751	1873	Ko si
+0x0752	1874	min./gbe
+0x0753	1875	Ṣeto Aago
+0x0754	1876	Olugbalejo tabili nikan le ṣeto awọn aago.
+0x0755	1877	Aago:
+0x0756	1878	Àkókò:
+0x0760	1888	won won.
+0x0761	1889	aipin.
+0x08da	2266	Pupa
+0x08db	2267	Funfun
+0x08dd	2269	Pupa
+0x08de	2270	Funfun
+0x0b48	2888	Kọ ẹkọ diẹ si
+0x0b4c	2892	Ṣe afihan ọna asopọ kan si ere mi ni\\nmy Yahoo!
+0x0b4d	2893	Kọ ẹkọ diẹ si
+0x0b80	2944	Ṣọra
+0x0c5b	3163	Tirẹ
+0x0c60	3168	Àkókò:
+0x0d35	3381	Awọn aṣayan
+0x0d36	3382	Ti ṣe
+0x0d43	3395	Awọn aṣayan
+0x0d44	3396	Ṣọra
+0x0dde	3550	Awọn afata:
+0x0de8	3560	Àlẹmọ Profanity:
+0x0e0c	3596	iseju.
+0x0e1b	3611	Ko si
+0x0e1c	3612	Alagbara
+0x0e1d	3613	Alailagbara
+0x111f	4383	Ere ti pari:
+0x1129	4393	Asiko ti o seku:
+0x1131	4401	Ipolowo:
+0x1143	4419	Fi silẹ
+0x158a	5514	Syeed Macintosh ko ṣe atilẹyin iwe afọwọkọ.
+0x159b	5531	Ohùn
+0x1605	5637	Akoko lati bẹrẹ ere:
+0x1629	5673	1 ọjọ
+0x162a	5674	1 wakati
+0x162b	5675	1 iseju
+0x162c	5676	10 iṣẹju
+0x162d	5677	15 iṣẹju
+0x162e	5678	wakati 3
+0x162f	5679	30 iṣẹju
+0x1630	5680	iṣẹju 5
+0x1631	5681	Gbesele
+0x1632	5682	Tapa
+0x1633	5683	Pa ẹnu mọ́
+0x1634	5684	Isakoso Yara:
+0x16b8	5816	Apejuwe:\\n(iyan)
+0x16b9	5817	Ṣe afihan Gbogbo-Star\\n ẹgbẹ
+0x16ba	5818	Ohùn
+0x1761	5985	Fagilee
+0x1762	5986	Awọn aṣayan ere
+0x1763	5987	Bẹrẹ
+0x18cd	6349	Yipada

@@ -1,0 +1,241 @@
+﻿# key_hex	key_dec	text
+0x0000	0	Alert
+0x0001	1	OK
+0x0017	23	Sidde
+0x0018	24	midlertidig
+0x0031	49	Dette spil blev \\nbragt til dig af:
+0x0032	50	Game Over
+0x0034	52	Valgmuligheder
+0x0035	53	Bordtype
+0x0041	65	Ja
+0x0042	66	Ingen
+0x0048	72	Stop med at spille og annuller resultatet \\n af dette spil (modstanderen skal acceptere).
+0x0049	73	Glem ikke
+0x004a	74	Afslut bekræftelse
+0x004b	75	Afslut og fortab:
+0x004c	76	Afslut og annuller
+0x004d	77	Afslut og fortab
+0x004e	78	Afslut og forspil spillet.
+0x004f	79	Afslut og gem:
+0x0050	80	Afslut og annuller:
+0x0051	81	Stop med at spille og gem \\n-spillet (modstanderen skal være enig).
+0x0052	82	Du forlader et ufærdigt vurderet spil:
+0x0053	83	Afslut og gem
+0x0079	121	Acceptere
+0x007b	123	Afvis alle invitationer
+0x007c	124	Inviteret
+0x007d	125	\\n \\n Spilmuligheder:
+0x007e	126	Årsag:
+0x007f	127	(valgfri)
+0x0080	128	har inviteret dig til bord #
+0x0081	129	\\n \\nVil du være med?
+0x0082	130	Nedgang
+0x0083	131	Tillad kun onlinemeddelelser fra mine venner.
+0x0084	132	Ignorere
+0x0085	133	Fra:
+0x0086	134	startede
+0x0087	135	Profil
+0x0088	136	Sende
+0x0089	137	Tæt
+0x008a	138	Gør dit træk og hvis
+0x008b	139	Tryk på 'Play Robot' for at spille computeren.
+0x008d	141	- Værelse:
+0x008e	142	ikke vender tilbage, vil du få mulighed for at tvinge en opsigelse.
+0x008f	143	*** Gem anmodet.
+0x0090	144	Beskyttet
+0x0091	145	har anmodet om at dette spil gemmes.\\nEr dette acceptabelt?
+0x0092	146	Privat
+0x0093	147	dine
+0x0094	148	Klik på en 'Sid'-knap for at deltage i spillet.
+0x0095	149	har anmodet om at få dette spil annulleret.\\nEr dette acceptabelt?
+0x0096	150	annulleret.
+0x0097	151	Stå op
+0x0098	152	modstander
+0x0099	153	På min tur
+0x009b	155	*** Alle kan tilmelde sig dit bord nu.
+0x009c	156	s.
+0x009d	157	Venter på modstanderen
+0x009e	158	Forlade
+0x009f	159	er kommet med på bordet.
+0x00a0	160	Klik på 'Start spil' for at begynde.
+0x00a1	161	Hjælp
+0x00a2	162	har forladt bordet.
+0x00a3	163	*** Kun personer, du har inviteret, kan spille ved eller se dit bord nu.
+0x00a4	164	Start spil
+0x00a5	165	Lyd på tur
+0x00a6	166	- Vært:
+0x00a7	167	Offentlig
+0x00a8	168	Spil Robot
+0x00aa	170	Støvle
+0x00ab	171	*** Annullering anmodet.
+0x00ac	172	*** Kun personer, du har inviteret, kan spille ved dit bord nu.
+0x00ae	174	- Bord:
+0x00af	175	*** Du er vært for dette bord.
+0x00b0	176	Spil:
+0x00b1	177	Dine
+0x00b2	178	Venter på, at modstanderen klikker på 'Start'.
+0x00b4	180	har efterladt et ufærdigt vurderet spil.\\n
+0x00b5	181	*** Spil
+0x00b6	182	gemt.
+0x00b7	183	Invitere
+0x00b8	184	partner
+0x00b9	185	Sund
+0x00ba	186	Hvis
+0x00bf	191	Indtast navn:
+0x00c0	192	Vælg Fra liste
+0x00c1	193	- eller -
+0x00c9	201	Ping
+0x00ca	202	Spillerinformation til
+0x00cb	203	Send øjeblikkelig besked:
+0x00cc	204	sekunder.
+0x00ce	206	minutter.
+0x00cf	207	Inaktiv tid:
+0x00e1	225	Tabel
+0x00e2	226	Hvem ser på
+0x00e3	227	muligheder:
+0x00e4	228	VÆR MED
+0x00e8	232	ved
+0x00e9	233	Rtng
+0x00ea	234	sekunder.\\nMin nettoforsinkelse:
+0x00eb	235	har inviteret dig til at tage plads.
+0x00f0	240	Du har en gammel version af klienten i din cache.
+0x00f2	242	Ping afsendt ... venter på svar.
+0x00f4	244	midlertidig
+0x00f5	245	Navn
+0x00f6	246	Forsøger at oprette forbindelse til spilserveren
+0x00f7	247	Spil nu
+0x00f9	249	Afslut spil
+0x00fb	251	's nettoforsinkelse:
+0x00fd	253	Sige:
+0x00ff	255	Kontakter spilserver...
+0x0102	258	Fejl: Ud af systemressourcer.\\nLuk alle unødvendige vinduer og programmer.\\nLuk derefter spilvinduet, og prøv igen.
+0x0105	261	Kan ikke oprette forbindelse til serveren.\\nEn af fire ting kunne have forårsaget dette:\\n1)Du er bag en firewall.\\n2)Du har ikke forbindelse til internettet.\\n3)Spilserveren er nede.\\n4)Du har en forældet side i din cache.
+0x0106	262	Opret tabel
+0x0108	264	Små vinduer
+0x0109	265	Tbl
+0x010b	267	Du er blevet startet fra bordet
+0x010c	268	Afbrudt fra serveren... Inaktiv for lang
+0x0111	273	Kun chatmeddelelser fra \\nvenner
+0x0115	277	... downloader rumtilstand
+0x0118	280	Fejl ved at logge på serveren.
+0x0119	281	Afvis alle \\ninvitationer
+0x011c	284	Rung
+0x011d	285	Du kan ikke ignorere dig selv.
+0x0123	291	Afbrudt fra serveren
+0x0125	293	Forbundet til spilserver som
+0x0128	296	Bedømmelser
+0x0129	297	for at\\nafmelde spillet.
+0x012a	298	at vende tilbage.
+0x012b	299	Vent på din
+0x012c	300	Tving din
+0x012d	301	Gem spil
+0x012e	302	Annuller spil:
+0x012f	303	Annuller spil
+0x0130	304	Tving fortabelse:
+0x0131	305	Vente
+0x0132	306	Stop med at spille og gem spillet.
+0x0133	307	har forladt et ufærdigt vurderet spil:
+0x0134	308	Stop med at spille, og optag ikke resultatet af dette spil.
+0x0135	309	Gem spil:
+0x0136	310	Tving fortabt
+0x0137	311	Vente:
+0x0140	320	OK
+0x0142	322	Lydadvarsel
+0x0164	356	Alert
+0x0165	357	OK
+0x0168	360	Ophæve
+0x016c	364	Ignorere
+0x016d	365	Profil
+0x016e	366	Sende
+0x016f	367	Tæt
+0x0179	377	Støvle
+0x017c	380	sekunder.
+0x0180	384	Invitere
+0x01f5	501	har afvist din invitation.\\nReason:
+0x0b48	2888	Lær mere
+0x0b4c	2892	Vis et link til mit spil i\\nmy Yahoo!
+0x0b4d	2893	Lær mere
+0x0b80	2944	Ur
+0x0c5b	3163	Dine
+0x0d35	3381	Valgmuligheder
+0x0d36	3382	Færdig
+0x0d43	3395	Valgmuligheder
+0x0d44	3396	Ur
+0x0dde	3550	Avatarer:
+0x0de8	3560	Ukvemsfilter:
+0x0e0c	3596	minut.
+0x0e1b	3611	Ingen
+0x0e1c	3612	Stærk
+0x0e1d	3613	Svag
+0x111f	4383	Game Over:
+0x1129	4393	Tid tilbage:
+0x1131	4401	Reklame:
+0x11bf	4543	Vælg Type
+0x11c0	4544	OK
+0x11c1	4545	solid
+0x11c2	4546	stribe
+0x11c6	4550	har bolden i hånden.
+0x1213	4627	Vælg lomme.
+0x1214	4628	Klik på en bold, du ønsker at slå.
+0x1217	4631	Træk cue med venstre museknap.
+0x1225	4645	Fuldstændig!
+0x1243	4675	Tryk på mellemrumstasten for at skyde.
+0x1244	4676	Træk med Shift+venstre museknap for at skyde.
+0x1245	4677	Træk med højre museknap for at skyde.
+0x1252	4690	Kradse!
+0x1253	4691	Skyd igen!
+0x1254	4692	Skud!
+0x125c	4700	Hvilken boldtype vil du gerne spille?
+0x125d	4701	Du må gerne flytte stødbolden, før du skyder.
+0x12b5	4789	nulstilles
+0x132c	4908	30 sek.
+0x132d	4909	ingen timer.
+0x132e	4910	bedømt.
+0x132f	4911	sek.
+0x1338	4920	engelsk
+0x136c	4972	Magt
+0x13fc	5116	Tid pr. træk:
+0x13fd	5117	Timer
+0x1400	5120	Ophæve
+0x1401	5121	Otteboldspil
+0x1402	5122	Spilmuligheder
+0x1403	5123	Bedømt spil.
+0x1404	5124	Starte
+0x1405	5125	Uddannelse.
+0x140a	5130	sek.
+0x1413	5139	vinder spillet.
+0x158a	5514	Macintosh-platformen understøtter ikke livescript.
+0x159b	5531	Stemme
+0x1605	5637	Tid til kampstart:
+0x1629	5673	1 dag
+0x162a	5674	1 time
+0x162b	5675	1 minut
+0x162c	5676	10 minutter
+0x162d	5677	15 minutter
+0x162e	5678	3 timer
+0x162f	5679	30 minutter
+0x1630	5680	5 minutter
+0x1631	5681	Forbyde
+0x1632	5682	Sparke
+0x1633	5683	Stum
+0x1634	5684	Værelsesadministration:
+0x1676	5750	Ophæve
+0x1677	5751	Lær mere
+0x1694	5780	ni bold spil
+0x1696	5782	9-bold pool er tilgængelig for Yahoo!
+0x169c	5788	9-bold pool er tilgængelig for Yahoo!
+0x16b2	5810	8-bold.
+0x16b3	5811	9-bold.
+0x16b5	5813	8-bold.
+0x16b6	5814	9-bold.
+0x16b7	5815	Uddannelse.
+0x16b8	5816	Beskrivelse: \\n (valgfrit)
+0x16b9	5817	Vis All-Star\\n-medlemskab
+0x16ba	5818	Stemme
+0x1761	5985	Ophæve
+0x1762	5986	Spilmuligheder
+0x1763	5987	Starte
+0x179d	6045	y
+0x18cd	6349	Byt
+0x18ce	6350	Kunne ikke åbne tabelvinduet.\\nIndstil venligst din browser til at tillade pop op-vinduer for dette websted, og prøv igen.
+0x18cf	6351	Forsøger at pop-up tabelvindue...

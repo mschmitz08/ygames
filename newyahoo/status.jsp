@@ -185,11 +185,27 @@
         height = "900";
 
     String roomOverride = request.getParameter("room");
+    String intlCode = request.getParameter("intl_code");
+    if ((intlCode == null || intlCode.trim().length() == 0)) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (int i = 0; i < cookies.length; i++) {
+                if ("intl_code".equals(cookies[i].getName())) {
+                    intlCode = cookies[i].getValue();
+                    break;
+                }
+            }
+        }
+    }
+    if (intlCode == null || intlCode.trim().length() == 0)
+        intlCode = "us";
+    else
+        intlCode = intlCode.trim().toLowerCase();
     String launcherPath = request.getScheme() + "://" + request.getServerName();
     if (!(request.getScheme().equals("http") && request.getServerPort() == 80)
             && !(request.getScheme().equals("https") && request.getServerPort() == 443))
         launcherPath += ":" + request.getServerPort();
-    launcherPath += "/ny/index.jsp";
+    launcherPath += "/ny/index.jsp?intl_code=" + url(intlCode);
 
     Vector<RoomStatusData> poolRows = new Vector<RoomStatusData>();
     Vector<RoomStatusData> checkersRows = new Vector<RoomStatusData>();
@@ -426,7 +442,7 @@ body {
 <body>
 <div class="page-shell">
     <div class="topbar">
-        <a class="back-link" href="<%=html(launcherPath)%>?game=<%=url(game)%>&host=<%=url(host)%>&port=<%=selectedPort%>&width=<%=url(width)%>&height=<%=url(height)%><%=roomOverride != null && roomOverride.length() > 0 ? "&room=" + url(roomOverride) : ""%>">Back To Launcher</a>
+        <a class="back-link" href="<%=html(launcherPath)%>&game=<%=url(game)%>&host=<%=url(host)%>&port=<%=selectedPort%>&width=<%=url(width)%>&height=<%=url(height)%><%=roomOverride != null && roomOverride.length() > 0 ? "&room=" + url(roomOverride) : ""%>">Back To Launcher</a>
     </div>
 
     <div class="hero">
@@ -478,8 +494,8 @@ body {
                 <p class="panel-copy">Click any room to bounce back to the launcher with that room already chosen. People count reflects everyone in the room. Tables created reflects active tables that are currently open or in use.</p>
             </div>
             <div class="tabs">
-                <a class="tab-link<%="pool".equals(game) ? " active" : ""%>" href="status.jsp?game=pool&host=<%=url(host)%>&width=<%=url(width)%>&height=<%=url(height)%>">Pool</a>
-                <a class="tab-link<%="checkers".equals(game) ? " active" : ""%>" href="status.jsp?game=checkers&host=<%=url(host)%>&width=<%=url(width)%>&height=<%=url(height)%>">Checkers</a>
+                <a class="tab-link<%="pool".equals(game) ? " active" : ""%>" href="status.jsp?game=pool&host=<%=url(host)%>&width=<%=url(width)%>&height=<%=url(height)%>&intl_code=<%=url(intlCode)%>">Pool</a>
+                <a class="tab-link<%="checkers".equals(game) ? " active" : ""%>" href="status.jsp?game=checkers&host=<%=url(host)%>&width=<%=url(width)%>&height=<%=url(height)%>&intl_code=<%=url(intlCode)%>">Checkers</a>
             </div>
         </div>
 
@@ -512,7 +528,7 @@ body {
                         <td><span class="count-pill"><%=row.occupiedTableCount%></span></td>
                         <td><span class="count-pill"><%=row.seatedPlayerCount%></span></td>
                         <td>
-                            <a class="launch-link" href="<%=html(launcherPath)%>?game=<%=url(row.game)%>&room=<%=url(row.roomName)%>&host=<%=url(host)%>&port=<%=roomPort%>&width=<%=url(width)%>&height=<%=url(height)%>">Choose Room</a>
+                            <a class="launch-link" href="<%=html(launcherPath)%>&game=<%=url(row.game)%>&room=<%=url(row.roomName)%>&host=<%=url(host)%>&port=<%=roomPort%>&width=<%=url(width)%>&height=<%=url(height)%>&intl_code=<%=url(intlCode)%>">Choose Room</a>
                         </td>
                     </tr>
                 <% } %>

@@ -1,0 +1,241 @@
+﻿# key_hex	key_dec	text
+0x0000	0	Upozornění
+0x0001	1	OK
+0x0017	23	Sedět
+0x0018	24	prozatímní
+0x0031	49	Tuto hru vám přinesl \\n:
+0x0032	50	Konec hry
+0x0034	52	Možnosti
+0x0035	53	Typ tabulky
+0x0041	65	Ano
+0x0042	66	Žádný
+0x0048	72	Přestaňte hrát a zrušte výsledek\\n této hry (soupeř musí souhlasit).
+0x0049	73	Nevadí
+0x004a	74	Ukončit potvrzení
+0x004b	75	Ukončit a propadnout:
+0x004c	76	Ukončit a zrušit
+0x004d	77	Ukončit a propadnout
+0x004e	78	Ukončete a ukončete hru.
+0x004f	79	Ukončit a uložit:
+0x0050	80	Ukončit a zrušit:
+0x0051	81	Přestaňte hrát a uložte hru \\n (soupeř musí souhlasit).
+0x0052	82	Ukončujete nedokončenou hodnocenou hru:
+0x0053	83	Ukončit a uložit
+0x0079	121	Přijmout
+0x007b	123	Odmítnout všechna pozvání
+0x007c	124	Pozvaný
+0x007d	125	\\n \\nMožnosti hry:
+0x007e	126	Důvod:
+0x007f	127	(volitelný)
+0x0080	128	vás pozval ke stolu č.
+0x0081	129	\\n \\nChtěli byste se připojit?
+0x0082	130	Pokles
+0x0083	131	Povolit rychlé zprávy pouze od mých přátel.
+0x0084	132	Ignorovat
+0x0085	133	Z:
+0x0086	134	začala
+0x0087	135	Profil
+0x0088	136	Poslat
+0x0089	137	Blízko
+0x008a	138	Udělejte svůj pohyb a pokud
+0x008b	139	Chcete-li hrát na počítači, stiskněte 'Play Robot'.
+0x008d	141	- Místnost:
+0x008e	142	nevrátí, dostanete\\n možnost vynutit si rezignaci.
+0x008f	143	*** Požadováno uložení.
+0x0090	144	Chráněný
+0x0091	145	požádal o uložení této hry.\\nJe to přijatelné?
+0x0092	146	Soukromé
+0x0093	147	vaše
+0x0094	148	Chcete-li se připojit ke hře, klikněte na tlačítko 'Sednout'.
+0x0095	149	požádal o zrušení této hry.\\nJe to přijatelné?
+0x0096	150	zrušeno.
+0x0097	151	Postavit se
+0x0098	152	oponent
+0x0099	153	Jsem na řadě
+0x009b	155	*** K vašemu stolu se nyní může připojit kdokoli.
+0x009c	156	s.
+0x009d	157	Čekání na soupeře
+0x009e	158	Přestat
+0x009f	159	se připojil ke stolu.
+0x00a0	160	Začněte kliknutím na 'Spustit hru'.
+0x00a1	161	Pomoc
+0x00a2	162	opustil stůl.
+0x00a3	163	*** Pouze lidé, které jste pozvali, mohou nyní hrát nebo sledovat váš stůl.
+0x00a4	164	Spustit hru
+0x00a5	165	Zvuk při zapnutí
+0x00a6	166	- Hostitel:
+0x00a7	167	Veřejnost
+0x00a8	168	Hrát Robota
+0x00aa	170	Bota
+0x00ab	171	*** Požadováno zrušení.
+0x00ac	172	*** U vašeho stolu nyní mohou hrát pouze lidé, které jste pozvali.
+0x00ae	174	- Stůl:
+0x00af	175	*** Jste hostitelem tohoto stolu.
+0x00b0	176	Hra:
+0x00b1	177	Vaše
+0x00b2	178	Čekání, až soupeř klikne na 'Start'.
+0x00b4	180	opustil nedokončenou hodnocenou hru.\\n
+0x00b5	181	*** Hra
+0x00b6	182	uloženo.
+0x00b7	183	Pozvat
+0x00b8	184	partner
+0x00b9	185	Zvuk
+0x00ba	186	Li
+0x00bf	191	Zadejte jméno:
+0x00c0	192	Vyberte ze seznamu
+0x00c1	193	- nebo -
+0x00c9	201	Ping
+0x00ca	202	Informace o hráči pro
+0x00cb	203	Odeslat okamžitou zprávu:
+0x00cc	204	sekundy.
+0x00ce	206	zápis.
+0x00cf	207	Doba nečinnosti:
+0x00e1	225	Tabulka
+0x00e2	226	Kdo se dívá
+0x00e3	227	možnosti:
+0x00e4	228	PŘIPOJTE SE
+0x00e8	232	podle
+0x00e9	233	Rtng
+0x00ea	234	sekund.\\nMoje čisté zpoždění:
+0x00eb	235	vás pozval, abyste se posadili.
+0x00f0	240	V mezipaměti máte starou verzi klienta.
+0x00f2	242	Ping odeslán... čekám na odpověď.
+0x00f4	244	prozatímní
+0x00f5	245	Jméno
+0x00f6	246	Pokus o připojení k hernímu serveru
+0x00f7	247	Hrát hned
+0x00f9	249	Ukončit hry
+0x00fb	251	čisté zpoždění:
+0x00fd	253	Říci:
+0x00ff	255	Kontaktování herního serveru...
+0x0102	258	Chyba: Nedostatek systémových prostředků.\\nZavřete všechna nepotřebná okna a aplikace.\\nPotom zavřete okno hry a zkuste to znovu.
+0x0105	261	Nelze se připojit k serveru.\\nTo mohla způsobit jedna ze čtyř věcí:\\n1)Jste za firewallem.\\n2)Nejste připojeni k internetu.\\n3)Herní server nefunguje.\\n4)V mezipaměti máte zastaralou stránku.
+0x0106	262	Vytvořit tabulku
+0x0108	264	Malá Windows
+0x0109	265	Tbl
+0x010b	267	Byl jsi spuštěn ze stolu
+0x010c	268	Odpojeno od serveru... Příliš dlouho nečinný
+0x0111	273	IM pouze od \\n přátel
+0x0115	277	... stahování stavu místnosti
+0x0118	280	Chyba při přihlašování na server.
+0x0119	281	Odmítnout všechna\\npozvání
+0x011c	284	Příčka
+0x011d	285	Nemůžete se ignorovat.
+0x0123	291	Odpojeno od serveru
+0x0125	293	Připojeno k hernímu serveru jako
+0x0128	296	Hodnocení
+0x0129	297	to\\nOdevzdejte hru.
+0x012a	298	vrátit se.
+0x012b	299	Počkejte na své
+0x012c	300	Vynutit si
+0x012d	301	Uložit hru
+0x012e	302	Zrušit hru:
+0x012f	303	Zrušit hru
+0x0130	304	Vynutit propadnutí:
+0x0131	305	Počkejte
+0x0132	306	Přestaňte hrát a uložte hru.
+0x0133	307	opustil nedokončenou hodnocenou hru:
+0x0134	308	Přestaňte hrát a nezaznamenávejte výsledek této hry.
+0x0135	309	Uložit hru:
+0x0136	310	Force Forfeit
+0x0137	311	Počkejte:
+0x0140	320	OK
+0x0142	322	Zvukové upozornění
+0x0164	356	Upozornění
+0x0165	357	OK
+0x0168	360	Zrušit
+0x016c	364	Ignorovat
+0x016d	365	Profil
+0x016e	366	Poslat
+0x016f	367	Blízko
+0x0179	377	Bota
+0x017c	380	sekundy.
+0x0180	384	Pozvat
+0x01f5	501	odmítl vaše pozvání.\\nDůvod:
+0x0b48	2888	Další informace
+0x0b4c	2892	Zobrazit odkaz na moji hru v\\nmy Yahoo!
+0x0b4d	2893	Další informace
+0x0b80	2944	Hodinky
+0x0c5b	3163	Vaše
+0x0d35	3381	Možnosti
+0x0d36	3382	Hotovo
+0x0d43	3395	Možnosti
+0x0d44	3396	Hodinky
+0x0dde	3550	Avataři:
+0x0de8	3560	Filtr vulgárních výrazů:
+0x0e0c	3596	minuta.
+0x0e1b	3611	Žádný
+0x0e1c	3612	Silný
+0x0e1d	3613	Slabý
+0x111f	4383	Konec hry:
+0x1129	4393	Zbývající čas:
+0x1131	4401	Inzerát:
+0x11bf	4543	Vyberte Typ
+0x11c0	4544	OK
+0x11c1	4545	solidní
+0x11c2	4546	proužek
+0x11c6	4550	má míč v ruce.
+0x1213	4627	Vyberte si kapsu.
+0x1214	4628	Klikněte na míč, který chcete udeřit.
+0x1217	4631	Táhněte tágo levým tlačítkem myši.
+0x1225	4645	Faul!
+0x1243	4675	Stisknutím mezerníku střílejte.
+0x1244	4676	Zatáhněte za Shift+levé tlačítko myši a střílejte.
+0x1245	4677	Zatáhněte za pravé tlačítko myši a střílejte.
+0x1252	4690	Poškrábat!
+0x1253	4691	Střílejte znovu!
+0x1254	4692	Střílet!
+0x125c	4700	Jaký typ míče byste chtěli hrát?
+0x125d	4701	Než vystřelíte, můžete bílou koulí pohnout.
+0x12b5	4789	resetovat
+0x132c	4908	30 sec.
+0x132d	4909	žádný časovač.
+0x132e	4910	hodnocené.
+0x132f	4911	sek.
+0x1338	4920	angličtina
+0x136c	4972	Moc
+0x13fc	5116	Čas na tah:
+0x13fd	5117	Časovač
+0x1400	5120	Zrušit
+0x1401	5121	Hra s osmi míčky
+0x1402	5122	Možnosti hry
+0x1403	5123	Ohodnocená hra.
+0x1404	5124	Start
+0x1405	5125	Výcvik.
+0x140a	5130	sek.
+0x1413	5139	vyhrává hru.
+0x158a	5514	Platforma Macintosh nepodporuje livescript.
+0x159b	5531	Hlas
+0x1605	5637	Čas do začátku hry:
+0x1629	5673	1 den
+0x162a	5674	1 hodina
+0x162b	5675	1 minuta
+0x162c	5676	10 minut
+0x162d	5677	15 minut
+0x162e	5678	3 hodiny
+0x162f	5679	30 minut
+0x1630	5680	5 minut
+0x1631	5681	Zákaz
+0x1632	5682	Kop
+0x1633	5683	Ztlumit
+0x1634	5684	Správa místnosti:
+0x1676	5750	Zrušit
+0x1677	5751	Další informace
+0x1694	5780	Devíti míčová hra
+0x1696	5782	9-ball pool je k dispozici Yahoo!
+0x169c	5788	9-ball pool je k dispozici Yahoo!
+0x16b2	5810	8-koule.
+0x16b3	5811	9-koule.
+0x16b5	5813	8-koule.
+0x16b6	5814	9-koule.
+0x16b7	5815	Výcvik.
+0x16b8	5816	Popis: \\n (volitelné)
+0x16b9	5817	Zobrazit All-Star\\n členství
+0x16ba	5818	Hlas
+0x1761	5985	Zrušit
+0x1762	5986	Možnosti hry
+0x1763	5987	Start
+0x179d	6045	y
+0x18cd	6349	Vyměňte
+0x18ce	6350	Nelze otevřít okno tabulky.\\nNastavte prosím svůj prohlížeč tak, aby povoloval vyskakovací okna pro tento web, a zkuste to znovu.
+0x18cf	6351	Pokus o zobrazení okna tabulky...
