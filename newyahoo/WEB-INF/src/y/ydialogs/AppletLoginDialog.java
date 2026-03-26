@@ -81,9 +81,9 @@ public class AppletLoginDialog extends Dialog {
 
         Panel modeButtons = new Panel(new GridLayout(1, 3, 6, 0));
         modeButtons.setBackground(PANEL_BG);
-        btnSignInMode = new Button(applet.uiText("sign_in", "Sign In"));
-        btnRegisterMode = new Button(applet.uiText("register", "Register"));
-        btnChangePasswordMode = new Button(applet.uiText("change_password", "Change Password"));
+        btnSignInMode = new Button(controlText("sign_in", "Sign In"));
+        btnRegisterMode = new Button(controlText("register", "Register"));
+        btnChangePasswordMode = new Button(controlText("change_password", "Change Password"));
         styleModeButton(btnSignInMode);
         styleModeButton(btnRegisterMode);
         styleModeButton(btnChangePasswordMode);
@@ -95,7 +95,7 @@ public class AppletLoginDialog extends Dialog {
         Panel center = new Panel(new BorderLayout(0, 8));
         center.setBackground(PANEL_BG);
 
-        lblMessage = new Label(applet.uiText("please_sign_in", "Please sign in"));
+        lblMessage = new Label(controlText("please_sign_in", "Please sign in"));
         lblMessage.setForeground(INK);
         lblMessage.setBackground(PANEL_BG);
         lblMessage.setFont(messageFont);
@@ -113,10 +113,10 @@ public class AppletLoginDialog extends Dialog {
         Panel row2 = new Panel(new GridLayout(1, 2, 8, 0));
         row2.setBackground(PANEL_BG);
 
-        lblField1 = createFieldLabel(applet.uiText("user_name", "User Name"));
-        lblField2 = createFieldLabel(applet.uiText("password", "Password"));
-        lblField3 = createFieldLabel(applet.uiText("confirm_password", "Confirm Password"));
-        lblField4 = createFieldLabel(applet.uiText("email", "Email"));
+        lblField1 = createFieldLabel(controlText("user_name", "User Name"));
+        lblField2 = createFieldLabel(controlText("password", "Password"));
+        lblField3 = createFieldLabel(controlText("confirm_password", "Confirm Password"));
+        lblField4 = createFieldLabel(controlText("email", "Email"));
 
         txtField1 = createField(false);
         txtField2 = createField(true);
@@ -141,8 +141,8 @@ public class AppletLoginDialog extends Dialog {
 
         Panel buttons = new Panel(new GridLayout(1, 2, 8, 0));
         buttons.setBackground(PANEL_BG);
-        btnPrimary = new Button(applet.uiText("enter_room", "Enter Room"));
-        btnCancel = new Button(applet.uiText("cancel", "Cancel"));
+        btnPrimary = new Button(controlText("enter_room", "Enter Room"));
+        btnCancel = new Button(controlText("cancel", "Cancel"));
         stylePrimaryButton(btnPrimary);
         styleSecondaryButton(btnCancel);
         buttons.add(btnPrimary);
@@ -212,14 +212,27 @@ public class AppletLoginDialog extends Dialog {
     private String buildFontSample() {
         StringBuffer sample = new StringBuffer();
         appendSample(sample, applet.uiText("dialog_title", "Game Login"));
-        appendSample(sample, applet.uiText("sign_in", "Sign In"));
-        appendSample(sample, applet.uiText("register", "Register"));
-        appendSample(sample, applet.uiText("change_password", "Change Password"));
-        appendSample(sample, applet.uiText("please_sign_in", "Please sign in"));
-        appendSample(sample, applet.uiText("user_name", "User Name"));
-        appendSample(sample, applet.uiText("password", "Password"));
-        appendSample(sample, applet.uiText("enter_room", "Enter Room"));
+        appendSample(sample, controlText("sign_in", "Sign In"));
+        appendSample(sample, controlText("register", "Register"));
+        appendSample(sample, controlText("change_password", "Change Password"));
+        appendSample(sample, controlText("please_sign_in", "Please sign in"));
+        appendSample(sample, controlText("user_name", "User Name"));
+        appendSample(sample, controlText("password", "Password"));
+        appendSample(sample, controlText("enter_room", "Enter Room"));
         return sample.toString();
+    }
+
+    private boolean useAsciiControlLabels() {
+        String locale = applet == null || applet.intl_code == null ? "us"
+                : applet.intl_code.toLowerCase();
+        return locale.startsWith("ja") || locale.startsWith("zh_cn")
+                || locale.startsWith("zh_tw") || locale.startsWith("ko");
+    }
+
+    private String controlText(String key, String fallback) {
+        if (useAsciiControlLabels())
+            return fallback;
+        return applet.uiText(key, fallback);
     }
 
     private void appendSample(StringBuffer sample, String text) {
@@ -288,42 +301,42 @@ public class AppletLoginDialog extends Dialog {
     private void applyMode(int newMode) {
         mode = newMode;
         if (mode == MODE_SIGN_IN) {
-            lblField1.setText(applet.uiText("user_name", "User Name"));
-            lblField2.setText(applet.uiText("password", "Password"));
-            lblField3.setText(applet.uiText("confirm_password", "Confirm Password"));
-            lblField4.setText(applet.uiText("email", "Email"));
+            lblField1.setText(controlText("user_name", "User Name"));
+            lblField2.setText(controlText("password", "Password"));
+            lblField3.setText(controlText("confirm_password", "Confirm Password"));
+            lblField4.setText(controlText("email", "Email"));
             row3.setVisible(false);
             row4.setVisible(false);
             txtField2.setEchoChar('*');
             txtField3.setEchoChar('*');
             txtField4.setEchoChar((char) 0);
-            btnPrimary.setLabel(applet.uiText("enter_room", "Enter Room"));
+            btnPrimary.setLabel(controlText("enter_room", "Enter Room"));
         }
         else if (mode == MODE_REGISTER) {
-            lblField1.setText(applet.uiText("user_name", "User Name"));
-            lblField2.setText(applet.uiText("password", "Password"));
-            lblField3.setText(applet.uiText("confirm_password", "Confirm Password"));
-            lblField4.setText(applet.uiText("invite_code", "Invite Code"));
+            lblField1.setText(controlText("user_name", "User Name"));
+            lblField2.setText(controlText("password", "Password"));
+            lblField3.setText(controlText("confirm_password", "Confirm Password"));
+            lblField4.setText(controlText("invite_code", "Invite Code"));
             row3.setVisible(true);
             row4.setVisible(false);
             txtField2.setEchoChar('*');
             txtField3.setEchoChar('*');
             txtField4.setEchoChar((char) 0);
-            btnPrimary.setLabel(applet.uiText("create_account", "Create Account"));
+            btnPrimary.setLabel(controlText("create_account", "Create Account"));
             txtField3.setText("");
             txtField4.setText("");
         }
         else {
-            lblField1.setText(applet.uiText("user_name", "User Name"));
-            lblField2.setText(applet.uiText("current_password", "Current Password"));
-            lblField3.setText(applet.uiText("new_password", "New Password"));
-            lblField4.setText(applet.uiText("confirm_new_password", "Confirm New Password"));
+            lblField1.setText(controlText("user_name", "User Name"));
+            lblField2.setText(controlText("current_password", "Current Password"));
+            lblField3.setText(controlText("new_password", "New Password"));
+            lblField4.setText(controlText("confirm_new_password", "Confirm New Password"));
             row3.setVisible(true);
             row4.setVisible(true);
             txtField2.setEchoChar('*');
             txtField3.setEchoChar('*');
             txtField4.setEchoChar('*');
-            btnPrimary.setLabel(applet.uiText("update_password", "Update Password"));
+            btnPrimary.setLabel(controlText("update_password", "Update Password"));
         }
         setTitle(applet.uiText("dialog_title", "Game Login"));
         refreshModeButtons();
@@ -418,7 +431,7 @@ public class AppletLoginDialog extends Dialog {
     }
 
     public void setMessage(String message) {
-        lblMessage.setText(message != null ? message : applet.uiText("please_sign_in", "Please sign in"));
+        lblMessage.setText(message != null ? message : controlText("please_sign_in", "Please sign in"));
     }
 
     public void setUsername(String username) {

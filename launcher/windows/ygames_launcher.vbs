@@ -40,6 +40,7 @@ Dim expectedClientHash
 Dim stableInstallDir
 Dim siteId
 Dim siteRootDir
+Dim skipSelfUpdate
 
 game = "pool"
 room = "corner_pocket"
@@ -59,6 +60,7 @@ expectedClientHash = ""
 stableInstallDir = shell.ExpandEnvironmentStrings("%LocalAppData%\YGamesLauncher")
 siteId = ""
 siteRootDir = baseDir
+skipSelfUpdate = False
 
 installedLauncherVersion = ReadLauncherVersion()
 
@@ -100,6 +102,9 @@ End If
 
 If launcherVersion <> "" Then
     If CompareVersions(installedLauncherVersion, launcherVersion) < 0 Then
+        If TryRefreshLauncherFromWeb(launcherVersion) Then
+            WScript.Quit 0
+        End If
         ShowUpdateRequired launcherVersion
         WScript.Quit 1
     End If
@@ -209,6 +214,9 @@ Sub ParseNamedArgs()
         ElseIf name = "--site_id" Then
             siteId = value
             i = i + 2
+        ElseIf name = "--skip_self_update" Then
+            skipSelfUpdate = True
+            i = i + 1
         Else
             i = i + 1
         End If
@@ -572,6 +580,182 @@ Function TryRefreshClientJarFromWeb(requiredHash)
     TryRefreshClientJarFromWeb = True
 End Function
 
+Function TryRefreshLauncherFromWeb(requiredVersion)
+    TryRefreshLauncherFromWeb = False
+
+    If skipSelfUpdate Then
+        Exit Function
+    End If
+
+    If webBase = "" Then
+        Exit Function
+    End If
+
+    Dim manifestUrl
+    manifestUrl = BuildWebUrl("/downloads/ygames_launcher_windows/launcher_manifest.txt")
+    If manifestUrl = "" Then
+        Exit Function
+    End If
+
+    Dim updateRoot
+    updateRoot = CreateLauncherUpdateRoot()
+    If updateRoot = "" Then
+        Exit Function
+    End If
+
+    Dim manifestPath
+    manifestPath = fso.BuildPath(updateRoot, "launcher_manifest.txt")
+
+    If Not DownloadBinaryFile(manifestUrl, manifestPath) Then
+        WriteDefaultLauncherManifest manifestPath
+    End If
+
+    If Not fso.FileExists(manifestPath) Then
+        SafeDeleteFolder updateRoot
+        Exit Function
+    End If
+
+    Dim file
+    Dim success
+    success = True
+    Set file = fso.OpenTextFile(manifestPath, 1)
+    Do While Not file.AtEndOfStream
+        Dim relPath
+        relPath = Trim(file.ReadLine)
+        If relPath <> "" And Left(relPath, 1) <> "#" Then
+            relPath = Replace(relPath, "/", "\")
+            Dim targetPath
+            targetPath = fso.BuildPath(updateRoot, relPath)
+            EnsureParentFolder targetPath
+            If Not DownloadBinaryFile(BuildWebUrl("/downloads/ygames_launcher_windows/" _
+                    & Replace(relPath, "\", "/")), targetPath) Then
+                success = False
+                Exit Do
+            End If
+        End If
+    Loop
+    file.Close
+
+    If Not success Then
+        SafeDeleteFolder updateRoot
+        Exit Function
+    End If
+
+    Dim downloadedVersion
+    downloadedVersion = ReadLauncherVersionFromFolder(updateRoot)
+    If downloadedVersion = "" Then
+        SafeDeleteFolder updateRoot
+        Exit Function
+    End If
+    If requiredVersion <> "" And CompareVersions(downloadedVersion, requiredVersion) < 0 Then
+        SafeDeleteFolder updateRoot
+        Exit Function
+    End If
+
+    If ScheduleLauncherSelfUpdate(updateRoot) Then
+        TryRefreshLauncherFromWeb = True
+    Else
+        SafeDeleteFolder updateRoot
+    End If
+End Function
+
+Function CreateLauncherUpdateRoot()
+    Dim tempBase
+    tempBase = shell.ExpandEnvironmentStrings("%TEMP%")
+    If tempBase = "" Or tempBase = "%TEMP%" Then
+        tempBase = launchDir
+    End If
+    CreateLauncherUpdateRoot = fso.BuildPath(tempBase, "YGamesLauncherUpdate_" _
+            & Replace(Replace(Replace(CStr(Now), "/", ""), ":", ""), " ", "_"))
+    EnsureFolder CreateLauncherUpdateRoot
+End Function
+
+Sub WriteDefaultLauncherManifest(manifestPath)
+    EnsureParentFolder manifestPath
+    Dim file
+    Set file = fso.CreateTextFile(manifestPath, True)
+    file.WriteLine "launcher_version.txt"
+    file.WriteLine "ygames_launcher.vbs"
+    file.WriteLine "install_launcher.bat"
+    file.WriteLine "uninstall_launcher.bat"
+    file.WriteLine "README.md"
+    file.WriteLine "runtime/README.md"
+    file.Close
+End Sub
+
+Function ReadLauncherVersionFromFolder(folderPath)
+    Dim versionPath
+    versionPath = fso.BuildPath(folderPath, "launcher_version.txt")
+    If Not fso.FileExists(versionPath) Then
+        ReadLauncherVersionFromFolder = ""
+        Exit Function
+    End If
+
+    Dim file
+    Set file = fso.OpenTextFile(versionPath, 1)
+    ReadLauncherVersionFromFolder = Trim(file.ReadAll)
+    file.Close
+End Function
+
+Sub EnsureParentFolder(filePath)
+    Dim parentPath
+    parentPath = fso.GetParentFolderName(filePath)
+    If parentPath <> "" Then
+        EnsureFolder parentPath
+    End If
+End Sub
+
+Function BuildCurrentArgumentString()
+    Dim i
+    Dim args
+    args = ""
+    For i = 0 To WScript.Arguments.Count - 1
+        If args <> "" Then
+            args = args & " "
+        End If
+        args = args & Quote(WScript.Arguments(i))
+    Next
+    BuildCurrentArgumentString = args
+End Function
+
+Function ScheduleLauncherSelfUpdate(updateRoot)
+    ScheduleLauncherSelfUpdate = False
+
+    Dim helperPath
+    helperPath = fso.BuildPath(launchDir, "launcher_self_update.cmd")
+
+    Dim currentArgs
+    currentArgs = BuildCurrentArgumentString()
+    Dim relaunchCommand
+    relaunchCommand = "wscript.exe " & Quote(fso.BuildPath(baseDir, "ygames_launcher.vbs"))
+    If currentArgs <> "" Then
+        relaunchCommand = relaunchCommand & " " & currentArgs
+    End If
+    relaunchCommand = relaunchCommand & " --skip_self_update"
+
+    Dim file
+    On Error Resume Next
+    Set file = fso.CreateTextFile(helperPath, True)
+    If Err.Number <> 0 Then
+        Err.Clear
+        On Error GoTo 0
+        Exit Function
+    End If
+    On Error GoTo 0
+
+    file.WriteLine "@echo off"
+    file.WriteLine "ping 127.0.0.1 -n 2 > nul"
+    file.WriteLine "xcopy /E /I /Y " & Quote(fso.BuildPath(updateRoot, "*")) _
+        & " " & Quote(baseDir & "\") & " > nul"
+    file.WriteLine relaunchCommand
+    file.WriteLine "rd /s /q " & Quote(updateRoot)
+    file.WriteLine "del " & Quote("%~f0")
+    file.Close
+
+    shell.Run "cmd.exe /c " & Quote(helperPath), 0, False
+    ScheduleLauncherSelfUpdate = True
+End Function
+
 Function DownloadBinaryFile(url, destinationPath)
     DownloadBinaryFile = False
 
@@ -625,6 +809,14 @@ Sub SafeDeleteFile(filePath)
     On Error Resume Next
     If fso.FileExists(filePath) Then
         fso.DeleteFile filePath, True
+    End If
+    On Error GoTo 0
+End Sub
+
+Sub SafeDeleteFolder(folderPath)
+    On Error Resume Next
+    If fso.FolderExists(folderPath) Then
+        fso.DeleteFolder folderPath, True
     End If
     On Error GoTo 0
 End Sub
@@ -867,7 +1059,7 @@ End Sub
 
 Sub ShowUpdateRequired(requiredVersion)
     Dim message
-    message = "This launcher is out of date for the website you just opened." & vbCrLf & vbCrLf & _
+    message = "This launcher is out of date for the website you just opened, and the automatic launcher refresh did not complete." & vbCrLf & vbCrLf & _
         "Installed launcher version: " & installedLauncherVersion & vbCrLf & _
         "Website expects version: " & requiredVersion & vbCrLf & vbCrLf & _
         "Please download the newer launcher package from the site and run install_launcher.bat again." & vbCrLf & vbCrLf & _
