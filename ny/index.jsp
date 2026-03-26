@@ -212,6 +212,13 @@
         fallbackLocale.label = "English";
         localeOptions.add(fallbackLocale);
     }
+    Collections.sort(localeOptions, new Comparator<LocaleOption>() {
+        public int compare(LocaleOption left, LocaleOption right) {
+            String leftLabel = left == null || left.label == null ? "" : left.label;
+            String rightLabel = right == null || right.label == null ? "" : right.label;
+            return leftLabel.compareToIgnoreCase(rightLabel);
+        }
+    });
     if (!hasLocale(localeOptions, requestedIntlCode))
         requestedIntlCode = "us";
     String requestHost = request.getServerName();
