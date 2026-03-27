@@ -85,7 +85,7 @@
     response.setHeader("Pragma", "no-cache");
     response.setDateHeader("Expires", 0);
 
-    String launcherVersion = request.getParameter("launcher_version");
+    String launcherVersion = readLauncherVersion(application, "0.7.4");
     String game = request.getParameter("game");
     String room = request.getParameter("room");
     String host = request.getParameter("host");
@@ -105,15 +105,13 @@
         }
     }
     String siteId = request.getParameter("site_id");
-    String expectedClientHash = request.getParameter("expected_client_hash");
+    String expectedClientHash = "";
     String accountMode = request.getParameter("account_mode");
     String webBase = request.getScheme() + "://" + request.getServerName();
     if (!(request.getScheme().equals("http") && request.getServerPort() == 80)
             && !(request.getScheme().equals("https") && request.getServerPort() == 443))
         webBase += ":" + request.getServerPort();
     webBase += request.getContextPath();
-    if (launcherVersion == null || launcherVersion.length() == 0)
-        launcherVersion = readLauncherVersion(application, "0.7.4");
     if (game == null || game.length() == 0)
         game = "pool";
     if (room == null || room.length() == 0)
@@ -132,10 +130,8 @@
         accountMode = "";
     if (siteId == null)
         siteId = "";
-    if (expectedClientHash == null || expectedClientHash.length() == 0) {
-        File launcherClientJar = new File(application.getRealPath("/downloads/ygames_launcher_windows/app/newyahoo/client.jar"));
-        expectedClientHash = sha256Hex(launcherClientJar);
-    }
+    File launcherClientJar = new File(application.getRealPath("/downloads/ygames_launcher_windows/app/newyahoo/client.jar"));
+    expectedClientHash = sha256Hex(launcherClientJar);
     String launcherPackageName = "ygames_launcher_windows_" + launcherVersion + ".zip";
 %>
 <html>

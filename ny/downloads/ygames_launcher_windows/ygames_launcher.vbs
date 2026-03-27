@@ -564,20 +564,51 @@ Function TryRefreshClientJarFromWeb(requiredHash)
 
     Dim targetJarPath
     targetJarPath = fso.BuildPath(appDir, "client.jar")
-    On Error Resume Next
-    If fso.FileExists(targetJarPath) Then
-        fso.DeleteFile targetJarPath, True
-    End If
-    fso.MoveFile tempJarPath, targetJarPath
-    If Err.Number <> 0 Then
-        Err.Clear
-        On Error GoTo 0
+    If Not ReplaceClientJarWithRetry(tempJarPath, targetJarPath) Then
         SafeDeleteFile tempJarPath
         Exit Function
     End If
-    On Error GoTo 0
 
     TryRefreshClientJarFromWeb = True
+End Function
+
+Function ReplaceClientJarWithRetry(tempJarPath, targetJarPath)
+    ReplaceClientJarWithRetry = False
+
+    Do
+        On Error Resume Next
+        Err.Clear
+        If fso.FileExists(targetJarPath) Then
+            fso.DeleteFile targetJarPath, True
+        End If
+        If Err.Number = 0 Then
+            fso.MoveFile tempJarPath, targetJarPath
+        End If
+
+        If Err.Number = 0 Then
+            On Error GoTo 0
+            ReplaceClientJarWithRetry = True
+            Exit Function
+        End If
+
+        Dim errorMessage
+        errorMessage = Err.Description
+        Err.Clear
+        On Error GoTo 0
+
+        Dim response
+        response = MsgBox( _
+            "The launcher is having trouble replacing client.jar." & vbCrLf & vbCrLf & _
+            "The game may still be open, or another process may be using the file." & vbCrLf & vbCrLf & _
+            "Please close the game window and then choose Retry." & vbCrLf & vbCrLf & _
+            "Launcher folder:" & vbCrLf & appDir & vbCrLf & vbCrLf & _
+            "Windows reported:" & vbCrLf & errorMessage, _
+            vbExclamation + vbRetryCancel, "Y! Games Launcher Update")
+
+        If response <> vbRetry Then
+            Exit Function
+        End If
+    Loop
 End Function
 
 Function TryRefreshLauncherFromWeb(requiredVersion)
