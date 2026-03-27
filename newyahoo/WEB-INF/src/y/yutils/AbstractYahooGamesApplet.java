@@ -1538,7 +1538,7 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 
 	void notifyFlagsAvatar() {
 		avatarList.Lu();
-		for (int i1 = 0; i1 < 45 - (idPropertyContains(4L) ? 0 : 11); i1++)
+		for (int i1 = 0; i1 < 45; i1++)
 			avatarList
 					.add(new YahooImage(((YahooImageList) avatars).image[i1]));
 

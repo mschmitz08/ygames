@@ -287,8 +287,7 @@ public abstract class YahooTable implements GameHandler {
 	}
 
 	int nextAvatar() {
-		avatar = (avatar + 1)
-				% (45 - (getApplet().idPropertyContains(4L) ? 0 : 11));
+		avatar = (avatar + 1) % 45;
 		return avatar;
 	}
 
@@ -381,8 +380,7 @@ public abstract class YahooTable implements GameHandler {
 	}
 
 	int previousAvatar() {
-		avatar = (avatar - 1)
-				% (45 - (getApplet().idPropertyContains(4L) ? 0 : 11));
+		avatar = (avatar - 1 + 45) % 45;
 		return avatar;
 	}
 
