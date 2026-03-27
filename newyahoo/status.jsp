@@ -167,19 +167,6 @@
         return summary;
     }
 
-    private String toggleSortDir(String sortKey, String activeSort, String activeDir) {
-        if (sortKey == null)
-            sortKey = "room";
-        if (sortKey.equals(activeSort) && !"desc".equalsIgnoreCase(activeDir))
-            return "desc";
-        return "asc";
-    }
-
-    private String sortIndicator(String sortKey, String activeSort, String activeDir) {
-        if (sortKey == null || !sortKey.equals(activeSort))
-            return "";
-        return "desc".equalsIgnoreCase(activeDir) ? " \u2193" : " \u2191";
-    }
 %>
 <%
     String game = request.getParameter("game");
@@ -199,12 +186,6 @@
         height = "900";
 
     String roomOverride = request.getParameter("room");
-    String sort = request.getParameter("sort");
-    if (!"people".equals(sort) && !"tables".equals(sort) && !"seated".equals(sort))
-        sort = "room";
-    String sortDir = request.getParameter("dir");
-    if (!"desc".equalsIgnoreCase(sortDir))
-        sortDir = "asc";
     String intlCode = request.getParameter("intl_code");
     if ((intlCode == null || intlCode.trim().length() == 0)) {
         Cookie[] cookies = request.getCookies();
@@ -240,32 +221,7 @@
         checkersSummary = summarize("checkers", "Checkers", checkersRows);
         selectedPort = "checkers".equals(game) ? Initializer.selfInstance.getCheckersPort() : Initializer.selfInstance.getPoolPort();
     }
-
     Vector<RoomStatusData> visibleRows = "checkers".equals(game) ? checkersRows : poolRows;
-    Collections.sort(visibleRows, new Comparator<RoomStatusData>() {
-        public int compare(RoomStatusData left, RoomStatusData right) {
-            int result = 0;
-            if ("people".equals(sort))
-                result = left.peopleCount - right.peopleCount;
-            else if ("tables".equals(sort))
-                result = left.occupiedTableCount - right.occupiedTableCount;
-            else if ("seated".equals(sort))
-                result = left.seatedPlayerCount - right.seatedPlayerCount;
-            else {
-                String leftLabel = left.roomLabel == null ? "" : left.roomLabel.toLowerCase();
-                String rightLabel = right.roomLabel == null ? "" : right.roomLabel.toLowerCase();
-                result = leftLabel.compareTo(rightLabel);
-            }
-
-            if (result == 0) {
-                String leftName = left.roomName == null ? "" : left.roomName.toLowerCase();
-                String rightName = right.roomName == null ? "" : right.roomName.toLowerCase();
-                result = leftName.compareTo(rightName);
-            }
-
-            return "desc".equalsIgnoreCase(sortDir) ? -result : result;
-        }
-    });
 %>
 <html>
 <head>
@@ -425,8 +381,12 @@ body {
 .room-table th a {
     color: inherit;
     text-decoration: none;
+    cursor: pointer;
 }
 .room-table th a:hover {
+    color: #23170f;
+}
+.room-table th a.active-sort {
     color: #23170f;
 }
 .room-table td {
@@ -467,6 +427,10 @@ body {
     padding: 18px 0 2px 0;
     color: #6d5639;
 }
+.sort-indicator {
+    display: inline-block;
+    min-width: 12px;
+}
 @media (max-width: 860px) {
     .summary-grid {
         grid-template-columns: 1fr;
@@ -494,6 +458,83 @@ body {
     }
 }
 </style>
+<script type="text/javascript">
+function sortRoomTable(column) {
+    var tableBody = document.getElementById("room-table-body");
+    if (!tableBody)
+        return false;
+
+    var rows = [];
+    for (var i = 0; i < tableBody.rows.length; i++)
+        rows.push(tableBody.rows[i]);
+
+    var currentColumn = tableBody.getAttribute("data-sort-column");
+    var currentDir = tableBody.getAttribute("data-sort-dir");
+    var nextDir = currentColumn == column && currentDir == "desc" ? "asc" : "desc";
+
+    rows.sort(function(left, right) {
+        var leftValue;
+        var rightValue;
+        if (column == "room") {
+            leftValue = (left.getAttribute("data-room-label") || "").toLowerCase();
+            rightValue = (right.getAttribute("data-room-label") || "").toLowerCase();
+            if (leftValue < rightValue)
+                return nextDir == "asc" ? -1 : 1;
+            if (leftValue > rightValue)
+                return nextDir == "asc" ? 1 : -1;
+
+            leftValue = (left.getAttribute("data-room-name") || "").toLowerCase();
+            rightValue = (right.getAttribute("data-room-name") || "").toLowerCase();
+            if (leftValue < rightValue)
+                return nextDir == "asc" ? -1 : 1;
+            if (leftValue > rightValue)
+                return nextDir == "asc" ? 1 : -1;
+            return 0;
+        }
+
+        leftValue = parseInt(left.getAttribute("data-" + column), 10);
+        rightValue = parseInt(right.getAttribute("data-" + column), 10);
+        if (isNaN(leftValue))
+            leftValue = 0;
+        if (isNaN(rightValue))
+            rightValue = 0;
+
+        if (leftValue == rightValue) {
+            var leftLabel = (left.getAttribute("data-room-label") || "").toLowerCase();
+            var rightLabel = (right.getAttribute("data-room-label") || "").toLowerCase();
+            if (leftLabel < rightLabel)
+                return -1;
+            if (leftLabel > rightLabel)
+                return 1;
+            return 0;
+        }
+
+        return nextDir == "asc" ? leftValue - rightValue : rightValue - leftValue;
+    });
+
+    for (var j = 0; j < rows.length; j++)
+        tableBody.appendChild(rows[j]);
+
+    tableBody.setAttribute("data-sort-column", column);
+    tableBody.setAttribute("data-sort-dir", nextDir);
+
+    var headers = document.getElementsByClassName("sort-link");
+    for (var k = 0; k < headers.length; k++) {
+        var header = headers[k];
+        var indicator = header.getElementsByTagName("span")[0];
+        header.className = "sort-link";
+        if (indicator)
+            indicator.innerHTML = "";
+        if (header.getAttribute("data-sort-key") == column) {
+            header.className = "sort-link active-sort";
+            if (indicator)
+                indicator.innerHTML = nextDir == "asc" ? "&uarr;" : "&darr;";
+        }
+    }
+
+    return false;
+}
+</script>
 </head>
 <body>
 <div class="page-shell">
@@ -561,21 +602,21 @@ body {
             <table class="room-table">
                 <thead>
                     <tr>
-                        <th><a href="status.jsp?game=<%=url(game)%>&sort=room&dir=<%=url(toggleSortDir("room", sort, sortDir))%>&host=<%=url(host)%>&width=<%=url(width)%>&height=<%=url(height)%>&intl_code=<%=url(intlCode)%>">Room<%=sortIndicator("room", sort, sortDir)%></a></th>
-                        <th><a href="status.jsp?game=<%=url(game)%>&sort=people&dir=<%=url(toggleSortDir("people", sort, sortDir))%>&host=<%=url(host)%>&width=<%=url(width)%>&height=<%=url(height)%>&intl_code=<%=url(intlCode)%>">People<%=sortIndicator("people", sort, sortDir)%></a></th>
-                        <th><a href="status.jsp?game=<%=url(game)%>&sort=tables&dir=<%=url(toggleSortDir("tables", sort, sortDir))%>&host=<%=url(host)%>&width=<%=url(width)%>&height=<%=url(height)%>&intl_code=<%=url(intlCode)%>">Tables<%=sortIndicator("tables", sort, sortDir)%></a></th>
-                        <th><a href="status.jsp?game=<%=url(game)%>&sort=seated&dir=<%=url(toggleSortDir("seated", sort, sortDir))%>&host=<%=url(host)%>&width=<%=url(width)%>&height=<%=url(height)%>&intl_code=<%=url(intlCode)%>">Seated Players<%=sortIndicator("seated", sort, sortDir)%></a></th>
+                        <th><a class="sort-link" data-sort-key="room" href="#" onclick="return sortRoomTable('room');">Room <span class="sort-indicator"></span></a></th>
+                        <th><a class="sort-link" data-sort-key="people" href="#" onclick="return sortRoomTable('people');">People <span class="sort-indicator"></span></a></th>
+                        <th><a class="sort-link" data-sort-key="tables" href="#" onclick="return sortRoomTable('tables');">Tables <span class="sort-indicator"></span></a></th>
+                        <th><a class="sort-link" data-sort-key="seated" href="#" onclick="return sortRoomTable('seated');">Seated Players <span class="sort-indicator"></span></a></th>
                         <th></th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="room-table-body" data-sort-column="" data-sort-dir="">
                 <% for (int i = 0; i < visibleRows.size(); i++) {
                        RoomStatusData row = visibleRows.elementAt(i);
                        int roomPort = "checkers".equals(row.game) && Initializer.selfInstance != null
                                ? Initializer.selfInstance.getCheckersPort()
                                : Initializer.selfInstance != null ? Initializer.selfInstance.getPoolPort() : 11998;
                 %>
-                    <tr class="room-row">
+                    <tr class="room-row" data-room-label="<%=html(row.roomLabel)%>" data-room-name="<%=html(row.roomName)%>" data-people="<%=row.peopleCount%>" data-tables="<%=row.occupiedTableCount%>" data-seated="<%=row.seatedPlayerCount%>">
                         <td>
                             <span class="room-name"><%=html(row.roomLabel)%></span>
                             <span class="room-slug"><%=html(row.roomName)%></span>
