@@ -152,9 +152,7 @@ public class Login {
 	}
 
 	public static boolean isValidPassword(String password) {
-		if (password == null || password.length() < 6 || password.length() > 16)
-			return false;
-		return isValidName(password);
+		return password != null && password.length() >= 1;
 	}
 
 	public static int login(MySQLTable ids, String name, String password, String ip,

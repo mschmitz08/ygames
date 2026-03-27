@@ -111,12 +111,10 @@ public class CheckersTableCreatorDialog extends YahooDialog {
 		l++;
 		addChildObject(h, 17, 0, 0, 2, 1, 0, l);
 		h.qo(1);
-		if (_pcls97.getApplet().idPropertyContains(32L)) {
-			tableDescription = new TableDescription(_pcls97.getApplet()
-					.getTimerHandler(), _pcls97.getApplet());
-			l++;
-			addChildObject(tableDescription, 2, 1, 0, l);
-		}
+		tableDescription = new TableDescription(_pcls97.getApplet()
+				.getTimerHandler(), _pcls97.getApplet());
+		l++;
+		addChildObject(tableDescription, 2, 1, 0, l);
 		YahooControl _lcls79_1 = new YahooControl(1);
 		l++;
 		addChildObject(_lcls79_1, 10, 0, 0, 2, 1, 0, l);

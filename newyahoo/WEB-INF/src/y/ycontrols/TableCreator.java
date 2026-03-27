@@ -35,8 +35,10 @@ public class TableCreator {
 	}
 
 	public void createDialog() {
-		if (getApplet().idPropertyContains(32L))
+		if (true) {
 			yahooDialog = new TableLabelDialog(this, container);
+			return;
+		}
 		makeTable();
 	}
 

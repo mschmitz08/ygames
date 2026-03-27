@@ -94,11 +94,9 @@ class PoolTableCreatorDialog extends YahooDialog {
 		h.addChildObject(i, 1);
 		addChildObject(h, 17, 0, 0, 2, 1, 0, 3);
 		h.qo(1);
-		if (_pcls97.getApplet().idPropertyContains(32L)) {
-			ptc_o = new TableDescription(_pcls97.getApplet().getTimerHandler(),
-					_pcls97.getApplet());
-			addChildObject(ptc_o, 2, 1, 0, 6);
-		}
+		ptc_o = new TableDescription(_pcls97.getApplet().getTimerHandler(),
+				_pcls97.getApplet());
+		addChildObject(ptc_o, 2, 1, 0, 6);
 		YahooControl _lcls79_1 = new YahooControl(1);
 		addChildObject(_lcls79_1, 10, 0, 0, 2, 1, 0, 7);
 		_lcls79_1.addChildObject(l, 0, 0, 2);

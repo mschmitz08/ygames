@@ -233,7 +233,7 @@ public abstract class YahooProfileId {
 	}
 
 	public boolean isAllStarMemberShip() {
-		return flags != 192;
+		return true;
 	}
 
 	/**
