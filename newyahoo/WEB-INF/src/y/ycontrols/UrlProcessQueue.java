@@ -71,27 +71,7 @@ public class UrlProcessQueue implements Runnable, ProcessHandler {
 				else {
 					url = new URL(item.url);
 				}
-				URLConnection urlconnection = url.openConnection();
-				if (urlconnection instanceof HttpURLConnection) {
-					HttpURLConnection http = (HttpURLConnection) urlconnection;
-					http.setRequestMethod(item.method != null ? item.method : "GET");
-					if (item.body != null && item.body.length > 0) {
-						http.setDoOutput(true);
-						if (item.contentType != null)
-							http.setRequestProperty("Content-Type",
-									item.contentType);
-						OutputStream output = null;
-						try {
-							output = http.getOutputStream();
-							output.write(item.body);
-							output.flush();
-						}
-						finally {
-							if (output != null)
-								output.close();
-						}
-					}
-				}
+				URLConnection urlconnection = openConnection(url, item);
 				StringBuffer stringbuffer = new StringBuffer();
 				InputStream input = null;
 				try {
@@ -160,5 +140,66 @@ public class UrlProcessQueue implements Runnable, ProcessHandler {
 	public synchronized void stop() {
 		stoped = true;
 		notify();
+	}
+
+	private URLConnection openConnection(URL url, UrlProcessEntry item)
+			throws IOException {
+		URL currentUrl = url;
+		String method = item.method != null ? item.method : "GET";
+		byte[] body = item.body;
+		for (int redirects = 0; redirects < 5; redirects++) {
+			URLConnection urlconnection = currentUrl.openConnection();
+			if (!(urlconnection instanceof HttpURLConnection)) {
+				configureConnection(urlconnection, item.contentType, body, method);
+				return urlconnection;
+			}
+			HttpURLConnection http = (HttpURLConnection) urlconnection;
+			http.setInstanceFollowRedirects(false);
+			configureConnection(http, item.contentType, body, method);
+			int responseCode = http.getResponseCode();
+			if (!isRedirect(responseCode))
+				return http;
+			String location = http.getHeaderField("Location");
+			http.disconnect();
+			if (location == null || location.length() == 0)
+				throw new IOException("HTTP redirect without Location");
+			currentUrl = new URL(currentUrl, location);
+			if (responseCode == HttpURLConnection.HTTP_SEE_OTHER) {
+				method = "GET";
+				body = null;
+			}
+		}
+		throw new IOException("Too many HTTP redirects");
+	}
+
+	private void configureConnection(URLConnection urlconnection,
+			String contentType, byte[] body, String method) throws IOException {
+		if (urlconnection instanceof HttpURLConnection) {
+			HttpURLConnection http = (HttpURLConnection) urlconnection;
+			http.setRequestMethod(method);
+			http.setUseCaches(false);
+		}
+		if (body != null && body.length > 0) {
+			urlconnection.setDoOutput(true);
+			if (contentType != null)
+				urlconnection.setRequestProperty("Content-Type", contentType);
+			OutputStream output = null;
+			try {
+				output = urlconnection.getOutputStream();
+				output.write(body);
+				output.flush();
+			}
+			finally {
+				if (output != null)
+					output.close();
+			}
+		}
+	}
+
+	private boolean isRedirect(int responseCode) {
+		return responseCode == HttpURLConnection.HTTP_MOVED_PERM
+				|| responseCode == HttpURLConnection.HTTP_MOVED_TEMP
+				|| responseCode == HttpURLConnection.HTTP_SEE_OTHER
+				|| responseCode == 307 || responseCode == 308;
 	}
 }

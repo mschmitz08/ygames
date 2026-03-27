@@ -166,6 +166,20 @@
         }
         return summary;
     }
+
+    private String toggleSortDir(String sortKey, String activeSort, String activeDir) {
+        if (sortKey == null)
+            sortKey = "room";
+        if (sortKey.equals(activeSort) && !"desc".equalsIgnoreCase(activeDir))
+            return "desc";
+        return "asc";
+    }
+
+    private String sortIndicator(String sortKey, String activeSort, String activeDir) {
+        if (sortKey == null || !sortKey.equals(activeSort))
+            return "";
+        return "desc".equalsIgnoreCase(activeDir) ? " \u2193" : " \u2191";
+    }
 %>
 <%
     String game = request.getParameter("game");
@@ -185,6 +199,12 @@
         height = "900";
 
     String roomOverride = request.getParameter("room");
+    String sort = request.getParameter("sort");
+    if (!"people".equals(sort) && !"tables".equals(sort) && !"seated".equals(sort))
+        sort = "room";
+    String sortDir = request.getParameter("dir");
+    if (!"desc".equalsIgnoreCase(sortDir))
+        sortDir = "asc";
     String intlCode = request.getParameter("intl_code");
     if ((intlCode == null || intlCode.trim().length() == 0)) {
         Cookie[] cookies = request.getCookies();
@@ -222,6 +242,30 @@
     }
 
     Vector<RoomStatusData> visibleRows = "checkers".equals(game) ? checkersRows : poolRows;
+    Collections.sort(visibleRows, new Comparator<RoomStatusData>() {
+        public int compare(RoomStatusData left, RoomStatusData right) {
+            int result = 0;
+            if ("people".equals(sort))
+                result = left.peopleCount - right.peopleCount;
+            else if ("tables".equals(sort))
+                result = left.occupiedTableCount - right.occupiedTableCount;
+            else if ("seated".equals(sort))
+                result = left.seatedPlayerCount - right.seatedPlayerCount;
+            else {
+                String leftLabel = left.roomLabel == null ? "" : left.roomLabel.toLowerCase();
+                String rightLabel = right.roomLabel == null ? "" : right.roomLabel.toLowerCase();
+                result = leftLabel.compareTo(rightLabel);
+            }
+
+            if (result == 0) {
+                String leftName = left.roomName == null ? "" : left.roomName.toLowerCase();
+                String rightName = right.roomName == null ? "" : right.roomName.toLowerCase();
+                result = leftName.compareTo(rightName);
+            }
+
+            return "desc".equalsIgnoreCase(sortDir) ? -result : result;
+        }
+    });
 %>
 <html>
 <head>
@@ -307,7 +351,7 @@ body {
 .summary-stat {
     padding: 12px;
     border-radius: 14px;
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(255, 248, 235, 0.12);
 }
 .summary-label {
     display: block;
@@ -315,11 +359,13 @@ body {
     font-size: 11px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: #c9b792;
+    color: #2f2214;
+    font-weight: bold;
 }
 .summary-value {
     display: block;
     font-size: 24px;
+    color: #19120b;
 }
 .panel {
     padding: 28px 30px 30px 30px;
@@ -373,7 +419,15 @@ body {
     font-size: 12px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: #6d5639;
+    color: #4c3722;
+    font-weight: bold;
+}
+.room-table th a {
+    color: inherit;
+    text-decoration: none;
+}
+.room-table th a:hover {
+    color: #23170f;
 }
 .room-table td {
     padding: 14px 0;
@@ -397,6 +451,8 @@ body {
     border-radius: 999px;
     text-align: center;
     background: rgba(32, 49, 77, 0.1);
+    color: #20140d;
+    font-weight: bold;
 }
 .launch-link {
     display: inline-block;
@@ -505,10 +561,10 @@ body {
             <table class="room-table">
                 <thead>
                     <tr>
-                        <th>Room</th>
-                        <th>People</th>
-                        <th>Tables</th>
-                        <th>Seated Players</th>
+                        <th><a href="status.jsp?game=<%=url(game)%>&sort=room&dir=<%=url(toggleSortDir("room", sort, sortDir))%>&host=<%=url(host)%>&width=<%=url(width)%>&height=<%=url(height)%>&intl_code=<%=url(intlCode)%>">Room<%=sortIndicator("room", sort, sortDir)%></a></th>
+                        <th><a href="status.jsp?game=<%=url(game)%>&sort=people&dir=<%=url(toggleSortDir("people", sort, sortDir))%>&host=<%=url(host)%>&width=<%=url(width)%>&height=<%=url(height)%>&intl_code=<%=url(intlCode)%>">People<%=sortIndicator("people", sort, sortDir)%></a></th>
+                        <th><a href="status.jsp?game=<%=url(game)%>&sort=tables&dir=<%=url(toggleSortDir("tables", sort, sortDir))%>&host=<%=url(host)%>&width=<%=url(width)%>&height=<%=url(height)%>&intl_code=<%=url(intlCode)%>">Tables<%=sortIndicator("tables", sort, sortDir)%></a></th>
+                        <th><a href="status.jsp?game=<%=url(game)%>&sort=seated&dir=<%=url(toggleSortDir("seated", sort, sortDir))%>&host=<%=url(host)%>&width=<%=url(width)%>&height=<%=url(height)%>&intl_code=<%=url(intlCode)%>">Seated Players<%=sortIndicator("seated", sort, sortDir)%></a></th>
                         <th></th>
                     </tr>
                 </thead>

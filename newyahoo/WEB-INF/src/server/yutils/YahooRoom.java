@@ -211,6 +211,10 @@ public abstract class YahooRoom {
 
 	public void ban(String name, int ban_type, Timestamp ban_date,
 			int ban_time, String reason, String admin) {
+		if (ban_type == IgnoredEntry.BAN)
+			ban_time = YahooProfileId.clampBanMinutes(ban_time);
+		else if (ban_type == IgnoredEntry.MUTE)
+			ban_time = YahooProfileId.clampMuteMinutes(ban_time);
 		MySQLTable ignoreds_table = getIgnoredsTable();
 
 		ResultSet rs = null;
@@ -595,11 +599,11 @@ public abstract class YahooRoom {
 		String idName = id.getName();
 		YahooConnectionId id1 = idTable.get(name);
 		if (id1 == null) {
-			alert(id, name + " não foi encontrado no servidor");
+			alert(id, name + " nï¿½o foi encontrado no servidor");
 			return false;
 		}
 		if (id1.isDeclineAllInviations()) {
-			alert(id, name + " não está aceitando convites");
+			alert(id, name + " nï¿½o estï¿½ aceitando convites");
 			return false;
 		}
 		if (id1.isIgnored(idName))
@@ -750,13 +754,13 @@ public abstract class YahooRoom {
 		ids.readLock();
 		try {
 			if (!ids.contains(name)) {
-				alert(id, name + " não está na sala");
+				alert(id, name + " nï¿½o estï¿½ na sala");
 				return;
 			}
 			YahooConnectionId id1 = ids.elementAt(ids.indexOf(name));
 			Vector<YahooTable> idTables = id1.getTables();
 			if (idTables.size() == 0) {
-				alert(id, name + " está na sala");
+				alert(id, name + " estï¿½ na sala");
 				return;
 			}
 			doJoinTable(id, idTables.elementAt(0).getNumber());

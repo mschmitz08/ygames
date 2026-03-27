@@ -28,6 +28,11 @@ import common.yutils.YahooUtils;
 
 public class YahooConnectionId implements YahooProfileIdListener, DataOutput {
 
+	private static final int				CHAT_FLOOD_COUNT		= 60;
+	private static final long			CHAT_FLOOD_INTERVAL	= 3000;
+	private static final int				BURST_FLOOD_COUNT	= 150;
+	private static final long			BURST_FLOOD_INTERVAL	= 2000;
+
 	private YahooSocket					socket;
 	private YahooRoom					room;
 	private Vector<YahooTable>			tables;
@@ -77,22 +82,22 @@ public class YahooConnectionId implements YahooProfileIdListener, DataOutput {
 		setState(0);
 		tables = new Vector<YahooTable>();
 
-		chatFloodRecord = new FloodRecord(3, 2000);
-		privateChatFloodRecord = new FloodRecord(3, 2000);
-		pingFloodRecord = new FloodRecord(9, 1000);
-		pongFloodRecord = new FloodRecord(9, 1000);
-		joinTableFloodRecord = new FloodRecord(3, 1000);
-		sitFloodRecord = new FloodRecord(9, 1000);
-		changeTablePrivacyFloodRecord = new FloodRecord(9, 1000);
-		declineInviteFloodRecord = new FloodRecord(9, 1000);
-		inviteFloodRecord = new FloodRecord(9, 1000);
-		setAvatarFloodRecord = new FloodRecord(9, 1000);
-		changeIdPropertyFloodRecord = new FloodRecord(3, 1000);
-		cancelRequestFloodRecord = new FloodRecord(9, 1000);
-		cancelResponseFloodRecord = new FloodRecord(9, 1000);
-		tableChatFloodRecord = new FloodRecord(3, 2000);
-		focusFloodRecord = new FloodRecord(9, 1000);
-		startFloodRecord = new FloodRecord(9, 1000);
+		chatFloodRecord = new FloodRecord(CHAT_FLOOD_COUNT, CHAT_FLOOD_INTERVAL);
+		privateChatFloodRecord = new FloodRecord(CHAT_FLOOD_COUNT, CHAT_FLOOD_INTERVAL);
+		pingFloodRecord = new FloodRecord(BURST_FLOOD_COUNT, BURST_FLOOD_INTERVAL);
+		pongFloodRecord = new FloodRecord(BURST_FLOOD_COUNT, BURST_FLOOD_INTERVAL);
+		joinTableFloodRecord = new FloodRecord(CHAT_FLOOD_COUNT, CHAT_FLOOD_INTERVAL);
+		sitFloodRecord = new FloodRecord(BURST_FLOOD_COUNT, BURST_FLOOD_INTERVAL);
+		changeTablePrivacyFloodRecord = new FloodRecord(BURST_FLOOD_COUNT, BURST_FLOOD_INTERVAL);
+		declineInviteFloodRecord = new FloodRecord(BURST_FLOOD_COUNT, BURST_FLOOD_INTERVAL);
+		inviteFloodRecord = new FloodRecord(BURST_FLOOD_COUNT, BURST_FLOOD_INTERVAL);
+		setAvatarFloodRecord = new FloodRecord(BURST_FLOOD_COUNT, BURST_FLOOD_INTERVAL);
+		changeIdPropertyFloodRecord = new FloodRecord(CHAT_FLOOD_COUNT, CHAT_FLOOD_INTERVAL);
+		cancelRequestFloodRecord = new FloodRecord(BURST_FLOOD_COUNT, BURST_FLOOD_INTERVAL);
+		cancelResponseFloodRecord = new FloodRecord(BURST_FLOOD_COUNT, BURST_FLOOD_INTERVAL);
+		tableChatFloodRecord = new FloodRecord(CHAT_FLOOD_COUNT, CHAT_FLOOD_INTERVAL);
+		focusFloodRecord = new FloodRecord(BURST_FLOOD_COUNT, BURST_FLOOD_INTERVAL);
+		startFloodRecord = new FloodRecord(BURST_FLOOD_COUNT, BURST_FLOOD_INTERVAL);
 	}
 
 	/*
@@ -106,7 +111,7 @@ public class YahooConnectionId implements YahooProfileIdListener, DataOutput {
 	public void actionBan(YahooProfileId sender, Timestamp ban_date, int time,
 			String reason) {
 		room.alert(this, "You are banned from the room "
-				+ (time == -1 ? "forever" : " per " + time / 60 + " minutes")
+				+ (time == -1 ? "forever" : " for " + time + " minute" + (time == 1 ? "" : "s"))
 				+ " (" + reason + ")");
 		close();
 	}
@@ -122,7 +127,7 @@ public class YahooConnectionId implements YahooProfileIdListener, DataOutput {
 	public void actionMute(YahooProfileId sender, Timestamp mute_date,
 			int time, String reason) {
 		room.blueMessage(this, "Your chat are blocked "
-				+ (time == -1 ? "forever" : " per " + time / 60 + " minutes")
+				+ (time == -1 ? "forever" : " for " + time + " minute" + (time == 1 ? "" : "s"))
 				+ " (" + reason + ")");
 	}
 
@@ -484,7 +489,7 @@ public class YahooConnectionId implements YahooProfileIdListener, DataOutput {
 	}
 
 	/**
-	 * @return rating verdadeiro (usado quando for provisÛrio)
+	 * @return rating verdadeiro (usado quando for provis√≥rio)
 	 */
 	public int getRating() {
 		if (profileId != null && profileId.getTotal() >= 20)
@@ -493,7 +498,7 @@ public class YahooConnectionId implements YahooProfileIdListener, DataOutput {
 	}
 
 	/**
-	 * @return a pontuaÁ„o verdadeira (sem verificar se È provisÛrio ou n„o)
+	 * @return a pontua√ß√£o verdadeira (sem verificar se √© provis√≥rio ou n√£o)
 	 */
 	public int getRealRating() {
 		if (profileId != null)

@@ -16,6 +16,9 @@ import data.MySQLTable;
  */
 public abstract class YahooProfileId {
 
+	public static final int					MAX_BAN_MINUTES		= 5;
+	public static final int					MAX_MUTE_MINUTES	= 5;
+
 	private String								name;
 	private int									rating;
 	private int									total;
@@ -271,6 +274,7 @@ public abstract class YahooProfileId {
 
 	public void notifyBan(Timestamp ban_date, int time, String reason,
 			String admin) {
+		time = clampBanMinutes(time);
 		if (ban_type != IgnoredEntry.BAN)
 			ignoreds_table.assyncInsert(new Object[] { name, ban_date,
 					IgnoredEntry.BAN, time, reason, admin, ip });
@@ -311,19 +315,20 @@ public abstract class YahooProfileId {
 
 	public void notifyMute(Timestamp mute_date, int time, String reason,
 			String admin) {
+		time = clampMuteMinutes(time);
 		if (ban_type != IgnoredEntry.MUTE)
-			ignoreds_table.assyncInsert(new Object[] { name, ban_date,
+			ignoreds_table.assyncInsert(new Object[] { name, mute_date,
 					IgnoredEntry.MUTE, time, reason, admin, ip });
 		else
 			ignoreds_table.assyncUpdate(new String[] { "name" },
 					new Object[] { name }, new String[] { "ban_date",
 							"ban_type", "ban_time", "reason", "admin", "ip" },
-					new Object[] { ban_date, IgnoredEntry.MUTE, time, reason,
+					new Object[] { mute_date, IgnoredEntry.MUTE, time, reason,
 							admin, ip });
 
 		ignoreds_table.assyncUpdate(new String[] { "ip" }, new Object[] { ip },
 				new String[] { "ban_date", "ban_type", "ban_time", "reason",
-						"admin" }, new Object[] { ban_date, IgnoredEntry.MUTE,
+						"admin" }, new Object[] { mute_date, IgnoredEntry.MUTE,
 						time, reason, admin });
 
 		ban_type = IgnoredEntry.MUTE;
@@ -333,6 +338,22 @@ public abstract class YahooProfileId {
 
 		for (int i = 0; i < listeners.size(); i++)
 			listeners.elementAt(i).actionMute(this, mute_date, time, reason);
+	}
+
+	public static int clampBanMinutes(int time) {
+		if (time < 0)
+			return time;
+		if (time == 0)
+			return MAX_BAN_MINUTES;
+		return Math.min(time, MAX_BAN_MINUTES);
+	}
+
+	public static int clampMuteMinutes(int time) {
+		if (time < 0)
+			return time;
+		if (time == 0)
+			return MAX_MUTE_MINUTES;
+		return Math.min(time, MAX_MUTE_MINUTES);
 	}
 
 	/**

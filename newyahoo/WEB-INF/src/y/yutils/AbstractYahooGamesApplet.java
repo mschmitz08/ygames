@@ -582,6 +582,17 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 		}
 	}
 
+	private String buildDefaultCredentialUrl(String endpoint) {
+		try {
+			URL documentBase = getDocumentBase();
+			if (documentBase != null)
+				return new URL(documentBase, "/ny/" + endpoint).toExternalForm();
+		}
+		catch (MalformedURLException _ex) {
+		}
+		return "https://retroplayhub.com/ny/" + endpoint;
+	}
+
 	@Override
 	protected boolean handleUrlProcessEntry(UrlProcessEntry entry) {
 		if (APPLET_LOGIN_REQUEST.equals(entry.obj)) {
@@ -1417,13 +1428,13 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 		host = getParameter("host");
 		login_url = getParameter("login_url");
 		if (login_url == null || login_url.length() == 0)
-			login_url = "http://127.0.0.1:8080/ny/applet_login.jsp";
+			login_url = buildDefaultCredentialUrl("applet_login.jsp");
 		register_url = getParameter("register_url");
 		if (register_url == null || register_url.length() == 0)
-			register_url = "http://127.0.0.1:8080/ny/applet_register.jsp";
+			register_url = buildDefaultCredentialUrl("applet_register.jsp");
 		change_password_url = getParameter("change_password_url");
 		if (change_password_url == null || change_password_url.length() == 0)
-			change_password_url = "http://127.0.0.1:8080/ny/applet_change_password.jsp";
+			change_password_url = buildDefaultCredentialUrl("applet_change_password.jsp");
 		account_mode = getParameter("account_mode");
 		btnExit = new YahooButton(lookupString(0x665000f9));// Exit
 		// Games
