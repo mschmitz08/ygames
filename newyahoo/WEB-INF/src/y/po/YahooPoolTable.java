@@ -10,9 +10,9 @@ import java.io.IOException;
 import java.util.Vector;
 
 import y.controls.YahooComponent;
+import y.controls.YahooComboBox;
 import y.controls.YahooControl;
 import y.controls.YahooLabel;
-import y.controls.YahooTextBox;
 import y.utils.Formater;
 import y.utils.TimerEngine;
 import y.utils.TimerEntry;
@@ -90,8 +90,7 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 	YVector			ypt_I;
 	PoolData		J;
 	String			state;
-	YahooLabel		lblTime;
-	YahooTextBox	txtTime;
+	YahooComboBox	cmbGhostStyle;
 
 	public YahooPoolTable() {
 		cueTime = 0L;
@@ -759,12 +758,37 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		}
 	}
 
+	public void applyGhostStyleSelection() {
+		if (cmbGhostStyle != null && poolArea != null && poolAimer != null)
+			switch (cmbGhostStyle.getItemIndex()) {
+			case 0:
+				poolAimer.setGhostStyle(Aim.STYLE_OUTLINE);
+				break;
+
+			case 1:
+				poolAimer.setGhostStyle(Aim.STYLE_GREEN_OUTLINE);
+				break;
+
+			case 2:
+				poolAimer.setGhostStyle(Aim.STYLE_RED_OUTLINE);
+				break;
+
+			default:
+				poolAimer.setGhostStyle(Aim.STYLE_GHOST_IMAGE);
+				break;
+			}
+	}
+
 	@Override
 	public void rq() {
-		lblTime = new YahooLabel("Time");
-		txtTime = new YahooTextBox(getTimerHandler());
-		txtTime.setText("4000");
+		cmbGhostStyle = new YahooComboBox(getTimerHandler());
+		cmbGhostStyle.setText("White");
+		cmbGhostStyle.setText("Green");
+		cmbGhostStyle.setText("Red");
+		cmbGhostStyle.setText("Ghost");
 		super.rq();
+		cmbGhostStyle.fn(3);
+		applyGhostStyleSelection();
 	}
 
 	public void Sc() {

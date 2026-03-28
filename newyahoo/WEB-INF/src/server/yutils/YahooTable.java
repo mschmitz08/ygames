@@ -675,6 +675,12 @@ public abstract class YahooTable implements GameHandler {
 
 	}
 
+	protected long getMinimumRatedGameDurationMs() {
+		if (this instanceof server.po.YahooPoolTable)
+			return 0L;
+		return 30000L;
+	}
+
 	public void handleStop(YData data) {
 		finishedGameCount++;
 
@@ -685,7 +691,7 @@ public abstract class YahooTable implements GameHandler {
 			return;
 		if (wonTurn == null)
 			return;
-		if (System.currentTimeMillis() - currGameLogEntry.getTime() < 30000) {
+		if (System.currentTimeMillis() - currGameLogEntry.getTime() < getMinimumRatedGameDurationMs()) {
 			doTableLog("This game was too short for rating");
 			return;
 		}

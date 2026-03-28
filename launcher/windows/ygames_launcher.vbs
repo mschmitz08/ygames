@@ -68,6 +68,7 @@ ParseArguments
 ConfigureSitePaths
 EnsureSiteBundle
 LoadLauncherSettings
+SyncLaunchMetadataFromWeb
 
 If ShouldWarnPortableLaunch() Then
     ShowPortableLaunchWarning
@@ -90,11 +91,17 @@ If expectedClientHash <> "" Then
         End If
     End If
     If localClientHash = "" Or LCase(localClientHash) <> LCase(expectedClientHash) Then
-        If TryRefreshClientJarFromWeb(expectedClientHash) Then
+        Dim refreshedClientHash
+        refreshedClientHash = TryRefreshClientJarFromWeb(expectedClientHash)
+        If refreshedClientHash <> "" Then
+            expectedClientHash = refreshedClientHash
             localClientHash = GetFileSha256(fso.BuildPath(appDir, "client.jar"))
         End If
     End If
     If localClientHash = "" Or LCase(localClientHash) <> LCase(expectedClientHash) Then
+        If TryRefreshLauncherFromWeb(launcherVersion) Then
+            WScript.Quit 0
+        End If
         ShowClientMismatch expectedClientHash, localClientHash
         WScript.Quit 1
     End If
@@ -155,6 +162,48 @@ Sub ParseArguments()
     Else
         ParseNamedArgs
     End If
+End Sub
+
+Sub SyncLaunchMetadataFromWeb()
+    If webBase = "" Then
+        Exit Sub
+    End If
+
+    Dim stateUrl
+    stateUrl = BuildWebUrl("/launcher_state.jsp")
+    If stateUrl = "" Then
+        Exit Sub
+    End If
+
+    Dim stateText
+    stateText = DownloadText(stateUrl)
+    If stateText = "" Then
+        Exit Sub
+    End If
+
+    stateText = Replace(stateText, vbCrLf, vbLf)
+    Dim lines
+    lines = Split(stateText, vbLf)
+
+    Dim line
+    For Each line In lines
+        line = Trim(line)
+        If line <> "" And Left(line, 1) <> "#" Then
+            Dim eqPos
+            eqPos = InStr(line, "=")
+            If eqPos > 0 Then
+                Dim key
+                Dim value
+                key = LCase(Trim(Left(line, eqPos - 1)))
+                value = Trim(Mid(line, eqPos + 1))
+                If key = "launcher_version" And value <> "" Then
+                    launcherVersion = value
+                ElseIf key = "client_hash" And value <> "" Then
+                    expectedClientHash = value
+                End If
+            End If
+        End If
+    Next
 End Sub
 
 Sub ParseNamedArgs()
@@ -524,7 +573,7 @@ Function ReadLauncherVersion()
 End Function
 
 Function TryRefreshClientJarFromWeb(requiredHash)
-    TryRefreshClientJarFromWeb = False
+    TryRefreshClientJarFromWeb = ""
 
     If webBase = "" Then
         Exit Function
@@ -557,11 +606,6 @@ Function TryRefreshClientJarFromWeb(requiredHash)
         Exit Function
     End If
 
-    If requiredHash <> "" And LCase(downloadedHash) <> LCase(requiredHash) Then
-        SafeDeleteFile tempJarPath
-        Exit Function
-    End If
-
     Dim targetJarPath
     targetJarPath = fso.BuildPath(appDir, "client.jar")
     If Not ReplaceClientJarWithRetry(tempJarPath, targetJarPath) Then
@@ -569,11 +613,13 @@ Function TryRefreshClientJarFromWeb(requiredHash)
         Exit Function
     End If
 
-    TryRefreshClientJarFromWeb = True
+    TryRefreshClientJarFromWeb = downloadedHash
 End Function
 
 Function ReplaceClientJarWithRetry(tempJarPath, targetJarPath)
     ReplaceClientJarWithRetry = False
+    Dim triedAutoClose
+    triedAutoClose = False
 
     Do
         On Error Resume Next
@@ -596,17 +642,25 @@ Function ReplaceClientJarWithRetry(tempJarPath, targetJarPath)
         Err.Clear
         On Error GoTo 0
 
+        If Not triedAutoClose Then
+            triedAutoClose = True
+            TryCloseRunningAppletProcesses
+            WScript.Sleep 1200
+        Else
         Dim response
         response = MsgBox( _
             "The launcher is having trouble replacing client.jar." & vbCrLf & vbCrLf & _
-            "The game may still be open, or another process may be using the file." & vbCrLf & vbCrLf & _
-            "Please close the game window and then choose Retry." & vbCrLf & vbCrLf & _
+            "The launcher already tried closing the open game window automatically, but the file is still in use." & vbCrLf & vbCrLf & _
+            "Please close anything that still has the game open and then choose Retry." & vbCrLf & vbCrLf & _
             "Launcher folder:" & vbCrLf & appDir & vbCrLf & vbCrLf & _
             "Windows reported:" & vbCrLf & errorMessage, _
             vbExclamation + vbRetryCancel, "Y! Games Launcher Update")
 
         If response <> vbRetry Then
             Exit Function
+        End If
+            TryCloseRunningAppletProcesses
+            WScript.Sleep 1200
         End If
     Loop
 End Function
@@ -775,6 +829,7 @@ Function ScheduleLauncherSelfUpdate(updateRoot)
     On Error GoTo 0
 
     file.WriteLine "@echo off"
+    file.WriteLine "taskkill /F /IM appletviewer.exe /T > nul 2>&1"
     file.WriteLine "ping 127.0.0.1 -n 2 > nul"
     file.WriteLine "xcopy /E /I /Y " & Quote(fso.BuildPath(updateRoot, "*")) _
         & " " & Quote(baseDir & "\") & " > nul"
@@ -817,6 +872,28 @@ Function DownloadBinaryFile(url, destinationPath)
     DownloadBinaryFile = True
 End Function
 
+Function DownloadText(url)
+    DownloadText = ""
+
+    Dim http
+    Set http = CreateObject("MSXML2.XMLHTTP")
+    On Error Resume Next
+    http.Open "GET", url, False
+    http.Send
+    If Err.Number <> 0 Then
+        Err.Clear
+        On Error GoTo 0
+        Exit Function
+    End If
+    On Error GoTo 0
+
+    If http.Status < 200 Or http.Status >= 300 Then
+        Exit Function
+    End If
+
+    DownloadText = http.responseText
+End Function
+
 Function BuildWebUrl(relativePath)
     Dim normalizedBase
     normalizedBase = webBase
@@ -849,6 +926,12 @@ Sub SafeDeleteFolder(folderPath)
     If fso.FolderExists(folderPath) Then
         fso.DeleteFolder folderPath, True
     End If
+    On Error GoTo 0
+End Sub
+
+Sub TryCloseRunningAppletProcesses()
+    On Error Resume Next
+    shell.Run "cmd.exe /c taskkill /F /IM appletviewer.exe /T >nul 2>&1", 0, True
     On Error GoTo 0
 End Sub
 
@@ -1106,7 +1189,7 @@ Sub ShowClientMismatch(requiredHash, localHash)
     message = "This launcher's bundled game files do not match what the website expects." & vbCrLf & vbCrLf & _
         "Expected client hash: " & requiredHash & vbCrLf & _
         "Local client hash: " & localHash & vbCrLf & vbCrLf & _
-        "The launcher tried to refresh client.jar automatically, but the local files still do not match." & vbCrLf & _
+        "The launcher tried to refresh client.jar automatically and then attempted a full launcher refresh, but the local files still do not match." & vbCrLf & _
         "Please download the latest launcher package and run install_launcher.bat again." & vbCrLf & vbCrLf & _
         "Launcher folder:" & vbCrLf & baseDir
     MsgBox message, vbExclamation, "Y! Games Launcher Update Needed"

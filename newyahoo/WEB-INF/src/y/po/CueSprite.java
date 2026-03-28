@@ -747,14 +747,7 @@ public class CueSprite extends YahooComponent implements YData {
 		posY = j1;
 		super.setCoords(cs_J + posX, K + posY);
 		if (m_selectedBall != null && isActive()) {
-			PoolBall selectedBall = PoolAimer
-					.cloneBall((PoolBall) m_selectedBall);
-			YIPoint cueDist = getPos(false).copy();
-			YIPoint englishDist = poolArea.english.getPos().copy();
-			selectedBall.start(cueDist, englishDist, new YIPoint(), -1);
-			selectedBall.vel.setFrom(new YIPoint(m_cue.x, m_cue.y));
-			selectedBall.vel.neg();
-			cs_y.computeAim(selectedBall);
+			cs_y.computeAim((PoolBall) m_selectedBall, m_cue);
 		}
 		else
 			cs_y.clearAim();

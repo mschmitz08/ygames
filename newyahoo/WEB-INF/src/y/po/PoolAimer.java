@@ -22,6 +22,7 @@ import common.po.YLine;
 import common.po.YIPoint;
 import common.po.YPoint;
 import common.po.YRectangle;
+import common.po.YIVector;
 import common.po.YVector;
 
 // Referenced classes of package y.po:
@@ -59,6 +60,7 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 	YPoint				aimBallInitPoint;
 	int					m;
 	YRectangle			playAreaBalls;
+	YRectangle			playAreaAim;
 	int					pa_o;
 	int					pa_p;
 	int					pa_q;
@@ -127,6 +129,9 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 		aimBallInitPoint = (YPoint) table.getProperty("AIM_BALL_INIT_POINT");
 		m = 228;
 		playAreaBalls = (YRectangle) table.getProperty("PLAY_AREA_BALLS");
+		playAreaAim = (YRectangle) table.getProperty("PLAY_AREA_AIM");
+		if (playAreaAim == null)
+			playAreaAim = playAreaBalls;
 		pa_o = 50;
 		pa_p = 470;
 		pa_q = 317;
@@ -409,124 +414,150 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 	}
 
 	public void computeAim(PoolBall selectedBall) {
+		computeAim(selectedBall, selectedBall == null ? null : selectedBall.vel.toYPoint());
+	}
+
+	public void computeAim(PoolBall selectedBall, YVector cueVector) {
 		aim.clear();
 		colBalls.removeAllElements();
 		ballColided = false;
 		index = -1;
 		firstColl.setCoords(0, 0);
 
-		if (selectedBall == null || selectedBall.inSlot()) {
+		if (selectedBall == null || selectedBall.inSlot() || cueVector == null) {
+			aim.invalidate();
+			return;
+		}
+		YIPoint startPoint = new YIPoint(selectedBall.a, selectedBall.b);
+		YPoint startFloatPoint = startPoint.toYVector();
+		YVector forwardVector = new YVector(-cueVector.x, -cueVector.y);
+		if (forwardVector.abs() <= 0.0001F) {
+			aim.invalidate();
+			return;
+		}
+		YPoint railFallback = extendToBounds(startFloatPoint, forwardVector);
+		PoolBall cueBall = cloneBall(selectedBall);
+		cueBall.vel.set(PoolMath.floatToYInt(cueVector.x), PoolMath.floatToYInt(cueVector.y));
+		cueBall.vel.neg();
+		cueBall.vel.versor();
+		cueBall.vel.mul(PoolMath.intToYInt(20));
+		if (cueBall.vel.abs() == 0) {
 			aim.invalidate();
 			return;
 		}
 
-		float cueX = selectedBall.getYIntX();
-		float cueY = selectedBall.getYIntY();
-		float dirX = PoolMath.yintToFloat(selectedBall.vel.a);
-		float dirY = PoolMath.yintToFloat(selectedBall.vel.b);
-		float dirLength = (float) Math.sqrt(dirX * dirX + dirY * dirY);
-		if (dirLength <= 0.0001F) {
-			aim.invalidate();
-			return;
+		int guideTimeToRail = PoolMath.n_1;
+		YIVector boundaryStep = cueBall.vel.je();
+		YIVector probe = new YIVector();
+		boundaryStep.versor();
+		for (int distance = 2; distance < 600; distance++) {
+			probe.setFrom(boundaryStep);
+			probe.mul(PoolMath.intToYInt(distance));
+			if (playAreaBalls.containsPoint(cueBall.a + probe.a, cueBall.b + probe.b))
+				continue;
+			guideTimeToRail = PoolMath.div(probe.abs(), cueBall.vel.abs());
+			break;
 		}
-		dirX /= dirLength;
-		dirY /= dirLength;
 
-		PoolBall hitBall = null;
-		float hitDistance = Float.MAX_VALUE;
-		float contactX = 0.0F;
-		float contactY = 0.0F;
-		float targetTravelX = 0.0F;
-		float targetTravelY = 0.0F;
-		float hitBallX = 0.0F;
-		float hitBallY = 0.0F;
-
+		int bestCollisionTime = PoolMath.n_1;
+		YIPoint savedPos = new YIPoint(cueBall.a, cueBall.b);
+		YIVector savedVel = cueBall.vel.je();
+		PoolBall collisionBall = null;
 		Vector<IBall> balls = table.getBallInPlayArea();
-		for (int i = 0; i < balls.size(); i++) {
-			IBall current = balls.elementAt(i);
-			if (current == null || current.getIndex() == selectedBall.getIndex() || current.inSlot())
-				continue;
-
-			float otherX = current.getYIntX();
-			float otherY = current.getYIntY();
-			float relX = otherX - cueX;
-			float relY = otherY - cueY;
-			float along = relX * dirX + relY * dirY;
-			if (along <= 0.0F)
-				continue;
-
-			float radius = PoolMath.yintToFloat(selectedBall.radius + current.getRadius());
-			float perpSq = relX * relX + relY * relY - along * along;
-			float radiusSq = radius * radius;
-			if (perpSq > radiusSq)
-				continue;
-
-			float offset = (float) Math.sqrt(Math.max(0.0D, radiusSq - perpSq));
-			float candidateDistance = along - offset;
-			if (candidateDistance < 0.0F || candidateDistance >= hitDistance)
-				continue;
-
-			hitDistance = candidateDistance;
-			contactX = cueX + dirX * candidateDistance;
-			contactY = cueY + dirY * candidateDistance;
-			hitBall = cloneBall((PoolBall) current);
-			index = current.getIndex();
-			hitBallX = otherX;
-			hitBallY = otherY;
-
-			float normalX = otherX - contactX;
-			float normalY = otherY - contactY;
-			float normalLength = (float) Math.sqrt(normalX * normalX + normalY * normalY);
-			if (normalLength > 0.0001F) {
-				targetTravelX = normalX / normalLength;
-				targetTravelY = normalY / normalLength;
+		cueBall.sliding = true;
+		cueBall.wX.set(0, 0);
+		cueBall.uncolide();
+		for (int tick = 0; tick < 600 && playAreaBalls.containsPoint(cueBall.a, cueBall.b); cueBall.nextPosition(), tick++) {
+			for (int i = 0; i < balls.size(); i++) {
+				IBall current = balls.elementAt(i);
+				if (current == null || current.getIndex() == selectedBall.getIndex() || current.inSlot())
+					continue;
+				PoolBall currentBall = (PoolBall) current;
+				int timeToBall = cueBall.timeToBall(currentBall);
+				if (timeToBall < bestCollisionTime && timeToBall > 0) {
+					bestCollisionTime = timeToBall;
+					collisionBall = currentBall;
+				}
 			}
+
+			if (bestCollisionTime < PoolMath.n_1) {
+				firstColl.setCoords(cueBall.a, cueBall.b);
+				cueBall.vel.mul(bestCollisionTime);
+				firstColl.add(cueBall.vel);
+				if (playAreaBalls.containsPoint(firstColl.a, firstColl.b)) {
+					ballColided = true;
+					index = collisionBall.getIndex();
+				}
+				break;
+			}
+			cueBall.add(cueBall.vel);
 		}
 
-		YPoint cueStart = new YPoint(cueX, cueY);
-		YLine cueLine;
-		YLine targetLine = new YLine();
+		cueBall.setCoords(savedPos);
+		cueBall.vel.setFrom(savedVel);
+
+		YLine cueLine = new YLine();
 		YLine deflectionLine = new YLine();
+		YLine targetLine = new YLine();
 		YPoint marker;
 
-		if (hitBall != null) {
-			ballColided = true;
-			firstColl.setCoords(PoolMath.floatToYInt(contactX), PoolMath.floatToYInt(contactY));
-			marker = new YPoint(contactX, contactY);
-			cueLine = new YLine((int) Math.rint(cueX), (int) Math.rint(cueY),
-					(int) Math.rint(contactX), (int) Math.rint(contactY));
-			float distanceScale = 1.0F - Math.min(0.6F, hitDistance / 220.0F * 0.6F);
-			float targetPreviewLength = 70.0F * distanceScale;
-			float deflectionPreviewLength = 55.0F * distanceScale;
-
-			YPoint targetStart = new YPoint(hitBallX, hitBallY);
-			YPoint targetEnd = extendDistance(targetStart, new YVector(targetTravelX, targetTravelY),
-					targetPreviewLength);
-			targetLine = new YLine();
-			targetLine.setCoords(targetStart, targetEnd);
-
-			float dot = dirX * targetTravelX + dirY * targetTravelY;
-			float cueDeflectX = dirX - targetTravelX * dot;
-			float cueDeflectY = dirY - targetTravelY * dot;
-			float cueDeflectLength = (float) Math.sqrt(cueDeflectX * cueDeflectX + cueDeflectY * cueDeflectY);
-			if (cueDeflectLength > 0.0001F) {
-				cueDeflectX /= cueDeflectLength;
-				cueDeflectY /= cueDeflectLength;
-				YPoint deflectStart = new YPoint(contactX, contactY);
-				YPoint deflectEnd = extendDistance(deflectStart, new YVector(cueDeflectX, cueDeflectY),
-						deflectionPreviewLength);
-				deflectionLine = new YLine();
-				deflectionLine.setCoords(deflectStart, deflectEnd);
-			}
+		if (!ballColided || collisionBall == null) {
+			cueBall.vel.mul(guideTimeToRail);
+			cueBall.add(cueBall.vel);
+			YPoint cueEndPoint = new YIPoint(cueBall.a, cueBall.b).toYVector();
+			if (cueEndPoint.distance(startFloatPoint) < 6F)
+				cueEndPoint = railFallback;
+			cueLine.setCoords(startFloatPoint, cueEndPoint);
+			marker = cueEndPoint;
 		}
 		else {
-			YPoint cueEnd = extendToBounds(cueStart, new YVector(dirX, dirY));
-			cueLine = new YLine();
-			cueLine.setCoords(cueStart, cueEnd);
-			marker = cueEnd;
+			PoolBall previewCollisionBall = cloneBall(collisionBall);
+			cueBall.setCoords(firstColl);
+			YPoint collisionPoint = cueBall.toYVector();
+			if (collisionPoint.distance(startFloatPoint) < 6F) {
+				cueLine.setCoords(startFloatPoint, railFallback);
+				marker = railFallback;
+				aim.add(cueLine, deflectionLine, targetLine, marker);
+				aim.invalidate();
+				return;
+			}
+			cueLine.setCoords(startFloatPoint, collisionPoint);
+			cueBall.vel.versor();
+			cueBall.vel.mul(0xa0000);
+			YIVector incomingVel = cueBall.vel.je();
+			cueBall.ov(previewCollisionBall, previewCollisionBall.vel);
+			previewCollisionBall.ov(cueBall, incomingVel.je());
+
+			int shotDistance = savedPos.distance(previewCollisionBall.a, previewCollisionBall.b);
+			int previewLength = pa_r;
+			if (shotDistance > PoolMath.intToYInt(40)) {
+				previewLength -= PoolMath.div(shotDistance - PoolMath.intToYInt(40), PoolMath.intToYInt(4));
+				if (previewLength < 0)
+					previewLength = 0;
+			}
+
+			YIVector cuePreview = cueBall.vel.je();
+			YIPoint cuePreviewEnd = new YIPoint(cueBall.a, cueBall.b);
+			if (cuePreview.abs() != 0) {
+				cuePreview.versor();
+				cuePreview.mul(previewLength);
+				cuePreviewEnd.add(cuePreview);
+			}
+			deflectionLine.setCoords(cueBall.toYVector(), cuePreviewEnd.toYVector());
+
+			YIVector objectPreview = previewCollisionBall.vel.je();
+			YIPoint objectPreviewEnd = new YIPoint(previewCollisionBall.a, previewCollisionBall.b);
+			if (objectPreview.abs() != 0) {
+				objectPreview.versor();
+				objectPreview.mul(previewLength);
+				objectPreviewEnd.add(objectPreview);
+			}
+			targetLine.setCoords(previewCollisionBall.toYVector(), objectPreviewEnd.toYVector());
+			previewCollisionBall.stop();
+			marker = collisionPoint;
 		}
 
-		aim.add(cueLine, targetLine, deflectionLine, marker);
+		aim.add(cueLine, deflectionLine, targetLine, marker);
 		aim.invalidate();
 	}
 
@@ -570,6 +601,10 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 		return -1;
 	}
 
+	public int getGhostStyle() {
+		return aim.getMarkerStyle();
+	}
+
 	public void handleTimer(long l1) {
 		if (arrowChanged) {
 			if (pa_v == 1)
@@ -597,6 +632,11 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 	}
 
 	public void ms() {
+		aim.invalidate();
+	}
+
+	public void setGhostStyle(int style) {
+		aim.setMarkerStyle(style);
 		aim.invalidate();
 	}
 
