@@ -525,8 +525,9 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 			int previewLength = pa_r;
 			if (shotDistance > PoolMath.intToYInt(40)) {
 				previewLength -= PoolMath.div(shotDistance - PoolMath.intToYInt(40), PoolMath.intToYInt(4));
-				if (previewLength < 0)
-					previewLength = 0;
+				int minPreviewLength = PoolMath.intToYInt(12);
+				if (previewLength < minPreviewLength)
+					previewLength = minPreviewLength;
 			}
 
 			YIVector cuePreview = cueBall.vel.je();
