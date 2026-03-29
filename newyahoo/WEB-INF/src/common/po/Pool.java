@@ -14,7 +14,6 @@ import common.utils.ByteArrayData;
 import common.yutils.Game;
 import common.yutils.GameHandler;
 import common.yutils._cls159;
-import core.PoolTrace;
 
 // Referenced classes of package y.po:
 // _cls95, _cls159, _cls111, _cls160,
@@ -262,16 +261,6 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 	}
 
 	public boolean doNotifyTStat(PoolData _pcls131, boolean flag) {
-		PoolTrace.client("POOL-END doNotifyTStat enter running=" + running
-				+ " state=" + m_currentState + " turn=" + m_turn + " turnNum="
-				+ m_turnNum + " setupState=" + setup.getState()
-				+ " turnPocketed=" + _pcls131.turnPocketed.getCount()
-				+ " turnCollided=" + _pcls131.turnCollided
-				+ " firstCollidedBall=" + _pcls131.firstCollidedBall);
-		if (m_currentState != 1 && m_currentState != 2)
-			PoolTrace.client("POOL-END doNotifyTStat ignored running="
-					+ running + " state=" + m_currentState + " turn=" + m_turn
-					+ " turnNum=" + m_turnNum);
 		if (m_currentState != 1 && m_currentState != 2)
 			return false;
 		if (O && z && flag) {
@@ -328,30 +317,20 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 		}
 
 		int i2 = setup.getState();
-		PoolTrace.client("POOL-END doNotifyTStat setupState=" + i2
-				+ " running=" + running + " state=" + m_currentState
-				+ " turn=" + m_turn + " turnNum=" + m_turnNum);
 		switch (i2) {
 		case 0: // '\0'
-			PoolTrace.client("POOL-END doNotifyTStat changeTurn");
 			changeTurn(setup.isTurnChanged(), false);
 			break;
 
 		case 1: // '\001'
-			PoolTrace.client("POOL-END doNotifyTStat winner path Zo="
-					+ setup.Zo());
 			Yj(setup.Zo());
 			break;
 
 		case 2: // '\002'
-			PoolTrace.client("POOL-END doNotifyTStat selectType path");
 			m_currentState = 3;
 			handler.kd(m_turn);
 			break;
 		}
-		PoolTrace.client("POOL-END doNotifyTStat exit running=" + running
-				+ " state=" + m_currentState + " turn=" + m_turn + " turnNum="
-				+ m_turnNum);
 		return true;
 	}
 
@@ -815,9 +794,6 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 	public void Yj(boolean flag) {
 		if (!isRunning())
 			return;
-		PoolTrace.client("POOL-END Yj enter running=" + running + " state="
-				+ m_currentState + " turn=" + m_turn + " turnNum=" + m_turnNum
-				+ " flag=" + flag);
 		ByteArrayData _lcls40 = new ByteArrayData(2);
 		byte byte0 = (byte) (flag ? 1 : 2);
 		byte byte1 = (byte) (flag ? 2 : 1);
@@ -826,23 +802,8 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 		String s1 = handler.Xc(flag ? 1 - m_turn : m_turn);
 		if (s1 != null)
 			m_playedBefore = true;
-		PoolTrace.client("POOL-END Yj before nd result[" + byte0 + "," + byte1
-				+ "] winnerLookup=" + s1);
 		handler.nd(_lcls40);
-		PoolTrace.client("POOL-END Yj after nd running=" + running + " state="
-				+ m_currentState);
-		try {
-			PoolTrace.client("POOL-END Yj before doStop running=" + running
-					+ " state=" + m_currentState);
-			doStop(_lcls40);
-			PoolTrace.client("POOL-END Yj after doStop running=" + running
-					+ " state=" + m_currentState);
-		}
-		catch (Throwable throwable) {
-			PoolTrace.client("POOL-END Yj doStop threw " + throwable);
-			PoolTrace.client(throwable);
-			throwable.printStackTrace();
-		}
+		doStop(_lcls40);
 		selectedSlotIndex = -1;
 	}
 

@@ -38,7 +38,6 @@ import common.po.YIVector;
 import common.po.YRectangle;
 import common.po.YVector;
 import common.utils.ByteArrayData;
-import core.PoolTrace;
 
 // Referenced classes of package y.po:
 // _cls99, _cls145, _cls86, _cls50,
@@ -289,10 +288,6 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 	@Override
 	public void doUpdate(DataInputStream datainputstream) throws IOException {
 		super.doUpdate(datainputstream);
-		PoolTrace.client("POOL-END table doUpdate running=" + pool.isRunning()
-				+ " state=" + pool.getCurrentState() + " turn=" + pool.m_turn
-				+ " turnNum=" + pool.m_turnNum + " mySit=" + getMySitIndex()
-				+ " finished=" + getFinishedGameCount());
 		if (pool != null && pool.isRunning() && pool.getCurrentState() == 0) {
 			pendingCueSnapshotRestore = true;
 			pendingEnglishSnapshotRestore = true;
@@ -468,22 +463,7 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 
 	@Override
 	public void handleStop(YData data) {
-		try {
-			PoolTrace.client("POOL-END table handleStop enter data="
-					+ (data == null ? "null" : data.getClass().getName())
-					+ " running=" + pool.isRunning() + " state="
-					+ pool.getCurrentState() + " finished="
-					+ getFinishedGameCount());
-			super.handleStop(data);
-			PoolTrace.client("POOL-END table handleStop exit running="
-					+ pool.isRunning() + " state=" + pool.getCurrentState()
-					+ " finished=" + getFinishedGameCount());
-		}
-		catch (Throwable throwable) {
-			PoolTrace.client("POOL-END table handleStop threw " + throwable);
-			PoolTrace.client(throwable);
-			throwable.printStackTrace();
-		}
+		super.handleStop(data);
 	}
 
 	public void handleStopMoving() {
@@ -686,10 +666,6 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		if (!pool.training)
 			s1 = ((ByteArrayData) _pcls111).byteAt(0) != 1 ? getSitIdCaption(1)
 					: getSitIdCaption(0);
-		PoolTrace.client("POOL-END table nd winnerCaption=" + s1 + " training="
-				+ pool.training + " g=" + pool.g + " mySit=" + getMySitIndex()
-				+ " running=" + pool.isRunning() + " state="
-				+ pool.getCurrentState());
 		if (!pool.g)
 			showQuickMessage(s1 + getApplet().lookupString(0x66501413));
 		if (pool.g)
@@ -762,17 +738,8 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 			J.read(datainputstream);
 			Xc(0);
 			Xc(1);
-			PoolTrace.client("POOL-END table parse 9B before running="
-					+ pool.isRunning() + " state=" + pool.getCurrentState()
-					+ " turn=" + pool.m_turn + " turnNum=" + pool.m_turnNum
-					+ " mySit=" + getMySitIndex());
 			logState("notifyTStat.");
-			boolean tstatHandled = pool.doNotifyTStat(J, false);
-			PoolTrace.client("POOL-END table parse 9B after handled="
-					+ tstatHandled + " running=" + pool.isRunning() + " state="
-					+ pool.getCurrentState() + " turn=" + pool.m_turn
-					+ " turnNum=" + pool.m_turnNum + " mySit="
-					+ getMySitIndex());
+			pool.doNotifyTStat(J, false);
 			break;
 
 		case -105: // 97: change time
