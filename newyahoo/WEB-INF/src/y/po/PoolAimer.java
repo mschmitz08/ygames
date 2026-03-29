@@ -514,13 +514,6 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 			PoolBall previewCollisionBall = cloneBall(collisionBall);
 			cueBall.setCoords(firstColl);
 			YPoint collisionPoint = cueBall.toYVector();
-			if (collisionPoint.distance(startFloatPoint) < 6F) {
-				cueLine.setCoords(startFloatPoint, railFallback);
-				marker = railFallback;
-				aim.add(cueLine, deflectionLine, targetLine, marker);
-				aim.invalidate();
-				return;
-			}
 			cueLine.setCoords(startFloatPoint, collisionPoint);
 			cueBall.vel.versor();
 			cueBall.vel.mul(0xa0000);
