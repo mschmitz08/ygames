@@ -540,6 +540,34 @@ public class CueSprite extends YahooComponent implements YData {
 		power = _power;
 	}
 
+	private boolean rebuildRemoteCueFromSelectedBall() {
+		YVector source = cueTipOffset;
+		if (m_selectedBall == null || m_selectedBall.inSlot())
+			return false;
+		if (source.x == 0.0F && source.y == 0.0F)
+			return false;
+		source.setCoordsTo(V);
+		V.versor();
+		cs_a.setCoords(m_selectedBall.getYIntX() + V.x * N,
+				m_selectedBall.getYIntY() + V.y * N);
+		cueTip.setCoords(cs_a.x + V.x * power1, cs_a.y + V.y * power1);
+		return true;
+	}
+
+	public void applyRemoteState() {
+		power1 = power;
+		m_cue.setCoords(cueTipOffset.x, cueTipOffset.y);
+		if (rebuildRemoteCueFromSelectedBall()) {
+			m_ball.setCoords(cueTip.x, cueTip.y);
+		}
+		else {
+			m_ball.setCoords(cueTip.x, cueTip.y);
+			cs_a.setCoords(m_ball.x, m_ball.y);
+		}
+		G = false;
+		Xk();
+	}
+
 	public boolean releasePowerBar(Event event, int i1, int j1) {
 		boolean flag = false;
 		if (isPulled()) {
@@ -670,6 +698,7 @@ public class CueSprite extends YahooComponent implements YData {
 	}
 
 	public void update() {
+		rebuildRemoteCueFromSelectedBall();
 		power1 = power;
 		D.setCoords((cueTip.x - m_ball.x) / iterateEffectCount,
 				(cueTip.y - m_ball.y) / iterateEffectCount);
@@ -737,6 +766,7 @@ public class CueSprite extends YahooComponent implements YData {
 	}
 
 	public void Xk() {
+		syncWorldAnchor();
 		int i1 = (int) m_ball.x - 5;
 		int j1 = (int) m_ball.y - 5;
 		if (m_cue.x < 0.0F)
@@ -754,5 +784,13 @@ public class CueSprite extends YahooComponent implements YData {
 		changed = true;
 		Dn();
 		invalidate();
+	}
+
+	private void syncWorldAnchor() {
+		if (poolArea == null || poolArea.poolAimer == null
+				|| poolArea.getContainer() == null)
+			return;
+		cs_J = poolArea.poolAimer.getWorldLeft(poolArea.getContainer());
+		K = poolArea.poolAimer.getWorldTop(poolArea.getContainer());
 	}
 }

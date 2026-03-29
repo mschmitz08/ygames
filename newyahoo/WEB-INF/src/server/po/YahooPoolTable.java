@@ -260,8 +260,11 @@ public class YahooPoolTable extends YahooTable implements PoolHandler {
 	@Override
 	protected void doUpdateGame(YahooConnectionId id) {
 		super.doUpdateGame(id);
-		changeCue(id, pool.m_turn, cue);
-		changeEnglish(id, pool.m_turn, english);
+		if (pool != null && pool.isRunning() && pool.getCurrentState() == 0
+				&& pool.m_turn >= 0 && pool.m_turn < sits.length) {
+			changeCue(id, pool.m_turn, cue);
+			changeEnglish(id, pool.m_turn, english);
+		}
 	}
 
 	public Vector<IBall> getBallInPlayArea() {

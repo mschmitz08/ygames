@@ -306,7 +306,7 @@ public class PoolArea extends YahooControl {
 
 	public void hc(IBall _pcls124) {
 		fc(_pcls124.getIndex(), 0, _pcls124.getX(), _pcls124.getY(), null, null);
-		if (handler.isMyTurn()) {
+		if (handler.isMyTurn() && cueSprite.getSelectedBall() != null) {
 			activate();
 			yc();
 		}
@@ -389,8 +389,8 @@ public class PoolArea extends YahooControl {
 	}
 
 	public void oc() {
-		if (pa_G != null && pa_G.getInSlot()
-				&& handler.getPool().isInSlot(pa_G.poolBall)) {
+		if (pa_G != null && !pa_G.getInSlot()
+				&& handler.getPool().xj(pa_G.poolBall)) {
 			pc(pa_G);
 			return;
 		}

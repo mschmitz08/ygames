@@ -90,6 +90,7 @@ C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\common\yutils\_cls65.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\common\yutils\_cls81.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\common\yutils\_cls83.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\core\DebugLog.java
+C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\core\PoolTrace.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\core\Initializer.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\data\MySQLAssync.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\data\MySQLConnectionPool.java

@@ -584,6 +584,12 @@ public abstract class YahooRoom {
 				.currentTimeMillis() - id.getLastRequestTime()));
 	}
 
+	public YahooConnectionId getId(String name) {
+		if (idTable == null || name == null)
+			return null;
+		return idTable.get(name);
+	}
+
 	public boolean doInvite(YahooConnectionId id, String name, int table) {
 		if (table < 1 || table > 255)
 			return false;

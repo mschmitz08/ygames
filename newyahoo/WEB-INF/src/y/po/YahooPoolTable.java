@@ -38,6 +38,7 @@ import common.po.YIVector;
 import common.po.YRectangle;
 import common.po.YVector;
 import common.utils.ByteArrayData;
+import core.PoolTrace;
 
 // Referenced classes of package y.po:
 // _cls99, _cls145, _cls86, _cls50,
@@ -91,6 +92,9 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 	PoolData		J;
 	String			state;
 	YahooComboBox	cmbGhostStyle;
+	boolean			pendingCueSnapshotRestore;
+	boolean			pendingEnglishSnapshotRestore;
+	boolean			preserveCueSnapshotOnRestore;
 
 	public YahooPoolTable() {
 		cueTime = 0L;
@@ -121,6 +125,9 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		ypt_I = new YVector();
 		J = new PoolData();
 		state = "";
+		pendingCueSnapshotRestore = false;
+		pendingEnglishSnapshotRestore = false;
+		preserveCueSnapshotOnRestore = false;
 		addSitParser(new SaveCancel(this));
 	}
 
@@ -277,6 +284,25 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 	public void doChangeEnglish(byte byte2, int i1, float x, float y) {
 		poolArea.english.e_n.x = x;
 		poolArea.english.e_n.y = y;
+	}
+
+	@Override
+	public void doUpdate(DataInputStream datainputstream) throws IOException {
+		super.doUpdate(datainputstream);
+		PoolTrace.client("POOL-END table doUpdate running=" + pool.isRunning()
+				+ " state=" + pool.getCurrentState() + " turn=" + pool.m_turn
+				+ " turnNum=" + pool.m_turnNum + " mySit=" + getMySitIndex()
+				+ " finished=" + getFinishedGameCount());
+		if (pool != null && pool.isRunning() && pool.getCurrentState() == 0) {
+			pendingCueSnapshotRestore = true;
+			pendingEnglishSnapshotRestore = true;
+			preserveCueSnapshotOnRestore = false;
+		}
+		else {
+			pendingCueSnapshotRestore = false;
+			pendingEnglishSnapshotRestore = false;
+			preserveCueSnapshotOnRestore = false;
+		}
 	}
 
 	public void doUpdateState() {
@@ -442,7 +468,22 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 
 	@Override
 	public void handleStop(YData data) {
-		super.handleStop(data);
+		try {
+			PoolTrace.client("POOL-END table handleStop enter data="
+					+ (data == null ? "null" : data.getClass().getName())
+					+ " running=" + pool.isRunning() + " state="
+					+ pool.getCurrentState() + " finished="
+					+ getFinishedGameCount());
+			super.handleStop(data);
+			PoolTrace.client("POOL-END table handleStop exit running="
+					+ pool.isRunning() + " state=" + pool.getCurrentState()
+					+ " finished=" + getFinishedGameCount());
+		}
+		catch (Throwable throwable) {
+			PoolTrace.client("POOL-END table handleStop threw " + throwable);
+			PoolTrace.client(throwable);
+			throwable.printStackTrace();
+		}
 	}
 
 	public void handleStopMoving() {
@@ -479,16 +520,49 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 	}
 
 	public void handleUpdateCue(int i1) {
+		if (!pool.isRunning() || pool.getCurrentState() != 0
+				|| pool.m_turn != i1) {
+			pendingCueSnapshotRestore = false;
+			preserveCueSnapshotOnRestore = false;
+			return;
+		}
+		if (pendingCueSnapshotRestore) {
+			poolArea.cueSprite.setVisible(true);
+			poolArea.cueSprite.applyRemoteState();
+			poolArea.cueSprite.setChanged(false);
+			poolArea.pullCue(poolArea.cueSprite.power1);
+			pendingCueSnapshotRestore = false;
+			preserveCueSnapshotOnRestore = true;
+			return;
+		}
+		if (getMySitIndex() == i1) {
+			preserveCueSnapshotOnRestore = false;
+			return;
+		}
 		if (getMySitIndex() != i1) {
 			poolArea.cueSprite.setVisible(true);
 			poolArea.cueSprite.update();
+			poolArea.cueSprite.setChanged(false);
 			poolArea.pullCue(poolArea.cueSprite.power1);
 		}
 	}
 
 	public void handleUpdateEnglish(int i1) {
-		if (getMySitIndex() != i1)
+		if (!pool.isRunning() || pool.getCurrentState() != 0
+				|| pool.m_turn != i1) {
+			pendingEnglishSnapshotRestore = false;
+			return;
+		}
+		if (pendingEnglishSnapshotRestore) {
 			poolArea.english.update();
+			poolArea.english.setChanged(false);
+			pendingEnglishSnapshotRestore = false;
+			return;
+		}
+		if (getMySitIndex() != i1) {
+			poolArea.english.update();
+			poolArea.english.setChanged(false);
+		}
 	}
 
 	public boolean haveInitTimePorMove() {
@@ -530,24 +604,43 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 
 	public void Id() {
 		poolArea.deactivate();
+		if (!pool.isRunning() || pool.getCurrentState() != 0)
+			poolArea.hideCue();
 		p = false;
 	}
 
 	public boolean isMyTurn() {
-		return pool.isSameTurn(getMySitIndex());
+		int sitIndex = getMySitIndex();
+		return sitIndex >= 0 && pool.isSameTurn(sitIndex);
 	}
 
 	public void Jd() {
+		restoreMyTurnView(true);
+	}
+
+	private void restoreMyTurnView(boolean playBeep) {
 		poolArea.oc();
 		if (pool.isRunning()) {
+			boolean preserveCue = preserveCueSnapshotOnRestore;
 			poolArea.activate();
-			poolArea.yc();
-			int i1 = pool.getSetup().Uo();
-			if (i1 != -1)
-				poolArea.cueSprite.Tk(((YIPoint) pool.getBall(i1)).toYVector());
+			if (preserveCue) {
+				poolArea.cueSprite.setVisible(true);
+				poolArea.cueSprite.applyRemoteState();
+				poolArea.cueSprite.setChanged(false);
+			}
+			else {
+				poolArea.yc();
+				int i1 = pool.getSetup().Uo();
+				if (i1 != -1)
+					poolArea.cueSprite.Tk(((YIPoint) pool.getBall(i1))
+							.toYVector());
+			}
+			poolArea.cueSprite.setChanged(false);
+			poolArea.english.setChanged(false);
 		}
 		Hd();
-		beep();
+		if (playBeep)
+			beep();
 	}
 
 	@Override
@@ -593,6 +686,10 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		if (!pool.training)
 			s1 = ((ByteArrayData) _pcls111).byteAt(0) != 1 ? getSitIdCaption(1)
 					: getSitIdCaption(0);
+		PoolTrace.client("POOL-END table nd winnerCaption=" + s1 + " training="
+				+ pool.training + " g=" + pool.g + " mySit=" + getMySitIndex()
+				+ " running=" + pool.isRunning() + " state="
+				+ pool.getCurrentState());
 		if (!pool.g)
 			showQuickMessage(s1 + getApplet().lookupString(0x66501413));
 		if (pool.g)
@@ -665,8 +762,17 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 			J.read(datainputstream);
 			Xc(0);
 			Xc(1);
+			PoolTrace.client("POOL-END table parse 9B before running="
+					+ pool.isRunning() + " state=" + pool.getCurrentState()
+					+ " turn=" + pool.m_turn + " turnNum=" + pool.m_turnNum
+					+ " mySit=" + getMySitIndex());
 			logState("notifyTStat.");
-			pool.doNotifyTStat(J, false);
+			boolean tstatHandled = pool.doNotifyTStat(J, false);
+			PoolTrace.client("POOL-END table parse 9B after handled="
+					+ tstatHandled + " running=" + pool.isRunning() + " state="
+					+ pool.getCurrentState() + " turn=" + pool.m_turn
+					+ " turnNum=" + pool.m_turnNum + " mySit="
+					+ getMySitIndex());
 			break;
 
 		case -105: // 97: change time

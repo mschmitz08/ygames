@@ -19,6 +19,7 @@ import common.utils.SynchronizedVector;
 import common.yutils.Game;
 import common.yutils.GameHandler;
 import common.yutils.GameHistory;
+import common.yutils.YahooUtils;
 
 import data.MySQLTable;
 
@@ -448,6 +449,7 @@ public abstract class YahooTable implements GameHandler {
 				}				
 				
 				sits[sitIndex] = id;
+				refreshStartedPlayerReference(id);
 				SynchronizedVector<YahooConnectionId> roomIds = room.getIds();
 				roomIds.readLock();
 				try {
@@ -662,11 +664,10 @@ public abstract class YahooTable implements GameHandler {
 
 	public void handleStart() {
 		String[] players = new String[startedPlayers.length];
-		for (int i = 0; i < startedPlayers.length; i++)
-			if (startedPlayers[i] != null)
-				players[i] = startedPlayers[i].getName();
-			else
-				players[i] = null;
+		for (int i = 0; i < startedPlayers.length; i++) {
+			YahooConnectionId player = getStartedOrCurrentSeatPlayer(i);
+			players[i] = player != null ? player.getName() : null;
+		}
 		currGameLogEntry = new GameHistory(System.currentTimeMillis(), players,
 				1 << getGameId());
 	}
@@ -696,22 +697,28 @@ public abstract class YahooTable implements GameHandler {
 			return;
 		}
 
+		YahooConnectionId[] resolvedPlayers = new YahooConnectionId[startedPlayers.length];
 		int[] oldRating = new int[startedPlayers.length];
-		for (int i = 0; i < startedPlayers.length; i++)
-			oldRating[i] = startedPlayers[i].getRealRating();
+		for (int i = 0; i < startedPlayers.length; i++) {
+			resolvedPlayers[i] = resolveStartedPlayer(i);
+			oldRating[i] = resolvedPlayers[i] != null ? resolvedPlayers[i].getRealRating() : YahooUtils.provisional;
+		}
 		int[] newRating = computeRating(oldRating, wonTurn);
 
 		for (int i = 0; i < startedPlayers.length; i++) {
-			if (wonTurn[i] == 1)
-				startedPlayers[i].getProfileId().incrementWins(newRating[i]);
-			else if (wonTurn[i] == 2)
-				startedPlayers[i].getProfileId().incrementLosses(newRating[i]);
-			else
-				startedPlayers[i].getProfileId().incrementDraws(newRating[i]);
+			YahooConnectionId player = resolvedPlayers[i];
+			if (player != null && player.getProfileId() != null)
+				if (wonTurn[i] == 1)
+					player.getProfileId().incrementWins(newRating[i]);
+				else if (wonTurn[i] == 2)
+					player.getProfileId().incrementLosses(newRating[i]);
+				else
+					player.getProfileId().incrementDraws(newRating[i]);
 			int delta = newRating[i] - oldRating[i];
-			currGameLogEntry.setOldRating(i, newRating[i]);
+			currGameLogEntry.setOldRating(i, oldRating[i]);
 			currGameLogEntry.setNewRating(i, newRating[i]);
-			doTableLog(startedPlayers[i].getName()
+			String playerName = player != null && player.getName() != null ? player.getName() : getStartedPlayerName(i);
+			doTableLog(playerName
 					+ " has old rating "
 					+ oldRating[i]
 					            + " and now have the new rating "
@@ -770,6 +777,64 @@ public abstract class YahooTable implements GameHandler {
 			}
 		}
 		gameLog.add(currGameLogEntry);
+	}
+
+	private String getStartedPlayerName(int index) {
+		if (currGameLogEntry != null) {
+			String[] players = currGameLogEntry.getPlayers();
+			if (players != null && index >= 0 && index < players.length
+					&& players[index] != null && players[index].length() > 0)
+				return players[index];
+		}
+		YahooConnectionId player = getStartedOrCurrentSeatPlayer(index);
+		return player != null ? player.getName() : "Unknown";
+	}
+
+	private YahooConnectionId getCurrentSeatPlayer(int index) {
+		if (sits != null && index >= 0 && index < sits.length) {
+			YahooConnectionId player = sits[index];
+			if (player != null && player.getProfileId() != null)
+				return player;
+		}
+		return null;
+	}
+
+	private YahooConnectionId getStartedOrCurrentSeatPlayer(int index) {
+		if (startedPlayers != null && index >= 0 && index < startedPlayers.length) {
+			YahooConnectionId player = startedPlayers[index];
+			if (player != null && player.getName() != null)
+				return player;
+		}
+		return getCurrentSeatPlayer(index);
+	}
+
+	private void refreshStartedPlayerReference(YahooConnectionId id) {
+		if (id == null || startedPlayers == null || currGameLogEntry == null)
+			return;
+		String joinedName = id.getName();
+		if (joinedName == null)
+			return;
+		String[] players = currGameLogEntry.getPlayers();
+		if (players == null)
+			return;
+		for (int i = 0; i < startedPlayers.length && i < players.length; i++)
+			if (joinedName.equals(players[i]))
+				startedPlayers[i] = id;
+	}
+
+	private YahooConnectionId resolveStartedPlayer(int index) {
+		if (startedPlayers != null && index >= 0 && index < startedPlayers.length) {
+			YahooConnectionId player = startedPlayers[index];
+			if (player != null && player.getProfileId() != null)
+				return player;
+		}
+		String playerName = getStartedPlayerName(index);
+		if (room != null && playerName != null && !"Unknown".equals(playerName)) {
+			YahooConnectionId player = room.getId(playerName);
+			if (player != null && player.getProfileId() != null)
+				return player;
+		}
+		return getCurrentSeatPlayer(index);
 	}
 
 	public void handleStopTick() {

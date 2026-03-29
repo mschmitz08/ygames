@@ -31,6 +31,7 @@ import y.ycontrols._cls88;
 import y.ydialogs.GameOverDialog;
 
 import common.io.YData;
+import core.PoolTrace;
 
 // Referenced classes of package y.po:
 // _cls174, _cls145, _cls98, _cls56,
@@ -398,14 +399,33 @@ public abstract class YahooGamesTable extends YahooTable implements
 
 	@Override
 	public void handleStop(YData data) {
-		super.handleStop(data);
-		if (q != null)
-			q.addChildObject(ygt_r, 0, 0, true);
-		Kq();
-		if (((AbstractYahooGamesApplet) getYahooGamesApplet()).noPopupTables)
-			getYahooGamesApplet().Jm(this, false);
-		if (!((AbstractYahooGamesApplet) getYahooGamesApplet()).noPopupTables)
-			getApplet().evalJS("gamesGameOff()");
+		try {
+			if (this instanceof y.po.YahooPoolTable)
+				PoolTrace.client("POOL-END games handleStop enter data="
+						+ (data == null ? "null" : data.getClass().getName())
+						+ " running=" + super.game.isRunning() + " finished="
+						+ getFinishedGameCount());
+			super.handleStop(data);
+			if (q != null)
+				q.addChildObject(ygt_r, 0, 0, true);
+			Kq();
+			if (((AbstractYahooGamesApplet) getYahooGamesApplet()).noPopupTables)
+				getYahooGamesApplet().Jm(this, false);
+			if (!((AbstractYahooGamesApplet) getYahooGamesApplet()).noPopupTables)
+				getApplet().evalJS("gamesGameOff()");
+			if (this instanceof y.po.YahooPoolTable)
+				PoolTrace.client("POOL-END games handleStop exit running="
+						+ super.game.isRunning() + " finished="
+						+ getFinishedGameCount());
+		}
+		catch (Throwable throwable) {
+			if (this instanceof y.po.YahooPoolTable) {
+				PoolTrace.client("POOL-END games handleStop threw "
+						+ throwable);
+				PoolTrace.client(throwable);
+			}
+			throwable.printStackTrace();
+		}
 	}
 
 	@Override
@@ -592,6 +612,10 @@ public abstract class YahooGamesTable extends YahooTable implements
 			break;
 
 		case 54: // '6': stop
+			if (this instanceof y.po.YahooPoolTable)
+				PoolTrace.client("POOL-END games parse stop packet running="
+						+ super.game.isRunning() + " finished="
+						+ getFinishedGameCount());
 			getGame().stop();
 			break;
 
