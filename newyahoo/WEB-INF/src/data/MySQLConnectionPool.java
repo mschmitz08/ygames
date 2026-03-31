@@ -85,6 +85,17 @@ public class MySQLConnectionPool implements Destroyable {
 		return null;
 	}
 
+	private void closeConnection(Connection connection) {
+		if (connection == null)
+			return;
+		try {
+			connection.close();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
 	@Override
 	public void destroy() {
 		for (int i = 0; i < mySqlConnections.length; i++) {
@@ -117,7 +128,8 @@ public class MySQLConnectionPool implements Destroyable {
 			if (using[i])
 				continue;
 			try {
-				if (connection.isClosed()) {
+				if (connection.isClosed() || !connection.isValid(2)) {
+					closeConnection(connection);
 					connection = createNewConnection();
 					mySqlConnections[i] = connection;
 				}
@@ -125,6 +137,9 @@ public class MySQLConnectionPool implements Destroyable {
 				return connection;
 			}
 			catch (SQLException e) {
+				closeConnection(connection);
+				mySqlConnections[i] = null;
+				using[i] = false;
 				e.printStackTrace();
 			}
 		}
@@ -160,6 +175,19 @@ public class MySQLConnectionPool implements Destroyable {
 			return;
 		}
 		System.err.println("Conex o n o liberada!");
+	}
+
+	public synchronized void discardConnection(Connection connection) {
+		for (int i = 0; i < mySqlConnections.length; i++) {
+			Connection connection1 = mySqlConnections[i];
+			if (connection1 != connection)
+				continue;
+			using[i] = false;
+			mySqlConnections[i] = null;
+			closeConnection(connection1);
+			return;
+		}
+		closeConnection(connection);
 	}
 
 }

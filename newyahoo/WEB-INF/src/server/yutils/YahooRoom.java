@@ -123,6 +123,7 @@ public abstract class YahooRoom {
 		}
 
 		for (int i = 1; i < tables.length; i++) {
+			tables[i].pruneStaleState();
 			if (tables[i].isFree())
 				continue;
 
@@ -638,11 +639,13 @@ public abstract class YahooRoom {
 	public boolean doMakeTable(YahooConnectionId id,
 			Hashtable<String, String> hashtable) {
 		DebugLog.log("YahooRoom.doMakeTable room=" + yport + " host=" + (id == null ? "null" : id.getName()) + " props=" + hashtable);
-		for (int i = 1; i < tables.length; i++)
+		for (int i = 1; i < tables.length; i++) {
+			tables[i].pruneStaleState();
 			if (tables[i].open(id, hashtable)) {
 				DebugLog.log("YahooRoom.doMakeTable opened table=" + i);
 				return true;
 			}
+		}
 		DebugLog.log("YahooRoom.doMakeTable failed no free table");
 		alert(id, "The maximum number of tables has already been reached");
 		return false;

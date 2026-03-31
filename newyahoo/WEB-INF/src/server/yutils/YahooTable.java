@@ -239,6 +239,98 @@ public abstract class YahooTable implements GameHandler {
 		startedPlayers = null;
 	}
 
+	private boolean isStaleTableId(YahooConnectionId id) {
+		if (id == null)
+			return true;
+		if (id.getRoom() != room)
+			return true;
+		Vector<YahooTable> currentTables = id.getTables();
+		return currentTables == null || !currentTables.contains(this);
+	}
+
+	public void pruneStaleState() {
+		if (free)
+			return;
+
+		Vector<Integer> clearedSitIndexes = new Vector<Integer>();
+		Vector<YahooConnectionId> liveTableIds = null;
+		boolean shouldRelease = false;
+		String nextHost = null;
+
+		ids.writeLock();
+		try {
+			for (int i = ids.size() - 1; i >= 0; i--) {
+				YahooConnectionId tableId = ids.elementAt(i);
+				if (!isStaleTableId(tableId))
+					continue;
+				ids.removeElementAt(i);
+			}
+
+			synchronized (sits) {
+				for (int i = 0; i < sits.length; i++) {
+					YahooConnectionId sit = sits[i];
+					if (sit == null || !isStaleTableId(sit))
+						continue;
+					sits[i] = null;
+					clearedSitIndexes.add(Integer.valueOf(i));
+				}
+			}
+
+			if (ids.isEmpty()) {
+				shouldRelease = true;
+			}
+			else {
+				boolean hostPresent = false;
+				for (YahooConnectionId tableId : ids)
+					if (tableId != null && tableId.getName().equals(host)) {
+						hostPresent = true;
+						break;
+					}
+				if (!hostPresent)
+					nextHost = ids.firstElement().getName();
+				if (nextHost != null || !clearedSitIndexes.isEmpty())
+					liveTableIds = new Vector<YahooConnectionId>(ids);
+			}
+		}
+		finally {
+			ids.writeUnlock();
+		}
+
+		if (shouldRelease) {
+			release();
+			return;
+		}
+
+		if (!clearedSitIndexes.isEmpty()) {
+			for (Integer sitIndex : clearedSitIndexes) {
+				ids.readLock();
+				try {
+					for (YahooConnectionId id : ids)
+						stand(id, sitIndex.intValue());
+				}
+				finally {
+					ids.readUnlock();
+				}
+
+				SynchronizedVector<YahooConnectionId> roomIds = room.getIds();
+				roomIds.readLock();
+				try {
+					for (YahooConnectionId id : roomIds)
+						room.sit(id, number, sitIndex.intValue(), "");
+				}
+				finally {
+					roomIds.readUnlock();
+				}
+			}
+		}
+
+		if (nextHost != null && liveTableIds != null) {
+			host = nextHost;
+			for (YahooConnectionId id : liveTableIds)
+				changeHost(id, host);
+		}
+	}
+
 	protected abstract Game createGame();
 
 	public void doAuto(YahooConnectionId id) {
@@ -856,6 +948,8 @@ public abstract class YahooTable implements GameHandler {
 	}
 
 	public boolean joinId(YahooConnectionId id) {
+		if (!ids.isEmpty())
+			pruneStaleState();
 		if (free)
 			return false;
 		String name = id.getName();
@@ -916,6 +1010,7 @@ public abstract class YahooTable implements GameHandler {
 	}
 
 	public boolean leaveId(YahooConnectionId id) {
+		pruneStaleState();
 		if (free)
 			return false;
 
@@ -959,6 +1054,7 @@ public abstract class YahooTable implements GameHandler {
 			return false;
 		try {
 			properties = hashtable;
+			privacy = 0;
 			game = createGame();
 			game.initialize(hashtable, this, hashtable.containsKey("training")
 					|| hashtable.containsKey("automat") ? 1 : 2);
@@ -1085,6 +1181,7 @@ public abstract class YahooTable implements GameHandler {
 	public void release() {
 		if (!free) {
 			free = true;
+			privacy = 0;
 
 			SynchronizedVector<YahooConnectionId> roomIds = room.getIds();
 			roomIds.readLock();
