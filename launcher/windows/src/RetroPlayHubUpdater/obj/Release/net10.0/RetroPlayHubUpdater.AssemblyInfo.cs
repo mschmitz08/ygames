@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RetroPlayHubUpdater")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+13f99ecd530845f29cb205882ec77b2db3659489")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1c004c82a9fa03ca44cc47c6b2942210ff55893e")]
 [assembly: System.Reflection.AssemblyProductAttribute("RetroPlayHubUpdater")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RetroPlayHubUpdater")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

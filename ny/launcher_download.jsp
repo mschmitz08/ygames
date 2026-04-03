@@ -133,6 +133,8 @@
     File launcherClientJar = new File(application.getRealPath("/downloads/ygames_launcher_windows/app/newyahoo/client.jar"));
     expectedClientHash = sha256Hex(launcherClientJar);
     String launcherPackageName = "RetroPlayHubLauncher_" + launcherVersion + ".msi";
+    String javaDownloadUrl = "https://www.azul.com/downloads/?architecture=x86-64-bit&os=windows&package=jdk&version=java-8-lts";
+    String dotnetDownloadUrl = "https://dotnet.microsoft.com/en-us/download/dotnet/10.0";
 %>
 <html>
 <head>
@@ -217,6 +219,20 @@ body {
     display: block;
     margin-bottom: 8px;
 }
+.requirements {
+    margin-top: 20px;
+    padding: 16px 18px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 228, 183, 0.18);
+}
+.requirements h3 {
+    margin: 0 0 10px 0;
+    font-size: 20px;
+}
+.requirements p {
+    margin: 0 0 10px 0;
+}
 @media (max-width: 760px) {
     .body {
         grid-template-columns: 1fr;
@@ -270,6 +286,13 @@ function goBackToLauncher() {
                     <li>Come back here and press Launch Again.</li>
                 </ol>
                 <p><strong>Version tip:</strong> If you already installed an older launcher, rerun this installer version so Windows refreshes the local launcher files.</p>
+                <div class="requirements">
+                    <h3>Requirements</h3>
+                    <p>If the launcher says Java 8 AppletViewer is missing, install a Windows x64 Java 8 JDK with AppletViewer support.</p>
+                    <p><a class="button" href="<%=javaDownloadUrl%>" target="_blank" rel="noopener">Download Java 8 JDK</a></p>
+                    <p>If Windows says a .NET runtime is missing before the launcher opens, install the current .NET Desktop Runtime.</p>
+                    <p><a class="button button-secondary" href="<%=dotnetDownloadUrl%>" target="_blank" rel="noopener">Download .NET Desktop Runtime</a></p>
+                </div>
             </div>
             <div class="pane pane-light">
                 <h2>Launch Target</h2>

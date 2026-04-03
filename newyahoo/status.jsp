@@ -226,7 +226,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=Cp1252"/>
-<title>New Yahoo! Live Rooms</title>
+<title>RetroPlayHub Live Rooms</title>
 <style type="text/css">
 body {
     margin: 0;

@@ -7,7 +7,6 @@ internal static class LauncherManifestClient
     private static readonly string[] DefaultManifestEntries =
     {
         "launcher_version.txt",
-        "ygames_launcher.vbs",
         "install_launcher.bat",
         "uninstall_launcher.bat",
         "README.md",

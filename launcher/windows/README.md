@@ -1,4 +1,4 @@
-# Y! Games Windows Launcher
+# RetroPlayHub Windows Launcher
 
 This package gives the website a local handoff target instead of pretending the browser can still run Java applets in-page.
 
@@ -11,10 +11,9 @@ This package gives the website a local handoff target instead of pretending the 
 
 ## Install
 
-1. Extract the launcher folder somewhere permanent.
-2. Run `install_launcher.bat`.
-3. The installer copies the launcher into `%LocalAppData%\YGamesLauncher` and registers the protocol there.
-4. Re-running the installer refreshes that same stable location.
+1. Download and run `RetroPlayHubLauncher.msi`.
+2. The installer copies the launcher into `%LocalAppData%\RetroPlayHubLauncher` and registers the protocol there.
+3. Re-running the installer refreshes that same stable location.
 
 ## Runtime expectations
 
@@ -25,7 +24,12 @@ The launcher looks for AppletViewer in this order:
 3. Standard Java install folders under `Program Files`
 4. `appletviewer` on the system `PATH`
 
-If none of those are available, the launcher shows a requirements message explaining that a Java 8 AppletViewer-capable runtime is still needed.
+If none of those are available, the launcher shows a requirements message, offers to open the Java download page, and explains that a Java 8 AppletViewer-capable runtime is still needed.
+
+Requirements links:
+
+- Java 8 JDK with AppletViewer: `https://www.azul.com/downloads/?architecture=x86-64-bit&os=windows&package=jdk&version=java-8-lts`
+- .NET Desktop Runtime 10: `https://dotnet.microsoft.com/en-us/download/dotnet/10.0`
 
 ## Window size
 

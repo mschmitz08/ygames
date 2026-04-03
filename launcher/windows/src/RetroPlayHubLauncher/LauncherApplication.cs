@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace RetroPlayHubLauncher;
@@ -91,12 +92,7 @@ internal static class LauncherApplication
         if (string.IsNullOrWhiteSpace(appletViewerPath))
         {
             splash.Close();
-            return ShowMessage(
-                "AppletViewer Required",
-                "This launcher needs Java 8 AppletViewer support before it can start the game.",
-                AppletViewerLocator.GetDiagnostics(paths),
-                MessageBoxIcon.Error,
-                1);
+            return ShowAppletViewerRequired(paths);
         }
 
         splash.SetStatus(
@@ -130,5 +126,47 @@ internal static class LauncherApplication
             icon);
 
         return exitCode;
+    }
+
+    private static int ShowAppletViewerRequired(LauncherPaths paths)
+    {
+        var message =
+            "RetroPlayHub Launcher needs Java 8 with AppletViewer before it can start the game." +
+            Environment.NewLine + Environment.NewLine +
+            "Recommended download:" + Environment.NewLine +
+            "Azul Zulu Java 8 JDK for Windows x64" + Environment.NewLine +
+            PrerequisiteLinks.Java8JdkUrl + Environment.NewLine + Environment.NewLine +
+            "Would you like to open that Java download page now?";
+
+        var result = MessageBox.Show(
+            message,
+            $"{LauncherBranding.ProductName} - Java Required",
+            MessageBoxButtons.YesNo,
+            MessageBoxIcon.Information);
+
+        if (result == DialogResult.Yes)
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = PrerequisiteLinks.Java8JdkUrl,
+                    UseShellExecute = true
+                });
+            }
+            catch
+            {
+                // If the browser handoff fails, fall through to diagnostics.
+            }
+        }
+
+        ShowMessage(
+            "AppletViewer Required",
+            "This launcher needs Java 8 AppletViewer support before it can start the game.",
+            AppletViewerLocator.GetDiagnostics(paths),
+            MessageBoxIcon.Error,
+            1);
+
+        return 1;
     }
 }

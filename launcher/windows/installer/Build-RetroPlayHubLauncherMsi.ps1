@@ -101,7 +101,7 @@ if ([string]::IsNullOrWhiteSpace($Version)) {
 }
 
 if ([string]::IsNullOrWhiteSpace($Version)) {
-    $Version = "0.7.10"
+    $Version = "0.8.0"
 }
 
 $msiVersion = "$Version.0"

@@ -1,5 +1,4 @@
 launcher_version.txt
-ygames_launcher.vbs
 install_launcher.bat
 uninstall_launcher.bat
 README.md
