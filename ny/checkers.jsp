@@ -124,7 +124,7 @@
     }
     String roomLabel = findRoomLabel(Initializer.selfInstance != null ? Initializer.selfInstance.checkers_rooms : null,
             room, "Badger Bridge");
-    String pageTitle = "Yahoo Checkers - Room: " + roomLabel;
+    String pageTitle = "RetroPlayHub Checkers - Room: " + roomLabel;
     String dictionaryUrl = resolveCheckersDictionary(application, intl_code);
 %>
 <title><%=pageTitle%></title>
@@ -140,7 +140,7 @@
 <param name="logreceivedmessages" value="0">
 <param name="yport" value="<%out.print(room);%>">
 <param name="label" value="<%out.print(roomLabel);%>">
-<param name="page_title" value="Yahoo Checkers">
+<param name="page_title" value="RetroPlayHub Checkers">
 <param name="account_mode" value="<%out.print(accountMode);%>">
 <param name="launcher_version" value="<%out.print(launcherVersion);%>">
 <param name="login_url" value="<%out.print(baseUrl);%>/applet_login.jsp">

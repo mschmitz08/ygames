@@ -122,7 +122,7 @@
 
     String roomLabel = findRoomLabel(Initializer.selfInstance != null ? Initializer.selfInstance.pool_rooms : null,
             room, "Corner Pocket");
-    String title = "Yahoo Pool";
+    String title = "RetroPlayHub Pool";
     String pageTitle = title + " - Room: " + roomLabel;
     String dictionaryUrl = resolvePoolDictionary(application, intlCode);
 %>

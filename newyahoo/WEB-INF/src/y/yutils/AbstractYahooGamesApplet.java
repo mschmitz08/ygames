@@ -1119,12 +1119,12 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 	private String fallbackPageTitle() {
 		String className = getClass().getName();
 		if (className.indexOf(".po2.") != -1)
-			return "Yahoo Pool 2";
+			return "RetroPlayHub Pool 2";
 		if (className.indexOf(".po.") != -1)
-			return "Yahoo Pool";
+			return "RetroPlayHub Pool";
 		if (className.indexOf(".k.") != -1)
-			return "Yahoo Checkers";
-		return "Yahoo Games";
+			return "RetroPlayHub Checkers";
+		return "RetroPlayHub Games";
 	}
 
 	private String fallbackRoomLabel(String roomName) {

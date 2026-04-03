@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=Cp1252"/>
-<title>New Yahoo! Rooms</title>
+<title>RetroPlayHub Rooms</title>
 <script language="JavaScript" type="text/JavaScript">
 <!--
 function MM_reloadPage(init) {  //reloads the window if Nav4 resized
@@ -22,19 +22,19 @@ MM_reloadPage(true);
     if(game == null)
         game = "checkers";
 
-    String pageTitle = "New Yahoo! Checkers";
+    String pageTitle = "RetroPlayHub Checkers";
     String targetPage = "checkers.jsp";
     MySQLTable roomsTable = null;
 
     if(Initializer.selfInstance != null){
         if("pool".equalsIgnoreCase(game)){
-            pageTitle = "New Yahoo! Pool";
+            pageTitle = "RetroPlayHub Pool";
             targetPage = "pool.jsp";
             roomsTable = Initializer.selfInstance.pool_rooms;
         }
         else {
             game = "checkers";
-            pageTitle = "New Yahoo! Checkers";
+            pageTitle = "RetroPlayHub Checkers";
             targetPage = "checkers.jsp";
             roomsTable = Initializer.selfInstance.checkers_rooms;
         }
@@ -55,7 +55,7 @@ function launchAnteroom(name) {
 
 <script language="javascript">
 function initialize() {
-    this.name = "yahoo_games_home";
+    this.name = "retroplayhub_home";
 }
 
 function lobbyopen(name) {

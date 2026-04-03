@@ -1,0 +1,15 @@
+C:\Users\mschm\Desktop\ygames2\launcher\windows\src\RetroPlayHubUpdater\bin\Release\net10.0\RetroPlayHubUpdater.exe
+C:\Users\mschm\Desktop\ygames2\launcher\windows\src\RetroPlayHubUpdater\bin\Release\net10.0\RetroPlayHubUpdater.deps.json
+C:\Users\mschm\Desktop\ygames2\launcher\windows\src\RetroPlayHubUpdater\bin\Release\net10.0\RetroPlayHubUpdater.runtimeconfig.json
+C:\Users\mschm\Desktop\ygames2\launcher\windows\src\RetroPlayHubUpdater\bin\Release\net10.0\RetroPlayHubUpdater.dll
+C:\Users\mschm\Desktop\ygames2\launcher\windows\src\RetroPlayHubUpdater\bin\Release\net10.0\RetroPlayHubUpdater.pdb
+C:\Users\mschm\Desktop\ygames2\launcher\windows\src\RetroPlayHubUpdater\obj\Release\net10.0\RetroPlayHubUpdater.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\mschm\Desktop\ygames2\launcher\windows\src\RetroPlayHubUpdater\obj\Release\net10.0\RetroPlayHubUpdater.AssemblyInfoInputs.cache
+C:\Users\mschm\Desktop\ygames2\launcher\windows\src\RetroPlayHubUpdater\obj\Release\net10.0\RetroPlayHubUpdater.AssemblyInfo.cs
+C:\Users\mschm\Desktop\ygames2\launcher\windows\src\RetroPlayHubUpdater\obj\Release\net10.0\RetroPlayHubUpdater.csproj.CoreCompileInputs.cache
+C:\Users\mschm\Desktop\ygames2\launcher\windows\src\RetroPlayHubUpdater\obj\Release\net10.0\RetroPlayHubUpdater.sourcelink.json
+C:\Users\mschm\Desktop\ygames2\launcher\windows\src\RetroPlayHubUpdater\obj\Release\net10.0\RetroPlayHubUpdater.dll
+C:\Users\mschm\Desktop\ygames2\launcher\windows\src\RetroPlayHubUpdater\obj\Release\net10.0\refint\RetroPlayHubUpdater.dll
+C:\Users\mschm\Desktop\ygames2\launcher\windows\src\RetroPlayHubUpdater\obj\Release\net10.0\RetroPlayHubUpdater.pdb
+C:\Users\mschm\Desktop\ygames2\launcher\windows\src\RetroPlayHubUpdater\obj\Release\net10.0\RetroPlayHubUpdater.genruntimeconfig.cache
+C:\Users\mschm\Desktop\ygames2\launcher\windows\src\RetroPlayHubUpdater\obj\Release\net10.0\ref\RetroPlayHubUpdater.dll

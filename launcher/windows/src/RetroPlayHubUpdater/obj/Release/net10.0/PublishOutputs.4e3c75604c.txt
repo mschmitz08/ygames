@@ -1,0 +1,5 @@
+C:\Users\mschm\Desktop\ygames2\launcher\windows\out\publish\RetroPlayHubUpdater\RetroPlayHubUpdater.exe
+C:\Users\mschm\Desktop\ygames2\launcher\windows\out\publish\RetroPlayHubUpdater\RetroPlayHubUpdater.dll
+C:\Users\mschm\Desktop\ygames2\launcher\windows\out\publish\RetroPlayHubUpdater\RetroPlayHubUpdater.deps.json
+C:\Users\mschm\Desktop\ygames2\launcher\windows\out\publish\RetroPlayHubUpdater\RetroPlayHubUpdater.runtimeconfig.json
+C:\Users\mschm\Desktop\ygames2\launcher\windows\out\publish\RetroPlayHubUpdater\RetroPlayHubUpdater.pdb

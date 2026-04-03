@@ -132,12 +132,12 @@
         siteId = "";
     File launcherClientJar = new File(application.getRealPath("/downloads/ygames_launcher_windows/app/newyahoo/client.jar"));
     expectedClientHash = sha256Hex(launcherClientJar);
-    String launcherPackageName = "ygames_launcher_windows_" + launcherVersion + ".zip";
+    String launcherPackageName = "RetroPlayHubLauncher_" + launcherVersion + ".msi";
 %>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=Cp1252"/>
-<title>Download Launcher</title>
+<title>Download RetroPlayHub Launcher</title>
 <style type="text/css">
 body {
     margin: 0;
@@ -255,21 +255,21 @@ function goBackToLauncher() {
 <div class="shell">
     <div class="card">
         <div class="hero">
-            <h1>Download The Launcher</h1>
-            <p>Modern browsers no longer run Java applets in-page, so the website now hands off to a local launcher package that can perform checks and open the game window for you.</p>
+            <h1>Download RetroPlayHub Launcher</h1>
+            <p>Modern browsers no longer run Java applets in-page, so RetroPlayHub now hands off to a local launcher that can perform checks and open the game window for you.</p>
         </div>
         <div class="body">
             <div class="pane">
                 <h2>First-Time Setup</h2>
-                <p>Download the Windows launcher package, extract it somewhere permanent, and run the installer once so your browser can hand off future game launches automatically.</p>
-                <p><a class="button" href="downloads/<%=launcherPackageName%>">Download Windows Launcher <%=launcherVersion%></a></p>
+                <p>Download the Windows installer, run it once, and let RetroPlayHub register the launcher so future game launches can hand off automatically.</p>
+                <p><a class="button" href="downloads/<%=launcherPackageName%>">Download RetroPlayHub Launcher <%=launcherVersion%></a></p>
                 <ol>
-                    <li>Extract the ZIP file.</li>
-                    <li>Run <code>install_launcher.bat</code>.</li>
+                    <li>Run the MSI installer.</li>
+                    <li>Let it install the launcher and updater.</li>
                     <li>If the launcher says Java 8 AppletViewer support is missing, follow the requirement prompt it shows.</li>
                     <li>Come back here and press Launch Again.</li>
                 </ol>
-                <p><strong>Version tip:</strong> If you already installed an older launcher, reinstall this exact version so Windows refreshes the local launcher files.</p>
+                <p><strong>Version tip:</strong> If you already installed an older launcher, rerun this installer version so Windows refreshes the local launcher files.</p>
             </div>
             <div class="pane pane-light">
                 <h2>Launch Target</h2>

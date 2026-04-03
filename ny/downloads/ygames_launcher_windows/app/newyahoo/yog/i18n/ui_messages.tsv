@@ -559,7 +559,7 @@ fa	request_failed	درخواست ناموفق بود
 fa	malformed_text_data_from	داده های متنی نادرست از {0}
 fa	error_loading_text	خطا در بارگیری متن: {0}
 fa	forfeit_confirm	آیا واقعاً می خواهید این بازی را از دست بدهید؟
-us	dialog_title	Game Login
+us	dialog_title	RetroPlayHub Login
 us	sign_in	Sign In
 us	register	Register
 us	change_password	Change Password

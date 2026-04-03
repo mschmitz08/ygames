@@ -300,7 +300,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=Cp1252"/>
-<title>New Yahoo! Launcher</title>
+<title>RetroPlayHub Launcher</title>
 <style type="text/css">
 body {
     margin: 0;
@@ -759,7 +759,7 @@ function launch(mode) {
 <div class="launcher-shell">
     <div class="launcher-card">
         <div class="hero">
-            <div class="eyebrow">Y! GAMES REVIVAL</div>
+            <div class="eyebrow">RETROPLAYHUB</div>
             <h1>Pick a game, choose a room, and step right in.</h1>
             <p>The launcher keeps the front door simple now: one place to enter Checkers or Pool, create an account, or update your password before you hit the table.</p>
             <div class="version">Launcher v<%=launcherVersion%></div>

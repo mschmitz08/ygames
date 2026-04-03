@@ -1,0 +1,810 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Fragment>
+    <DirectoryRef Id="INSTALLFOLDER">
+      <Directory Id="DIR_app_7D1043473D" Name="app">
+        <Directory Id="DIR_app_newyahoo_6CDF9FE501" Name="newyahoo">
+          <Directory Id="DIR_app_newyahoo_yog_A1989245F5" Name="yog">
+            <Directory Id="DIR_app_newyahoo_yog_i_ABDDFAC9D0" Name="i">
+              <Directory Id="DIR_app_newyahoo_yog_i_us_7A94A571E4" Name="us">
+                <Directory Id="DIR_app_newyahoo_yog_i_us_ga_DA55840DA4" Name="ga">
+                  <Directory Id="DIR_app_newyahoo_yog_i_us_ga_sl_2_55A4AA438E" Name="sl_2">
+                  </Directory>
+                  <Directory Id="DIR_app_newyahoo_yog_i_us_ga_sx_63D4355269" Name="sx">
+                  </Directory>
+                </Directory>
+              </Directory>
+            </Directory>
+            <Directory Id="DIR_app_newyahoo_yog_i18n_EA09C2E03C" Name="i18n">
+            </Directory>
+            <Directory Id="DIR_app_newyahoo_yog_resource_A543C4B56D" Name="resource">
+              <Directory Id="DIR_app_newyahoo_yog_resource_common_E50C632E13" Name="common">
+              </Directory>
+              <Directory Id="DIR_app_newyahoo_yog_resource_pool_B6E0682D72" Name="pool">
+              </Directory>
+            </Directory>
+            <Directory Id="DIR_app_newyahoo_yog_y_4F50759650" Name="y">
+              <Directory Id="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Name="k">
+              </Directory>
+              <Directory Id="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Name="po">
+              </Directory>
+            </Directory>
+          </Directory>
+        </Directory>
+      </Directory>
+      <Directory Id="DIR_runtime_F2E18FFC17" Name="runtime">
+      </Directory>
+      <Directory Id="DIR_sites_23BF00BD8A" Name="sites">
+        <Directory Id="DIR_sites_57b9a0ca67a35b24_26E1B63581" Name="57b9a0ca67a35b24">
+          <Directory Id="DIR_sites_57b9a0ca67a35b24_app_E299428839" Name="app">
+            <Directory Id="DIR_sites_57b9a0ca67a35b24_app_newyahoo_BA3FA04F4F" Name="newyahoo">
+              <Directory Id="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_7FD3244D5F" Name="yog">
+                <Directory Id="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_i_27ED1C3F55" Name="i">
+                  <Directory Id="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_i_us_D0D3B7F6E9" Name="us">
+                    <Directory Id="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_i_us_ga_B0AD9145DC" Name="ga">
+                      <Directory Id="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_i_us_ga_sl_65BAB9E70B" Name="sl_2">
+                      </Directory>
+                      <Directory Id="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_i_us_ga_sx_580D8ACDFC" Name="sx">
+                      </Directory>
+                    </Directory>
+                  </Directory>
+                </Directory>
+                <Directory Id="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_i18n_5B275A93FE" Name="i18n">
+                </Directory>
+                <Directory Id="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_resource_183C926195" Name="resource">
+                  <Directory Id="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_resource_c_8A7A2769B5" Name="common">
+                  </Directory>
+                  <Directory Id="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_resource_p_33077E0985" Name="pool">
+                  </Directory>
+                </Directory>
+                <Directory Id="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_A18C0C3848" Name="y">
+                  <Directory Id="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Name="k">
+                  </Directory>
+                  <Directory Id="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Name="po">
+                  </Directory>
+                </Directory>
+              </Directory>
+            </Directory>
+          </Directory>
+          <Directory Id="DIR_sites_57b9a0ca67a35b24_launches_2591567F88" Name="launches">
+          </Directory>
+        </Directory>
+      </Directory>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <ComponentGroup Id="LauncherFiles">
+    <Component Id="CMP_install_launcher_bat_F66AD8304A" Directory="INSTALLFOLDER" Guid="*">
+      <File Id="FIL_install_launcher_bat_F66AD8304A" Source="$(var.LauncherSourceDir)\install_launcher.bat" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_launcher_manifest_txt_1B41B880C6" Directory="INSTALLFOLDER" Guid="*">
+      <File Id="FIL_launcher_manifest_txt_1B41B880C6" Source="$(var.LauncherSourceDir)\launcher_manifest.txt" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_launcher_settings_ini_77200CEEBD" Directory="INSTALLFOLDER" Guid="*">
+      <File Id="FIL_launcher_settings_ini_77200CEEBD" Source="$(var.LauncherSourceDir)\launcher_settings.ini" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_launcher_version_txt_CB8DE80DF7" Directory="INSTALLFOLDER" Guid="*">
+      <File Id="FIL_launcher_version_txt_CB8DE80DF7" Source="$(var.LauncherSourceDir)\launcher_version.txt" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_README_md_8EC9A00BFD" Directory="INSTALLFOLDER" Guid="*">
+      <File Id="FIL_README_md_8EC9A00BFD" Source="$(var.LauncherSourceDir)\README.md" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_RetroPlayHubLauncher_deps_json_8E5B94A787" Directory="INSTALLFOLDER" Guid="*">
+      <File Id="FIL_RetroPlayHubLauncher_deps_json_8E5B94A787" Source="$(var.LauncherSourceDir)\RetroPlayHubLauncher.deps.json" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_RetroPlayHubLauncher_dll_DC291E2433" Directory="INSTALLFOLDER" Guid="*">
+      <File Id="FIL_RetroPlayHubLauncher_dll_DC291E2433" Source="$(var.LauncherSourceDir)\RetroPlayHubLauncher.dll" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_RetroPlayHubLauncher_exe_B80563F748" Directory="INSTALLFOLDER" Guid="*">
+      <File Id="FIL_RetroPlayHubLauncher_exe_B80563F748" Source="$(var.LauncherSourceDir)\RetroPlayHubLauncher.exe" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_RetroPlayHubLauncher_pdb_6601127278" Directory="INSTALLFOLDER" Guid="*">
+      <File Id="FIL_RetroPlayHubLauncher_pdb_6601127278" Source="$(var.LauncherSourceDir)\RetroPlayHubLauncher.pdb" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_RetroPlayHubLauncher_runtimeconfig_json_1541AA3A99" Directory="INSTALLFOLDER" Guid="*">
+      <File Id="FIL_RetroPlayHubLauncher_runtimeconfig_json_1541AA3A99" Source="$(var.LauncherSourceDir)\RetroPlayHubLauncher.runtimeconfig.json" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_RetroPlayHubUpdater_deps_json_10A8DADC88" Directory="INSTALLFOLDER" Guid="*">
+      <File Id="FIL_RetroPlayHubUpdater_deps_json_10A8DADC88" Source="$(var.LauncherSourceDir)\RetroPlayHubUpdater.deps.json" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_RetroPlayHubUpdater_dll_14A9620B55" Directory="INSTALLFOLDER" Guid="*">
+      <File Id="FIL_RetroPlayHubUpdater_dll_14A9620B55" Source="$(var.LauncherSourceDir)\RetroPlayHubUpdater.dll" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_RetroPlayHubUpdater_exe_86A9A79EA7" Directory="INSTALLFOLDER" Guid="*">
+      <File Id="FIL_RetroPlayHubUpdater_exe_86A9A79EA7" Source="$(var.LauncherSourceDir)\RetroPlayHubUpdater.exe" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_RetroPlayHubUpdater_pdb_496FD01BBC" Directory="INSTALLFOLDER" Guid="*">
+      <File Id="FIL_RetroPlayHubUpdater_pdb_496FD01BBC" Source="$(var.LauncherSourceDir)\RetroPlayHubUpdater.pdb" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_RetroPlayHubUpdater_runtimeconfig_json_8534D90646" Directory="INSTALLFOLDER" Guid="*">
+      <File Id="FIL_RetroPlayHubUpdater_runtimeconfig_json_8534D90646" Source="$(var.LauncherSourceDir)\RetroPlayHubUpdater.runtimeconfig.json" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_uninstall_launcher_bat_4E1BC67795" Directory="INSTALLFOLDER" Guid="*">
+      <File Id="FIL_uninstall_launcher_bat_4E1BC67795" Source="$(var.LauncherSourceDir)\uninstall_launcher.bat" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_client_jar_464434D669" Directory="DIR_app_newyahoo_6CDF9FE501" Guid="*">
+      <File Id="FIL_app_newyahoo_client_jar_464434D669" Source="$(var.LauncherSourceDir)\app\newyahoo\client.jar" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_i_us_ga_sl_2_ck_gif_351A6EF567" Directory="DIR_app_newyahoo_yog_i_us_ga_sl_2_55A4AA438E" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_i_us_ga_sl_2_ck_gif_351A6EF567" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\i\us\ga\sl_2\ck.gif" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_i_us_ga_sl_2_Thumbs_db_6F48EF21F9" Directory="DIR_app_newyahoo_yog_i_us_ga_sl_2_55A4AA438E" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_i_us_ga_sl_2_Thumbs_db_6F48EF21F9" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\i\us\ga\sl_2\Thumbs.db" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_i_us_ga_sx_ck_gif_9295770F9F" Directory="DIR_app_newyahoo_yog_i_us_ga_sx_63D4355269" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_i_us_ga_sx_ck_gif_9295770F9F" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\i\us\ga\sx\ck.gif" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_i_us_ga_sx_Thumbs_db_54FB2A4707" Directory="DIR_app_newyahoo_yog_i_us_ga_sx_63D4355269" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_i_us_ga_sx_Thumbs_db_54FB2A4707" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\i\us\ga\sx\Thumbs.db" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_i18n_ui_messages_tsv_DB17216209" Directory="DIR_app_newyahoo_yog_i18n_EA09C2E03C" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_i18n_ui_messages_tsv_DB17216209" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\i18n\ui_messages.tsv" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_resource_common_beep_au_2F7BED42B7" Directory="DIR_app_newyahoo_yog_resource_common_E50C632E13" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_resource_common_beep_au_2F7BED42B7" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\resource\common\beep.au" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_resource_pool_ball_au_9276A35BBE" Directory="DIR_app_newyahoo_yog_resource_pool_B6E0682D72" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_resource_pool_ball_au_9276A35BBE" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\resource\pool\ball.au" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_resource_pool_ball_soft_au_8D99C1D20B" Directory="DIR_app_newyahoo_yog_resource_pool_B6E0682D72" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_resource_pool_ball_soft_au_8D99C1D20B" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\resource\pool\ball-soft.au" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_resource_pool_cue_au_7F9198EFFF" Directory="DIR_app_newyahoo_yog_resource_pool_B6E0682D72" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_resource_pool_cue_au_7F9198EFFF" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\resource\pool\cue.au" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_resource_pool_cushion_au_AFFFF09214" Directory="DIR_app_newyahoo_yog_resource_pool_B6E0682D72" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_resource_pool_cushion_au_AFFFF09214" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\resource\pool\cushion.au" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_resource_pool_pocket_au_208717EB51" Directory="DIR_app_newyahoo_yog_resource_pool_B6E0682D72" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_resource_pool_pocket_au_208717EB51" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\resource\pool\pocket.au" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_am_t4_ldict_50434BA731" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_am_t4_ldict_50434BA731" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\am-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_ar_t4_ldict_EDACE0B5F6" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_ar_t4_ldict_EDACE0B5F6" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\ar-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_as_t4_ldict_365FFC04D4" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_as_t4_ldict_365FFC04D4" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\as-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_bg_t4_ldict_33F54F605A" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_bg_t4_ldict_33F54F605A" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\bg-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_bn_t4_ldict_6EDD46A036" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_bn_t4_ldict_6EDD46A036" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\bn-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_cs_t4_ldict_7D34359D6D" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_cs_t4_ldict_7D34359D6D" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\cs-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_da_t4_ldict_69AD0DBC97" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_da_t4_ldict_69AD0DBC97" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\da-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_de_t4_ldict_1E7A39A3C6" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_de_t4_ldict_1E7A39A3C6" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\de-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_el_t4_ldict_E8D5BA75C3" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_el_t4_ldict_E8D5BA75C3" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\el-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_es_t4_ldict_D308EC8AEC" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_es_t4_ldict_D308EC8AEC" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\es-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_fa_t4_ldict_88D0B124D5" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_fa_t4_ldict_88D0B124D5" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\fa-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_fi_t4_ldict_16DD2ADA20" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_fi_t4_ldict_16DD2ADA20" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\fi-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_fr_t4_ldict_E6739C4BB2" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_fr_t4_ldict_E6739C4BB2" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\fr-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_gu_t4_ldict_53F4ECD021" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_gu_t4_ldict_53F4ECD021" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\gu-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_ha_t4_ldict_0A6F83A9C9" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_ha_t4_ldict_0A6F83A9C9" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\ha-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_he_t4_ldict_D4D799E38B" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_he_t4_ldict_D4D799E38B" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\he-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_hi_t4_ldict_FC6B5315C2" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_hi_t4_ldict_FC6B5315C2" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\hi-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_hu_t4_ldict_189C785CF5" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_hu_t4_ldict_189C785CF5" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\hu-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_id_t4_ldict_1956855569" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_id_t4_ldict_1956855569" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\id-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_it_t4_ldict_3E7F6928DE" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_it_t4_ldict_3E7F6928DE" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\it-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_ja_t4_ldict_FDCD4A7952" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_ja_t4_ldict_FDCD4A7952" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\ja-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_kn_t4_ldict_3EAB3D004E" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_kn_t4_ldict_3EAB3D004E" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\kn-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_ko_t4_ldict_6CE95B1C7E" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_ko_t4_ldict_6CE95B1C7E" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\ko-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_ml_t4_ldict_717D3DBB78" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_ml_t4_ldict_717D3DBB78" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\ml-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_mr_t4_ldict_C33B94919F" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_mr_t4_ldict_C33B94919F" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\mr-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_ms_t4_ldict_5494A3FAC5" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_ms_t4_ldict_5494A3FAC5" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\ms-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_my_t4_ldict_65C2AE1F6F" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_my_t4_ldict_65C2AE1F6F" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\my-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_nl_t4_ldict_207C383DCC" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_nl_t4_ldict_207C383DCC" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\nl-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_no_t4_ldict_789CB1F6B5" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_no_t4_ldict_789CB1F6B5" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\no-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_or_t4_ldict_B0057622D3" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_or_t4_ldict_B0057622D3" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\or-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_pa_t4_ldict_A1E8A0CEA9" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_pa_t4_ldict_A1E8A0CEA9" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\pa-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_pl_t4_ldict_D3A245D631" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_pl_t4_ldict_D3A245D631" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\pl-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_pt_t4_ldict_996C7307C7" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_pt_t4_ldict_996C7307C7" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\pt-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_ro_t4_ldict_2FB39E1CA9" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_ro_t4_ldict_2FB39E1CA9" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\ro-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_ru_t4_ldict_76E43738B1" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_ru_t4_ldict_76E43738B1" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\ru-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_sk_t4_ldict_318C383320" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_sk_t4_ldict_318C383320" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\sk-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_sv_t4_ldict_5E4AA9D6A3" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_sv_t4_ldict_5E4AA9D6A3" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\sv-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_sw_t4_ldict_AD7C6C9F4A" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_sw_t4_ldict_AD7C6C9F4A" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\sw-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_ta_t4_ldict_EA43F9501D" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_ta_t4_ldict_EA43F9501D" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\ta-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_te_t4_ldict_347F49F9FD" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_te_t4_ldict_347F49F9FD" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\te-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_th_t4_ldict_BCADAC35A1" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_th_t4_ldict_BCADAC35A1" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\th-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_tl_t4_ldict_403D951BDA" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_tl_t4_ldict_403D951BDA" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\tl-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_tr_t4_ldict_39D48E87FF" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_tr_t4_ldict_39D48E87FF" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\tr-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_uk_t4_ldict_DA9E443A74" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_uk_t4_ldict_DA9E443A74" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\uk-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_ur_t4_ldict_B0E90B6F05" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_ur_t4_ldict_B0E90B6F05" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\ur-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_us_t4_ldict_CFAAD97A2D" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_us_t4_ldict_CFAAD97A2D" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\us-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_vi_t4_ldict_18C7B668E4" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_vi_t4_ldict_18C7B668E4" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\vi-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_yo_t4_ldict_DC78269944" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_yo_t4_ldict_DC78269944" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\yo-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_zh_cn_t4_ldict_8A6C1E3B01" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_zh_cn_t4_ldict_8A6C1E3B01" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\zh_cn-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_k_zh_tw_t4_ldict_B3C6955ADA" Directory="DIR_app_newyahoo_yog_y_k_85F0C74B7D" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_k_zh_tw_t4_ldict_B3C6955ADA" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\k\zh_tw-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_am_ti_ldict_5E71FBED99" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_am_ti_ldict_5E71FBED99" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\am-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_ar_ti_ldict_40279387ED" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_ar_ti_ldict_40279387ED" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\ar-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_as_ti_ldict_E6C4170C30" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_as_ti_ldict_E6C4170C30" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\as-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_bg_ti_ldict_19549A91C2" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_bg_ti_ldict_19549A91C2" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\bg-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_bn_ti_ldict_7B06FEFAB9" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_bn_ti_ldict_7B06FEFAB9" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\bn-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_cs_ti_ldict_14C69F06F6" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_cs_ti_ldict_14C69F06F6" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\cs-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_da_ti_ldict_27E4396DB9" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_da_ti_ldict_27E4396DB9" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\da-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_de_ti_ldict_CF19F4CCF2" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_de_ti_ldict_CF19F4CCF2" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\de-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_el_ti_ldict_8BB863815C" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_el_ti_ldict_8BB863815C" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\el-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_es_ti_ldict_B0D7E85CB0" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_es_ti_ldict_B0D7E85CB0" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\es-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_fa_ti_ldict_D83ABF4F1B" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_fa_ti_ldict_D83ABF4F1B" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\fa-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_fi_ti_ldict_8E0EAE6112" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_fi_ti_ldict_8E0EAE6112" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\fi-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_fr_ti_ldict_338BA6763E" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_fr_ti_ldict_338BA6763E" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\fr-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_gu_ti_ldict_5056A3DBC9" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_gu_ti_ldict_5056A3DBC9" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\gu-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_ha_ti_ldict_9525BC4AA7" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_ha_ti_ldict_9525BC4AA7" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\ha-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_he_ti_ldict_21CB200DB2" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_he_ti_ldict_21CB200DB2" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\he-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_hi_ti_ldict_FA75DC9240" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_hi_ti_ldict_FA75DC9240" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\hi-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_hu_ti_ldict_F61EFE185D" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_hu_ti_ldict_F61EFE185D" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\hu-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_id_ti_ldict_4811C370CF" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_id_ti_ldict_4811C370CF" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\id-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_it_ti_ldict_08252D0184" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_it_ti_ldict_08252D0184" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\it-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_ja_ti_ldict_C5B9AEF6BF" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_ja_ti_ldict_C5B9AEF6BF" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\ja-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_kn_ti_ldict_02F5845EDB" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_kn_ti_ldict_02F5845EDB" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\kn-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_ko_ti_ldict_330F0C1E54" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_ko_ti_ldict_330F0C1E54" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\ko-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_ml_ti_ldict_375E578F6B" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_ml_ti_ldict_375E578F6B" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\ml-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_mr_ti_ldict_FB3599948C" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_mr_ti_ldict_FB3599948C" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\mr-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_ms_ti_ldict_945D346B3F" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_ms_ti_ldict_945D346B3F" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\ms-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_my_ti_ldict_50E1FBF835" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_my_ti_ldict_50E1FBF835" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\my-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_nl_ti_ldict_733BACDFC8" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_nl_ti_ldict_733BACDFC8" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\nl-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_no_ti_ldict_0BC6C8E3CE" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_no_ti_ldict_0BC6C8E3CE" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\no-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_or_ti_ldict_5B04199B1F" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_or_ti_ldict_5B04199B1F" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\or-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_pa_ti_ldict_E9E18E3345" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_pa_ti_ldict_E9E18E3345" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\pa-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_pl_ti_ldict_C8DF6355E4" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_pl_ti_ldict_C8DF6355E4" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\pl-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_pt_ti_ldict_C654043218" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_pt_ti_ldict_C654043218" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\pt-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_ro_ti_ldict_6E60878E8C" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_ro_ti_ldict_6E60878E8C" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\ro-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_ru_ti_ldict_DA79A5008A" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_ru_ti_ldict_DA79A5008A" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\ru-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_sk_ti_ldict_2A4AEFED2D" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_sk_ti_ldict_2A4AEFED2D" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\sk-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_sv_ti_ldict_887D25F91A" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_sv_ti_ldict_887D25F91A" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\sv-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_sw_ti_ldict_C1CFA6C594" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_sw_ti_ldict_C1CFA6C594" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\sw-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_ta_ti_ldict_3E9BC97115" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_ta_ti_ldict_3E9BC97115" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\ta-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_te_ti_ldict_28B692C9ED" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_te_ti_ldict_28B692C9ED" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\te-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_th_ti_ldict_E1500D58CC" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_th_ti_ldict_E1500D58CC" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\th-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_tl_ti_ldict_A30560C0D8" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_tl_ti_ldict_A30560C0D8" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\tl-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_tr_ti_ldict_9B7477ED95" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_tr_ti_ldict_9B7477ED95" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\tr-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_uk_ti_ldict_CA6F5A3067" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_uk_ti_ldict_CA6F5A3067" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\uk-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_ur_ti_ldict_9207FF96C1" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_ur_ti_ldict_9207FF96C1" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\ur-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_us_ti_ldict_3A28E0C882" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_us_ti_ldict_3A28E0C882" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\us-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_vi_ti_ldict_F090994788" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_vi_ti_ldict_F090994788" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\vi-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_yo_ti_ldict_7A509F3EB5" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_yo_ti_ldict_7A509F3EB5" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\yo-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_zh_cn_ti_ldict_88A104A2B7" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_zh_cn_ti_ldict_88A104A2B7" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\zh_cn-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_app_newyahoo_yog_y_po_zh_tw_ti_ldict_1D85BB8BEC" Directory="DIR_app_newyahoo_yog_y_po_2F78E8FFA9" Guid="*">
+      <File Id="FIL_app_newyahoo_yog_y_po_zh_tw_ti_ldict_1D85BB8BEC" Source="$(var.LauncherSourceDir)\app\newyahoo\yog\y\po\zh_tw-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_runtime_README_md_8F2909C0F2" Directory="DIR_runtime_F2E18FFC17" Guid="*">
+      <File Id="FIL_runtime_README_md_8F2909C0F2" Source="$(var.LauncherSourceDir)\runtime\README.md" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_client_jar_8D094C63C4" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_BA3FA04F4F" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_client_jar_8D094C63C4" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\client.jar" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_i_us_ga_sl_4CEE952E1B" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_i_us_ga_sl_65BAB9E70B" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_i_us_ga_sl_4CEE952E1B" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\i\us\ga\sl_2\ck.gif" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_i_us_ga_sl_D0ACC530E0" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_i_us_ga_sl_65BAB9E70B" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_i_us_ga_sl_D0ACC530E0" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\i\us\ga\sl_2\Thumbs.db" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_i_us_ga_sx_527D758CD2" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_i_us_ga_sx_580D8ACDFC" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_i_us_ga_sx_527D758CD2" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\i\us\ga\sx\ck.gif" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_i_us_ga_sx_3C772B30EC" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_i_us_ga_sx_580D8ACDFC" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_i_us_ga_sx_3C772B30EC" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\i\us\ga\sx\Thumbs.db" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_i18n_ui_me_1131D5358C" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_i18n_5B275A93FE" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_i18n_ui_me_1131D5358C" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\i18n\ui_messages.tsv" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_resource_c_0105D0F971" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_resource_c_8A7A2769B5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_resource_c_0105D0F971" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\resource\common\beep.au" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_resource_p_E22531BAC8" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_resource_p_33077E0985" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_resource_p_E22531BAC8" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\resource\pool\ball.au" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_resource_p_7EE04C2158" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_resource_p_33077E0985" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_resource_p_7EE04C2158" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\resource\pool\ball-soft.au" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_resource_p_117930EE3D" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_resource_p_33077E0985" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_resource_p_117930EE3D" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\resource\pool\cue.au" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_resource_p_EBB1AF5757" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_resource_p_33077E0985" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_resource_p_EBB1AF5757" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\resource\pool\cushion.au" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_resource_p_9EE8F47EB9" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_resource_p_33077E0985" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_resource_p_9EE8F47EB9" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\resource\pool\pocket.au" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_am_t4__E2785F8ED5" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_am_t4__E2785F8ED5" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\am-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_ar_t4__969CD2D88F" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_ar_t4__969CD2D88F" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\ar-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_as_t4__E8BCE3357A" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_as_t4__E8BCE3357A" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\as-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_bg_t4__A5CB12DB82" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_bg_t4__A5CB12DB82" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\bg-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_bn_t4__4F2BB5F854" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_bn_t4__4F2BB5F854" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\bn-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_cs_t4__38E49E69E7" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_cs_t4__38E49E69E7" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\cs-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_da_t4__4EB9868588" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_da_t4__4EB9868588" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\da-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_de_t4__3C7F47CFE1" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_de_t4__3C7F47CFE1" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\de-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_el_t4__8ECA1BBAF3" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_el_t4__8ECA1BBAF3" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\el-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_es_t4__EED22466EA" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_es_t4__EED22466EA" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\es-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_fa_t4__4B49B5F489" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_fa_t4__4B49B5F489" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\fa-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_fi_t4__273479B314" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_fi_t4__273479B314" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\fi-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_fr_t4__08999DCD99" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_fr_t4__08999DCD99" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\fr-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_gu_t4__85D020D63A" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_gu_t4__85D020D63A" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\gu-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_ha_t4__4A56086879" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_ha_t4__4A56086879" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\ha-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_he_t4__7046C47BBA" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_he_t4__7046C47BBA" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\he-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_hi_t4__0DE33B5804" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_hi_t4__0DE33B5804" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\hi-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_hu_t4__1ECB011115" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_hu_t4__1ECB011115" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\hu-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_id_t4__0E132B5779" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_id_t4__0E132B5779" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\id-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_it_t4__F94EFE34CB" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_it_t4__F94EFE34CB" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\it-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_ja_t4__EE10637D45" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_ja_t4__EE10637D45" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\ja-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_kn_t4__590BB8DF6B" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_kn_t4__590BB8DF6B" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\kn-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_ko_t4__DE8CDD09AA" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_ko_t4__DE8CDD09AA" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\ko-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_ml_t4__A743EF5E80" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_ml_t4__A743EF5E80" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\ml-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_mr_t4__E3739DB195" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_mr_t4__E3739DB195" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\mr-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_ms_t4__95E02B0559" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_ms_t4__95E02B0559" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\ms-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_my_t4__B7EB0B0551" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_my_t4__B7EB0B0551" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\my-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_nl_t4__AA6A2DC268" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_nl_t4__AA6A2DC268" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\nl-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_no_t4__F76729A8BD" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_no_t4__F76729A8BD" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\no-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_or_t4__6E42862A34" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_or_t4__6E42862A34" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\or-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_pa_t4__50FF1DB535" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_pa_t4__50FF1DB535" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\pa-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_pl_t4__4AD68DA372" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_pl_t4__4AD68DA372" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\pl-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_pt_t4__CBF4B4C3E8" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_pt_t4__CBF4B4C3E8" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\pt-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_ro_t4__CCC4DC9EF3" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_ro_t4__CCC4DC9EF3" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\ro-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_ru_t4__9BFD43E5EF" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_ru_t4__9BFD43E5EF" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\ru-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_sk_t4__F0E086F6AB" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_sk_t4__F0E086F6AB" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\sk-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_sv_t4__746E0A5366" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_sv_t4__746E0A5366" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\sv-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_sw_t4__CB5297C292" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_sw_t4__CB5297C292" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\sw-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_ta_t4__E3BA0CE5EA" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_ta_t4__E3BA0CE5EA" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\ta-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_te_t4__0F1F7F3E94" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_te_t4__0F1F7F3E94" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\te-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_th_t4__75732CEF55" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_th_t4__75732CEF55" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\th-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_tl_t4__D545B68D2A" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_tl_t4__D545B68D2A" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\tl-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_tr_t4__63FFD2CC88" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_tr_t4__63FFD2CC88" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\tr-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_uk_t4__19A8F24C8B" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_uk_t4__19A8F24C8B" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\uk-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_ur_t4__3DD4315B70" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_ur_t4__3DD4315B70" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\ur-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_us_t4__1EB7C19706" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_us_t4__1EB7C19706" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\us-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_vi_t4__58578E9091" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_vi_t4__58578E9091" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\vi-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_yo_t4__633C2205E7" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_yo_t4__633C2205E7" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\yo-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_zh_cn__A3957099C7" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_zh_cn__A3957099C7" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\zh_cn-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_zh_tw__6E0DE02CAD" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_60A0F523F5" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_k_zh_tw__6E0DE02CAD" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\k\zh_tw-t4.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_am_ti_2EB43DCAF3" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_am_ti_2EB43DCAF3" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\am-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_ar_ti_F143DCE305" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_ar_ti_F143DCE305" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\ar-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_as_ti_B09EA7FD22" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_as_ti_B09EA7FD22" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\as-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_bg_ti_103333C5FB" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_bg_ti_103333C5FB" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\bg-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_bn_ti_76EC81DE35" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_bn_ti_76EC81DE35" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\bn-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_cs_ti_D299BAA9E6" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_cs_ti_D299BAA9E6" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\cs-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_da_ti_13ECBCB91E" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_da_ti_13ECBCB91E" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\da-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_de_ti_3E667015F7" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_de_ti_3E667015F7" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\de-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_el_ti_CC53E951EA" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_el_ti_CC53E951EA" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\el-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_es_ti_7AB5A40CE2" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_es_ti_7AB5A40CE2" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\es-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_fa_ti_C335C19EF2" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_fa_ti_C335C19EF2" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\fa-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_fi_ti_F4E9DCED8A" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_fi_ti_F4E9DCED8A" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\fi-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_fr_ti_18458FA550" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_fr_ti_18458FA550" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\fr-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_gu_ti_E9646DB3F3" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_gu_ti_E9646DB3F3" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\gu-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_ha_ti_529F861056" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_ha_ti_529F861056" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\ha-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_he_ti_795BE478EC" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_he_ti_795BE478EC" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\he-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_hi_ti_CA6295C523" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_hi_ti_CA6295C523" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\hi-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_hu_ti_4BA985CC63" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_hu_ti_4BA985CC63" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\hu-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_id_ti_C06609F7D2" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_id_ti_C06609F7D2" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\id-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_it_ti_5224308C4B" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_it_ti_5224308C4B" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\it-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_ja_ti_2C6F32B0F1" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_ja_ti_2C6F32B0F1" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\ja-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_kn_ti_50612614D0" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_kn_ti_50612614D0" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\kn-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_ko_ti_0507206631" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_ko_ti_0507206631" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\ko-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_ml_ti_8D52DF9CEA" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_ml_ti_8D52DF9CEA" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\ml-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_mr_ti_3DFC8157DA" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_mr_ti_3DFC8157DA" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\mr-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_ms_ti_65B95A6A15" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_ms_ti_65B95A6A15" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\ms-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_my_ti_A86CE42BF3" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_my_ti_A86CE42BF3" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\my-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_nl_ti_A02765C190" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_nl_ti_A02765C190" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\nl-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_no_ti_E4BC6B7B77" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_no_ti_E4BC6B7B77" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\no-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_or_ti_67D9163160" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_or_ti_67D9163160" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\or-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_pa_ti_FACACBED4B" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_pa_ti_FACACBED4B" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\pa-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_pl_ti_BF60175E28" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_pl_ti_BF60175E28" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\pl-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_pt_ti_F30AC63046" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_pt_ti_F30AC63046" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\pt-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_ro_ti_6CA28143FC" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_ro_ti_6CA28143FC" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\ro-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_ru_ti_DC9562DF4D" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_ru_ti_DC9562DF4D" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\ru-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_sk_ti_FF06454DFE" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_sk_ti_FF06454DFE" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\sk-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_sv_ti_8DB506D0DF" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_sv_ti_8DB506D0DF" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\sv-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_sw_ti_BE3A0C8CEC" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_sw_ti_BE3A0C8CEC" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\sw-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_ta_ti_E13CBF6B92" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_ta_ti_E13CBF6B92" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\ta-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_te_ti_3851838F9A" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_te_ti_3851838F9A" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\te-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_th_ti_E9344862BB" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_th_ti_E9344862BB" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\th-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_tl_ti_9C72FAC9C8" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_tl_ti_9C72FAC9C8" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\tl-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_tr_ti_708F136C62" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_tr_ti_708F136C62" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\tr-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_uk_ti_D13075F64A" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_uk_ti_D13075F64A" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\uk-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_ur_ti_C59EA8E30E" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_ur_ti_C59EA8E30E" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\ur-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_us_ti_61807B7BC8" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_us_ti_61807B7BC8" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\us-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_vi_ti_98A4E14807" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_vi_ti_98A4E14807" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\vi-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_yo_ti_D14C93404C" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_yo_ti_D14C93404C" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\yo-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_zh_cn_D7144FF048" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_zh_cn_D7144FF048" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\zh_cn-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_zh_tw_E246F71E95" Directory="DIR_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_A53D6359F4" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_app_newyahoo_yog_y_po_zh_tw_E246F71E95" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\app\newyahoo\yog\y\po\zh_tw-ti.ldict" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_launches_checkers_badger_br_05D8D1DFF0" Directory="DIR_sites_57b9a0ca67a35b24_launches_2591567F88" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_launches_checkers_badger_br_05D8D1DFF0" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\launches\checkers_badger_bridge.html" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_launches_launch_policy_4934AC097B" Directory="DIR_sites_57b9a0ca67a35b24_launches_2591567F88" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_launches_launch_policy_4934AC097B" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\launches\launch.policy" KeyPath="yes" />
+    </Component>
+    <Component Id="CMP_sites_57b9a0ca67a35b24_launches_pool_8_ball_nightm_60FE83FD2A" Directory="DIR_sites_57b9a0ca67a35b24_launches_2591567F88" Guid="*">
+      <File Id="FIL_sites_57b9a0ca67a35b24_launches_pool_8_ball_nightm_60FE83FD2A" Source="$(var.LauncherSourceDir)\sites\57b9a0ca67a35b24\launches\pool_8_ball_nightmare.html" KeyPath="yes" />
+    </Component>
+    </ComponentGroup>
+  </Fragment>
+</Wix>

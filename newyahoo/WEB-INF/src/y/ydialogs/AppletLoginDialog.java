@@ -66,7 +66,7 @@ public class AppletLoginDialog extends Dialog {
     protected int mode;
 
     public AppletLoginDialog(AbstractYahooGamesApplet applet) {
-        super(findOwnerFrame(applet), applet.uiText("dialog_title", "Game Login"), false);
+        super(findOwnerFrame(applet), applet.uiText("dialog_title", "RetroPlayHub Login"), false);
         this.applet = applet;
         initializeFonts();
 
@@ -211,7 +211,7 @@ public class AppletLoginDialog extends Dialog {
 
     private String buildFontSample() {
         StringBuffer sample = new StringBuffer();
-        appendSample(sample, applet.uiText("dialog_title", "Game Login"));
+        appendSample(sample, applet.uiText("dialog_title", "RetroPlayHub Login"));
         appendSample(sample, controlText("sign_in", "Sign In"));
         appendSample(sample, controlText("register", "Register"));
         appendSample(sample, controlText("change_password", "Change Password"));
@@ -338,7 +338,7 @@ public class AppletLoginDialog extends Dialog {
             txtField4.setEchoChar('*');
             btnPrimary.setLabel(controlText("update_password", "Update Password"));
         }
-        setTitle(applet.uiText("dialog_title", "Game Login"));
+        setTitle(applet.uiText("dialog_title", "RetroPlayHub Login"));
         refreshModeButtons();
         pack();
     }
@@ -571,7 +571,7 @@ public class AppletLoginDialog extends Dialog {
 
             g.setColor(Color.white);
             g.setFont(chooseUiFont(applet, roomTitle(), Font.BOLD, 24));
-            g.drawString("Y! Games Revival", 34, 64);
+            g.drawString("RetroPlayHub", 34, 64);
 
             g.setColor(new Color(232, 220, 198));
             g.setFont(chooseUiFont(applet, roomTitle(), Font.PLAIN, 13));
