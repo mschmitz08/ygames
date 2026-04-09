@@ -503,6 +503,7 @@ public class PoolEngine implements ClockHandler, TimerHandler {
 	public void stop() {
 		for (IBall element : ball)
 			element.stop();
+		moving = false;
 
 	}
 }

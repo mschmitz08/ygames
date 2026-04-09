@@ -385,6 +385,10 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 		firstStrike = isFirstStrike();
 		synchronized (poolEngine) {
 			m_currentState = 1;
+			// Even a paper-thin tap should complete through the normal stop path.
+			// Without priming this state, a zero-motion strike can leave the game
+			// stuck waiting for a stop transition that never occurs.
+			poolEngine.moving = true;
 			if (!z) {
 				boolean flag = Bj(getBall(index));
 				for (IBall element : ball)
