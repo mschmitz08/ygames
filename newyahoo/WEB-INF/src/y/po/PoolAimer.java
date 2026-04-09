@@ -9,6 +9,8 @@ import java.awt.Event;
 import java.awt.Image;
 import java.util.Vector;
 
+import core.PoolTraceLog;
+
 import y.controls.ArrowControl;
 import y.controls.YahooControl;
 import y.controls.YahooGraphics;
@@ -92,6 +94,7 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 	Image				R;
 	YIPoint				firstColl1;
 	Vector<PoolBall>	colBalls;
+	String				lastPreviewSummary;
 
 	public int			maxAimCount	= 3;
 
@@ -120,6 +123,7 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 		pa_Q = YahooPoolImageList.loadImages().o;
 		R = YahooPoolImageList.loadImages().p;
 		firstColl1 = new YIPoint();
+		lastPreviewSummary = "preview not computed";
 		table = _pcls29;
 		arrow = new ArrowControl(2, 10, 20);
 		arrow.setForeColor(Color.red);
@@ -423,8 +427,14 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 		ballColided = false;
 		index = -1;
 		firstColl.setCoords(0, 0);
+		lastPreviewSummary = "selected="
+				+ (selectedBall == null ? "null" : Integer.toString(selectedBall
+						.getIndex())) + " cueVector="
+				+ (cueVector == null ? "null" : "(" + cueVector.x + ","
+						+ cueVector.y + ")");
 
 		if (selectedBall == null || selectedBall.inSlot() || cueVector == null) {
+			lastPreviewSummary = lastPreviewSummary + " skipped";
 			aim.invalidate();
 			return;
 		}
@@ -432,6 +442,7 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 		YPoint startFloatPoint = startPoint.toYVector();
 		YVector forwardVector = new YVector(-cueVector.x, -cueVector.y);
 		if (forwardVector.abs() <= 0.0001F) {
+			lastPreviewSummary = lastPreviewSummary + " zero-forward-vector";
 			aim.invalidate();
 			return;
 		}
@@ -442,6 +453,7 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 		cueBall.vel.versor();
 		cueBall.vel.mul(PoolMath.intToYInt(20));
 		if (cueBall.vel.abs() == 0) {
+			lastPreviewSummary = lastPreviewSummary + " zero-cue-velocity";
 			aim.invalidate();
 			return;
 		}
@@ -495,6 +507,12 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 
 		cueBall.setCoords(savedPos);
 		cueBall.vel.setFrom(savedVel);
+		lastPreviewSummary = lastPreviewSummary + " guideTimeToRail="
+				+ guideTimeToRail + " bestCollisionTime=" + bestCollisionTime
+				+ " collided=" + ballColided + " collBall=" + index
+				+ " firstColl=" + PoolTraceLog.point(firstColl)
+				+ " collisionBall="
+				+ (collisionBall == null ? "null" : PoolTraceLog.ball(collisionBall));
 
 		YLine cueLine = new YLine();
 		YLine deflectionLine = new YLine();
@@ -581,6 +599,7 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 	}
 
 	public YIPoint getFirstColl() {
+		PoolTraceLog.log("POOL-AIMER", "preview requested " + lastPreviewSummary);
 		if (ballColided) {
 			firstColl1.setCoords(firstColl.a, firstColl.b);
 			return firstColl1;

@@ -2,6 +2,8 @@ package common.po;
 
 import java.util.Vector;
 
+import core.PoolTraceLog;
+
 import y.list.StringList;
 import y.utils.TimerHandler;
 
@@ -35,6 +37,9 @@ public class PoolEngine implements ClockHandler, TimerHandler {
 	public int					iterateAreaCounter;
 	private YIVector			B;
 	public boolean				moving		= false;
+	private long				debugShotId;
+	private int					debugFramesRemaining;
+	private int					debugFrameIndex;
 
 	public PoolEngine(PoolEngineHandler _pcls147) {
 		physicsLog = new StringList();
@@ -48,6 +53,9 @@ public class PoolEngine implements ClockHandler, TimerHandler {
 		v2 = new YIVector();
 		v1 = new YIVector();
 		B = new YIVector(0, PoolMath.n_5);
+		debugShotId = 0L;
+		debugFramesRemaining = 0;
+		debugFrameIndex = 0;
 		handler = _pcls147;
 	}
 
@@ -61,6 +69,9 @@ public class PoolEngine implements ClockHandler, TimerHandler {
 	public void close() {
 		active = false;
 		moving = false;
+		debugShotId = 0L;
+		debugFramesRemaining = 0;
+		debugFrameIndex = 0;
 		handler = null;
 		ball = null;
 		if (ballInPlayArea != null) {
@@ -128,6 +139,7 @@ public class PoolEngine implements ClockHandler, TimerHandler {
 		if (!active || ballInPlayArea == null || ballInSlot == null || q == null
 				|| r == null || s == null || slots == null)
 			return;
+		debugFrameIndex++;
 		if (iteratePlayArea() && handler != null)
 			handler.handleIterate();
 		if (iterateBallInSlot() && handler != null)
@@ -137,9 +149,29 @@ public class PoolEngine implements ClockHandler, TimerHandler {
 			t = 0;
 		}
 		boolean moving1 = movingExist();
+		if (debugFramesRemaining > 0) {
+			PoolTraceLog.log("POOL-ENGINE", "shot=" + debugShotId + " frame="
+					+ debugFrameIndex + " movingBefore=" + moving + " movingAfter="
+					+ moving1 + " active=" + active + " movingBalls="
+					+ describeMovingBalls());
+			debugFramesRemaining--;
+		}
 		if (!moving1 && moving && handler != null)
 			handler.handleStop();
+		if (!moving1 && moving)
+			PoolTraceLog.log("POOL-ENGINE", "shot=" + debugShotId
+					+ " stop-transition frame=" + debugFrameIndex
+					+ " movingBefore=" + moving + " movingAfter=" + moving1);
 		moving = moving1;
+	}
+
+	public void beginDebugShot(long shotId) {
+		debugShotId = shotId;
+		debugFramesRemaining = 160;
+		debugFrameIndex = 0;
+		PoolTraceLog.log("POOL-ENGINE", "shot=" + debugShotId
+				+ " beginDebugShot active=" + active + " ballInPlayArea="
+				+ (ballInPlayArea == null ? -1 : ballInPlayArea.size()));
 	}
 
 	/*
@@ -305,12 +337,22 @@ public class PoolEngine implements ClockHandler, TimerHandler {
 			}
 			currFlag = flag;
 			if (minTimeToObstacle == cE && clS != null) {
+				if (debugFramesRemaining > 0)
+					PoolTraceLog.log("POOL-ENGINE", "shot=" + debugShotId
+							+ " obstacle-collision cE=" + cE + " ball="
+							+ PoolTraceLog.ball(clS) + " obstacle="
+							+ ((PoolBall) clS).obstacle);
 				if (logMessages)
 					addPhysicsLog("clS " + clS + " "
 							+ ((PoolBall) clS).obstacle);
 				clS.pv();
 			}
 			if (minTimeToCollBall == cE && cb2 != null && cb1 != null) {
+				if (debugFramesRemaining > 0)
+					PoolTraceLog.log("POOL-ENGINE", "shot=" + debugShotId
+							+ " ball-collision cE=" + cE + " cb1="
+							+ PoolTraceLog.ball(cb1) + " cb2="
+							+ PoolTraceLog.ball(cb2));
 				if (logMessages)
 					addPhysicsLog("cb1" + cb1 + "\n cb2" + cb2);
 				v2.setFrom(cb2.getVel());
@@ -331,6 +373,27 @@ public class PoolEngine implements ClockHandler, TimerHandler {
 			currBall.nextPosition();
 		}
 		return currFlag;
+	}
+
+	private String describeMovingBalls() {
+		if (ballInPlayArea == null)
+			return "none";
+		StringBuffer buffer = new StringBuffer();
+		int logged = 0;
+		for (int i = 0; i < ballInPlayArea.size(); i++) {
+			IBall currBall = ballInPlayArea.elementAt(i);
+			if (currBall == null || (!currBall.isMoving() && currBall.getVel().abs() == 0))
+				continue;
+			if (logged > 0)
+				buffer.append("; ");
+			buffer.append(PoolTraceLog.ball(currBall));
+			logged++;
+			if (logged == 4)
+				break;
+		}
+		if (logged == 0)
+			return "none";
+		return buffer.toString();
 	}
 
 	public boolean J(int index, int x, int y) {
