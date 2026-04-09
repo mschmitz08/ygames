@@ -635,7 +635,6 @@ public class PoolBall extends YIPoint implements IBall {
 		C.versor();
 		C.mul(vel.abs());
 		C.setTo(vel);
-		C.setTo(wX);
 	}
 
 	public void tz() {
@@ -723,8 +722,9 @@ public class PoolBall extends YIPoint implements IBall {
 				wX.absMul(i2);
 			}
 		}
+		boolean alignedForRoll = vel.Ef(wX);
 		guideTowardFirstCollision();
-		if (vel.Ef(wX))
+		if (alignedForRoll)
 			sliding = false;
 	}
 

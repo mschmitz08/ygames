@@ -20,8 +20,6 @@ internal static class LauncherApplication
         var paths = LauncherPaths.CreateDefault();
         var layout = LauncherLayout.Resolve(paths, options);
         LauncherStorage.EnsureLayoutExists(paths, layout);
-        LauncherStorage.EnsureSiteBundle(paths, layout);
-        var settings = LauncherSettings.Load(layout, options);
         var updateOutcome = UpdaterPreflight.CheckForUpdates(options, paths, out var updateDetails);
 
         if (updateOutcome is UpdaterCheckOutcome.LauncherUpdateNeeded or UpdaterCheckOutcome.ClientUpdateNeeded)
@@ -56,6 +54,9 @@ internal static class LauncherApplication
                 MessageBoxIcon.Error,
                 1);
         }
+
+        LauncherStorage.EnsureSiteBundle(paths, layout);
+        var settings = LauncherSettings.Load(layout, options);
 
         splash.SetStatus(
             "Preparing launch files...",

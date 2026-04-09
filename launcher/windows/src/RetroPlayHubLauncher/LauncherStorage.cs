@@ -21,24 +21,75 @@ internal static class LauncherStorage
             return;
         }
 
-        var siteClientJar = Path.Combine(layout.AppDirectory, "client.jar");
-        var siteYogDirectory = Path.Combine(layout.AppDirectory, "yog");
-        if (File.Exists(siteClientJar) && Directory.Exists(siteYogDirectory))
-        {
-            return;
-        }
-
         if (!Directory.Exists(paths.TemplateAppDirectory))
         {
             return;
         }
 
-        CopyDirectory(paths.TemplateAppDirectory, layout.AppDirectory);
+        if (!SiteBundleNeedsRefresh(paths, layout))
+        {
+            return;
+        }
+
+        MirrorDirectory(paths.TemplateAppDirectory, layout.AppDirectory);
     }
 
-    private static void CopyDirectory(string sourcePath, string targetPath)
+    private static bool SiteBundleNeedsRefresh(LauncherPaths paths, LauncherLayout layout)
+    {
+        var templateClientJar = Path.Combine(paths.TemplateAppDirectory, "client.jar");
+        var siteClientJar = Path.Combine(layout.AppDirectory, "client.jar");
+        if (!File.Exists(templateClientJar))
+        {
+            return false;
+        }
+
+        if (!File.Exists(siteClientJar))
+        {
+            return true;
+        }
+
+        var templateHash = ComputeSha256(templateClientJar);
+        var siteHash = ComputeSha256(siteClientJar);
+
+        if (string.IsNullOrWhiteSpace(templateHash) || string.IsNullOrWhiteSpace(siteHash))
+        {
+            return true;
+        }
+
+        return !string.Equals(templateHash, siteHash, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static string ComputeSha256(string filePath)
+    {
+        using var stream = File.OpenRead(filePath);
+        using var sha256 = System.Security.Cryptography.SHA256.Create();
+        var hash = sha256.ComputeHash(stream);
+        return BitConverter.ToString(hash).Replace("-", string.Empty);
+    }
+
+    private static void MirrorDirectory(string sourcePath, string targetPath)
     {
         Directory.CreateDirectory(targetPath);
+
+        foreach (var targetFilePath in Directory.EnumerateFiles(targetPath))
+        {
+            var fileName = Path.GetFileName(targetFilePath);
+            var sourceFilePath = Path.Combine(sourcePath, fileName);
+            if (!File.Exists(sourceFilePath))
+            {
+                File.Delete(targetFilePath);
+            }
+        }
+
+        foreach (var targetDirectoryPath in Directory.EnumerateDirectories(targetPath))
+        {
+            var directoryName = Path.GetFileName(targetDirectoryPath);
+            var sourceDirectoryPath = Path.Combine(sourcePath, directoryName);
+            if (!Directory.Exists(sourceDirectoryPath))
+            {
+                Directory.Delete(targetDirectoryPath, recursive: true);
+            }
+        }
 
         foreach (var filePath in Directory.EnumerateFiles(sourcePath))
         {
@@ -49,7 +100,7 @@ internal static class LauncherStorage
         foreach (var directoryPath in Directory.EnumerateDirectories(sourcePath))
         {
             var directoryName = Path.GetFileName(directoryPath);
-            CopyDirectory(directoryPath, Path.Combine(targetPath, directoryName));
+            MirrorDirectory(directoryPath, Path.Combine(targetPath, directoryName));
         }
     }
 }

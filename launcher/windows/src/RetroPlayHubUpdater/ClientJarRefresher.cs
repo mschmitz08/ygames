@@ -70,6 +70,7 @@ internal static class ClientJarRefresher
             }
 
             File.Move(tempJarPath, targetJarPath);
+            RefreshSiteClientJarCopies(installRoot, targetJarPath);
         }
         catch (Exception ex)
         {
@@ -99,6 +100,27 @@ internal static class ClientJarRefresher
         catch
         {
             // Best-effort cleanup only.
+        }
+    }
+
+    private static void RefreshSiteClientJarCopies(string installRoot, string sourceJarPath)
+    {
+        var sitesRoot = Path.Combine(installRoot, "sites");
+        if (!Directory.Exists(sitesRoot))
+        {
+            return;
+        }
+
+        foreach (var siteRoot in Directory.EnumerateDirectories(sitesRoot))
+        {
+            var targetDirectory = Path.Combine(siteRoot, "app", "newyahoo");
+            if (!Directory.Exists(targetDirectory))
+            {
+                continue;
+            }
+
+            Directory.CreateDirectory(targetDirectory);
+            File.Copy(sourceJarPath, Path.Combine(targetDirectory, "client.jar"), overwrite: true);
         }
     }
 }
