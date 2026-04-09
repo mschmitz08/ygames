@@ -54,6 +54,17 @@ public class MySQLConnectionPool implements Destroyable {
 				dbUserName, dbPassword);
 	}
 
+	private void closeConnection(Connection connection) {
+		if (connection == null)
+			return;
+		try {
+			connection.close();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private Connection createNewConnection() {		
 		//System.out.println("Criando nova conex o com o banco jdbc:mysql://"
 		//		+ dbHost + ":" + dbPort + "/" + dbName + "; usu rio="
@@ -141,8 +152,8 @@ public class MySQLConnectionPool implements Destroyable {
 			if (using[i])
 				continue;
 			try {
-				if (connection.isClosed()) {
-					//System.out.println("Conex o ao MySQL esta fechada. Reconectando...");
+				if (connection.isClosed() || !connection.isValid(2)) {
+					closeConnection(connection);
 					connection = createNewConnection();
 					mySqlConnections[i] = connection;
 				}
@@ -150,7 +161,9 @@ public class MySQLConnectionPool implements Destroyable {
 				return connection;
 			}
 			catch (SQLException e) {
-				// TODO Auto-generated catch block
+				closeConnection(connection);
+				mySqlConnections[i] = null;
+				using[i] = false;
 				e.printStackTrace();
 			}
 		}
@@ -200,6 +213,19 @@ public class MySQLConnectionPool implements Destroyable {
 			return;
 		}
 		System.err.println("Conex o n o liberada!");
+	}
+
+	public synchronized void discardConnection(Connection connection) {
+		for (int i = 0; i < mySqlConnections.length; i++) {
+			Connection connection1 = mySqlConnections[i];
+			if (connection1 != connection)
+				continue;
+			using[i] = false;
+			mySqlConnections[i] = null;
+			closeConnection(connection1);
+			return;
+		}
+		closeConnection(connection);
 	}
 
 }

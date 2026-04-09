@@ -13,6 +13,24 @@ import java.sql.SQLNonTransientConnectionException;
 
 public class MySQLTable {
 
+	private static boolean isConnectionFailure(SQLException e) {
+		if (e instanceof SQLNonTransientConnectionException)
+			return true;
+		String sqlState = e.getSQLState();
+		if (sqlState != null && sqlState.startsWith("08"))
+			return true;
+		String message = e.getMessage();
+		if (message == null)
+			return false;
+		message = message.toLowerCase();
+		return message.contains("communicationsexception")
+				|| message.contains("communications link failure")
+				|| message.contains("broken pipe")
+				|| message.contains("connection reset")
+				|| message.contains("eofexception")
+				|| message.contains("server has gone away");
+	}
+
 	public static String formatValue(Object value) {
 		if (value instanceof String) {
 			String result = (String)value;
@@ -181,10 +199,15 @@ public class MySQLTable {
 			}
 			catch(SQLNonTransientConnectionException e) {
 				//System.out.println("Erro durante a execu  o do comando SQL (Servidor MySQL est  off-line). Tentando uma nova conex o com o pool... (Tentativa " + (counter + 1) +")");				
+				pool.discardConnection(connection);
 			}
 			catch (SQLException e) {
-				success = true;
-				e.printStackTrace();
+				if (isConnectionFailure(e))
+					pool.discardConnection(connection);
+				else {
+					success = true;
+					e.printStackTrace();
+				}
 			}
 			finally {
 				if (statement != null) {
@@ -196,7 +219,8 @@ public class MySQLTable {
 						e.printStackTrace();
 					}
 				}
-				pool.releaseConnection(connection);
+				if (success)
+					pool.releaseConnection(connection);
 				if(!success) {
 					synchronized(this) {
 						try {
@@ -239,14 +263,18 @@ public class MySQLTable {
 			}
 			catch(SQLNonTransientConnectionException e) {
 				//System.out.println("Erro durante a execu  o do comando SQL (Servidor MySQL est  off-line). Tentando uma nova conex o com o pool... (Tentativa " + (counter + 1) +")");				
+				pool.discardConnection(connection);
 			}
 			catch (SQLException e) {
-				success = true;
-				e.printStackTrace();
+				if (isConnectionFailure(e))
+					pool.discardConnection(connection);
+				else {
+					success = true;
+					e.printStackTrace();
+				}
 			}		
 			finally {
 				if(!success) {
-					pool.releaseConnection(connection);
 					synchronized(this) {
 						try {
 							wait(1000);
