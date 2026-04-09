@@ -10,8 +10,6 @@ import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import core.PoolTraceLog;
-
 import common.utils.ByteArrayData;
 import common.yutils.Game;
 import common.yutils.GameHandler;
@@ -103,8 +101,6 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 	private YIPoint						firstColl;
 
 	private int							collBall;
-	private long						debugShotSequence;
-	private long						activeDebugShotId;
 
 	public Pool() {
 		super();
@@ -125,8 +121,6 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 		x = false;
 		m_aimStateInit = true;
 		selectedSlotIndex = -1;
-		debugShotSequence = 0L;
-		activeDebugShotId = 0L;
 	}
 
 	public boolean actionReset(int turn) {
@@ -191,8 +185,6 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 	}
 
 	public void changeTurn(boolean change, boolean ballInHand) {
-		int previousTurn = m_turn;
-		int previousTurnNum = m_turnNum;
 		if (ballInHand)
 			m_aimStateInit = true;
 		if (change)
@@ -202,11 +194,6 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 			handler.selectSlot(selectedSlotIndex);
 		m_turnNum++;
 		m_currentState = 0;
-		PoolTraceLog.log("POOL-COMMON", "changeTurn shot=" + activeDebugShotId
-				+ " previousTurn=" + previousTurn + " newTurn=" + m_turn
-				+ " previousTurnNum=" + previousTurnNum + " newTurnNum="
-				+ m_turnNum + " changed=" + change + " ballInHand="
-				+ ballInHand + " selectedSlotIndex=" + selectedSlotIndex);
 		if (logMessages)
 			handler.logState("Pool.changeTurn.");
 		handler.zd(m_turn, m_aimStateInit);
@@ -276,12 +263,6 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 	public boolean doNotifyTStat(PoolData _pcls131, boolean flag) {
 		if (m_currentState != 1 && m_currentState != 2)
 			return false;
-		PoolTraceLog.log("POOL-COMMON", "doNotifyTStat shot="
-				+ activeDebugShotId + " state=" + m_currentState + " flag="
-				+ flag + " clientTs=" + _pcls131.clientTs() + " turnCollided="
-				+ _pcls131.turnCollided + " sideCollided=" + _pcls131.c
-				+ " firstCollidedBall=" + _pcls131.firstCollidedBall
-				+ " turnPocketedCount=" + _pcls131.turnPocketed.getCount());
 		if (O && z && flag) {
 			boolean flag1 = Bj(getBall(index));
 			for (IBall element : ball)
@@ -382,18 +363,10 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 
 	public boolean doStrike(int turn, int _index, YIPoint _cueDist,
 			YIPoint _englishDist, YIPoint _firstColl, int _collBall) {
-		if (m_turn != turn) {
-			PoolTraceLog.log("POOL-COMMON", "doStrike rejected wrong-turn turn="
-					+ turn + " expected=" + m_turn + " state="
-					+ m_currentState + " index=" + _index);
+		if (m_turn != turn)
 			return false;
-		}
-		if (m_currentState != 0) {
-			PoolTraceLog.log("POOL-COMMON",
-					"doStrike rejected wrong-state turn=" + turn + " state="
-							+ m_currentState + " index=" + _index);
+		if (m_currentState != 0)
 			return false;
-		}
 		pocketed = false;
 		turnCollided = false;
 		sideCollided = false;
@@ -410,22 +383,12 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 		firstColl = _firstColl;
 		collBall = _collBall;
 		firstStrike = isFirstStrike();
-		activeDebugShotId = ++debugShotSequence;
-		PoolTraceLog.log("POOL-COMMON", "doStrike accepted shot="
-				+ activeDebugShotId + " turn=" + turn + " turnNum=" + m_turnNum
-				+ " index=" + _index + " cueDist="
-				+ PoolTraceLog.point(_cueDist) + " englishDist="
-				+ PoolTraceLog.point(_englishDist) + " firstColl="
-				+ PoolTraceLog.point(_firstColl) + " collBall=" + _collBall
-				+ " firstStrike=" + firstStrike + " openingBreak="
-				+ Bj(getBall(index)));
 		synchronized (poolEngine) {
 			m_currentState = 1;
 			// Even a paper-thin tap should complete through the normal stop path.
 			// Without priming this state, a zero-motion strike can leave the game
 			// stuck waiting for a stop transition that never occurs.
 			poolEngine.moving = true;
-			poolEngine.beginDebugShot(activeDebugShotId);
 			if (!z) {
 				boolean flag = Bj(getBall(index));
 				for (IBall element : ball)
@@ -535,12 +498,6 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 		if (!turnCollided) {
 			firstCollidedBall = _pcls124.isMoving() ? _pcls124_1 : _pcls124;
 			turnCollided = true;
-			PoolTraceLog.log("POOL-COMMON", "first collision shot="
-					+ activeDebugShotId + " colliderA="
-					+ PoolTraceLog.ball(_pcls124) + " colliderB="
-					+ PoolTraceLog.ball(_pcls124_1) + " firstCollidedBall="
-					+ (firstCollidedBall == null ? "null" : Integer.toString(firstCollidedBall
-							.getIndex())));
 			if (handler != null)
 				handler.handleFirtsColl(firstCollidedBall);
 		}
@@ -559,9 +516,6 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 	public void handlePocket(IBall _pcls124) {
 		turnPocketed.add(_pcls124);
 		pocketed = true;
-		PoolTraceLog.log("POOL-COMMON", "pocket shot=" + activeDebugShotId
-				+ " ball=" + PoolTraceLog.ball(_pcls124) + " turnPocketedCount="
-				+ turnPocketed.size());
 	}
 
 	public void handleShiftFromIntersect() {
@@ -570,23 +524,10 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 
 	public void handleSideColl(IBall _pcls124) {
 		sideCollided = true;
-		PoolTraceLog.log("POOL-COMMON", "side-collision shot="
-				+ activeDebugShotId + " ball=" + PoolTraceLog.ball(_pcls124));
 	}
 
 	public void handleStop() {
-		PoolTraceLog.log("POOL-COMMON", "handleStop shot=" + activeDebugShotId
-				+ " turn=" + m_turn + " turnNum=" + m_turnNum + " state="
-				+ m_currentState + " turnCollided=" + turnCollided
-				+ " pocketed=" + pocketed + " sideCollided=" + sideCollided
-				+ " firstCollidedBall="
-				+ (firstCollidedBall == null ? "null" : Integer.toString(firstCollidedBall
-						.getIndex())));
 		handler.handleStopMoving();
-	}
-
-	public long getActiveDebugShotId() {
-		return activeDebugShotId;
 	}
 
 	public void initializeEngine() {
@@ -773,13 +714,6 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 			G.turnInArea.writeInt(element.getY());
 			G.turnInArea.writeInt(element.getSlot());
 		}
-		PoolTraceLog.log("POOL-COMMON", "tj shot=" + activeDebugShotId
-				+ " turnCollided=" + turnCollided + " sideCollided="
-				+ sideCollided + " pocketed=" + pocketed + " firstCollidedBall="
-				+ (firstCollidedBall == null ? "null" : Integer.toString(firstCollidedBall
-						.getIndex())) + " turnPocketedCount="
-				+ turnPocketed.size());
-
 		return G;
 	}
 

@@ -9,8 +9,6 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.Vector;
 
-import core.PoolTraceLog;
-
 import y.controls.YahooComponent;
 import y.controls.YahooComboBox;
 import y.controls.YahooControl;
@@ -469,14 +467,6 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 	}
 
 	public void handleStopMoving() {
-		PoolTraceLog.log("POOL-CLIENT", "handleStopMoving shot="
-				+ pool.getActiveDebugShotId() + " turn=" + pool.m_turn + " turnNum="
-				+ pool.m_turnNum + " state=" + pool.getCurrentState()
-				+ " firstCollided="
-				+ (pool.firstCollidedBall == null ? "null" : Integer.toString(pool.firstCollidedBall
-						.getIndex())) + " pocketed=" + pool.pocketed
-				+ " turnCollided=" + pool.turnCollided + " sideCollided="
-				+ pool.sideCollided);
 	}
 
 	public synchronized void handleTimer(long l1) {
@@ -662,7 +652,6 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		if (state.length() > 200)
 			state = state.substring(state.length() - 180);
 		state += "\n" + s1;
-		PoolTraceLog.log("POOL-CLIENT-STATE", s1);
 	}
 
 	public String lookupString(int i) {
@@ -937,24 +926,10 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 			YIPoint englishDist = poolArea.english.getPos().copy();
 			YIPoint firstColl = poolAimer.getFirstColl();
 			int collBall = poolAimer.getIndex();
-			boolean openingBreak = pool.Bj(selectedBall);
-			YIPoint originalCueDist = new YIPoint(cueDist.a, cueDist.b);
-			YIPoint originalFirstColl = new YIPoint(firstColl.a, firstColl.b);
-			int originalCollBall = collBall;
 			if (pool.Bj(selectedBall)) {
 				cueDist = buildOpeningBreakCueDist(selectedBall, cueDist);
 			}
 			collBall = resolveCollisionHint(selectedBall.getIndex(), firstColl, collBall);
-			PoolTraceLog.log("POOL-CLIENT", "strike-request turnNum="
-					+ pool.m_turnNum + " seat=" + getMySitIndex() + " ball="
-					+ selectedBall.getIndex() + " break=" + openingBreak
-					+ " cueDistBefore=" + PoolTraceLog.point(originalCueDist)
-					+ " cueDistAfter=" + PoolTraceLog.point(cueDist)
-					+ " englishDist=" + PoolTraceLog.point(englishDist)
-					+ " firstCollBefore=" + PoolTraceLog.point(originalFirstColl)
-					+ " firstCollAfter=" + PoolTraceLog.point(firstColl)
-					+ " collBallBefore=" + originalCollBall + " collBallAfter="
-					+ collBall);
 			// System.out.println("cueDist=" + cueDist + "; englishDist="
 			// + englishDist + "; firstColl=" + firstColl + "; collBall="
 			// + collBall);
@@ -994,12 +969,6 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 			YIPoint firstColl, int collBall) {
 		logState("strike done and sent turn=" + pool.m_turnNum + " seat="
 				+ getMySitIndex());
-		PoolTraceLog.log("POOL-CLIENT", "strike-dispatch turnNum="
-				+ pool.m_turnNum + " seat=" + getMySitIndex() + " ball="
-				+ index + " cueDist=" + PoolTraceLog.point(cueDist)
-				+ " englishDist=" + PoolTraceLog.point(englishDist)
-				+ " firstColl=" + PoolTraceLog.point(firstColl) + " collBall="
-				+ collBall);
 		send('\uFF82', pool.m_turnNum, index, (byte) collBall, cueDist,
 				englishDist, firstColl);
 		pool.poolEngine.active = false;
