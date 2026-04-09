@@ -4,8 +4,8 @@ internal static class VersionComparison
 {
     public static int Compare(string? leftValue, string? rightValue)
     {
-        var leftParts = (leftValue ?? string.Empty).Split('.', StringSplitOptions.RemoveEmptyEntries);
-        var rightParts = (rightValue ?? string.Empty).Split('.', StringSplitOptions.RemoveEmptyEntries);
+        var leftParts = (leftValue ?? string.Empty).Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+        var rightParts = (rightValue ?? string.Empty).Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
         var maxIndex = Math.Max(leftParts.Length, rightParts.Length);
 
         for (var i = 0; i < maxIndex; i++)

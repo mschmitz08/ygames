@@ -625,17 +625,23 @@ public class PoolBall extends YIPoint implements IBall {
 		return s;
 	}
 
+	private void guideTowardFirstCollision() {
+		if (!ballColided || firstColl == null)
+			return;
+		D.setCoords(firstColl.a, firstColl.b);
+		C.setFrom(this, D);
+		if (C.abs() == 0)
+			return;
+		C.versor();
+		C.mul(vel.abs());
+		C.setTo(vel);
+		C.setTo(wX);
+	}
+
 	public void tz() {
 		vel.sub(rotationFriction);
 		vel.setTo(wX);
-		if (ballColided) {
-			D.setCoords(firstColl.a, firstColl.b);
-			C.setFrom(this, D);
-			C.versor();
-			C.mul(vel.abs());
-			C.setTo(vel);
-			C.setTo(wX);
-		}
+		guideTowardFirstCollision();
 	}
 
 	public void uncolide() {
@@ -717,6 +723,9 @@ public class PoolBall extends YIPoint implements IBall {
 				wX.absMul(i2);
 			}
 		}
+		guideTowardFirstCollision();
+		if (vel.Ef(wX))
+			sliding = false;
 	}
 
 	public int vv() {

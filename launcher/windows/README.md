@@ -29,7 +29,7 @@ If none of those are available, the launcher shows a requirements message, offer
 Requirements links:
 
 - Java 8 JDK with AppletViewer: `https://www.azul.com/downloads/?architecture=x86-64-bit&os=windows&package=jdk&version=java-8-lts`
-- .NET Desktop Runtime 10: `https://dotnet.microsoft.com/en-us/download/dotnet/10.0`
+- .NET Framework 4.8 Runtime: `https://dotnet.microsoft.com/en-us/download/dotnet-framework/net48`
 
 ## Window size
 

@@ -16,7 +16,7 @@ internal sealed record LauncherSettings(string AppletWidth, string AppletHeight)
         foreach (var rawLine in File.ReadLines(settingsPath))
         {
             var line = rawLine.Trim();
-            if (string.IsNullOrWhiteSpace(line) || line.StartsWith('#') || line.StartsWith(';'))
+            if (string.IsNullOrWhiteSpace(line) || line.StartsWith("#") || line.StartsWith(";"))
             {
                 continue;
             }
@@ -27,8 +27,8 @@ internal sealed record LauncherSettings(string AppletWidth, string AppletHeight)
                 continue;
             }
 
-            var key = line[..eqPos].Trim().ToLowerInvariant();
-            var value = line[(eqPos + 1)..].Trim();
+            var key = line.Substring(0, eqPos).Trim().ToLowerInvariant();
+            var value = line.Substring(eqPos + 1).Trim();
 
             if (key == "width" && !options.WidthSpecified && int.TryParse(value, out _))
             {

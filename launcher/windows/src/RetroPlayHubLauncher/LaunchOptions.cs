@@ -119,9 +119,9 @@ internal sealed record LaunchOptions(
             return;
         }
 
-        foreach (var pair in query.TrimStart('?').Split('&', StringSplitOptions.RemoveEmptyEntries))
+        foreach (var pair in query.TrimStart('?').Split(new[] { '&' }, StringSplitOptions.RemoveEmptyEntries))
         {
-            var split = pair.Split('=', 2);
+            var split = pair.Split(new[] { '=' }, 2);
             if (split.Length != 2)
             {
                 continue;

@@ -19,7 +19,7 @@ internal static class LauncherStateManifestClient
         var launcherVersion = string.Empty;
         var clientHash = string.Empty;
 
-        foreach (var rawLine in body.Replace("\r\n", "\n", StringComparison.Ordinal).Split('\n'))
+        foreach (var rawLine in body.Replace("\r\n", "\n").Split('\n'))
         {
             var line = rawLine.Trim();
             if (string.IsNullOrWhiteSpace(line))
@@ -33,8 +33,8 @@ internal static class LauncherStateManifestClient
                 continue;
             }
 
-            var key = line[..equalsIndex].Trim().ToLowerInvariant();
-            var value = line[(equalsIndex + 1)..].Trim();
+            var key = line.Substring(0, equalsIndex).Trim().ToLowerInvariant();
+            var value = line.Substring(equalsIndex + 1).Trim();
 
             if (key == "launcher_version" && value.Length > 0)
             {

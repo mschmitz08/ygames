@@ -928,20 +928,6 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 			YIPoint englishDist = poolArea.english.getPos().copy();
 			YIPoint firstColl = poolAimer.getFirstColl();
 			int collBall = poolAimer.getIndex();
-			boolean flag = pool.Bj(selectedBall);
-			if (flag) {
-				YIVector u = new YIVector((YIPoint) selectedBall, cueDist);
-				float f1 = 5F;
-				if (collBall == 1)
-					f1 *= 1.3F;
-				int l1 = PoolMath.floatToYInt(((float) Math.random() - 0.5F)
-						* f1);
-				u.mul(PoolMath.floatToYInt(1.4F));
-				u.b = PoolMath.add(u.b, l1);
-				cueDist = ((PoolBall) selectedBall).newCopy();
-				cueDist.add(u);
-				firstColl = new YIPoint(0, 0);
-			}
 			if (collBall != -1) {
 				IBall _ball[] = pool.getBall();
 				for (IBall item : _ball) {

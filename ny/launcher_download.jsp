@@ -134,7 +134,7 @@
     expectedClientHash = sha256Hex(launcherClientJar);
     String launcherPackageName = "RetroPlayHubLauncher_" + launcherVersion + ".msi";
     String javaDownloadUrl = "https://www.azul.com/downloads/?architecture=x86-64-bit&os=windows&package=jdk&version=java-8-lts";
-    String dotnetDownloadUrl = "https://dotnet.microsoft.com/en-us/download/dotnet/10.0";
+    String dotnetDownloadUrl = "https://dotnet.microsoft.com/en-us/download/dotnet-framework/net48";
 %>
 <html>
 <head>
@@ -290,8 +290,8 @@ function goBackToLauncher() {
                     <h3>Requirements</h3>
                     <p>If the launcher says Java 8 AppletViewer is missing, install a Windows x64 Java 8 JDK with AppletViewer support.</p>
                     <p><a class="button" href="<%=javaDownloadUrl%>" target="_blank" rel="noopener">Download Java 8 JDK</a></p>
-                    <p>If Windows says a .NET runtime is missing before the launcher opens, install the current .NET Desktop Runtime.</p>
-                    <p><a class="button button-secondary" href="<%=dotnetDownloadUrl%>" target="_blank" rel="noopener">Download .NET Desktop Runtime</a></p>
+                    <p>If Windows says a .NET runtime is missing before the launcher opens, install .NET Framework 4.8. This is the runtime the current launcher uses, and it is the better fit for older systems like Windows 7.</p>
+                    <p><a class="button button-secondary" href="<%=dotnetDownloadUrl%>" target="_blank" rel="noopener">Download .NET Framework 4.8</a></p>
                 </div>
             </div>
             <div class="pane pane-light">

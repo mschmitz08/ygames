@@ -52,12 +52,18 @@ New-Item -ItemType Directory -Force -Path $generatedRoot | Out-Null
 New-Item -ItemType Directory -Force -Path $OutputDirectory | Out-Null
 
 Write-Host "Publishing RetroPlayHubLauncher..."
+if (Test-Path $launcherPublishRoot) {
+    Remove-Item -Recurse -Force $launcherPublishRoot
+}
 dotnet publish $launcherProject -c $Configuration -o $launcherPublishRoot --no-restore -p:UseAppHost=true
 if ($LASTEXITCODE -ne 0) {
     throw "dotnet publish failed for RetroPlayHubLauncher"
 }
 
 Write-Host "Publishing RetroPlayHubUpdater..."
+if (Test-Path $updaterPublishRoot) {
+    Remove-Item -Recurse -Force $updaterPublishRoot
+}
 dotnet publish $updaterProject -c $Configuration -o $updaterPublishRoot --no-restore -p:UseAppHost=true
 if ($LASTEXITCODE -ne 0) {
     throw "dotnet publish failed for RetroPlayHubUpdater"
@@ -69,8 +75,19 @@ if (Test-Path $stagingRoot) {
 }
 New-Item -ItemType Directory -Force -Path $stagingRoot | Out-Null
 
+Get-ChildItem -Path $downloadsRoot -File -ErrorAction SilentlyContinue | Where-Object {
+    $_.Name -like "RetroPlayHubLauncher.*" -or $_.Name -like "RetroPlayHubUpdater.*"
+} | ForEach-Object {
+    Remove-Item -Force $_.FullName
+}
+
 Copy-Item -Recurse -Force (Join-Path $downloadsRoot "*") $stagingRoot
 Remove-Item (Join-Path $stagingRoot "ygames_launcher.vbs") -Force -ErrorAction SilentlyContinue
+Get-ChildItem -Path $stagingRoot -File -ErrorAction SilentlyContinue | Where-Object {
+    $_.Name -like "RetroPlayHubLauncher.*" -or $_.Name -like "RetroPlayHubUpdater.*"
+} | ForEach-Object {
+    Remove-Item -Force $_.FullName
+}
 
 $launcherExecutable = Join-Path $launcherPublishRoot "RetroPlayHubLauncher.exe"
 $updaterExecutable = Join-Path $updaterPublishRoot "RetroPlayHubUpdater.exe"
@@ -101,7 +118,7 @@ if ([string]::IsNullOrWhiteSpace($Version)) {
 }
 
 if ([string]::IsNullOrWhiteSpace($Version)) {
-    $Version = "0.8.0"
+    $Version = "0.8.2"
 }
 
 $msiVersion = "$Version.0"

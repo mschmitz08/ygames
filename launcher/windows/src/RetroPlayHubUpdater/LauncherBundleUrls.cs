@@ -10,7 +10,7 @@ internal static class LauncherBundleUrls
         }
 
         var bundleRoot = new Uri(manifestUri, "downloads/ygames_launcher_windows/");
-        var targetUri = new Uri(bundleRoot, relativePath.Replace("\\", "/", StringComparison.Ordinal));
+        var targetUri = new Uri(bundleRoot, relativePath.Replace("\\", "/"));
         return targetUri.ToString();
     }
 
@@ -22,7 +22,7 @@ internal static class LauncherBundleUrls
         }
 
         var downloadsRoot = new Uri(manifestUri, "downloads/");
-        var targetUri = new Uri(downloadsRoot, relativePath.Replace("\\", "/", StringComparison.Ordinal));
+        var targetUri = new Uri(downloadsRoot, relativePath.Replace("\\", "/"));
         return targetUri.ToString();
     }
 }

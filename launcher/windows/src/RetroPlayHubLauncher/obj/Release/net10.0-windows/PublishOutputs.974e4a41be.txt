@@ -1,5 +1,0 @@
-C:\Users\mschm\Desktop\ygames2\launcher\windows\out\publish\RetroPlayHubLauncher\RetroPlayHubLauncher.exe
-C:\Users\mschm\Desktop\ygames2\launcher\windows\out\publish\RetroPlayHubLauncher\RetroPlayHubLauncher.dll
-C:\Users\mschm\Desktop\ygames2\launcher\windows\out\publish\RetroPlayHubLauncher\RetroPlayHubLauncher.deps.json
-C:\Users\mschm\Desktop\ygames2\launcher\windows\out\publish\RetroPlayHubLauncher\RetroPlayHubLauncher.runtimeconfig.json
-C:\Users\mschm\Desktop\ygames2\launcher\windows\out\publish\RetroPlayHubLauncher\RetroPlayHubLauncher.pdb

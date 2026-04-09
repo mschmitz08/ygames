@@ -1,1 +1,33 @@
 tools/deploy/deploy.local.cmd
+
+# Local .NET CLI state
+.dotnet-home/
+
+# Local deploy/test scratch
+deploy_out/
+launcher_test_stale/
+tmp/
+
+# Tomcat/Java build outputs
+newyahoo/WEB-INF/classes/
+newyahoo/client.jar
+ny/WEB-INF/classes/
+
+# Launcher build outputs
+launcher/windows/out/
+launcher/windows/installer/generated/
+launcher/windows/src/**/bin/
+launcher/windows/src/**/obj/
+
+# Generated installer artifacts
+*.wixpdb
+
+# Published download artifacts generated during release
+ny/downloads/RetroPlayHubLauncher*.msi
+ny/downloads/ygames_launcher_windows/app/newyahoo/client.jar
+ny/downloads/ygames_launcher_windows/RetroPlayHubLauncher.exe
+ny/downloads/ygames_launcher_windows/RetroPlayHubLauncher.exe.config
+ny/downloads/ygames_launcher_windows/RetroPlayHubLauncher.pdb
+ny/downloads/ygames_launcher_windows/RetroPlayHubUpdater.exe
+ny/downloads/ygames_launcher_windows/RetroPlayHubUpdater.exe.config
+ny/downloads/ygames_launcher_windows/RetroPlayHubUpdater.pdb

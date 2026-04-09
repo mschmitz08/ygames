@@ -39,15 +39,15 @@ internal static class LauncherManifestClient
     private static IReadOnlyList<string> Parse(string body)
     {
         var entries = new List<string>();
-        foreach (var rawLine in body.Replace("\r\n", "\n", StringComparison.Ordinal).Split('\n'))
+        foreach (var rawLine in body.Replace("\r\n", "\n").Split('\n'))
         {
             var line = rawLine.Trim();
-            if (string.IsNullOrWhiteSpace(line) || line.StartsWith('#'))
+            if (string.IsNullOrWhiteSpace(line) || line.StartsWith("#"))
             {
                 continue;
             }
 
-            entries.Add(line.Replace('/', Path.DirectorySeparatorChar));
+            entries.Add(line.Replace("/", Path.DirectorySeparatorChar.ToString()));
         }
 
         return entries;

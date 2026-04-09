@@ -91,7 +91,7 @@ internal static class LaunchArtifactWriter
     private static string BuildWebUrl(string webBase, string relativePath)
     {
         var normalizedBase = webBase.TrimEnd('/');
-        if (!relativePath.StartsWith('/'))
+        if (!relativePath.StartsWith("/"))
         {
             relativePath = "/" + relativePath;
         }
@@ -103,8 +103,8 @@ internal static class LaunchArtifactWriter
 
     private static string HtmlEscape(string value) =>
         value
-            .Replace("&", "&amp;", StringComparison.Ordinal)
-            .Replace("\"", "&quot;", StringComparison.Ordinal)
-            .Replace("<", "&lt;", StringComparison.Ordinal)
-            .Replace(">", "&gt;", StringComparison.Ordinal);
+            .Replace("&", "&amp;")
+            .Replace("\"", "&quot;")
+            .Replace("<", "&lt;")
+            .Replace(">", "&gt;");
 }
