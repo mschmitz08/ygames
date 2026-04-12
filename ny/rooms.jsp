@@ -72,6 +72,8 @@ initialize();
         ResultSet rs = roomsTable.getAllValues();
         try {
             while(rs.next()){
+                if(rs.getInt("public") != 1)
+                    continue;
                 String name = rs.getString("name");
                 String label = rs.getString("label");
                 int idCount = rs.getInt("id_count");

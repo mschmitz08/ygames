@@ -284,4 +284,27 @@ INSERT INTO `pool_rooms` (`name`, `label`, `public`, `country`, `welcome_msg`, `
 ('zebra_cove', 'Zebra Cove', 1, 'us', 'Welcome to room Zebra Cove', 50)
 ;
 
+-- Keep the full historical room set in the table, but only surface a compact
+-- curated set in launchers and room browsers. Hidden rooms can be restored by
+-- flipping their public flag back to 1 later.
+UPDATE `pool_rooms` SET `public` = 0;
+UPDATE `pool_rooms` SET `public` = 1
+WHERE `name` IN (
+    'advanced_lounge',
+    'beginner_lounge',
+    'intermediate_lounge',
+    'social_lounge',
+    '8_ball_nightmare',
+    'fast_eddies',
+    'high_rollers',
+    'low_rollers',
+    'minnesota_fats',
+    'players_choice',
+    'pool_hustlers',
+    'pool_sharks',
+    'rack_it_up',
+    'side_pocket',
+    'trick_shot'
+);
+
 

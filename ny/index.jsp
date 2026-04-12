@@ -195,6 +195,9 @@
     if (!"checkers".equalsIgnoreCase(requestedGame))
         requestedGame = "pool";
     String requestedRoom = request.getParameter("room");
+    if ((requestedRoom == null || requestedRoom.trim().length() == 0)
+            && "pool".equals(requestedGame))
+        requestedRoom = "advanced_lounge";
     String requestedHost = request.getParameter("host");
     String requestedWidth = request.getParameter("width");
     String requestedHeight = request.getParameter("height");
@@ -280,6 +283,8 @@
                 if (tables[tableIndex] != null)
                     rs = tables[tableIndex].getAllValues();
                 while (rs != null && rs.next()) {
+                    if (rs.getInt("public") != 1)
+                        continue;
                     String name = rs.getString("name");
                     String label = rs.getString("label");
                     if (label == null || label.length() == 0)

@@ -86,6 +86,9 @@
                 rs = roomsTable.getAllValues();
             while (rs != null && rs.next()) {
                 String roomName = rs.getString("name");
+                seen.put(roomName, roomName);
+                if (rs.getInt("public") != 1)
+                    continue;
                 String roomLabel = rs.getString("label");
                 if (roomLabel == null || roomLabel.length() == 0)
                     roomLabel = roomName;
@@ -110,7 +113,6 @@
                 }
 
                 statuses.add(row);
-                seen.put(roomName, roomName);
             }
         }
         catch (SQLException e) {

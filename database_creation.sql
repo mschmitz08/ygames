@@ -506,6 +506,26 @@ INSERT INTO `pool_rooms` (`name`, `label`, `public`, `country`, `welcome_msg`, `
 ('zebra_cove', 'Zebra Cove', 1, 'us', 'Welcome to room Zebra Cove', 50)
 ;
 
+UPDATE `pool_rooms` SET `public` = 0;
+UPDATE `pool_rooms` SET `public` = 1
+WHERE `name` IN (
+  'advanced_lounge',
+  'beginner_lounge',
+  'intermediate_lounge',
+  'social_lounge',
+  '8_ball_nightmare',
+  'fast_eddies',
+  'high_rollers',
+  'low_rollers',
+  'minnesota_fats',
+  'players_choice',
+  'pool_hustlers',
+  'pool_sharks',
+  'rack_it_up',
+  'side_pocket',
+  'trick_shot'
+);
+
 
 
 
