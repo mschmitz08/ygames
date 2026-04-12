@@ -568,10 +568,10 @@ public class PoolBall extends YIPoint implements IBall {
 		int deltaX = super.a - ((YIPoint) _lcls171).a;
 		int deltaY = super.b - ((YIPoint) _lcls171).b;
 		if (deltaVx == 0 && deltaVy == 0)
-			return PoolMath.n_2;
+			return nearFirstCollisionWithinTick(_lcls171, PoolMath.n_2);
 		if (Math.abs(deltaX) - Math.abs(deltaVx) > d + PoolMath.n_5
 				&& Math.abs(deltaY) - Math.abs(deltaVy) > d + PoolMath.n_5)
-			return PoolMath.n_2;
+			return nearFirstCollisionWithinTick(_lcls171, PoolMath.n_2);
 		long l2 = d;
 		long l3 = deltaVx;
 		long l4 = deltaVy;
@@ -579,7 +579,7 @@ public class PoolBall extends YIPoint implements IBall {
 		long l6 = deltaY;
 		long a = PoolMath2.mul(l3, l3) + PoolMath2.mul(l4, l4);
 		if (a == 0L)
-			return PoolMath.n_2;
+			return nearFirstCollisionWithinTick(_lcls171, PoolMath.n_2);
 		long b = PoolMath2.mul(PoolMath2.n_2, PoolMath2.mul(l5, l3)
 				+ PoolMath2.mul(l6, l4));
 		long c = PoolMath2.mul(l5, l5) + PoolMath2.mul(l6, l6)
@@ -587,12 +587,71 @@ public class PoolBall extends YIPoint implements IBall {
 		long delta = PoolMath2.mul(b, b)
 				- PoolMath2.mul(PoolMath2.n_4, PoolMath2.mul(a, c));
 		if (delta < 0L)
-			return PoolMath.n_2;
+			return nearFirstCollisionWithinTick(_lcls171, PoolMath.n_2);
 		long sqrtDelta = PoolMath2.sqrt(delta);
 		long x2 = PoolMath2
 				.div(-b - sqrtDelta, PoolMath2.mul(PoolMath2.n_2, a));
 		int k2 = PoolMath2.toInt(x2);
-		return k2;
+		return nearFirstCollisionWithinTick(_lcls171, k2);
+	}
+
+	private int nearFirstCollisionWithinTick(PoolBall otherBall, int defaultTime) {
+		int guidedTime = nearFirstCollisionWithinTick(this, otherBall);
+		if (guidedTime > 0)
+			return defaultTime == PoolMath.n_2 ? guidedTime : Math.min(defaultTime,
+					guidedTime);
+		guidedTime = nearFirstCollisionWithinTick(otherBall, this);
+		if (guidedTime > 0)
+			return defaultTime == PoolMath.n_2 ? guidedTime : Math.min(defaultTime,
+					guidedTime);
+		return defaultTime;
+	}
+
+	private int nearFirstCollisionWithinTick(PoolBall movingBall, PoolBall targetBall) {
+		if (!movingBall.ballColided || movingBall.firstColl == null
+				|| movingBall.collBall != targetBall.getIndex())
+			return -1;
+		int speed = movingBall.vel.abs();
+		if (speed <= 0)
+			return -1;
+		movingBall.D.setCoords(movingBall.firstColl);
+		movingBall.C.setFrom(movingBall, movingBall.D);
+		if (movingBall.vel.mul(movingBall.C) <= 0L)
+			return -1;
+		int distanceToFirstCollision = movingBall.C.abs();
+		if (distanceToFirstCollision > speed + movingBall.radius)
+			return -1;
+		float startX = PoolMath.yintToFloat(movingBall.a);
+		float startY = PoolMath.yintToFloat(movingBall.b);
+		float endX = PoolMath.yintToFloat(movingBall.a + movingBall.vel.a);
+		float endY = PoolMath.yintToFloat(movingBall.b + movingBall.vel.b);
+		float pointX = PoolMath.yintToFloat(movingBall.firstColl.a);
+		float pointY = PoolMath.yintToFloat(movingBall.firstColl.b);
+		float segX = endX - startX;
+		float segY = endY - startY;
+		float segLenSq = segX * segX + segY * segY;
+		if (segLenSq <= 0.0F)
+			return -1;
+		float t1 = ((pointX - startX) * segX + (pointY - startY) * segY)
+				/ segLenSq;
+		if (t1 < 0.0F)
+			t1 = 0.0F;
+		else if (t1 > 1.0F)
+			t1 = 1.0F;
+		float closestX = startX + segX * t1;
+		float closestY = startY + segY * t1;
+		float dx = pointX - closestX;
+		float dy = pointY - closestY;
+		float distanceToSegment = (float) Math.sqrt(dx * dx + dy * dy);
+		float tolerance = Math.max(0.4F, PoolMath.yintToFloat(movingBall.radius) * 0.2F);
+		if (distanceToSegment > tolerance)
+			return -1;
+		int guidedTime = PoolMath.div(distanceToFirstCollision, speed);
+		if (guidedTime <= 0)
+			guidedTime = PoolMath.div(PoolMath.n_1, PoolMath.intToYInt(16));
+		if (guidedTime <= 0 || guidedTime > PoolMath.n_1)
+			return -1;
+		return guidedTime;
 	}
 
 	public int timeToObstacle(Obstacle obstacles[]) {

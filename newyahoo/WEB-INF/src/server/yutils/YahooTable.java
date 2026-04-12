@@ -342,6 +342,10 @@ public abstract class YahooTable implements GameHandler {
 			room.alert(id, "You are not the host of table");
 			return false;
 		}
+		if (Game.isRated(properties) && game != null && game.isRunning()) {
+			room.alert(id, "You cannot boot players from a rated game in progress.");
+			return false;
+		}
 		booteds.put(name, name);
 		doTableLog(name + " was booted from the table by " + id.getName());
 		room.doBoot(id, number, name);

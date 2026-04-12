@@ -276,6 +276,7 @@ public abstract class YahooGamesTable extends YahooTable implements
 	public void deactivateControls(int i1) {
 		btnAuto.setEnabled(true);
 		btnStand.setEnabled(true);
+		updateBootButton();
 		updateSitButtons();
 		Eq();
 		refreshGame();
@@ -293,6 +294,7 @@ public abstract class YahooGamesTable extends YahooTable implements
 			logMessage(getApplet().lookupString(0x665000af), Color.blue);
 		cmbChangePrivacy.setEnabled(imHost);
 		btnInvite.setEnabled(imHost);
+		updateBootButton();
 		Jq();
 		updateSitButtons();
 	}
@@ -412,6 +414,7 @@ public abstract class YahooGamesTable extends YahooTable implements
 	public void handleUpdateStatus(boolean flag) {
 		Kq();
 		hq();
+		updateBootButton();
 	}
 
 	public synchronized void handleYes(YesNoDialog _pcls4) {
@@ -433,6 +436,13 @@ public abstract class YahooGamesTable extends YahooTable implements
 		btnStartGame.setEnabled(System.currentTimeMillis() >= getTime()
 				&& super.game.allSitsStarted() && getMySitIndex() >= 0
 				&& super.r.ad_b <= 0);
+	}
+
+	private void updateBootButton() {
+		boolean allowBoot = imHost
+				&& !(super.game != null && super.game.isRunning() && common.yutils.Game
+						.isRated(getPropertyes()));
+		btnBoot.setEnabled(allowBoot);
 	}
 
 	void Hq(int i1) {
@@ -740,6 +750,7 @@ public abstract class YahooGamesTable extends YahooTable implements
 		btnInvite.setEnabled(false);
 		btnStartGame.setEnabled(false);
 		btnAuto.setEnabled(false);
+		btnBoot.setEnabled(false);
 		table_side_tabcolor_bg = getApplet().getYahooColor(
 				"yahoo.games.table_side_tabcolor_bg", YahooTable.c.getRGB());
 		table_side_tabcolor_fg = getApplet().getYahooColor(
