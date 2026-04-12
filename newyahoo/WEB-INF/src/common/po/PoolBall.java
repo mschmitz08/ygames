@@ -790,7 +790,7 @@ public class PoolBall extends YIPoint implements IBall {
 	}
 
 	public void zz(int i1, YIVector _pcls48) {
-		boolean keepRollingState = wX.abs() > linearFriction / 2 || h.he() > 0;
+		boolean keepRollingState = wX.abs() > linearFriction / 8 || h.he() > 0;
 		int j1 = PoolMath.mul(i1, Y);
 		_pcls48.setTo(w);
 		w.versor();
