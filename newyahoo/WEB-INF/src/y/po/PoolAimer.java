@@ -18,6 +18,7 @@ import y.utils.YahooImage;
 import common.po.PoolBall;
 import common.po.IBall;
 import common.po.PoolMath;
+import common.po.PoolTraceLog;
 import common.po.YLine;
 import common.po.YIPoint;
 import common.po.YPoint;
@@ -52,6 +53,7 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 		poolBall.K = ball.K;
 		poolBall.L = ball.L;
 		poolBall.ballColided = ball.ballColided;
+		poolBall.setPreviewMode(true);
 		return poolBall;
 	}
 
@@ -552,6 +554,14 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 		}
 
 		aim.add(cueLine, deflectionLine, targetLine, marker);
+		PoolTraceLog.log("preview", "selected="
+				+ (selectedBall == null ? -1 : selectedBall.getIndex()) + " cue="
+				+ PoolTraceLog.fmt(cueVector) + " collided=" + ballColided
+				+ " collBall=" + index + " firstColl="
+				+ PoolTraceLog.fmt(firstColl) + " bestCollisionTime="
+				+ bestCollisionTime + " guideTimeToRail=" + guideTimeToRail
+				+ " marker=" + PoolTraceLog.fmt(marker) + " ghostStyle="
+				+ aim.getMarkerStyle());
 		aim.invalidate();
 	}
 

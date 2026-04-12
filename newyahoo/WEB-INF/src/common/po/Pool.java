@@ -172,16 +172,44 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 	}
 
 	public boolean Bj(IBall _pcls124) {
-		boolean flag = false;
+		return isOpeningBreakShot(_pcls124, collBall);
+	}
+
+	private boolean hasOpeningRackState(IBall _pcls124) {
 		int i1 = 0;
 		for (IBall _lcls124 : ball) {
 			if (!_lcls124.equals(_pcls124) && _lcls124.isInitPos())
 				i1++;
 		}
 
-		if (i1 > 5)
-			flag = true;
-		return flag;
+		return i1 > 5;
+	}
+
+	private boolean isRackClusterBall(int i1) {
+		if (i1 <= 0 || i1 >= ball.length)
+			return false;
+		IBall _lcls124 = getBall(i1);
+		if (_lcls124 == null || _lcls124.inSlot() || !_lcls124.isInitPos())
+			return false;
+		int j1 = 0;
+		int k1 = PoolMath.intToYInt(26);
+		for (IBall _lcls124_1 : ball) {
+			if (_lcls124_1 == null || _lcls124_1.getIndex() == 0
+					|| _lcls124_1.getIndex() == i1 || _lcls124_1.inSlot()
+					|| !_lcls124_1.isInitPos())
+				continue;
+			if (_lcls124.distance((YIPoint) _lcls124_1) > k1)
+				continue;
+			j1++;
+			if (j1 >= 2)
+				return true;
+		}
+
+		return false;
+	}
+
+	public boolean isOpeningBreakShot(IBall _pcls124, int i1) {
+		return hasOpeningRackState(_pcls124) && isRackClusterBall(i1);
 	}
 
 	public void changeTurn(boolean change, boolean ballInHand) {
@@ -264,7 +292,7 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 		if (m_currentState != 1 && m_currentState != 2)
 			return false;
 		if (O && z && flag) {
-			boolean flag1 = Bj(getBall(index));
+			boolean flag1 = isOpeningBreakShot(getBall(index), collBall);
 			for (IBall element : ball)
 				element.Pv(flag1);
 
@@ -363,10 +391,18 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 
 	public boolean doStrike(int turn, int _index, YIPoint _cueDist,
 			YIPoint _englishDist, YIPoint _firstColl, int _collBall) {
-		if (m_turn != turn)
+		if (m_turn != turn) {
+			PoolTraceLog.log("pool-doStrike-reject", "reason=turn turn=" + turn
+					+ " expected=" + m_turn + " state=" + m_currentState
+					+ " index=" + _index + " collBall=" + _collBall);
 			return false;
-		if (m_currentState != 0)
+		}
+		if (m_currentState != 0) {
+			PoolTraceLog.log("pool-doStrike-reject", "reason=state turn=" + turn
+					+ " state=" + m_currentState + " index=" + _index
+					+ " collBall=" + _collBall);
 			return false;
+		}
 		pocketed = false;
 		turnCollided = false;
 		sideCollided = false;
@@ -390,7 +426,14 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 			// stuck waiting for a stop transition that never occurs.
 			poolEngine.moving = true;
 			if (!z) {
-				boolean flag = Bj(getBall(index));
+				boolean flag = isOpeningBreakShot(getBall(index), collBall);
+				PoolTraceLog.log("pool-doStrike-accept", "turn=" + turn + " index="
+						+ _index + " collBall=" + _collBall + " cueDist="
+						+ PoolTraceLog.fmt(_cueDist) + " englishDist="
+						+ PoolTraceLog.fmt(_englishDist) + " firstColl="
+						+ PoolTraceLog.fmt(_firstColl) + " break=" + flag
+						+ " firstStrike=" + firstStrike + " training=" + training
+						+ " currentState=" + m_currentState);
 				for (IBall element : ball)
 					element.Pv(flag);
 
@@ -495,6 +538,13 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 	}
 
 	public void handleCollBalls(IBall _pcls124, IBall _pcls124_1) {
+		if (_pcls124.getIndex() == 0 || _pcls124_1.getIndex() == 0)
+			PoolTraceLog.log("pool-handleCollBalls", "ball1="
+					+ PoolTraceLog.fmt(_pcls124) + " ball2="
+					+ PoolTraceLog.fmt(_pcls124_1) + " turnCollided="
+					+ turnCollided + " firstCollidedBall="
+					+ (firstCollidedBall == null ? -1 : firstCollidedBall
+							.getIndex()));
 		if (!turnCollided) {
 			firstCollidedBall = _pcls124.isMoving() ? _pcls124_1 : _pcls124;
 			turnCollided = true;

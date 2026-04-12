@@ -31,6 +31,7 @@ import common.po.PoolBall;
 import common.po.PoolData;
 import common.po.PoolHandler;
 import common.po.PoolMath;
+import common.po.PoolTraceLog;
 import common.po.Slot;
 import common.po.Vel;
 import common.po.YIPoint;
@@ -716,6 +717,11 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 			cueDist.read(datainputstream);
 			englishDist.read(datainputstream);
 			firstColl.read(datainputstream);
+			PoolTraceLog.log("client-recv-strike", "seat=" + byte4 + " index="
+					+ k2 + " collBall=" + byte5 + " cueDist="
+					+ PoolTraceLog.fmt(cueDist) + " englishDist="
+					+ PoolTraceLog.fmt(englishDist) + " firstColl="
+					+ PoolTraceLog.fmt(firstColl));
 			logState("strike recvd " + byte4 + " " + k2);
 			if (byte4 != getMySitIndex())
 				pool.doStrike(byte4, k2, cueDist, englishDist, firstColl,
@@ -925,10 +931,24 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 			YIPoint englishDist = poolArea.english.getPos().copy();
 			YIPoint firstColl = poolAimer.getFirstColl();
 			int collBall = poolAimer.getIndex();
-			if (pool.Bj(selectedBall)) {
-				cueDist = buildOpeningBreakCueDist(selectedBall, cueDist);
-			}
+			int previewCollBall = collBall;
+			YIPoint previewFirstColl = new YIPoint(firstColl.a, firstColl.b);
 			collBall = resolveCollisionHint(selectedBall.getIndex(), firstColl, collBall);
+			boolean openingBreak = pool.isOpeningBreakShot(selectedBall, collBall);
+			PoolTraceLog.log("client-strike-preview", "turn=" + pool.m_turnNum
+					+ " seat=" + getMySitIndex() + " selected="
+					+ selectedBall.getIndex() + " cueDist="
+					+ PoolTraceLog.fmt(cueDist) + " englishDist="
+					+ PoolTraceLog.fmt(englishDist) + " previewCollBall="
+					+ previewCollBall + " resolvedCollBall=" + collBall
+					+ " previewFirstColl=" + PoolTraceLog.fmt(previewFirstColl)
+					+ " openingBreak=" + openingBreak);
+			if (openingBreak) {
+				cueDist = buildOpeningBreakCueDist(selectedBall, cueDist);
+				PoolTraceLog.log("client-strike-break-boost", "selected="
+						+ selectedBall.getIndex() + " boostedCueDist="
+						+ PoolTraceLog.fmt(cueDist));
+			}
 			// System.out.println("cueDist=" + cueDist + "; englishDist="
 			// + englishDist + "; firstColl=" + firstColl + "; collBall="
 			// + collBall);
@@ -953,6 +973,12 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 			nearestDistance = distance;
 			nearestBallIndex = item.getIndex();
 		}
+		if (nearestBallIndex != collBall)
+			PoolTraceLog.log("resolve-collision-hint", "cueBall="
+					+ cueBallIndex + " previewCollBall=" + collBall
+					+ " resolvedCollBall=" + nearestBallIndex + " firstColl="
+					+ PoolTraceLog.fmt(firstColl) + " nearestDistance="
+					+ nearestDistance);
 		return nearestBallIndex;
 	}
 
@@ -966,6 +992,12 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 
 	public void strike(int index, YIPoint cueDist, YIPoint englishDist,
 			YIPoint firstColl, int collBall) {
+		PoolTraceLog.log("client-strike-send", "turn=" + pool.m_turnNum
+				+ " seat=" + getMySitIndex() + " index=" + index
+				+ " collBall=" + collBall + " cueDist="
+				+ PoolTraceLog.fmt(cueDist) + " englishDist="
+				+ PoolTraceLog.fmt(englishDist) + " firstColl="
+				+ PoolTraceLog.fmt(firstColl));
 		logState("strike done and sent turn=" + pool.m_turnNum + " seat="
 				+ getMySitIndex());
 		send('\uFF82', pool.m_turnNum, index, (byte) collBall, cueDist,
