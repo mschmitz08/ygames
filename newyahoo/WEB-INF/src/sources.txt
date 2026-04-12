@@ -38,7 +38,6 @@ C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\common\po\PoolMath2.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\common\po\PoolParams.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\common\po\PoolPocket.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\common\po\PoolSetup.java
-C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\common\po\PoolTraceLog.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\common\po\Setup.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\common\po\Slot.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\common\po\TrainingSetup.java

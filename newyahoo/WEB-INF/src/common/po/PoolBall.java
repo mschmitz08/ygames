@@ -384,37 +384,13 @@ public class PoolBall extends YIPoint implements IBall {
 					* (5 - (int) PoolMath.yintToFloat(vel.abs() * 5)));
 		int i1 = Math.abs(vel.proj(C));
 		C.versor();
-		if (traceCollision)
-			PoolTraceLog.log("ball-ov-pre", "self=" + index + " other="
-					+ _lcls171.getIndex() + " beforeVel="
-					+ PoolTraceLog.fmt(beforeVel) + " beforeWX="
-					+ PoolTraceLog.fmt(beforeWX) + " incomingVel="
-					+ PoolTraceLog.fmt(incomingVel) + " axis="
-					+ PoolTraceLog.fmt(C) + " l1=" + l1 + " l2=" + l2 + " l3="
-					+ l3 + " i1=" + i1 + " break=" + L + " hadEnglish="
-					+ hadEnglishOnStrike + " previewMode=" + previewMode
-					+ " ballColided=" + ballColided + " collBall=" + collBall
-					+ " firstColl=" + PoolTraceLog.fmt(firstColl));
 		zz(i1, C);
-		if (traceCollision)
-			PoolTraceLog.log("ball-ov-post", "self=" + index + " other="
-					+ _lcls171.getIndex() + " afterVel="
-					+ PoolTraceLog.fmt(vel) + " afterWX="
-					+ PoolTraceLog.fmt(wX) + " h=" + PoolTraceLog.fmt(h)
-					+ " sliding=" + sliding + " inSlot=" + inSlot());
 		uncolide();
 	}
 
 	public void pv() {
 		if (obstacle == null)
 			return;
-		boolean pendingFirstCollisionHint = hasPendingFirstCollisionHint();
-		if (index == 0 || pendingFirstCollisionHint)
-			PoolTraceLog.log("ball-pv", "ball=" + index + " obstacle="
-					+ obstacle + " beforeVel=" + PoolTraceLog.fmt(vel)
-					+ " beforeWX=" + PoolTraceLog.fmt(wX) + " pendingHint="
-					+ pendingFirstCollisionHint + " collBall=" + collBall
-					+ " firstColl=" + PoolTraceLog.fmt(firstColl));
 		if (vel.norm() > PoolMath.four && handler != null)
 			handler.handleColl(2);
 		YIVector _lcls48 = obstacle.Rl(this);
@@ -446,12 +422,6 @@ public class PoolBall extends YIPoint implements IBall {
 		if (i1 > 0)
 			wX.sub(i1);
 		sliding = true;
-		if (index == 0 || pendingFirstCollisionHint)
-			PoolTraceLog.log("ball-pv", "ball=" + index + " obstacle="
-					+ obstacle + " afterVel=" + PoolTraceLog.fmt(vel)
-					+ " afterWX=" + PoolTraceLog.fmt(wX) + " pendingHint="
-					+ pendingFirstCollisionHint + " collBall=" + collBall
-					+ " firstColl=" + PoolTraceLog.fmt(firstColl));
 		uncolide();
 	}
 
@@ -595,17 +565,6 @@ public class PoolBall extends YIPoint implements IBall {
 		}
 		if (handler != null)
 			handler.handleColl(3);
-		PoolTraceLog.log("ball-start", "index=" + index + " cueDist="
-				+ PoolTraceLog.fmt(cueDist) + " englishDist="
-				+ PoolTraceLog.fmt(englishDist) + " firstColl="
-				+ PoolTraceLog.fmt(_firstColl) + " collBall=" + _collBall
-				+ " pullback=" + PoolMath.yintToFloat(j1) + " englishAbs="
-				+ PoolMath.yintToFloat(k1) + " launchSpeed="
-				+ PoolMath.yintToFloat(i2) + " vel=" + PoolTraceLog.fmt(vel)
-				+ " wX=" + PoolTraceLog.fmt(wX) + " h="
-				+ PoolTraceLog.fmt(h) + " sliding=" + sliding + " break=" + L
-				+ " hadEnglish=" + hadEnglishOnStrike + " previewMode="
-				+ previewMode + " logPath=" + PoolTraceLog.getPath());
 		nv();
 	}
 
@@ -654,13 +613,6 @@ public class PoolBall extends YIPoint implements IBall {
 
 	private int applyGuidedTimeOverride(PoolBall _lcls171, int defaultTime) {
 		int guidedTime = guidedTimeToFirstCollision(_lcls171, defaultTime);
-		if (hasPendingFirstCollisionHint() && collBall == _lcls171.getIndex()
-				&& guidedTime != defaultTime)
-			PoolTraceLog.log("time-to-ball-guided", "ball=" + index + " target="
-					+ _lcls171.getIndex() + " default=" + defaultTime
-					+ " guided=" + guidedTime + " vel="
-					+ PoolTraceLog.fmt(vel) + " firstColl="
-					+ PoolTraceLog.fmt(firstColl));
 		if (guidedTime > 0)
 			return guidedTime;
 		if (!hasPendingFirstCollisionHint()
@@ -668,13 +620,6 @@ public class PoolBall extends YIPoint implements IBall {
 				&& _lcls171.collBall == getIndex()) {
 			int mirroredGuidedTime = _lcls171.guidedTimeToFirstCollision(this,
 					defaultTime);
-			if (mirroredGuidedTime != defaultTime)
-				PoolTraceLog.log("time-to-ball-guided-mirror", "ball=" + index
-						+ " source=" + _lcls171.getIndex() + " default="
-						+ defaultTime + " mirroredGuided="
-						+ mirroredGuidedTime + " otherVel="
-						+ PoolTraceLog.fmt(_lcls171.vel) + " otherFirstColl="
-						+ PoolTraceLog.fmt(_lcls171.firstColl));
 			if (mirroredGuidedTime > 0)
 				return mirroredGuidedTime;
 		}
@@ -687,9 +632,6 @@ public class PoolBall extends YIPoint implements IBall {
 			return defaultTime;
 		int speed = vel.abs();
 		if (speed == 0) {
-			PoolTraceLog.log("guided-time", "ball=" + index + " target="
-					+ _lcls171.getIndex() + " action=skip reason=speed0 default="
-					+ defaultTime);
 			return defaultTime;
 		}
 		boolean aggressiveGuidance = shouldAggressivelyGuideFirstCollision();
@@ -697,18 +639,9 @@ public class PoolBall extends YIPoint implements IBall {
 		C.setFrom(this, D);
 		int distanceToFirstCollision = C.abs();
 		if (distanceToFirstCollision == 0) {
-			PoolTraceLog.log("guided-time", "ball=" + index + " target="
-					+ _lcls171.getIndex()
-					+ " action=skip reason=distance0 default=" + defaultTime);
 			return defaultTime;
 		}
 		if (vel.mul(C) <= 0L) {
-			PoolTraceLog.log("guided-time", "ball=" + index + " target="
-					+ _lcls171.getIndex()
-					+ " action=skip reason=past-firstColl default=" + defaultTime
-					+ " distance=" + PoolMath.yintToFloat(distanceToFirstCollision)
-					+ " speed=" + PoolMath.yintToFloat(speed) + " aggressive="
-					+ aggressiveGuidance);
 			return defaultTime;
 		}
 		if (aggressiveGuidance) {
@@ -716,47 +649,19 @@ public class PoolBall extends YIPoint implements IBall {
 			vel.setVersor(H);
 			int alignment = Math.abs(H.proj(C));
 			if (alignment < PoolMath.floatToYInt(0.75F)) {
-				PoolTraceLog.log("guided-time", "ball=" + index + " target="
-						+ _lcls171.getIndex()
-						+ " action=skip reason=poor-alignment default="
-						+ defaultTime + " alignment="
-						+ PoolMath.yintToFloat(alignment) + " distance="
-						+ PoolMath.yintToFloat(distanceToFirstCollision));
 				return defaultTime;
 			}
 		}
 		if (!aggressiveGuidance && distanceToFirstCollision > speed + radius / 2) {
-			PoolTraceLog.log("guided-time", "ball=" + index + " target="
-					+ _lcls171.getIndex()
-					+ " action=skip reason=too-far-normal default=" + defaultTime
-					+ " distance=" + PoolMath.yintToFloat(distanceToFirstCollision)
-					+ " speed=" + PoolMath.yintToFloat(speed));
 			return defaultTime;
 		}
 		if (aggressiveGuidance && distanceToFirstCollision > speed + radius) {
-			PoolTraceLog.log("guided-time", "ball=" + index + " target="
-					+ _lcls171.getIndex()
-					+ " action=skip reason=too-far-aggressive default="
-					+ defaultTime + " distance="
-					+ PoolMath.yintToFloat(distanceToFirstCollision) + " speed="
-					+ PoolMath.yintToFloat(speed));
 			return defaultTime;
 		}
 		int guidedTime = PoolMath.div(distanceToFirstCollision, speed);
 		if (guidedTime <= 0 || guidedTime > PoolMath.n_1) {
-			PoolTraceLog.log("guided-time", "ball=" + index + " target="
-					+ _lcls171.getIndex()
-					+ " action=skip reason=guided-out-of-range guided="
-					+ guidedTime + " default=" + defaultTime);
 			return defaultTime;
 		}
-		PoolTraceLog.log("guided-time", "ball=" + index + " target="
-				+ _lcls171.getIndex() + " action=apply guided=" + guidedTime
-				+ " default=" + defaultTime + " distance="
-				+ PoolMath.yintToFloat(distanceToFirstCollision) + " speed="
-				+ PoolMath.yintToFloat(speed) + " aggressive="
-				+ aggressiveGuidance + " firstColl="
-				+ PoolTraceLog.fmt(firstColl));
 		if (defaultTime <= 0 || defaultTime == PoolMath.n_2)
 			return guidedTime;
 		return guidedTime < defaultTime ? guidedTime : defaultTime;
@@ -805,35 +710,19 @@ public class PoolBall extends YIPoint implements IBall {
 		C.setFrom(this, D);
 		int distanceToFirstCollision = C.abs();
 		if (distanceToFirstCollision == 0) {
-			PoolTraceLog.log("guide-firstColl", "ball=" + index
-					+ " action=skip reason=distance0 target=" + collBall);
 			return;
 		}
 		if (L && distanceToFirstCollision > radius + radius) {
-			PoolTraceLog.log("guide-firstColl", "ball=" + index
-					+ " action=skip reason=break-distance target=" + collBall
-					+ " distance=" + PoolMath.yintToFloat(distanceToFirstCollision));
 			return;
 		}
 		boolean aggressiveGuidance = shouldAggressivelyGuideFirstCollision();
 		if (vel.mul(C) <= 0L) {
-			PoolTraceLog.log("guide-firstColl", "ball=" + index
-					+ " action=skip reason=past-firstColl target=" + collBall
-					+ " aggressive=" + aggressiveGuidance + " distance="
-					+ PoolMath.yintToFloat(distanceToFirstCollision) + " vel="
-					+ PoolTraceLog.fmt(beforeVel));
 			return;
 		}
 		C.versor();
 		vel.setVersor(H);
-		int alignment = Math.abs(H.proj(C));
 		if (aggressiveGuidance) {
 			if (distanceToFirstCollision > radius + radius / 2) {
-				PoolTraceLog.log("guide-firstColl", "ball=" + index
-						+ " action=skip reason=too-far-aggressive-live target="
-						+ collBall + " distance="
-						+ PoolMath.yintToFloat(distanceToFirstCollision) + " speed="
-						+ PoolMath.yintToFloat(vel.abs()));
 				return;
 			}
 			int steerWeight = distanceToFirstCollision <= radius ? PoolMath
@@ -844,37 +733,14 @@ public class PoolBall extends YIPoint implements IBall {
 			H.versor();
 			H.mul(beforeVel.abs());
 			H.setTo(vel);
-			PoolTraceLog.log("guide-firstColl", "ball=" + index
-					+ " action=apply-aggressive-blend target=" + collBall
-					+ " alignment=" + PoolMath.yintToFloat(alignment)
-					+ " distance="
-					+ PoolMath.yintToFloat(distanceToFirstCollision)
-					+ " beforeVel=" + PoolTraceLog.fmt(beforeVel)
-					+ " afterVel=" + PoolTraceLog.fmt(vel) + " beforeWX="
-					+ PoolTraceLog.fmt(beforeWX) + " afterWX="
-					+ PoolTraceLog.fmt(wX) + " firstColl="
-					+ PoolTraceLog.fmt(firstColl));
 			return;
 		}
 		if (!aggressiveGuidance && distanceToFirstCollision > vel.abs()
 				+ radius / 2) {
-			PoolTraceLog.log("guide-firstColl", "ball=" + index
-					+ " action=skip reason=too-far-normal target=" + collBall
-					+ " distance=" + PoolMath.yintToFloat(distanceToFirstCollision)
-					+ " speed=" + PoolMath.yintToFloat(vel.abs()));
 			return;
 		}
 		C.mul(vel.abs());
 		C.setTo(vel);
-		PoolTraceLog.log("guide-firstColl", "ball=" + index + " action=apply target="
-				+ collBall + " aggressive=" + aggressiveGuidance + " alignment="
-				+ PoolMath.yintToFloat(alignment) + " distance="
-				+ PoolMath.yintToFloat(distanceToFirstCollision) + " beforeVel="
-				+ PoolTraceLog.fmt(beforeVel) + " afterVel="
-				+ PoolTraceLog.fmt(vel) + " beforeWX="
-				+ PoolTraceLog.fmt(beforeWX) + " afterWX="
-				+ PoolTraceLog.fmt(wX) + " firstColl="
-				+ PoolTraceLog.fmt(firstColl));
 	}
 
 	public int timeToObstacle(Obstacle obstacles[]) {
@@ -920,10 +786,6 @@ public class PoolBall extends YIPoint implements IBall {
 	}
 
 	public void uncolide() {
-		if (ballColided || firstColl != null || collBall >= 0)
-			PoolTraceLog.log("uncolide", "ball=" + index + " ballColided="
-					+ ballColided + " collBall=" + collBall + " firstColl="
-					+ PoolTraceLog.fmt(firstColl));
 		ballColided = false;
 		firstColl = null;
 		collBall = -1;
@@ -1071,14 +933,5 @@ public class PoolBall extends YIPoint implements IBall {
 			if (!keepRollingState)
 				wX.set(0, 0);
 		}
-		if (index == 0 || collBall >= 0)
-			PoolTraceLog.log("ball-zz", "index=" + index + " i1=" + i1
-					+ " beforeVel=" + PoolTraceLog.fmt(beforeVel) + " afterVel="
-					+ PoolTraceLog.fmt(vel) + " beforeWX="
-					+ PoolTraceLog.fmt(beforeWX) + " afterWX="
-					+ PoolTraceLog.fmt(wX) + " originalForwardRoll="
-					+ PoolMath.yintToFloat(originalForwardRoll) + " favorFollow="
-					+ favorNaturalFollow + " keepRollingState="
-					+ keepRollingState + " h=" + PoolTraceLog.fmt(h));
 	}
 }

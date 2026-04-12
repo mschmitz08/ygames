@@ -137,10 +137,6 @@ public class PoolEngine implements ClockHandler, TimerHandler {
 			t = 0;
 		}
 		boolean moving1 = movingExist();
-		if (!moving1 && moving)
-			PoolTraceLog.log("engine-stop", "iterateAreaCounter="
-					+ iterateAreaCounter + " active=" + active + " movingWas="
-					+ moving + " movingNow=" + moving1);
 		if (!moving1 && moving && handler != null)
 			handler.handleStop();
 		moving = moving1;
@@ -317,13 +313,6 @@ public class PoolEngine implements ClockHandler, TimerHandler {
 			if (minTimeToCollBall == cE && cb2 != null && cb1 != null) {
 				if (logMessages)
 					addPhysicsLog("cb1" + cb1 + "\n cb2" + cb2);
-				if (cb1.getIndex() == 0 || cb2.getIndex() == 0)
-					PoolTraceLog.log("engine-collision-choice", "tick="
-							+ iterateAreaCounter + " cE=" + cE + " cb1="
-							+ PoolTraceLog.fmt(cb1) + " cb2="
-							+ PoolTraceLog.fmt(cb2) + " tnTick=" + tnTick
-							+ " minTimeToCollBall=" + minTimeToCollBall
-							+ " minTimeToObstacle=" + minTimeToObstacle);
 				v2.setFrom(cb2.getVel());
 				v1.setFrom(cb1.getVel());
 				if (cb2.getIndex() < cb1.getIndex()) {
