@@ -6,6 +6,7 @@
 package server.net;
 
 import core.DebugLog;
+import core.Initializer;
 
 import java.io.DataInputStream;
 import java.io.EOFException;
@@ -18,6 +19,7 @@ import login.Login;
 import server.io.YahooConnectionId;
 import server.yutils.IgnoredEntry;
 import server.yutils.YahooRoom;
+import common.utils.ClientJarHash;
 import data.MySQLTable;
 
 // Referenced classes of package y.po:
@@ -127,6 +129,38 @@ public abstract class YahooServerConnection extends Thread implements
 					id.close();
 					return false;
 				}
+
+				String clientHash = ClientJarHash.extractClientHashFromAgent(id
+						.getAgent());
+				String cleanAgent = ClientJarHash.stripClientHashFromAgent(id
+						.getAgent());
+				id.setAgent(cleanAgent);
+				String publishedClientHash = Initializer.selfInstance == null ? ""
+						: Initializer.selfInstance.getPublishedClientHash();
+				if (publishedClientHash != null && publishedClientHash.length() > 0) {
+					if (clientHash == null || clientHash.length() == 0) {
+						DebugLog.log("YahooServerConnection.doProcess client hash missing id="
+								+ idname + " expected=" + publishedClientHash
+								+ " agent=" + cleanAgent);
+						room.alert(id,
+								"Client version does not match the current version. Please refresh the page or reinstall the launcher.");
+						id.close();
+						return false;
+					}
+					if (!publishedClientHash.equalsIgnoreCase(clientHash)) {
+						DebugLog.log("YahooServerConnection.doProcess client hash mismatch id="
+								+ idname + " expected=" + publishedClientHash
+								+ " actual=" + clientHash + " agent="
+								+ cleanAgent);
+						room.alert(id,
+								"Client version does not match the current version. Please refresh the page or reinstall the launcher.");
+						id.close();
+						return false;
+					}
+				}
+				else
+					DebugLog.log("YahooServerConnection.doProcess published client hash unavailable; allowing login id="
+							+ idname);
 
 				DebugLog.log("YahooServerConnection.doProcess login validated idname=" + idname);
 				server.aquireProfileId(id, idname);

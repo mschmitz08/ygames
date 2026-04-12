@@ -106,6 +106,13 @@
             && !(request.getScheme().equals("https") && request.getServerPort() == 443))
         baseUrl += ":" + request.getServerPort();
     baseUrl += request.getContextPath();
+    String clientJarCacheToken = "";
+    String launcherClientJarPath = application.getRealPath("/downloads/ygames_launcher_windows/app/newyahoo/client.jar");
+    if(launcherClientJarPath != null) {
+        File launcherClientJar = new File(launcherClientJarPath);
+        if(launcherClientJar.exists())
+            clientJarCacheToken = "?v=" + launcherClientJar.lastModified();
+    }
 
     Cookie[] cookies = request.getCookies();
     String cookie = "";
@@ -133,7 +140,7 @@
 </head>
 <body>
 <h3><%=pageTitle%></h3>
-<applet code="y.po.YahooPool" name="ygames_applet" codebase="/ny/" archive="client.jar" width="100%" height="100%">
+<applet code="y.po.YahooPool" name="ygames_applet" codebase="/ny/" archive="downloads/ygames_launcher_windows/app/newyahoo/client.jar<%=clientJarCacheToken%>" width="100%" height="100%">
 <param name="port" value="<%=port%>">
 <param name="host" value="<%out.print(appletHost);%>">
 <param name="yport" value="<%=room%>">

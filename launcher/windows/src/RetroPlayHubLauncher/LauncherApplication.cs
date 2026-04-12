@@ -9,127 +9,172 @@ internal static class LauncherApplication
     {
         var options = LaunchOptions.Parse(args);
         using var splash = new LauncherSplashForm();
+        LauncherPaths? paths = null;
+
+        string SaveRunLog()
+        {
+            if (paths is null)
+            {
+                return string.Empty;
+            }
+
+            return LauncherRunLog.Write(paths, splash.GetLogText());
+        }
+
+        void SetSplashStatus(string headline, string body, string? logLine = null)
+        {
+            splash.SetStatus(headline, body);
+            if (!string.IsNullOrWhiteSpace(logLine))
+            {
+                splash.AppendLog(logLine ?? string.Empty);
+            }
+
+            Application.DoEvents();
+        }
+
         splash.Show();
-        Application.DoEvents();
+        SetSplashStatus(
+            "Preparing your game...",
+            "Checking launcher files, preparing applet settings, and getting the game window ready.",
+            "Launcher started.");
 
-        splash.SetStatus(
+        SetSplashStatus(
             "Checking for updates...",
-            "Making sure your RetroPlayHub launcher and game files are ready before we open the game window.");
-        Application.DoEvents();
+            "Making sure your RetroPlayHub launcher and game files are ready before we open the game window.",
+            "Checking for launcher and client updates.");
 
-        var paths = LauncherPaths.CreateDefault();
+        paths = LauncherPaths.CreateDefault();
         var layout = LauncherLayout.Resolve(paths, options);
         LauncherStorage.EnsureLayoutExists(paths, layout);
-        var updateOutcome = UpdaterPreflight.CheckForUpdates(options, paths, out var updateDetails);
+        splash.AppendLog("Verified launcher layout and install folders.");
+        var updateOutcome = UpdaterPreflight.CheckForUpdates(
+            options,
+            paths,
+            line => splash.AppendLog(line ?? string.Empty),
+            out var updateDetails);
 
         if (updateOutcome is UpdaterCheckOutcome.LauncherUpdateNeeded or UpdaterCheckOutcome.ClientUpdateNeeded)
         {
+            var logPath = SaveRunLog();
             splash.Close();
-            return ShowMessage(
+            return ShowDetails(
                 "Update Required",
                 "RetroPlayHub Launcher needs to finish updating before it can start the game.",
                 updateDetails,
+                logPath,
                 MessageBoxIcon.Information,
                 (int)updateOutcome);
         }
 
         if (updateOutcome == UpdaterCheckOutcome.InstallerLaunched)
         {
+            var logPath = SaveRunLog();
             splash.Close();
-            return ShowMessage(
+            return ShowDetails(
                 "Installer Started",
                 "RetroPlayHub Launcher started the installer. Finish that update, then launch the game again.",
                 updateDetails,
+                logPath,
                 MessageBoxIcon.Information,
                 0);
         }
 
         if (updateOutcome == UpdaterCheckOutcome.UpdateCheckFailed)
         {
+            var logPath = SaveRunLog();
             splash.Close();
-            return ShowMessage(
+            return ShowDetails(
                 "Update Check Failed",
                 "RetroPlayHub Launcher could not complete its update check.",
                 updateDetails,
+                logPath,
                 MessageBoxIcon.Error,
                 1);
         }
 
         LauncherStorage.EnsureSiteBundle(paths, layout);
         var settings = LauncherSettings.Load(layout, options);
+        splash.AppendLog("Verified active site bundle and launcher settings.");
 
-        splash.SetStatus(
+        SetSplashStatus(
             "Preparing launch files...",
-            "Building the policy and applet page for your selected room.");
-        Application.DoEvents();
+            "Building the policy and applet page for your selected room.",
+            "Writing launch policy and applet HTML.");
 
         var descriptor = AppletDescriptor.Create(options, layout);
         var policyPath = LaunchArtifactWriter.WritePolicyFile(layout);
         var htmlPath = LaunchArtifactWriter.WriteAppletHtml(layout, options, settings, descriptor);
         var appletViewerPath = AppletViewerLocator.Find(paths);
+        splash.AppendLog($"Prepared launch files for {descriptor.RoomLabel}.");
 
         if (!File.Exists(Path.Combine(layout.AppDirectory, "client.jar")))
         {
+            splash.AppendLog($"Missing client.jar in {layout.AppDirectory}.");
+            var logPath = SaveRunLog();
             splash.Close();
-            return ShowMessage(
+            return ShowDetails(
                 "Missing client.jar",
                 "RetroPlayHub Launcher could not find client.jar in the current app bundle.",
                 layout.AppDirectory,
+                logPath,
                 MessageBoxIcon.Error,
                 1);
         }
 
         if (!Directory.Exists(Path.Combine(layout.AppDirectory, "yog")))
         {
+            splash.AppendLog($"Missing yog resources in {layout.AppDirectory}.");
+            var logPath = SaveRunLog();
             splash.Close();
-            return ShowMessage(
+            return ShowDetails(
                 "Missing Resources",
                 "RetroPlayHub Launcher could not find the yog resource folder in the current app bundle.",
                 layout.AppDirectory,
+                logPath,
                 MessageBoxIcon.Error,
                 1);
         }
 
         if (string.IsNullOrWhiteSpace(appletViewerPath))
         {
+            var logPath = SaveRunLog();
             splash.Close();
-            return ShowAppletViewerRequired(paths);
+            return ShowAppletViewerRequired(paths, logPath);
         }
 
-        splash.SetStatus(
+        SetSplashStatus(
             "Launching your game...",
-            $"Opening {descriptor.PageTitle} in {descriptor.RoomLabel}.");
-        Application.DoEvents();
+            $"Opening {descriptor.PageTitle} in {descriptor.RoomLabel}.",
+            $"Launching AppletViewer from {appletViewerPath}.");
 
         AppletLauncher.Launch(appletViewerPath, policyPath, htmlPath, layout.AppDirectory);
+        splash.AppendLog("AppletViewer launch requested successfully.");
+        SaveRunLog();
         splash.Close();
 
         return 0;
     }
 
-    private static int ShowMessage(
+    private static int ShowDetails(
         string headline,
         string body,
         string details,
+        string logPath,
         MessageBoxIcon icon,
         int exitCode)
     {
-        var message = body;
-        if (!string.IsNullOrWhiteSpace(details))
-        {
-            message += Environment.NewLine + Environment.NewLine + details.Trim();
-        }
-
-        MessageBox.Show(
-            message,
-            $"{LauncherBranding.ProductName} - {headline}",
-            MessageBoxButtons.OK,
+        using var dialog = new LauncherDetailsForm(
+            headline,
+            body,
+            string.IsNullOrWhiteSpace(details) ? "(no additional details)" : details.Trim(),
+            logPath,
             icon);
+        dialog.ShowDialog();
 
         return exitCode;
     }
 
-    private static int ShowAppletViewerRequired(LauncherPaths paths)
+    private static int ShowAppletViewerRequired(LauncherPaths paths, string logPath)
     {
         var message =
             "RetroPlayHub Launcher needs Java 8 with AppletViewer before it can start the game." +
@@ -161,10 +206,11 @@ internal static class LauncherApplication
             }
         }
 
-        ShowMessage(
+        ShowDetails(
             "AppletViewer Required",
             "This launcher needs Java 8 AppletViewer support before it can start the game.",
             AppletViewerLocator.GetDiagnostics(paths),
+            logPath,
             MessageBoxIcon.Error,
             1);
 

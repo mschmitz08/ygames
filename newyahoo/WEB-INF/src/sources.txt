@@ -74,6 +74,7 @@ C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\common\po2\YRectangle.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\common\po2\YVector.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\common\utils\Buffer.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\common\utils\ByteArrayData.java
+C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\common\utils\ClientJarHash.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\common\utils\ClockHandler.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\common\utils\IOBuffer.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\common\utils\ReverseClock.java

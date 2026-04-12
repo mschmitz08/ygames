@@ -54,6 +54,7 @@ import y.ydialogs.InformationFrame;
 import y.ydialogs.OptionsDialog;
 import y.ydialogs.PrivateChatFrame;
 
+import common.utils.ClientJarHash;
 import common.yutils.YahooUtils;
 import common.yutils._cls159;
 
@@ -155,6 +156,7 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 	public static final String	APPLET_REGISTER_REQUEST	= "APPLET_REGISTER_REQUEST";
 	public static final String	APPLET_CHANGE_PASSWORD_REQUEST	= "APPLET_CHANGE_PASSWORD_REQUEST";
 	String										agent;
+	String										clientJarHash;
 	protected String							page_id;
 	String										prof_id;
 	String										page_title;
@@ -1756,7 +1758,7 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 				yahooConnectionThread.output.write(command);
 				yahooConnectionThread.output.writeUTF(cookie);
 				yahooConnectionThread.output.writeUTF(ycookie);
-				yahooConnectionThread.output.writeUTF(agent);
+				yahooConnectionThread.output.writeUTF(buildReportedAgent());
 				yahooConnectionThread.output.writeUTF(intl_code);
 				yahooConnectionThread.flush();
 			}
@@ -1916,6 +1918,12 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 		if (i1 < 2)
 			return i1;
 		return testCPU(i1 - 1) + testCPU(i1 - 2);
+	}
+
+	private String buildReportedAgent() {
+		if (clientJarHash == null || clientJarHash.length() == 0)
+			clientJarHash = ClientJarHash.computeSelfJarHash(getClass());
+		return ClientJarHash.appendClientHashToAgent(agent, clientJarHash);
 	}
 
 	void updateFriends(Vector<String> vector) {

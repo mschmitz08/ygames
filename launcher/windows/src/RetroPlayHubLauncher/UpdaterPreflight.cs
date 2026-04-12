@@ -5,7 +5,11 @@ namespace RetroPlayHubLauncher;
 
 internal static class UpdaterPreflight
 {
-    public static UpdaterCheckOutcome CheckForUpdates(LaunchOptions options, LauncherPaths paths, out string details)
+    public static UpdaterCheckOutcome CheckForUpdates(
+        LaunchOptions options,
+        LauncherPaths paths,
+        Action<string>? log,
+        out string details)
     {
         details = string.Empty;
 
@@ -22,6 +26,7 @@ internal static class UpdaterPreflight
             return UpdaterCheckOutcome.UpToDate;
         }
 
+        log?.Invoke($"Using updater: {updater.FilePath}");
         var manifestUrl = BuildWebUrl(options.WebBase, "/launcher_state.jsp");
         if (string.IsNullOrWhiteSpace(manifestUrl))
         {
@@ -29,6 +34,7 @@ internal static class UpdaterPreflight
             return UpdaterCheckOutcome.UpToDate;
         }
 
+        log?.Invoke($"Reading manifest: {manifestUrl}");
         var startInfo = new ProcessStartInfo
         {
             FileName = updater.RequiresDotnetHost ? "dotnet" : updater.FilePath,
@@ -46,11 +52,36 @@ internal static class UpdaterPreflight
             return UpdaterCheckOutcome.UpdateCheckFailed;
         }
 
-        var stdout = process.StandardOutput.ReadToEnd();
-        var stderr = process.StandardError.ReadToEnd();
+        var transcript = new List<string>();
+        var transcriptLock = new object();
+
+        void CaptureLine(string? line, bool isError)
+        {
+            if (line is null)
+            {
+                return;
+            }
+
+            var display = isError && !string.IsNullOrWhiteSpace(line)
+                ? "STDERR: " + line
+                : line;
+
+            lock (transcriptLock)
+            {
+                transcript.Add(display);
+            }
+
+            log?.Invoke(display);
+        }
+
+        process.OutputDataReceived += (_, eventArgs) => CaptureLine(eventArgs.Data, false);
+        process.ErrorDataReceived += (_, eventArgs) => CaptureLine(eventArgs.Data, true);
+        process.BeginOutputReadLine();
+        process.BeginErrorReadLine();
+        process.WaitForExit();
         process.WaitForExit();
 
-        details = BuildDetails(stdout, stderr);
+        details = BuildDetails(transcript);
 
         return process.ExitCode switch
         {
@@ -87,28 +118,21 @@ internal static class UpdaterPreflight
         parts.Add(manifestUrl);
         parts.Add("--install-root");
         parts.Add(installRoot);
-        parts.Add("--quiet");
 
         return string.Join(" ", parts.ConvertAll(Quote));
     }
 
-    private static string BuildDetails(string stdout, string stderr)
+    private static string BuildDetails(List<string> transcript)
     {
-        var builder = new StringBuilder();
-        if (!string.IsNullOrWhiteSpace(stdout))
+        if (transcript.Count == 0)
         {
-            builder.AppendLine(stdout.TrimEnd());
+            return string.Empty;
         }
 
-        if (!string.IsNullOrWhiteSpace(stderr))
+        var builder = new StringBuilder();
+        foreach (var line in transcript)
         {
-            if (builder.Length > 0)
-            {
-                builder.AppendLine();
-            }
-
-            builder.AppendLine("STDERR:");
-            builder.AppendLine(stderr.TrimEnd());
+            builder.AppendLine(line);
         }
 
         return builder.ToString().TrimEnd();

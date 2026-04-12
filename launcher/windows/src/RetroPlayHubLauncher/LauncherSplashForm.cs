@@ -8,7 +8,9 @@ internal sealed class LauncherSplashForm : Form
     private readonly Label brandLabel;
     private readonly Label headlineLabel;
     private readonly Label bodyLabel;
+    private readonly Label operationsLabel;
     private readonly ProgressBar progressBar;
+    private readonly TextBox operationsTextBox;
 
     public LauncherSplashForm()
     {
@@ -19,7 +21,7 @@ internal sealed class LauncherSplashForm : Form
         MinimizeBox = false;
         ShowInTaskbar = true;
         TopMost = true;
-        ClientSize = new Size(520, 220);
+        ClientSize = new Size(640, 420);
         BackColor = Color.FromArgb(18, 24, 38);
         ForeColor = Color.FromArgb(245, 234, 213);
         Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
@@ -45,15 +47,37 @@ internal sealed class LauncherSplashForm : Form
         bodyLabel = new Label
         {
             AutoSize = false,
-            Bounds = new Rectangle(24, 100, 472, 58),
+            Bounds = new Rectangle(24, 100, 592, 44),
             Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point),
             ForeColor = Color.FromArgb(223, 211, 190),
             Text = "Checking launcher files, preparing applet settings, and getting the game window ready."
         };
 
+        operationsLabel = new Label
+        {
+            AutoSize = false,
+            Bounds = new Rectangle(24, 160, 592, 20),
+            Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point),
+            ForeColor = Color.FromArgb(244, 211, 156),
+            Text = "Operations"
+        };
+
+        operationsTextBox = new TextBox
+        {
+            Bounds = new Rectangle(24, 186, 592, 174),
+            BackColor = Color.FromArgb(11, 16, 27),
+            ForeColor = Color.FromArgb(231, 225, 214),
+            BorderStyle = BorderStyle.FixedSingle,
+            Multiline = true,
+            ReadOnly = true,
+            ScrollBars = ScrollBars.Vertical,
+            Font = new Font("Consolas", 8.5F, FontStyle.Regular, GraphicsUnit.Point),
+            WordWrap = true
+        };
+
         progressBar = new ProgressBar
         {
-            Bounds = new Rectangle(24, 174, 472, 16),
+            Bounds = new Rectangle(24, 378, 592, 16),
             Style = ProgressBarStyle.Marquee,
             MarqueeAnimationSpeed = 24
         };
@@ -61,6 +85,8 @@ internal sealed class LauncherSplashForm : Form
         Controls.Add(brandLabel);
         Controls.Add(headlineLabel);
         Controls.Add(bodyLabel);
+        Controls.Add(operationsLabel);
+        Controls.Add(operationsTextBox);
         Controls.Add(progressBar);
     }
 
@@ -70,4 +96,37 @@ internal sealed class LauncherSplashForm : Form
         bodyLabel.Text = body;
         Refresh();
     }
+
+    public void AppendLog(string line)
+    {
+        if (IsDisposed)
+        {
+            return;
+        }
+
+        if (InvokeRequired)
+        {
+            try
+            {
+                BeginInvoke(new Action<string>(AppendLog), line);
+            }
+            catch
+            {
+                // Ignore late updates after the window is closing.
+            }
+
+            return;
+        }
+
+        var prefix = $"[{DateTime.Now:HH:mm:ss}] ";
+        operationsTextBox.AppendText(
+            string.IsNullOrWhiteSpace(line)
+                ? Environment.NewLine
+                : prefix + line + Environment.NewLine);
+        operationsTextBox.SelectionStart = operationsTextBox.TextLength;
+        operationsTextBox.ScrollToCaret();
+        Refresh();
+    }
+
+    public string GetLogText() => operationsTextBox.Text;
 }

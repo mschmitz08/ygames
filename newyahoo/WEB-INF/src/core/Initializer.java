@@ -1,5 +1,6 @@
 package core;
 
+import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Hashtable;
@@ -11,6 +12,7 @@ import process.ProcessPool;
 import server.k.YahooCheckersServer;
 import server.po.YahooPoolServer;
 import server.yutils.YahooRoomHandler;
+import common.utils.ClientJarHash;
 import data.MySQLConnectionPool;
 import data.MySQLTable;
 
@@ -46,6 +48,10 @@ public class Initializer extends HttpServlet implements YahooRoomHandler {
     private MySQLConnectionPool connectionPool;
     private YahooPoolServer poolServer;
     private YahooCheckersServer checkersServer;
+    private String publishedClientJarPath;
+    private String publishedClientHash = "";
+    private long publishedClientJarLastModified = -1L;
+    private long publishedClientJarLength = -1L;
 
     public int getPoolPort() {
         return poolPort;
@@ -61,6 +67,32 @@ public class Initializer extends HttpServlet implements YahooRoomHandler {
 
     public YahooCheckersServer getCheckersServer() {
         return checkersServer;
+    }
+
+    public synchronized String getPublishedClientHash() {
+        File jarFile = resolvePublishedClientJarFile();
+        if (jarFile == null || !jarFile.exists()) {
+            publishedClientHash = "";
+            publishedClientJarLastModified = -1L;
+            publishedClientJarLength = -1L;
+            return "";
+        }
+
+        long lastModified = jarFile.lastModified();
+        long length = jarFile.length();
+        if (publishedClientHash.length() == 0
+                || lastModified != publishedClientJarLastModified
+                || length != publishedClientJarLength) {
+            publishedClientHash = ClientJarHash.computeFileSha256(jarFile);
+            publishedClientJarLastModified = lastModified;
+            publishedClientJarLength = length;
+            System.out.println("Published client hash "
+                    + (publishedClientHash.length() == 0 ? "unavailable"
+                            : publishedClientHash)
+                    + " from " + jarFile.getPath());
+        }
+
+        return publishedClientHash;
     }
 
     private String readConfig(String name, String defaultValue) {
@@ -83,6 +115,36 @@ public class Initializer extends HttpServlet implements YahooRoomHandler {
         } catch (NumberFormatException e) {
             return defaultValue;
         }
+    }
+
+    private File resolvePublishedClientJarFile() {
+        if (publishedClientJarPath != null && publishedClientJarPath.length() > 0)
+            return new File(publishedClientJarPath);
+
+        File fromWebapps = resolvePublishedClientJarFromWebapps();
+        if (fromWebapps != null)
+            return fromWebapps;
+
+        String catalinaBase = System.getProperty("catalina.base");
+        if (catalinaBase != null && catalinaBase.length() > 0)
+            return new File(catalinaBase,
+                    "webapps/ny/downloads/ygames_launcher_windows/app/newyahoo/client.jar");
+
+        return null;
+    }
+
+    private File resolvePublishedClientJarFromWebapps() {
+        if (getServletContext() == null)
+            return null;
+        String rootPath = getServletContext().getRealPath("/");
+        if (rootPath == null || rootPath.length() == 0)
+            return null;
+        File webappRoot = new File(rootPath);
+        File webappsRoot = webappRoot.getParentFile();
+        if (webappsRoot == null)
+            return null;
+        return new File(webappsRoot,
+                "ny/downloads/ygames_launcher_windows/app/newyahoo/client.jar");
     }
 
     @Override
@@ -161,6 +223,7 @@ public class Initializer extends HttpServlet implements YahooRoomHandler {
             dbName = readConfig("newyahoo.db.name", dbName);
             dbUserName = readConfig("newyahoo.db.username", dbUserName);
             dbPassword = readConfig("newyahoo.db.password", dbPassword);
+            publishedClientJarPath = readConfig("newyahoo.client.jar.path", "");
             poolPort = readConfigInt("newyahoo.port.pool", poolPort);
             checkersPort = readConfigInt("newyahoo.port.checkers", checkersPort);
             System.out.println("Creating ProcessPool");
@@ -245,6 +308,7 @@ public class Initializer extends HttpServlet implements YahooRoomHandler {
             System.out.println("YahooCheckersServer created");
 
             System.out.println("Pool 2 runtime is retired; skipping Pool 2 server startup");
+            getPublishedClientHash();
 
             System.out.println("NEWYAHOO INIT END");
         } catch (Throwable t) {

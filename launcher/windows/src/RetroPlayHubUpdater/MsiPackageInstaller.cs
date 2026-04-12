@@ -23,6 +23,9 @@ internal static class MsiPackageInstaller
             var tempMsiPath = Path.Combine(
                 Path.GetTempPath(),
                 $"RetroPlayHubLauncher_{requiredVersion}_{Guid.NewGuid():N}.msi");
+            var tempLogPath = Path.Combine(
+                Path.GetTempPath(),
+                $"RetroPlayHubLauncher_{requiredVersion}_{Guid.NewGuid():N}.log");
 
             try
             {
@@ -45,11 +48,14 @@ internal static class MsiPackageInstaller
                 {
                     FileName = "msiexec.exe",
                     UseShellExecute = true,
-                    Arguments = $"/i \"{tempMsiPath}\" /passive /norestart"
+                    Arguments = $"/i \"{tempMsiPath}\" /passive /norestart /L*V \"{tempLogPath}\""
                 };
 
                 Process.Start(startInfo);
-                message = $"Launched MSI installer from {packageUrl}";
+                message =
+                    $"Launched MSI installer from {packageUrl}{Environment.NewLine}" +
+                    $"Downloaded package: {tempMsiPath}{Environment.NewLine}" +
+                    $"Installer log: {tempLogPath}";
                 return true;
             }
             catch (Exception ex)
