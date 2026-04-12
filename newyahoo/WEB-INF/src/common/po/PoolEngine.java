@@ -380,7 +380,9 @@ public class PoolEngine implements ClockHandler, TimerHandler {
 	public boolean movingExist() {
 		boolean flag = false;
 		for (int i1 = 0; i1 < ball.length; i1++) {
-			if (!ball[i1].isMoving())
+			if (!ball[i1].isMoving()
+					&& ((PoolBall) ball[i1]).wX.abs() == 0
+					&& ball[i1].Bv().he() == 0)
 				continue;
 			flag = true;
 			// if(logMessages)

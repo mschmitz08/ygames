@@ -718,9 +718,8 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 			firstColl.read(datainputstream);
 			logState("strike recvd " + byte4 + " " + k2);
 			if (byte4 != getMySitIndex())
-				pool
-						.doStrike(byte4, k2, cueDist, englishDist, firstColl,
-								byte5);
+				pool.doStrike(byte4, k2, cueDist, englishDist, firstColl,
+						byte5);
 			break;
 
 		case -112: // 90: time empty

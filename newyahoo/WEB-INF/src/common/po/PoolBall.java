@@ -371,7 +371,7 @@ public class PoolBall extends YIPoint implements IBall {
 				&& (A.norm() < 5L || A.zf(vel) > PoolMath.pi / 4))
 			vel.mul(vel.norm() >= PoolMath.n_1 ? O : O
 					* (5 - (int) PoolMath.yintToFloat(vel.abs() * 5)));
-		int i1 = Math.abs(vel.proj(x));
+		int i1 = Math.abs(vel.proj(C));
 		C.versor();
 		zz(i1, C);
 		uncolide();
@@ -790,6 +790,7 @@ public class PoolBall extends YIPoint implements IBall {
 	}
 
 	public void zz(int i1, YIVector _pcls48) {
+		boolean keepRollingState = wX.abs() > linearFriction / 2 || h.he() > 0;
 		int j1 = PoolMath.mul(i1, Y);
 		_pcls48.setTo(w);
 		w.versor();
@@ -806,7 +807,8 @@ public class PoolBall extends YIPoint implements IBall {
 		vel.mul(55536);
 		if (vel.norm() < 5L) {
 			vel.set(0, 0);
-			wX.set(0, 0);
+			if (!keepRollingState)
+				wX.set(0, 0);
 		}
 	}
 }
