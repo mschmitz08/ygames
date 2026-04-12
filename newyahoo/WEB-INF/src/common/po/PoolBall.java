@@ -91,8 +91,6 @@ public class PoolBall extends YIPoint implements IBall {
 	YIVector			H;
 	Vector<String>		msgList;
 	boolean				J;
-	boolean				hadEnglishOnStrike;
-	boolean				previewMode;
 
 	public boolean		K;
 
@@ -123,8 +121,6 @@ public class PoolBall extends YIPoint implements IBall {
 		H = new YIVector();
 		msgList = new Vector<String>();
 		J = false;
-		hadEnglishOnStrike = false;
-		previewMode = false;
 		K = false;
 		L = false;
 		reset();
@@ -153,8 +149,6 @@ public class PoolBall extends YIPoint implements IBall {
 		H = new YIVector();
 		msgList = new Vector<String>();
 		J = false;
-		hadEnglishOnStrike = false;
-		previewMode = false;
 		K = false;
 		L = false;
 		radius = PoolMath.intToYInt(k1);
@@ -351,15 +345,7 @@ public class PoolBall extends YIPoint implements IBall {
 
 	public void ov(IBall ball, YIVector v) {
 		PoolBall _lcls171 = (PoolBall) ball;
-		boolean traceCollision = index == 0 || _lcls171.getIndex() == 0
-				|| hasPendingFirstCollisionHint()
-						&& collBall == _lcls171.getIndex()
-				|| _lcls171.hasPendingFirstCollisionHint()
-						&& _lcls171.collBall == index;
-		YIVector beforeVel = vel.je();
-		YIVector beforeWX = wX.je();
-		YIVector incomingVel = v.je();
-		if (hasPendingFirstCollisionHint() && collBall == _lcls171.getIndex())
+		if (ballColided && collBall == _lcls171.getIndex())
 			setPos(firstColl.a, firstColl.b);
 		if (L) {
 			A.setFrom(vel);
@@ -447,7 +433,6 @@ public class PoolBall extends YIPoint implements IBall {
 		vel = new YIVector();
 		wX = new YIVector();
 		h = new Vel();
-		hadEnglishOnStrike = false;
 	}
 
 	public void resetBall() {
@@ -475,7 +460,7 @@ public class PoolBall extends YIPoint implements IBall {
 	}
 
 	public void setPreviewMode(boolean flag) {
-		previewMode = flag;
+		// The old client physics did not have a separate preview-only physics mode.
 	}
 
 	public void setPool(PoolParams _pcls57) {
@@ -504,7 +489,6 @@ public class PoolBall extends YIPoint implements IBall {
 		if (j1 <= 0)
 			return;
 		int k1 = englishDist.abs();
-		hadEnglishOnStrike = k1 != 0;
 		int l1 = PoolMath.div(k1, radius);
 		int i2;
 		if (k1 != 0) {
@@ -584,10 +568,10 @@ public class PoolBall extends YIPoint implements IBall {
 		int deltaX = super.a - ((YIPoint) _lcls171).a;
 		int deltaY = super.b - ((YIPoint) _lcls171).b;
 		if (deltaVx == 0 && deltaVy == 0)
-			return applyGuidedTimeOverride(_lcls171, PoolMath.n_2);
+			return PoolMath.n_2;
 		if (Math.abs(deltaX) - Math.abs(deltaVx) > d + PoolMath.n_5
 				&& Math.abs(deltaY) - Math.abs(deltaVy) > d + PoolMath.n_5)
-			return applyGuidedTimeOverride(_lcls171, PoolMath.n_2);
+			return PoolMath.n_2;
 		long l2 = d;
 		long l3 = deltaVx;
 		long l4 = deltaVy;
@@ -595,7 +579,7 @@ public class PoolBall extends YIPoint implements IBall {
 		long l6 = deltaY;
 		long a = PoolMath2.mul(l3, l3) + PoolMath2.mul(l4, l4);
 		if (a == 0L)
-			return applyGuidedTimeOverride(_lcls171, PoolMath.n_2);
+			return PoolMath.n_2;
 		long b = PoolMath2.mul(PoolMath2.n_2, PoolMath2.mul(l5, l3)
 				+ PoolMath2.mul(l6, l4));
 		long c = PoolMath2.mul(l5, l5) + PoolMath2.mul(l6, l6)
@@ -603,144 +587,12 @@ public class PoolBall extends YIPoint implements IBall {
 		long delta = PoolMath2.mul(b, b)
 				- PoolMath2.mul(PoolMath2.n_4, PoolMath2.mul(a, c));
 		if (delta < 0L)
-			return applyGuidedTimeOverride(_lcls171, PoolMath.n_2);
+			return PoolMath.n_2;
 		long sqrtDelta = PoolMath2.sqrt(delta);
 		long x2 = PoolMath2
 				.div(-b - sqrtDelta, PoolMath2.mul(PoolMath2.n_2, a));
 		int k2 = PoolMath2.toInt(x2);
-		return applyGuidedTimeOverride(_lcls171, k2);
-	}
-
-	private int applyGuidedTimeOverride(PoolBall _lcls171, int defaultTime) {
-		int guidedTime = guidedTimeToFirstCollision(_lcls171, defaultTime);
-		if (guidedTime > 0)
-			return guidedTime;
-		if (!hasPendingFirstCollisionHint()
-				&& _lcls171.hasPendingFirstCollisionHint()
-				&& _lcls171.collBall == getIndex()) {
-			int mirroredGuidedTime = _lcls171.guidedTimeToFirstCollision(this,
-					defaultTime);
-			if (mirroredGuidedTime > 0)
-				return mirroredGuidedTime;
-		}
-		return defaultTime;
-	}
-
-	private int guidedTimeToFirstCollision(PoolBall _lcls171, int defaultTime) {
-		if (!hasPendingFirstCollisionHint()
-				|| collBall != _lcls171.getIndex())
-			return defaultTime;
-		int speed = vel.abs();
-		if (speed == 0) {
-			return defaultTime;
-		}
-		boolean aggressiveGuidance = shouldAggressivelyGuideFirstCollision();
-		D.setCoords(firstColl.a, firstColl.b);
-		C.setFrom(this, D);
-		int distanceToFirstCollision = C.abs();
-		if (distanceToFirstCollision == 0) {
-			return defaultTime;
-		}
-		if (vel.mul(C) <= 0L) {
-			return defaultTime;
-		}
-		if (aggressiveGuidance) {
-			C.versor();
-			vel.setVersor(H);
-			int alignment = Math.abs(H.proj(C));
-			if (alignment < PoolMath.floatToYInt(0.75F)) {
-				return defaultTime;
-			}
-		}
-		if (!aggressiveGuidance && distanceToFirstCollision > speed + radius / 2) {
-			return defaultTime;
-		}
-		if (aggressiveGuidance && distanceToFirstCollision > speed + radius) {
-			return defaultTime;
-		}
-		int guidedTime = PoolMath.div(distanceToFirstCollision, speed);
-		if (guidedTime <= 0 || guidedTime > PoolMath.n_1) {
-			return defaultTime;
-		}
-		if (defaultTime <= 0 || defaultTime == PoolMath.n_2)
-			return guidedTime;
-		return guidedTime < defaultTime ? guidedTime : defaultTime;
-	}
-
-	private boolean shouldAggressivelyGuideFirstCollision() {
-		return !L && !hadEnglishOnStrike && h.he() == 0
-				&& isThinFirstCollision();
-	}
-
-	private boolean shouldFavorNaturalFollow(int forwardRoll) {
-		if (previewMode || L || hadEnglishOnStrike || h.he() != 0
-				|| forwardRoll <= 0)
-			return false;
-		if (shouldAggressivelyGuideFirstCollision())
-			return false;
-		return forwardRoll >= PoolMath.mul(wX.abs(), PoolMath
-				.floatToYInt(0.9F));
-	}
-
-	private boolean isThinFirstCollision() {
-		if (firstColl == null || collBall < 0 || pool == null || vel.abs() == 0)
-			return false;
-		Vector<IBall> vector = pool.getBallInPlayArea();
-		for (int i1 = 0; i1 < vector.size(); i1++) {
-			IBall _lcls124 = vector.elementAt(i1);
-			if (_lcls124 == null || _lcls124.getIndex() != collBall)
-				continue;
-			C.setFrom(firstColl, (YIPoint) _lcls124);
-			if (C.abs() == 0)
-				return false;
-			C.versor();
-			vel.setVersor(H);
-			long l1 = Math.abs(H.mul(C));
-			return l1 < PoolMath.floatToYInt(0.92F);
-		}
-		return false;
-	}
-
-	private void guideTowardFirstCollision() {
-		if (!hasPendingFirstCollisionHint())
-			return;
-		YIVector beforeVel = vel.je();
-		YIVector beforeWX = wX.je();
-		D.setCoords(firstColl.a, firstColl.b);
-		C.setFrom(this, D);
-		int distanceToFirstCollision = C.abs();
-		if (distanceToFirstCollision == 0) {
-			return;
-		}
-		if (L && distanceToFirstCollision > radius + radius) {
-			return;
-		}
-		boolean aggressiveGuidance = shouldAggressivelyGuideFirstCollision();
-		if (vel.mul(C) <= 0L) {
-			return;
-		}
-		C.versor();
-		vel.setVersor(H);
-		if (aggressiveGuidance) {
-			if (distanceToFirstCollision > radius + radius / 2) {
-				return;
-			}
-			int steerWeight = distanceToFirstCollision <= radius ? PoolMath
-					.floatToYInt(0.15F) : PoolMath.floatToYInt(0.08F);
-			H.mul(PoolMath.n_1 - steerWeight);
-			C.mul(steerWeight);
-			H.add(C);
-			H.versor();
-			H.mul(beforeVel.abs());
-			H.setTo(vel);
-			return;
-		}
-		if (!aggressiveGuidance && distanceToFirstCollision > vel.abs()
-				+ radius / 2) {
-			return;
-		}
-		C.mul(vel.abs());
-		C.setTo(vel);
+		return k2;
 	}
 
 	public int timeToObstacle(Obstacle obstacles[]) {
@@ -782,17 +634,20 @@ public class PoolBall extends YIPoint implements IBall {
 	public void tz() {
 		vel.sub(rotationFriction);
 		vel.setTo(wX);
-		guideTowardFirstCollision();
+		if (ballColided) {
+			D.setCoords(firstColl.a, firstColl.b);
+			C.setFrom(this, D);
+			C.versor();
+			C.mul(vel.abs());
+			C.setTo(vel);
+			C.setTo(wX);
+		}
 	}
 
 	public void uncolide() {
 		ballColided = false;
 		firstColl = null;
 		collBall = -1;
-	}
-
-	private boolean hasPendingFirstCollisionHint() {
-		return firstColl != null && collBall >= 0;
 	}
 
 	private void updateParams() {
@@ -870,10 +725,6 @@ public class PoolBall extends YIPoint implements IBall {
 				wX.absMul(i2);
 			}
 		}
-		boolean alignedForRoll = vel.Ef(wX);
-		guideTowardFirstCollision();
-		if (alignedForRoll)
-			sliding = false;
 	}
 
 	public int vv() {
@@ -894,33 +745,13 @@ public class PoolBall extends YIPoint implements IBall {
 	}
 
 	public void zz(int i1, YIVector _pcls48) {
-		YIVector beforeVel = vel.je();
-		YIVector beforeWX = wX.je();
-		_pcls48.setTo(H);
-		H.versor();
-		int originalForwardRoll = Math.max(0, wX.proj(H));
-		boolean favorNaturalFollow = shouldFavorNaturalFollow(originalForwardRoll);
-		boolean keepRollingState = wX.abs() > linearFriction
-				/ (favorNaturalFollow ? 32 : 8) || h.he() > 0;
 		int j1 = PoolMath.mul(i1, Y);
 		_pcls48.setTo(w);
 		w.versor();
 		w.mul(j1);
 		int k1 = w.proj(wX);
-		if (k1 > 0) {
-			if (favorNaturalFollow)
-				k1 = PoolMath.mul(k1, PoolMath.floatToYInt(0.5F));
+		if (k1 > 0)
 			wX.sub(k1);
-		}
-		if (favorNaturalFollow) {
-			int currentForwardRoll = Math.max(0, wX.proj(H));
-			int minFollowRoll = PoolMath.mul(originalForwardRoll,
-					PoolMath.floatToYInt(0.5F));
-			if (currentForwardRoll < minFollowRoll) {
-				H.mul(minFollowRoll - currentForwardRoll);
-				wX.add(H);
-			}
-		}
 		if (h.he() > 0) {
 			int i2 = PoolMath.mul(Z, i1);
 			i2 = h.ke() <= 0 ? -i2 : i2;
@@ -930,8 +761,7 @@ public class PoolBall extends YIPoint implements IBall {
 		vel.mul(55536);
 		if (vel.norm() < 5L) {
 			vel.set(0, 0);
-			if (!keepRollingState)
-				wX.set(0, 0);
+			wX.set(0, 0);
 		}
 	}
 }
