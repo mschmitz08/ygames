@@ -7,6 +7,7 @@ package y.po;
 import java.awt.Color;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.Random;
 import java.util.Vector;
 
 import y.controls.YahooComponent;
@@ -53,6 +54,10 @@ import common.utils.ByteArrayData;
 
 public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		TimerHandler, PoolAreaHandler {
+
+	private static final int	BREAK_POWER_JITTER	= 10;
+	private static final int	MAX_CUE_POWER		= 120;
+	private static final Random BREAK_RANDOM		= new Random();
 
 	public Pool		pool;
 	PoolArea		poolArea;
@@ -921,6 +926,7 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 	public void strike() {
 		if (isMyTurn() && pool.isRunning() && pool.getCurrentState() == 0) {
 			IBall selectedBall = poolArea.cueSprite.getSelectedBall();
+			int selectedPower = poolArea.cueSprite.power1;
 			YIPoint cueDist = poolArea.cueSprite.getPos(true).copy();
 			YIPoint englishDist = poolArea.english.getPos().copy();
 			YIPoint firstColl = poolAimer.getFirstColl();
@@ -930,6 +936,7 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 			collBall = resolveCollisionHint(selectedBall.getIndex(), firstColl, collBall);
 			boolean openingBreak = pool.isOpeningBreakShot(selectedBall, collBall);
 			if (openingBreak) {
+				cueDist = applyBreakPowerJitter(selectedBall, cueDist, selectedPower);
 				cueDist = buildOpeningBreakCueDist(selectedBall, cueDist);
 			}
 			// System.out.println("cueDist=" + cueDist + "; englishDist="
@@ -965,6 +972,27 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		YIPoint boostedCueDist = ((PoolBall) selectedBall).newCopy();
 		boostedCueDist.add(boostedPullback);
 		return boostedCueDist;
+	}
+
+	private YIPoint applyBreakPowerJitter(IBall selectedBall, YIPoint cueDist,
+			int selectedPower) {
+		if (selectedPower <= 0)
+			return cueDist;
+		int adjustedPower;
+		if (selectedPower >= MAX_CUE_POWER)
+			adjustedPower = selectedPower - BREAK_RANDOM.nextInt(BREAK_POWER_JITTER + 1);
+		else
+			adjustedPower = Math.max(0, Math.min(MAX_CUE_POWER, selectedPower
+					+ BREAK_RANDOM.nextInt(BREAK_POWER_JITTER * 2 + 1)
+					- BREAK_POWER_JITTER));
+		if (adjustedPower == selectedPower)
+			return cueDist;
+		YIVector pullback = new YIVector((YIPoint) selectedBall, cueDist);
+		pullback.mul(PoolMath.floatToYInt((float) adjustedPower
+				/ (float) selectedPower));
+		YIPoint adjustedCueDist = ((PoolBall) selectedBall).newCopy();
+		adjustedCueDist.add(pullback);
+		return adjustedCueDist;
 	}
 
 	public void strike(int index, YIPoint cueDist, YIPoint englishDist,
