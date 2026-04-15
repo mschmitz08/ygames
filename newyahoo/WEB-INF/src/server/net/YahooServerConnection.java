@@ -164,6 +164,14 @@ public abstract class YahooServerConnection extends Thread implements
 
 				DebugLog.log("YahooServerConnection.doProcess login validated idname=" + idname);
 				server.aquireProfileId(id, idname);
+				if (id.getProfileId() == null) {
+					DebugLog.log("YahooServerConnection.doProcess profile acquisition failed for "
+							+ idname + " room=" + (room == null ? "null" : room.getYport()));
+					room.alert(id,
+							"Unable to load your room profile right now. Please try joining again.");
+					id.close();
+					return false;
+				}
 
 				IgnoredEntry entry = id.getIgnoredEntry();
 				if (entry != null && entry.type == IgnoredEntry.BAN) {

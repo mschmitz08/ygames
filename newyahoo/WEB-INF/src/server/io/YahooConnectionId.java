@@ -340,6 +340,8 @@ public class YahooConnectionId implements YahooProfileIdListener, DataOutput {
 	 * @return avatar
 	 */
 	public byte getAvatar() {
+		if (profileId == null)
+			return 0;
 		return profileId.getAvatar();
 	}
 
@@ -384,6 +386,8 @@ public class YahooConnectionId implements YahooProfileIdListener, DataOutput {
 	 * @return flags
 	 */
 	public long getFlags() {
+		if (profileId == null)
+			return flags;
 		return flags | profileId.getFlags();
 	}
 
@@ -396,6 +400,8 @@ public class YahooConnectionId implements YahooProfileIdListener, DataOutput {
 	}
 
 	public long getGlobalFlags() {
+		if (profileId == null)
+			return 0;
 		return profileId.getFlags();
 	}
 
@@ -403,6 +409,8 @@ public class YahooConnectionId implements YahooProfileIdListener, DataOutput {
 	 * @return true se estiver sem chat
 	 */
 	public IgnoredEntry getIgnoredEntry() {
+		if (profileId == null)
+			return null;
 		return profileId.getIgnoredEntry();
 	}
 
@@ -450,6 +458,8 @@ public class YahooConnectionId implements YahooProfileIdListener, DataOutput {
 	 * @return moreflags
 	 */
 	public int getMoreFlags() {
+		if (profileId == null)
+			return 0;
 		return profileId.getMoreFlags();
 	}
 
@@ -481,6 +491,8 @@ public class YahooConnectionId implements YahooProfileIdListener, DataOutput {
 	}
 
 	public String getProfile() {
+		if (profileId == null)
+			return "";
 		return profileId.getProfile();
 	}
 
@@ -576,6 +588,8 @@ public class YahooConnectionId implements YahooProfileIdListener, DataOutput {
 	}
 
 	public boolean isAllStarMemberShip() {
+		if (profileId == null)
+			return false;
 		return profileId.isAllStarMemberShip();
 	}
 
@@ -602,6 +616,8 @@ public class YahooConnectionId implements YahooProfileIdListener, DataOutput {
 	}
 
 	public void loadValues(String[] names, ActionLoadValue action) {
+		if (profileId == null)
+			return;
 		profileId.loadValues(names, action);
 	}
 
@@ -615,12 +631,14 @@ public class YahooConnectionId implements YahooProfileIdListener, DataOutput {
 
 	public void notifyBan(Timestamp ban_date, int time, String reason,
 			String admin) {
-		profileId.notifyBan(ban_date, time, reason, admin);
+		if (profileId != null)
+			profileId.notifyBan(ban_date, time, reason, admin);
 	}
 
 	public void notifyMute(Timestamp mute_date, int time, String reason,
 			String admin) {
-		profileId.notifyMute(mute_date, time, reason, admin);
+		if (profileId != null)
+			profileId.notifyMute(mute_date, time, reason, admin);
 	}
 
 	/**
@@ -635,7 +653,8 @@ public class YahooConnectionId implements YahooProfileIdListener, DataOutput {
 	 * @param avatar
 	 */
 	public void setAvatar(byte avatar) {
-		profileId.setAvatar(avatar);
+		if (profileId != null)
+			profileId.setAvatar(avatar);
 	}
 
 	/**
@@ -655,7 +674,8 @@ public class YahooConnectionId implements YahooProfileIdListener, DataOutput {
 	}
 
 	public void setGlobalFlags(long value) {
-		profileId.notifyFlags(value);
+		if (profileId != null)
+			profileId.notifyFlags(value);
 	}
 
 	/**
@@ -705,14 +725,16 @@ public class YahooConnectionId implements YahooProfileIdListener, DataOutput {
 	}
 
 	public void setProperty(String name, String value) {
-		profileId.setProperty(name, value);
+		if (profileId != null)
+			profileId.setProperty(name, value);
 	}
 
 	/**
 	 * @param value
 	 */
 	public void setRating(int value) {
-		profileId.setRating(value);
+		if (profileId != null)
+			profileId.setRating(value);
 	}
 
 	/**

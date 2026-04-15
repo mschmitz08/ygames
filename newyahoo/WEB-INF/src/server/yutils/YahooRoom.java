@@ -41,6 +41,15 @@ public abstract class YahooRoom {
 
 	public void addId(final YahooConnectionId id) {
 		DebugLog.log("YahooRoom.addId ENTER room=" + yport + " id=" + id + " name=" + (id == null ? "null" : id.getName()));
+		if (id == null || id.getProfileId() == null || id.getName() == null) {
+			DebugLog.log("YahooRoom.addId aborting due to missing profile state room="
+					+ yport + " id=" + id + " profileId="
+					+ (id == null ? "null" : id.getProfileId()));
+			if (id != null)
+				id.close();
+			return;
+		}
+		pruneInvalidRoomIds();
 		String name = id.getName();
 		YahooConnectionId id1 = idTable.get(name);
 		if (id1 != null) {
@@ -82,6 +91,8 @@ public abstract class YahooRoom {
 		ids.readLock();
 		try {
 			for (YahooConnectionId id2 : ids) {
+				if (!isValidRoomId(id2))
+					continue;
 				String name2 = id2.getName();
 				enterId(id, name2, name2);
 				if (id2.isAllStarMemberShip())
@@ -112,6 +123,8 @@ public abstract class YahooRoom {
 			byte avatar = id.getAvatar();
 
 			for (YahooConnectionId id2 : ids) {
+				if (!isValidRoomId(id2))
+					continue;
 				enterId(id2, name, name);
 				if (id.isAllStarMemberShip())
 					changePublicFlags(id2, name, id.getMoreFlags());
@@ -134,8 +147,11 @@ public abstract class YahooRoom {
 			SynchronizedVector<YahooConnectionId> tableIds = tables[i].getIds();
 			tableIds.readLock();
 			try {
-				for (YahooConnectionId id2 : tableIds)
+				for (YahooConnectionId id2 : tableIds) {
+					if (id2 == null || id2.getName() == null)
+						continue;
 					joinTable(id, id2.getName(), number);
+				}
 			}
 			finally {
 				tableIds.readUnlock();
@@ -146,6 +162,8 @@ public abstract class YahooRoom {
 				continue;
 			for (int j = 0; j < sits.length; j++) {
 				if (sits[j] == null)
+					continue;
+				if (sits[j].getName() == null)
 					continue;
 				sit(id, number, j, sits[j].getName());
 			}
@@ -780,11 +798,40 @@ public abstract class YahooRoom {
 	}
 
 	public void enterId(YahooConnectionId id, String name, String caption) {
+		if (id == null || name == null || caption == null) {
+			DebugLog.log("YahooRoom.enterId skipping null payload room=" + yport
+					+ " target=" + id + " name=" + name + " caption=" + caption);
+			return;
+		}
 		synchronized (id) {
 			id.write('e');
 			id.writeUTF(name);
 			id.writeUTF(caption);
 			id.flush();
+		}
+	}
+
+	private boolean isValidRoomId(YahooConnectionId id) {
+		return id != null && id.getProfileId() != null && id.getName() != null;
+	}
+
+	private void pruneInvalidRoomIds() {
+		ids.writeLock();
+		try {
+			for (int i = ids.size() - 1; i >= 0; i--) {
+				YahooConnectionId id = ids.elementAt(i);
+				if (isValidRoomId(id))
+					continue;
+				String staleName = id == null ? null : id.getName();
+				DebugLog.log("YahooRoom.pruneInvalidRoomIds removing stale entry room="
+						+ yport + " index=" + i + " id=" + id + " name=" + staleName);
+				ids.remove(i);
+				if (staleName != null)
+					idTable.remove(staleName);
+			}
+		}
+		finally {
+			ids.writeUnlock();
 		}
 	}
 
