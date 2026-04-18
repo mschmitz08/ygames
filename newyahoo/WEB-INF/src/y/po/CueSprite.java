@@ -31,6 +31,11 @@ import common.po.YVector;
 
 public class CueSprite extends YahooComponent implements YData {
 
+	private static final double	BASE_DIRECTION_STEP		= 0.00075D;
+	private static final double	MAX_DIRECTION_STEP		= 0.00375D;
+	private static final long	DIRECTION_ACCEL_START_MS	= 180L;
+	private static final long	DIRECTION_ACCEL_RAMP_MS		= 900L;
+
 	YPoint				cs_a;
 	YPoint				m_ball;
 	YPoint				cs_c;
@@ -81,6 +86,9 @@ public class CueSprite extends YahooComponent implements YData {
 	private YVector		X;
 	private Rectangle	rectangle;
 	PoolArea			poolArea;
+	private int			heldDirectionKey;
+	private int			heldDirectionModifiers;
+	private long		heldDirectionStartTime;
 
 	public CueSprite(PoolArea poolArea, YahooControl _pcls79,
 			PoolAreaHandler _pcls29) {
@@ -133,6 +141,9 @@ public class CueSprite extends YahooComponent implements YData {
 		W = new YVector();
 		X = new YVector();
 		rectangle = new Rectangle();
+		heldDirectionKey = 0;
+		heldDirectionModifiers = 0;
+		heldDirectionStartTime = 0L;
 		cs_y = (PoolAimer) _pcls79;
 		Sn(true);
 		cs_o = new Color(125, 63, 0);
@@ -192,14 +203,10 @@ public class CueSprite extends YahooComponent implements YData {
 			return;
 		if (isPulled()) {
 			doResetCue();
+			resetDirectionalHold();
 			return;
 		}
-		double d1 = 0.0020000000949949026D;
-		if (i1 == 1006) // set para esquerda
-			d1 *= -1D;
-		if ((event.modifiers & Event.SHIFT_MASK) != 0)
-			d1 *= 20D;
-		rotate(d1);
+		startDirectionalHold(event, i1);
 	}
 
 	public void doChangePower(Event event, int i1) {
@@ -225,6 +232,7 @@ public class CueSprite extends YahooComponent implements YData {
 		if (!isActive() || m_selectedBall == null || !isVisible()) {
 			return;
 		}
+		resetDirectionalHold();
 		m_ball.setCoords(cs_a.x, cs_a.y);
 		setPulled(false);
 		invalidate();
@@ -248,6 +256,8 @@ public class CueSprite extends YahooComponent implements YData {
 				G = false;
 			Xk();
 		}
+		if (heldDirectionKey == 1006 || heldDirectionKey == 1007)
+			applyDirectionalHoldStep(false);
 	}
 
 	@Override
@@ -267,6 +277,8 @@ public class CueSprite extends YahooComponent implements YData {
 
 	@Override
 	public boolean eventKeyRelease(Event event, int i1) {
+		if (i1 == 1006 || i1 == 1007)
+			resetDirectionalHold();
 		cs_y.wb();
 		return true;
 	}
@@ -600,6 +612,8 @@ public class CueSprite extends YahooComponent implements YData {
 
 	public void setActive(boolean flag) {
 		m_active = flag;
+		if (!flag)
+			resetDirectionalHold();
 	}
 
 	public void setChanged(boolean flag) {
@@ -792,5 +806,50 @@ public class CueSprite extends YahooComponent implements YData {
 			return;
 		cs_J = poolArea.poolAimer.getWorldLeft(poolArea.getContainer());
 		K = poolArea.poolAimer.getWorldTop(poolArea.getContainer());
+	}
+
+	private void startDirectionalHold(Event event, int key) {
+		long now = System.currentTimeMillis();
+		boolean newHold = heldDirectionKey != key;
+		heldDirectionKey = key;
+		heldDirectionModifiers = event != null ? event.modifiers : 0;
+		if (newHold || heldDirectionStartTime == 0L) {
+			heldDirectionStartTime = now;
+			applyDirectionalHoldStep(true);
+		}
+	}
+
+	private void resetDirectionalHold() {
+		heldDirectionKey = 0;
+		heldDirectionModifiers = 0;
+		heldDirectionStartTime = 0L;
+	}
+
+	private void applyDirectionalHoldStep(boolean initialStep) {
+		if (heldDirectionKey != 1006 && heldDirectionKey != 1007)
+			return;
+		double step = computeDirectionalStep(System.currentTimeMillis(),
+				initialStep);
+		if (heldDirectionKey == 1006)
+			step *= -1D;
+		if ((heldDirectionModifiers & Event.SHIFT_MASK) != 0)
+			step *= 20D;
+		rotate(step);
+	}
+
+	private double computeDirectionalStep(long now, boolean initialStep) {
+		if (initialStep || heldDirectionStartTime == 0L)
+			return BASE_DIRECTION_STEP;
+		long heldMs = now - heldDirectionStartTime;
+		if (heldMs <= DIRECTION_ACCEL_START_MS)
+			return BASE_DIRECTION_STEP;
+		double progress = (double) (heldMs - DIRECTION_ACCEL_START_MS)
+				/ (double) DIRECTION_ACCEL_RAMP_MS;
+		if (progress < 0.0D)
+			progress = 0.0D;
+		if (progress > 1.0D)
+			progress = 1.0D;
+		return BASE_DIRECTION_STEP
+				+ (MAX_DIRECTION_STEP - BASE_DIRECTION_STEP) * progress;
 	}
 }

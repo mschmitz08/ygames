@@ -59,38 +59,46 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 	private static final int	MAX_CUE_POWER		= 120;
 	private static final Random BREAK_RANDOM		= new Random();
 	private static final String[] TABLE_COLOR_NAMES = { "Classic", "Aqua",
-			"Azure", "Berry", "Black", "Blush", "Bronze", "Charcoal",
-			"Cherry", "Copper", "Coral", "Crimson", "Emerald", "Forest",
-			"Fuchsia", "Gold", "Indigo", "Ivory", "Lagoon", "Lavender",
-			"Lemon", "Lilac", "Lime", "Magenta", "Mauve", "Mint",
-			"Mocha", "Olive", "Orange", "Peach", "Peri", "Plum",
-			"Purple", "Rose", "Rosewd", "Ruby", "Salmon", "Seafoam",
-			"Sienna", "Silver", "Sky", "Slate", "Sun", "Teal", "Turq",
-			"Violet", "Custom" };
+			"Apricot", "Azure", "Berry", "Black", "Blush", "Bronze",
+			"Cerise", "Charcoal", "Cherry", "Copper", "Coral", "Crimson",
+			"Denim", "Emerald", "Forest", "Fuchsia", "Gold", "Indigo",
+			"Ivory", "Jade", "Lagoon", "Lavender", "Lemon", "Lilac",
+			"Lime", "Magenta", "Maroon", "Mauve", "Mint", "Mocha",
+			"Navy", "Olive", "Orange", "Orchid", "Peach", "Peri",
+			"Pine", "Plum", "Purple", "Rose", "Rosewd", "Ruby",
+			"Salmon", "Sand", "Seafoam", "Sienna", "Silver", "Sky",
+			"Slate", "Sun", "Tan", "Teal", "Tomato", "Turq",
+			"Violet", "Wheat", "Custom" };
 	private static final Color[] TABLE_COLOR_VALUES = {
 			new Color(45, 109, 43), new Color(0, 168, 168),
-			new Color(96, 168, 224), new Color(130, 52, 108),
-			new Color(18, 18, 18), new Color(224, 170, 196),
-			new Color(140, 104, 46), new Color(54, 59, 64),
+			new Color(238, 176, 112), new Color(96, 168, 224),
+			new Color(130, 52, 108), new Color(18, 18, 18),
+			new Color(224, 170, 196), new Color(140, 104, 46),
+			new Color(214, 56, 118), new Color(54, 59, 64),
 			new Color(168, 36, 48), new Color(150, 86, 48),
 			new Color(205, 92, 92), new Color(163, 28, 48),
-			new Color(33, 136, 79), new Color(42, 92, 42),
-			new Color(208, 60, 156), new Color(166, 124, 0),
-			new Color(57, 62, 151), new Color(214, 214, 194),
+			new Color(42, 92, 132), new Color(33, 136, 79),
+			new Color(42, 92, 42), new Color(208, 60, 156),
+			new Color(166, 124, 0), new Color(57, 62, 151),
+			new Color(214, 214, 194), new Color(56, 142, 96),
 			new Color(0, 102, 153), new Color(123, 104, 238),
 			new Color(208, 196, 72), new Color(170, 132, 214),
 			new Color(75, 151, 32), new Color(178, 40, 123),
-			new Color(145, 95, 160), new Color(80, 168, 112),
-			new Color(112, 84, 62), new Color(78, 102, 35),
-			new Color(204, 102, 0), new Color(228, 164, 116),
-			new Color(102, 153, 255), new Color(110, 38, 98),
+			new Color(108, 28, 44), new Color(145, 95, 160),
+			new Color(80, 168, 112), new Color(112, 84, 62),
+			new Color(28, 44, 92), new Color(78, 102, 35),
+			new Color(204, 102, 0), new Color(186, 85, 211),
+			new Color(228, 164, 116), new Color(102, 153, 255),
+			new Color(44, 92, 52), new Color(110, 38, 98),
 			new Color(92, 39, 143), new Color(196, 92, 132),
 			new Color(101, 55, 55), new Color(145, 24, 52),
-			new Color(219, 112, 147), new Color(52, 168, 128),
-			new Color(132, 77, 49), new Color(142, 142, 142),
-			new Color(42, 135, 218), new Color(96, 108, 132),
-			new Color(184, 158, 0), new Color(0, 102, 102),
-			new Color(35, 155, 166), new Color(118, 74, 188), null };
+			new Color(219, 112, 147), new Color(194, 178, 128),
+			new Color(52, 168, 128), new Color(132, 77, 49),
+			new Color(142, 142, 142), new Color(42, 135, 218),
+			new Color(96, 108, 132), new Color(184, 158, 0),
+			new Color(210, 180, 140), new Color(0, 102, 102),
+			new Color(214, 85, 56), new Color(35, 155, 166),
+			new Color(118, 74, 188), new Color(222, 184, 135), null };
 
 	public Pool		pool;
 	PoolArea		poolArea;
@@ -136,6 +144,8 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 	boolean			pendingCueSnapshotRestore;
 	boolean			pendingEnglishSnapshotRestore;
 	boolean			preserveCueSnapshotOnRestore;
+	String[]		startedSeatNames;
+	boolean			startedSeatNamesCaptured;
 
 	public YahooPoolTable() {
 		cueTime = 0L;
@@ -165,6 +175,8 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		firstColl = new YIPoint();
 		ypt_I = new YVector();
 		J = new PoolData();
+		startedSeatNames = null;
+		startedSeatNamesCaptured = false;
 		state = "";
 		currentTableColor = TABLE_COLOR_VALUES[0];
 		pendingCueSnapshotRestore = false;
@@ -484,6 +496,8 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 	@Override
 	public void handleStart() {
 		super.handleStart();
+		if (!startedSeatNamesCaptured)
+			captureStartedSeatNames();
 		poolArea.xc();
 		poolArea.yc();
 		if (isMyTurn()) {
@@ -508,6 +522,7 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 	@Override
 	public void handleStop(YData data) {
 		super.handleStop(data);
+		clearStartedSeatNames();
 	}
 
 	public void handleStopMoving() {
@@ -634,7 +649,8 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 
 	public boolean isMyTurn() {
 		int sitIndex = getMySitIndex();
-		return sitIndex >= 0 && pool.isSameTurn(sitIndex);
+		return sitIndex >= 0 && isStartedSeatOwner(sitIndex)
+				&& pool.isSameTurn(sitIndex);
 	}
 
 	public void Jd() {
