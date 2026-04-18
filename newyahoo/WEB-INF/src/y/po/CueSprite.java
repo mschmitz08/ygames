@@ -33,7 +33,8 @@ public class CueSprite extends YahooComponent implements YData {
 
 	private static final double	BASE_DIRECTION_STEP		= 0.00075D;
 	private static final double	MAX_DIRECTION_STEP		= 0.00375D;
-	private static final long	DIRECTION_ACCEL_START_MS	= 180L;
+	private static final long	DIRECTION_REPEAT_START_MS	= 220L;
+	private static final long	DIRECTION_ACCEL_START_MS	= 500L;
 	private static final long	DIRECTION_ACCEL_RAMP_MS		= 900L;
 
 	YPoint				cs_a;
@@ -828,8 +829,10 @@ public class CueSprite extends YahooComponent implements YData {
 	private void applyDirectionalHoldStep(boolean initialStep) {
 		if (heldDirectionKey != 1006 && heldDirectionKey != 1007)
 			return;
-		double step = computeDirectionalStep(System.currentTimeMillis(),
-				initialStep);
+		long now = System.currentTimeMillis();
+		if (!initialStep && now - heldDirectionStartTime < DIRECTION_REPEAT_START_MS)
+			return;
+		double step = computeDirectionalStep(now, initialStep);
 		if (heldDirectionKey == 1006)
 			step *= -1D;
 		if ((heldDirectionModifiers & Event.SHIFT_MASK) != 0)
