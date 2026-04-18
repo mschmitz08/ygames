@@ -25,13 +25,24 @@ public class PoolControlContainer extends TableControlContainer {
 	@Override
 	public boolean createControlPannel(YahooControl container, int[] counter) {
 		boolean result = super.createControlPannel(container, counter);
-		YahooControl cnt = new YahooControl();
+		YahooControl ghostControl = new YahooControl();
 		YahooComponent obj = poolTable.cmbGhostStyle;
-		cnt.addChildObject(obj, 10, 2, 0, 1, 1, 0, 0, 1, 0, 1, 0);
-		YahooPannel pannel = new YahooPannel("ghost", cnt,
+		ghostControl.addChildObject(obj, 10, 2, 0, 1, 1, 0, 0, 1, 0, 1, 0);
+		YahooPannel pannel = new YahooPannel("ghost", ghostControl,
 				table.table_side_tabcolor_bg, table.table_side_tabcolor_fg);
 		container.addChildObject(pannel, 10, 1, 2, 1, 1, 0, ++counter[0], 1, 0,
 				1, 0);
+		YahooControl tableColorControl = new YahooControl();
+		tableColorControl.addChildObject(poolTable.cmbTableColor, 10, 2, 0, 1, 1,
+				0, 0, 1, 0, 1, 0);
+		YahooPannel tablePannel = new YahooPannel("table", tableColorControl,
+				table.table_side_tabcolor_bg, table.table_side_tabcolor_fg);
+		container.addChildObject(tablePannel, 10, 1, 2, 1, 1, 0, ++counter[0], 1,
+				0, 1, 0);
+		poolTable.customTableColorPanel = poolTable.tableColorEditor;
+		poolTable.tableColorEditor.visible = false;
+		container.addChildObject(poolTable.tableColorEditor, 0, 0, true);
+		poolTable.applyTableColorSelection();
 		return result;
 	}
 
@@ -39,11 +50,22 @@ public class PoolControlContainer extends TableControlContainer {
 	public boolean eventActionEvent(Event event, Object obj) {
 		if (event.target == poolTable.cmbGhostStyle)
 			poolTable.applyGhostStyleSelection();
+		else if (event.target == poolTable.cmbTableColor)
+			poolTable.applyTableColorSelection();
 		else if (event.target == table.chkSound)
 			table.getApplet().Kg(table.chkSound.isChecked());
 		else
 			return super.eventActionEvent(event, obj);
 		return true;
+	}
+
+	@Override
+	public boolean eventMouseDown(Event event, int x, int y) {
+		if (poolTable != null && poolTable.isCustomTableColorPanelVisible()
+				&& event.target != poolTable.tableColorEditor
+				&& event.target != poolTable.cmbTableColor)
+			poolTable.setCustomTableColorPanelVisible(false);
+		return super.eventMouseDown(event, x, y);
 	}
 
 }

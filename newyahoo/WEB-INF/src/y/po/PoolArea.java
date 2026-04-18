@@ -72,6 +72,8 @@ public class PoolArea extends YahooControl {
 
 	Color					pa_x;
 
+	Color					pa_y;
+
 	public YahooLabel		lblTime;
 
 	BallSprite				ballSprite[];
@@ -102,6 +104,7 @@ public class PoolArea extends YahooControl {
 		pa_c = new YahooButton[3];
 		pa_w = new Color(0, 51, 0);
 		pa_x = new Color(97, 143, 97);
+		pa_y = new Color(124, 179, 124);
 		lblTime = new YahooLabel("00:00", YahooLabel.yl_a, 60);
 		pa_B = -1;
 		handler = _pcls29;
@@ -114,7 +117,7 @@ public class PoolArea extends YahooControl {
 			m = new YahooControl(0);
 			powerBar = new PowerBar(_pcls29);
 			m.addChildObject(powerBar, 17, 3, 3, 1, 1, 0, 1);
-			m.setBackColor(new Color(124, 179, 124));
+			m.setBackColor(pa_y);
 			addChildObject(m, 17, 3, 3, 1, 10, 2, 0, 1, 0, 1, 1);
 			pa_u = new YahooLabel("");
 		}
@@ -126,7 +129,7 @@ public class PoolArea extends YahooControl {
 			english.setVisible(true);
 			powerBar = new PowerBar(_pcls29);
 			m.addChildObject(powerBar, 17, 3, 3, 1, 1, 0, 1);
-			m.setBackColor(new Color(124, 179, 124));
+			m.setBackColor(pa_y);
 			addChildObject(m, 17, 3, 3, 1, 10, 2, 0, 1, 0, 1, 1);
 			pa_u = new YahooLabel("");
 		}
@@ -446,6 +449,39 @@ public class PoolArea extends YahooControl {
 
 	public void setBackColor() {
 		super.setBackColor(pa_w);
+	}
+
+	public void setTableColor(Color color) {
+		if (color == null)
+			return;
+		pa_w = blend(color, Color.black, 0.55F);
+		pa_x = blend(color, Color.white, 0.28F);
+		pa_y = blend(color, Color.white, 0.42F);
+		super.setBackColor(pa_w);
+		if (j != null)
+			j.setBackColor(pa_x);
+		if (k != null)
+			k.setBackColor(pa_x);
+		if (l != null)
+			l.setBackColor(pa_x);
+		if (m != null)
+			m.setBackColor(pa_y);
+		invalidate();
+	}
+
+	private Color blend(Color color, Color color1, float value) {
+		float amount = value;
+		if (amount < 0.0F)
+			amount = 0.0F;
+		if (amount > 1.0F)
+			amount = 1.0F;
+		int red = (int) (color.getRed() * (1.0F - amount) + color1.getRed()
+				* amount);
+		int green = (int) (color.getGreen() * (1.0F - amount) + color1
+				.getGreen() * amount);
+		int blue = (int) (color.getBlue() * (1.0F - amount) + color1.getBlue()
+				* amount);
+		return new Color(red, green, blue);
 	}
 
 	public void swapArrow(int i1) {

@@ -7,6 +7,9 @@ package y.po;
 import java.awt.Color;
 import java.awt.Event;
 import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.image.PixelGrabber;
+import java.util.Random;
 import java.util.Vector;
 
 import y.controls.ArrowControl;
@@ -14,6 +17,7 @@ import y.controls.YahooControl;
 import y.controls.YahooGraphics;
 import y.utils.TimerHandler;
 import y.utils.YahooImage;
+import y.utils.YahooImageProducer;
 
 import common.po.PoolBall;
 import common.po.IBall;
@@ -34,6 +38,8 @@ import common.po.YVector;
 // _cls13
 
 public class PoolAimer extends YahooControl implements TimerHandler {
+
+	private static final Color	DEFAULT_TABLE_COLOR	= new Color(45, 109, 43);
 
 	public static PoolBall cloneBall(PoolBall ball) {
 		PoolBall poolBall = new PoolBall();
@@ -62,6 +68,7 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 	int					m;
 	YRectangle			playAreaBalls;
 	YRectangle			playAreaAim;
+	YRectangle			playArea;
 	int					pa_o;
 	int					pa_p;
 	int					pa_q;
@@ -77,6 +84,8 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 	int					index;
 	Color				pa_C;
 	Color				pa_D;
+	Color				pa_S;
+	Color				pa_T;
 	Image				pa_E;
 	boolean				pa_F;
 	Aim					aim;
@@ -91,6 +100,17 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 	Image				pa_P;
 	Image				pa_Q;
 	Image				R;
+	Image				basePa_I;
+	Image				basePa_J;
+	Image				basePa_K;
+	Image				basePa_L;
+	Image				basePa_M;
+	Image				basePa_N;
+	Image				basePa_O;
+	Image				basePa_P;
+	Image				basePa_Q;
+	Image				baseR;
+	Image				tableBackground;
 	YIPoint				firstColl1;
 	Vector<PoolBall>	colBalls;
 
@@ -107,19 +127,31 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 		ballColided = false;
 		firstColl = new YIPoint(0, 0);
 		index = 0;
-		pa_C = new Color(97, 143, 97);
+		pa_C = DEFAULT_TABLE_COLOR;
 		pa_D = new Color(99, 142, 38);
+		pa_S = new Color(0, 51, 0);
+		pa_T = new Color(10, 10, 10);
 		pa_E = YahooPoolImageList.loadImages().q;
-		pa_I = YahooPoolImageList.loadImages().g;
-		pa_J = YahooPoolImageList.loadImages().h;
-		pa_K = YahooPoolImageList.loadImages().i;
-		pa_L = YahooPoolImageList.loadImages().j;
-		pa_M = YahooPoolImageList.loadImages().k;
-		pa_N = YahooPoolImageList.loadImages().l;
-		pa_O = YahooPoolImageList.loadImages().m;
-		pa_P = YahooPoolImageList.loadImages().n;
-		pa_Q = YahooPoolImageList.loadImages().o;
-		R = YahooPoolImageList.loadImages().p;
+		basePa_I = YahooPoolImageList.loadImages().g;
+		basePa_J = YahooPoolImageList.loadImages().h;
+		basePa_K = YahooPoolImageList.loadImages().i;
+		basePa_L = YahooPoolImageList.loadImages().j;
+		basePa_M = YahooPoolImageList.loadImages().k;
+		basePa_N = YahooPoolImageList.loadImages().l;
+		basePa_O = YahooPoolImageList.loadImages().m;
+		basePa_P = YahooPoolImageList.loadImages().n;
+		basePa_Q = YahooPoolImageList.loadImages().o;
+		baseR = YahooPoolImageList.loadImages().p;
+		pa_I = basePa_I;
+		pa_J = basePa_J;
+		pa_K = basePa_K;
+		pa_L = basePa_L;
+		pa_M = basePa_M;
+		pa_N = basePa_N;
+		pa_O = basePa_O;
+		pa_P = basePa_P;
+		pa_Q = basePa_Q;
+		R = baseR;
 		firstColl1 = new YIPoint();
 		table = _pcls29;
 		arrow = new ArrowControl(2, 10, 20);
@@ -131,8 +163,11 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 		m = 228;
 		playAreaBalls = (YRectangle) table.getProperty("PLAY_AREA_BALLS");
 		playAreaAim = (YRectangle) table.getProperty("PLAY_AREA_AIM");
+		playArea = (YRectangle) table.getProperty("PLAY_AREA");
 		if (playAreaAim == null)
 			playAreaAim = playAreaBalls;
+		if (playArea == null)
+			playArea = playAreaAim;
 		pa_o = 50;
 		pa_p = 470;
 		pa_q = 317;
@@ -140,6 +175,8 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 		aim = new Aim(550, 300, pa_r, _pcls29);
 
 		addChildObject(aim, 0, 0, true);
+		refreshTableArt(pa_C);
+		setBackColor(pa_S);
 		invalidate();
 	}
 
@@ -646,8 +683,12 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 	@Override
 	public void paint(YahooGraphics yahooGraphics) {
 		super.paint(yahooGraphics);
-		yahooGraphics.setColor(new Color(45, 109, 43));
-		yahooGraphics.fillRect(0, 0, 550, 300);
+		if (tableBackground != null)
+			yahooGraphics.drawImage(tableBackground, 0, 0, null);
+		else {
+			yahooGraphics.setColor(pa_C);
+			yahooGraphics.fillRect(0, 0, 550, 300);
+		}
 		for (int i1 = 0; i1 < 550; i1++) {
 			yahooGraphics.drawImage(pa_I, i1, -1, null);
 			yahooGraphics.drawImage(pa_J, i1, 257, null);
@@ -667,7 +708,7 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 		yahooGraphics.setColor(pa_D);
 		yahooGraphics.drawLine(153, 36, 153, 262);
 		if (pa_F) {
-			yahooGraphics.setColor(new Color(10, 10, 10));
+			yahooGraphics.setColor(pa_T);
 			yahooGraphics.fillOval(pa_o - 10, pa_q - 14, 25, 25);
 			yahooGraphics.fillOval(pa_p - 10, pa_q - 14, 25, 25);
 			yahooGraphics.fillRect(pa_o, pa_q - 14, 420, 25);
@@ -677,12 +718,169 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 	@Override
 	public void realingChilds() {
 		super.realingChilds();
-		setBackColor(pa_C);
+		setBackColor(pa_S);
 	}
 
 	public void setCueSprite(CueSprite _pcls58) {
 		getContainer().addChildObject(_pcls58, 1, 1, true);
 		cueSprite = _pcls58;
+	}
+
+	public void setTableColor(Color color) {
+		if (color == null)
+			return;
+		pa_C = color;
+		pa_D = sameColor(color, DEFAULT_TABLE_COLOR) ? new Color(99, 142, 38)
+				: blend(color, Color.white, 0.08F);
+		pa_S = blend(color, Color.black, 0.55F);
+		pa_T = new Color(10, 10, 10);
+		refreshTableArt(color);
+		setBackColor(pa_S);
+		invalidate();
+	}
+
+	private void refreshTableArt(Color color) {
+		tableBackground = createTableBackground(color);
+		if (sameColor(color, DEFAULT_TABLE_COLOR)) {
+			pa_I = basePa_I;
+			pa_J = basePa_J;
+			pa_K = basePa_K;
+			pa_L = basePa_L;
+			pa_M = basePa_M;
+			pa_N = basePa_N;
+			pa_O = basePa_O;
+			pa_P = basePa_P;
+			pa_Q = basePa_Q;
+			R = baseR;
+			return;
+		}
+		pa_I = tintTableImage(basePa_I, color);
+		pa_J = tintTableImage(basePa_J, color);
+		pa_K = tintTableImage(basePa_K, color);
+		pa_L = tintTableImage(basePa_L, color);
+		pa_M = tintTableImage(basePa_M, color);
+		pa_N = tintTableImage(basePa_N, color);
+		pa_O = tintTableImage(basePa_O, color);
+		pa_P = tintTableImage(basePa_P, color);
+		pa_Q = tintTableImage(basePa_Q, color);
+		R = tintTableImage(baseR, color);
+	}
+
+	private Image createTableBackground(Color color) {
+		int width = 550;
+		int height = 300;
+		int pixels[] = new int[width * height];
+		Random random = new Random(color.getRGB() ^ 0x51f15eL);
+		int baseRed = color.getRed();
+		int baseGreen = color.getGreen();
+		int baseBlue = color.getBlue();
+		for (int i1 = 0; i1 < pixels.length; i1++) {
+			int delta = 0;
+			if (random.nextInt(6) == 0)
+				delta = random.nextInt(11) - 5;
+			int red = clampChannel(baseRed + delta);
+			int green = clampChannel(baseGreen + delta);
+			int blue = clampChannel(baseBlue + delta);
+			pixels[i1] = 0xff000000 | red << 16 | green << 8 | blue;
+		}
+
+		return Toolkit.getDefaultToolkit().createImage(
+				new YahooImageProducer(width, height, pixels, 0, width));
+	}
+
+	private Image tintTableImage(Image image, Color color) {
+		try {
+			PixelGrabber pixelgrabber = new PixelGrabber(image, 0, 0, -1, -1,
+					true);
+			pixelgrabber.grabPixels();
+			int width = pixelgrabber.getWidth();
+			int height = pixelgrabber.getHeight();
+			Object object = pixelgrabber.getPixels();
+			if (!(object instanceof int[]) || width < 1 || height < 1)
+				return image;
+			int source[] = (int[]) object;
+			int pixels[] = new int[source.length];
+			float hsb[] = new float[3];
+			for (int i1 = 0; i1 < source.length; i1++) {
+				int pixel = source[i1];
+				int alpha = pixel >>> 24;
+				if (alpha == 0) {
+					pixels[i1] = pixel;
+					continue;
+				}
+				int red = pixel >> 16 & 0xff;
+				int green = pixel >> 8 & 0xff;
+				int blue = pixel & 0xff;
+				Color.RGBtoHSB(red, green, blue, hsb);
+				if (shouldTintTablePixel(red, green, blue, hsb[0], hsb[1],
+						hsb[2]))
+					pixels[i1] = recolorTablePixel(color, alpha, red, green, blue);
+				else
+					pixels[i1] = pixel;
+			}
+
+			return Toolkit.getDefaultToolkit().createImage(
+					new YahooImageProducer(width, height, pixels, 0, width));
+		}
+		catch (InterruptedException _ex) {
+			Thread.currentThread().interrupt();
+			return image;
+		}
+	}
+
+	private boolean shouldTintTablePixel(int red, int green, int blue,
+			float hue, float saturation, float brightness) {
+		if (brightness < 0.015F || saturation < 0.08F)
+			return false;
+		if (green > red + 4 && green > blue + 2)
+			return true;
+		return hue >= 0.12F && hue <= 0.48F && green >= red - 6
+				&& green >= blue - 10;
+	}
+
+	private int recolorTablePixel(Color color, int alpha, int red, int green,
+			int blue) {
+		float sourceHSB[] = Color.RGBtoHSB(red, green, blue, null);
+		float targetHSB[] = Color.RGBtoHSB(color.getRed(), color.getGreen(),
+				color.getBlue(), null);
+		float hue = targetHSB[0];
+		float saturation = targetHSB[1] * (0.6F + sourceHSB[1] * 0.4F);
+		if (saturation > 1.0F)
+			saturation = 1.0F;
+		float brightness = sourceHSB[2] * (0.68F + targetHSB[2] * 0.26F);
+		if (brightness > 1.0F)
+			brightness = 1.0F;
+		int rgb = Color.HSBtoRGB(hue, saturation, brightness);
+		return alpha << 24 | rgb & 0xffffff;
+	}
+
+	private int clampChannel(int value) {
+		if (value < 0)
+			return 0;
+		if (value > 255)
+			return 255;
+		return value;
+	}
+
+	private boolean sameColor(Color color, Color color1) {
+		return color != null && color1 != null && color.getRed() == color1.getRed()
+				&& color.getGreen() == color1.getGreen()
+				&& color.getBlue() == color1.getBlue();
+	}
+
+	private Color blend(Color color, Color color1, float value) {
+		float amount = value;
+		if (amount < 0.0F)
+			amount = 0.0F;
+		if (amount > 1.0F)
+			amount = 1.0F;
+		int red = (int) (color.getRed() * (1.0F - amount) + color1.getRed()
+				* amount);
+		int green = (int) (color.getGreen() * (1.0F - amount) + color1
+				.getGreen() * amount);
+		int blue = (int) (color.getBlue() * (1.0F - amount) + color1.getBlue()
+				* amount);
+		return new Color(red, green, blue);
 	}
 
 }

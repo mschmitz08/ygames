@@ -222,6 +222,7 @@ C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\BallImage.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\BallProducer.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\BallSprite.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\BlackProducer.java
+C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\ColorChannelSlider.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\ColoredBallProducer.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\CueSprite.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\English.java
@@ -235,6 +236,7 @@ C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\PoolTableOptions.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\PowerBar.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\RoomVersion.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\SelectTypeDialog.java
+C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\TableColorEditor.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\YahooBallImage.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\YahooPool.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\YahooPoolImageList.java

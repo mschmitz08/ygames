@@ -58,6 +58,28 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 	private static final int	BREAK_POWER_JITTER	= 10;
 	private static final int	MAX_CUE_POWER		= 120;
 	private static final Random BREAK_RANDOM		= new Random();
+	private static final String[] TABLE_COLOR_NAMES = { "Classic", "Lagoon",
+			"Ruby", "Orange", "Sun", "Purple", "Violet", "Indigo",
+			"Magenta", "Sky", "Teal", "Turq", "Seafoam", "Mint", "Olive",
+			"Lime", "Gold", "Copper", "Coral", "Salmon", "Lavender",
+			"Peri", "Mauve", "Rosewood", "Plum", "Sienna", "Mocha", "Charcoal",
+			"Black", "Silver", "Custom" };
+	private static final Color[] TABLE_COLOR_VALUES = {
+			new Color(45, 109, 43), new Color(0, 102, 153),
+			new Color(145, 24, 52), new Color(204, 102, 0),
+			new Color(184, 158, 0), new Color(92, 39, 143),
+			new Color(118, 74, 188), new Color(57, 62, 151),
+			new Color(178, 40, 123), new Color(42, 135, 218),
+			new Color(0, 102, 102), new Color(35, 155, 166),
+			new Color(52, 168, 128), new Color(80, 168, 112),
+			new Color(78, 102, 35), new Color(75, 151, 32),
+			new Color(166, 124, 0), new Color(150, 86, 48),
+			new Color(205, 92, 92), new Color(219, 112, 147),
+			new Color(123, 104, 238), new Color(102, 153, 255),
+			new Color(145, 95, 160), new Color(101, 55, 55),
+			new Color(110, 38, 98), new Color(132, 77, 49),
+			new Color(112, 84, 62), new Color(54, 59, 64),
+			new Color(18, 18, 18), new Color(142, 142, 142), null };
 
 	public Pool		pool;
 	PoolArea		poolArea;
@@ -96,6 +118,10 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 	PoolData		J;
 	String			state;
 	YahooComboBox	cmbGhostStyle;
+	YahooComboBox	cmbTableColor;
+	YahooComponent	customTableColorPanel;
+	TableColorEditor	tableColorEditor;
+	Color			currentTableColor;
 	boolean			pendingCueSnapshotRestore;
 	boolean			pendingEnglishSnapshotRestore;
 	boolean			preserveCueSnapshotOnRestore;
@@ -129,6 +155,7 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		ypt_I = new YVector();
 		J = new PoolData();
 		state = "";
+		currentTableColor = TABLE_COLOR_VALUES[0];
 		pendingCueSnapshotRestore = false;
 		pendingEnglishSnapshotRestore = false;
 		preserveCueSnapshotOnRestore = false;
@@ -234,6 +261,7 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 			addObject(new YahooLabel(getApplet().lookupString(0x665016b7)), -1);
 		super.createArea();
 		poolArea.setBackColor();
+		applyCurrentTableColor();
 		pool.getSetup().getBallCount();
 		timerHandler = getTimerHandler();
 		poolTimer = timerHandler.add(pool.getPoolEngine(), 15); // 15
@@ -854,6 +882,82 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 			}
 	}
 
+	public void applyTableColorSelection() {
+		if (cmbTableColor == null)
+			return;
+		int index = cmbTableColor.getItemIndex();
+		if (index < 0)
+			index = 0;
+		if (index >= TABLE_COLOR_NAMES.length)
+			index = 0;
+		if (index == TABLE_COLOR_NAMES.length - 1) {
+			if (tableColorEditor != null)
+				currentTableColor = tableColorEditor.getColor();
+		}
+		else {
+			currentTableColor = TABLE_COLOR_VALUES[index];
+		}
+		refreshTableColorUi();
+		applyCurrentTableColor();
+	}
+
+	private void applyCurrentTableColor() {
+		if (poolAimer != null && currentTableColor != null)
+			poolAimer.setTableColor(currentTableColor);
+		if (poolArea != null && currentTableColor != null)
+			poolArea.setTableColor(currentTableColor);
+	}
+
+	public void handleCustomTableColorChange(Color color) {
+		if (color == null || cmbTableColor == null)
+			return;
+		if (cmbTableColor.getItemIndex() != TABLE_COLOR_NAMES.length - 1)
+			cmbTableColor.fn(TABLE_COLOR_NAMES.length - 1);
+		currentTableColor = color;
+		refreshTableColorUi();
+		applyCurrentTableColor();
+	}
+
+	public boolean isCustomTableColorPanelVisible() {
+		return customTableColorPanel != null && customTableColorPanel.visible
+				&& !customTableColorPanel.c;
+	}
+
+	private boolean isCustomTableColorSelected() {
+		return cmbTableColor != null
+				&& cmbTableColor.getItemIndex() == TABLE_COLOR_NAMES.length - 1;
+	}
+
+	public void setCustomTableColorPanelVisible(boolean visible) {
+		if (customTableColorPanel == null)
+			return;
+		customTableColorPanel.visible = visible;
+		customTableColorPanel.c = !visible;
+		if (visible)
+			positionCustomTableColorPanel();
+		else
+			customTableColorPanel.setCoords(-1000, -1000, false);
+		customTableColorPanel.invalidate();
+	}
+
+	private void refreshTableColorUi() {
+		if (tableColorEditor != null && currentTableColor != null)
+			tableColorEditor.setColor(currentTableColor);
+		if (customTableColorPanel != null) {
+			setCustomTableColorPanelVisible(isCustomTableColorSelected());
+		}
+	}
+
+	private void positionCustomTableColorPanel() {
+		if (customTableColorPanel == null || cmbTableColor == null
+				|| customTableColorPanel.getParent() == null)
+			return;
+		int left = cmbTableColor.getWorldLeft(customTableColorPanel.getParent()) - 4;
+		int top = cmbTableColor.getWorldTop(customTableColorPanel.getParent())
+				+ cmbTableColor.getHeight() + 6;
+		customTableColorPanel.setCoords(left, top, false);
+	}
+
 	@Override
 	public void rq() {
 		cmbGhostStyle = new YahooComboBox(getTimerHandler());
@@ -861,9 +965,15 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		cmbGhostStyle.setText("Green");
 		cmbGhostStyle.setText("Red");
 		cmbGhostStyle.setText("Ghost");
+		cmbTableColor = new YahooComboBox(getTimerHandler());
+		for (String tableColorName : TABLE_COLOR_NAMES)
+			cmbTableColor.setText(tableColorName);
+		tableColorEditor = new TableColorEditor(this);
 		super.rq();
 		cmbGhostStyle.fn(3);
+		cmbTableColor.fn(0);
 		applyGhostStyleSelection();
+		applyTableColorSelection();
 	}
 
 	public void Sc() {
