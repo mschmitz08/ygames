@@ -496,8 +496,6 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 	@Override
 	public void handleStart() {
 		super.handleStart();
-		if (!startedSeatNamesCaptured)
-			captureStartedSeatNames();
 		poolArea.xc();
 		poolArea.yc();
 		if (isMyTurn()) {
@@ -522,7 +520,6 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 	@Override
 	public void handleStop(YData data) {
 		super.handleStop(data);
-		clearStartedSeatNames();
 	}
 
 	public void handleStopMoving() {
@@ -649,8 +646,7 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 
 	public boolean isMyTurn() {
 		int sitIndex = getMySitIndex();
-		return sitIndex >= 0 && isStartedSeatOwner(sitIndex)
-				&& pool.isSameTurn(sitIndex);
+		return sitIndex >= 0 && pool.isSameTurn(sitIndex);
 	}
 
 	public void Jd() {
@@ -943,6 +939,34 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		currentTableColor = color;
 		refreshTableColorUi();
 		applyCurrentTableColor();
+	}
+
+	public void handleTableColorSliderChange(char channel, int value) {
+		Color color = currentTableColor != null ? currentTableColor
+				: TABLE_COLOR_VALUES[0];
+		int red = color.getRed();
+		int green = color.getGreen();
+		int blue = color.getBlue();
+		switch (channel) {
+		case 'r':
+		case 'R':
+			red = value;
+			break;
+
+		case 'g':
+		case 'G':
+			green = value;
+			break;
+
+		case 'b':
+		case 'B':
+			blue = value;
+			break;
+
+		default:
+			return;
+		}
+		handleCustomTableColorChange(new Color(red, green, blue));
 	}
 
 	public boolean isCustomTableColorPanelVisible() {
