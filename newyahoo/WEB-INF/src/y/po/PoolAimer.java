@@ -788,13 +788,14 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 		int height = 300;
 		int pixels[] = new int[width * height];
 		Random random = new Random(color.getRGB() ^ 0x51f15eL);
-		int baseRed = color.getRed();
-		int baseGreen = color.getGreen();
-		int baseBlue = color.getBlue();
+		Color backgroundBase = deriveBackgroundBaseColor(color);
+		int baseRed = backgroundBase.getRed();
+		int baseGreen = backgroundBase.getGreen();
+		int baseBlue = backgroundBase.getBlue();
 		for (int i1 = 0; i1 < pixels.length; i1++) {
 			int delta = 0;
 			if (random.nextInt(6) == 0)
-				delta = random.nextInt(11) - 5;
+				delta = random.nextInt(3) - 1;
 			int red = clampChannel(baseRed + delta);
 			int green = clampChannel(baseGreen + delta);
 			int blue = clampChannel(baseBlue + delta);
@@ -803,6 +804,14 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 
 		return Toolkit.getDefaultToolkit().createImage(
 				new YahooImageProducer(width, height, pixels, 0, width));
+	}
+
+	private Color deriveBackgroundBaseColor(Color color) {
+		if (sameColor(color, DEFAULT_TABLE_COLOR))
+			return color;
+		int rgb = recolorTablePixel(color, 0xff, DEFAULT_TABLE_COLOR.getRed(),
+				DEFAULT_TABLE_COLOR.getGreen(), DEFAULT_TABLE_COLOR.getBlue());
+		return new Color(rgb & 0xffffff);
 	}
 
 	private Image tintTableImage(Image image, Color color) {
