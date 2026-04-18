@@ -40,6 +40,7 @@ import common.po.YVector;
 public class PoolAimer extends YahooControl implements TimerHandler {
 
 	private static final Color	DEFAULT_TABLE_COLOR	= new Color(45, 109, 43);
+	private static final Color	DEFAULT_TABLE_SURROUND	= new Color(97, 143, 97);
 
 	public static PoolBall cloneBall(PoolBall ball) {
 		PoolBall poolBall = new PoolBall();
@@ -129,7 +130,7 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 		index = 0;
 		pa_C = DEFAULT_TABLE_COLOR;
 		pa_D = new Color(99, 142, 38);
-		pa_S = new Color(0, 51, 0);
+		pa_S = DEFAULT_TABLE_SURROUND;
 		pa_T = new Color(10, 10, 10);
 		pa_E = YahooPoolImageList.loadImages().q;
 		basePa_I = YahooPoolImageList.loadImages().g;
@@ -733,7 +734,8 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 		pa_C = renderColor;
 		pa_D = sameColor(color, DEFAULT_TABLE_COLOR) ? new Color(99, 142, 38)
 				: blend(renderColor, Color.white, 0.08F);
-		pa_S = blend(renderColor, Color.black, 0.55F);
+		pa_S = sameColor(color, DEFAULT_TABLE_COLOR) ? DEFAULT_TABLE_SURROUND
+				: blend(renderColor, Color.white, 0.22F);
 		pa_T = new Color(10, 10, 10);
 		refreshTableArt(renderColor);
 		setBackColor(pa_S);
