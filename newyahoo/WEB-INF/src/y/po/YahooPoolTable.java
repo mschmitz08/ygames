@@ -58,26 +58,37 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 	private static final int	BREAK_POWER_JITTER	= 10;
 	private static final int	MAX_CUE_POWER		= 120;
 	private static final Random BREAK_RANDOM		= new Random();
-	private static final String[] TABLE_COLOR_NAMES = { "Classic", "Black",
-			"Charcoal", "Copper", "Coral", "Gold", "Indigo", "Lagoon",
-			"Lavender", "Lime", "Magenta", "Mauve", "Mint", "Mocha",
-			"Olive", "Orange", "Peri", "Plum", "Purple", "Rosewood",
-			"Ruby", "Salmon", "Seafoam", "Sienna", "Silver", "Sky", "Sun",
-			"Teal", "Turq", "Violet", "Custom" };
+	private static final String[] TABLE_COLOR_NAMES = { "Classic", "Aqua",
+			"Azure", "Berry", "Black", "Blush", "Bronze", "Charcoal",
+			"Cherry", "Copper", "Coral", "Crimson", "Emerald", "Forest",
+			"Fuchsia", "Gold", "Indigo", "Ivory", "Lagoon", "Lavender",
+			"Lemon", "Lilac", "Lime", "Magenta", "Mauve", "Mint",
+			"Mocha", "Olive", "Orange", "Peach", "Peri", "Plum",
+			"Purple", "Rose", "Rosewd", "Ruby", "Salmon", "Seafoam",
+			"Sienna", "Silver", "Sky", "Slate", "Sun", "Teal", "Turq",
+			"Violet", "Custom" };
 	private static final Color[] TABLE_COLOR_VALUES = {
-			new Color(45, 109, 43), new Color(18, 18, 18),
-			new Color(54, 59, 64), new Color(150, 86, 48),
-			new Color(205, 92, 92), new Color(166, 124, 0),
-			new Color(57, 62, 151), new Color(0, 102, 153),
-			new Color(123, 104, 238), new Color(75, 151, 32),
-			new Color(178, 40, 123), new Color(145, 95, 160),
-			new Color(80, 168, 112), new Color(112, 84, 62),
-			new Color(78, 102, 35), new Color(204, 102, 0),
+			new Color(45, 109, 43), new Color(0, 168, 168),
+			new Color(96, 168, 224), new Color(130, 52, 108),
+			new Color(18, 18, 18), new Color(224, 170, 196),
+			new Color(140, 104, 46), new Color(54, 59, 64),
+			new Color(168, 36, 48), new Color(150, 86, 48),
+			new Color(205, 92, 92), new Color(163, 28, 48),
+			new Color(33, 136, 79), new Color(42, 92, 42),
+			new Color(208, 60, 156), new Color(166, 124, 0),
+			new Color(57, 62, 151), new Color(214, 214, 194),
+			new Color(0, 102, 153), new Color(123, 104, 238),
+			new Color(208, 196, 72), new Color(170, 132, 214),
+			new Color(75, 151, 32), new Color(178, 40, 123),
+			new Color(145, 95, 160), new Color(80, 168, 112),
+			new Color(112, 84, 62), new Color(78, 102, 35),
+			new Color(204, 102, 0), new Color(228, 164, 116),
 			new Color(102, 153, 255), new Color(110, 38, 98),
-			new Color(92, 39, 143), new Color(101, 55, 55),
-			new Color(145, 24, 52), new Color(219, 112, 147),
-			new Color(52, 168, 128), new Color(132, 77, 49),
-			new Color(142, 142, 142), new Color(42, 135, 218),
+			new Color(92, 39, 143), new Color(196, 92, 132),
+			new Color(101, 55, 55), new Color(145, 24, 52),
+			new Color(219, 112, 147), new Color(52, 168, 128),
+			new Color(132, 77, 49), new Color(142, 142, 142),
+			new Color(42, 135, 218), new Color(96, 108, 132),
 			new Color(184, 158, 0), new Color(0, 102, 102),
 			new Color(35, 155, 166), new Color(118, 74, 188), null };
 
@@ -956,21 +967,40 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 	}
 
 	private void positionCustomTableColorPanel() {
-		if (customTableColorPanel == null || cmbTableColor == null
-				|| customTableColorPanel.getParent() == null)
+		if (customTableColorPanel == null || cmbTableColor == null)
 			return;
-		int left = cmbTableColor.getWorldLeft(customTableColorPanel.getParent()) - 4;
-		int dropdownTop = cmbTableColor.getWorldTop(customTableColorPanel.getParent());
+		YahooControl host = ensureCustomTableColorPanelHost();
+		if (host == null)
+			return;
+		int left = cmbTableColor.getWorldLeft(host) - 4;
+		int dropdownTop = cmbTableColor.getWorldTop(host);
 		int top = dropdownTop - customTableColorPanel.getHeight() - 6;
 		if (top < 0)
 			top = dropdownTop + cmbTableColor.getHeight() + 6;
 		customTableColorPanel.setCoords(left, top, true);
 	}
 
+	private YahooControl ensureCustomTableColorPanelHost() {
+		if (customTableColorPanel == null || cmbTableColor == null)
+			return null;
+		YahooControl host = cmbTableColor.getContainer();
+		if (host == null)
+			return customTableColorPanel.getParent();
+		if (customTableColorPanel.getParent() != host) {
+			YahooControl oldParent = customTableColorPanel.getParent();
+			int left = customTableColorPanel.left;
+			int top = customTableColorPanel.top;
+			if (oldParent != null)
+				oldParent.removeChildObject(customTableColorPanel);
+			host.addChildObject(customTableColorPanel, left, top, true);
+		}
+		return host;
+	}
+
 	private void bringCustomTableColorPanelToFront() {
-		if (customTableColorPanel == null || customTableColorPanel.getParent() == null)
+		YahooControl parent = ensureCustomTableColorPanelHost();
+		if (customTableColorPanel == null || parent == null)
 			return;
-		YahooControl parent = customTableColorPanel.getParent();
 		int left = customTableColorPanel.left;
 		int top = customTableColorPanel.top;
 		parent.removeChildObject(customTableColorPanel);
