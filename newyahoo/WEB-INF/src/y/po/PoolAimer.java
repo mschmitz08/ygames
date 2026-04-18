@@ -729,14 +729,31 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 	public void setTableColor(Color color) {
 		if (color == null)
 			return;
-		pa_C = color;
+		Color renderColor = adjustClothColor(color);
+		pa_C = renderColor;
 		pa_D = sameColor(color, DEFAULT_TABLE_COLOR) ? new Color(99, 142, 38)
-				: blend(color, Color.white, 0.08F);
-		pa_S = blend(color, Color.black, 0.55F);
+				: blend(renderColor, Color.white, 0.08F);
+		pa_S = blend(renderColor, Color.black, 0.55F);
 		pa_T = new Color(10, 10, 10);
-		refreshTableArt(color);
+		refreshTableArt(renderColor);
 		setBackColor(pa_S);
 		invalidate();
+	}
+
+	private Color adjustClothColor(Color color) {
+		if (sameColor(color, DEFAULT_TABLE_COLOR))
+			return color;
+		float hsb[] = Color.RGBtoHSB(color.getRed(), color.getGreen(),
+				color.getBlue(), null);
+		float saturation = hsb[1];
+		float brightness = hsb[2];
+		brightness *= 0.6F + (1.0F - saturation) * 0.16F;
+		if (brightness < 0.0F)
+			brightness = 0.0F;
+		if (brightness > 1.0F)
+			brightness = 1.0F;
+		int rgb = Color.HSBtoRGB(hsb[0], saturation, brightness);
+		return new Color(rgb & 0xffffff);
 	}
 
 	private void refreshTableArt(Color color) {
