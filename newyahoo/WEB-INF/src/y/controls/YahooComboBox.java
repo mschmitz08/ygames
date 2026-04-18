@@ -20,6 +20,7 @@ public class YahooComboBox extends YahooControl {
 	public int				ycc_b;
 	public int				ycc_c;
 	public int				ycc_d;
+	public int				ycc_e;
 	public YahooTextBox		e;
 	public _cls113			ycc_f;
 	public FontMetrics		ycc_g;
@@ -35,6 +36,7 @@ public class YahooComboBox extends YahooControl {
 		ycc_b = -1;
 		ycc_c = 0;
 		ycc_d = -1;
+		ycc_e = 0;
 		e = new YahooTextBox(timerHandler);
 		ycc_f = new _cls113(this);
 		h = null;
@@ -53,6 +55,31 @@ public class YahooComboBox extends YahooControl {
 		h = null;
 	}
 
+	public int getPopupItemHeight() {
+		return ycc_g.getHeight();
+	}
+
+	public int getPopupVisibleCount() {
+		int visibleCount = 14;
+		if (ycc_a.size() < visibleCount)
+			visibleCount = ycc_a.size();
+		if (visibleCount < 1)
+			visibleCount = 1;
+		return visibleCount;
+	}
+
+	public boolean hasPopupScrollBar() {
+		return ycc_a.size() > getPopupVisibleCount();
+	}
+
+	public int getPopupListWidth() {
+		return getWidth1() + (hasPopupScrollBar() ? 12 : 0);
+	}
+
+	public int getPopupHeight() {
+		return getPopupItemHeight() * getPopupVisibleCount();
+	}
+
 	protected void an(int i1, int j1) {
 		h = new _cls92(this, i1, j1);
 	}
@@ -68,17 +95,20 @@ public class YahooComboBox extends YahooControl {
 			j = true;
 			ycc_f.invalidate();
 			if (h == null) {
-				int k1 = getWidth1();
-				int l1 = ycc_g.getHeight() * ycc_a.size();
+				int k1 = getPopupListWidth();
+				int l1 = getPopupHeight();
 				int i2 = getWorldLeft(getContainer());
-				int j2 = getWorldTop(getContainer()) + getHeight1();
-				if (j2 + l1 > getContainer().getHeight()) {
-					k = j2 - (getContainer().getHeight() - l1);
-					j2 -= k;
-				}
-				else {
-					k = 0;
-				}
+				int defaultTop = getWorldTop(getContainer()) + getHeight1();
+				int j2 = defaultTop;
+				if (j2 + l1 > getContainer().getHeight())
+					j2 = getContainer().getHeight() - l1;
+				if (j2 < 0)
+					j2 = 0;
+				k = defaultTop - j2;
+				if (ycc_c < ycc_e)
+					ycc_e = ycc_c;
+				if (ycc_c >= ycc_e + getPopupVisibleCount())
+					ycc_e = ycc_c - getPopupVisibleCount() + 1;
 				an(k1, l1);
 				getContainer().addChildObject(h, i2, j2, true);
 				xb(h, true);
@@ -121,6 +151,10 @@ public class YahooComboBox extends YahooControl {
 	public void fn(int i1) {
 		e.setText(ycc_a.elementAt(i1));
 		ycc_c = i1;
+		if (ycc_c < ycc_e)
+			ycc_e = ycc_c;
+		if (ycc_c >= ycc_e + getPopupVisibleCount())
+			ycc_e = ycc_c - getPopupVisibleCount() + 1;
 	}
 
 	public int getItemIndex() {
