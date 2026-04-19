@@ -31,11 +31,8 @@ import common.po.YVector;
 
 public class CueSprite extends YahooComponent implements YData {
 
-	private static final double	BASE_DIRECTION_STEP		= 0.00075D;
-	private static final double	MAX_DIRECTION_STEP		= 0.00375D;
+	private static final double	DIRECTION_STEP_UNIT		= 0.00025D;
 	private static final long	DIRECTION_REPEAT_START_MS	= 220L;
-	private static final long	DIRECTION_ACCEL_START_MS	= 500L;
-	private static final long	DIRECTION_ACCEL_RAMP_MS		= 900L;
 
 	YPoint				cs_a;
 	YPoint				m_ball;
@@ -90,6 +87,10 @@ public class CueSprite extends YahooComponent implements YData {
 	private int			heldDirectionKey;
 	private int			heldDirectionModifiers;
 	private long		heldDirectionStartTime;
+	private int			directionTapUnits;
+	private int			directionMaxUnits;
+	private long		directionAccelStartMs;
+	private long		directionAccelRampMs;
 
 	public CueSprite(PoolArea poolArea, YahooControl _pcls79,
 			PoolAreaHandler _pcls29) {
@@ -145,6 +146,10 @@ public class CueSprite extends YahooComponent implements YData {
 		heldDirectionKey = 0;
 		heldDirectionModifiers = 0;
 		heldDirectionStartTime = 0L;
+		directionTapUnits = YahooPoolTable.DEFAULT_CUE_TAP_UNITS;
+		directionMaxUnits = YahooPoolTable.DEFAULT_CUE_MAX_UNITS;
+		directionAccelStartMs = YahooPoolTable.DEFAULT_CUE_ACCEL_DELAY_MS;
+		directionAccelRampMs = YahooPoolTable.DEFAULT_CUE_ACCEL_RAMP_MS;
 		cs_y = (PoolAimer) _pcls79;
 		Sn(true);
 		cs_o = new Color(125, 63, 0);
@@ -621,6 +626,30 @@ public class CueSprite extends YahooComponent implements YData {
 		changed = flag;
 	}
 
+	public void setDirectionControl(int tapUnits, int maxUnits,
+			int accelStartMs, int accelRampMs) {
+		if (tapUnits < 1)
+			tapUnits = 1;
+		if (tapUnits > 40)
+			tapUnits = 40;
+		if (maxUnits < tapUnits)
+			maxUnits = tapUnits;
+		if (maxUnits > 140)
+			maxUnits = 140;
+		if (accelStartMs < 0)
+			accelStartMs = 0;
+		if (accelStartMs > 3000)
+			accelStartMs = 3000;
+		if (accelRampMs < 100)
+			accelRampMs = 100;
+		if (accelRampMs > 5000)
+			accelRampMs = 5000;
+		directionTapUnits = tapUnits;
+		directionMaxUnits = maxUnits;
+		directionAccelStartMs = accelStartMs;
+		directionAccelRampMs = accelRampMs;
+	}
+
 	public void setCue(float x, float y) {
 		m_cue.setCoords(x, y);
 		m_ball.setCoordsTo(U);
@@ -842,17 +871,18 @@ public class CueSprite extends YahooComponent implements YData {
 
 	private double computeDirectionalStep(long now, boolean initialStep) {
 		if (initialStep || heldDirectionStartTime == 0L)
-			return BASE_DIRECTION_STEP;
+			return DIRECTION_STEP_UNIT * directionTapUnits;
 		long heldMs = now - heldDirectionStartTime;
-		if (heldMs <= DIRECTION_ACCEL_START_MS)
-			return BASE_DIRECTION_STEP;
-		double progress = (double) (heldMs - DIRECTION_ACCEL_START_MS)
-				/ (double) DIRECTION_ACCEL_RAMP_MS;
+		if (heldMs <= directionAccelStartMs)
+			return DIRECTION_STEP_UNIT * directionTapUnits;
+		double progress = (double) (heldMs - directionAccelStartMs)
+				/ (double) directionAccelRampMs;
 		if (progress < 0.0D)
 			progress = 0.0D;
 		if (progress > 1.0D)
 			progress = 1.0D;
-		return BASE_DIRECTION_STEP
-				+ (MAX_DIRECTION_STEP - BASE_DIRECTION_STEP) * progress;
+		double tapStep = DIRECTION_STEP_UNIT * directionTapUnits;
+		double maxStep = DIRECTION_STEP_UNIT * directionMaxUnits;
+		return tapStep + (maxStep - tapStep) * progress;
 	}
 }

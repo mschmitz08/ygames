@@ -224,6 +224,7 @@ C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\BallSprite.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\BlackProducer.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\ColorChannelSlider.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\ColoredBallProducer.java
+C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\CueControlEditor.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\CueSprite.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\English.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\PoolAimer.java

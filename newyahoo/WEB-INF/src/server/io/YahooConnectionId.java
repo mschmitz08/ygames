@@ -32,6 +32,8 @@ public class YahooConnectionId implements YahooProfileIdListener, DataOutput {
 	private static final long			CHAT_FLOOD_INTERVAL	= 3000;
 	private static final int				BURST_FLOOD_COUNT	= 150;
 	private static final long			BURST_FLOOD_INTERVAL	= 2000;
+	private static final int				ID_PROPERTY_FLOOD_COUNT	= 300;
+	private static final long			ID_PROPERTY_FLOOD_INTERVAL	= 3000;
 
 	private YahooSocket					socket;
 	private YahooRoom					room;
@@ -92,7 +94,8 @@ public class YahooConnectionId implements YahooProfileIdListener, DataOutput {
 		declineInviteFloodRecord = new FloodRecord(BURST_FLOOD_COUNT, BURST_FLOOD_INTERVAL);
 		inviteFloodRecord = new FloodRecord(BURST_FLOOD_COUNT, BURST_FLOOD_INTERVAL);
 		setAvatarFloodRecord = new FloodRecord(BURST_FLOOD_COUNT, BURST_FLOOD_INTERVAL);
-		changeIdPropertyFloodRecord = new FloodRecord(CHAT_FLOOD_COUNT, CHAT_FLOOD_INTERVAL);
+		changeIdPropertyFloodRecord = new FloodRecord(ID_PROPERTY_FLOOD_COUNT,
+				ID_PROPERTY_FLOOD_INTERVAL);
 		cancelRequestFloodRecord = new FloodRecord(BURST_FLOOD_COUNT, BURST_FLOOD_INTERVAL);
 		cancelResponseFloodRecord = new FloodRecord(BURST_FLOOD_COUNT, BURST_FLOOD_INTERVAL);
 		tableChatFloodRecord = new FloodRecord(CHAT_FLOOD_COUNT, CHAT_FLOOD_INTERVAL);

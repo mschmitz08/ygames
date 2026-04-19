@@ -82,6 +82,11 @@ CREATE TABLE `ids` (
   `games_common_hidestar` tinyint(1) NOT NULL DEFAULT '0',
   `games_common_smallwindows` tinyint(1) NOT NULL DEFAULT '0',
   `games_common_automove` tinyint(1) NOT NULL DEFAULT '1',
+  `pool_table_color` varchar(16) NOT NULL DEFAULT 'Classic',
+  `pool_cue_tap` smallint(5) unsigned NOT NULL DEFAULT '8',
+  `pool_cue_max` smallint(5) unsigned NOT NULL DEFAULT '8',
+  `pool_cue_delay` smallint(5) unsigned NOT NULL DEFAULT '500',
+  `pool_cue_ramp` smallint(5) unsigned NOT NULL DEFAULT '900',
   PRIMARY KEY (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

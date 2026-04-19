@@ -208,7 +208,9 @@ public abstract class YahooRoom {
 
 		id.loadValues(new String[] { "games_common_sound", "prowler_g",
 				"games_common_profanity", "games_common_hidestar",
-				"games_common_smallwindows", "games_common_automove" },
+				"games_common_smallwindows", "games_common_automove",
+				"pool_table_color", "pool_cue_tap", "pool_cue_max",
+				"pool_cue_delay", "pool_cue_ramp" },
 				new ActionLoadValue() {
 			public void onLoad(String name, String value) {
 				changeIdProperty(id, name, value);

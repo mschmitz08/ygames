@@ -39,9 +39,19 @@ public class PoolControlContainer extends TableControlContainer {
 				table.table_side_tabcolor_bg, table.table_side_tabcolor_fg);
 		container.addChildObject(tablePannel, 10, 1, 2, 1, 1, 0, ++counter[0], 1,
 				0, 1, 0);
+		YahooControl cueControl = new YahooControl();
+		cueControl.addChildObject(poolTable.btnCueControls, 10, 2, 0, 1, 1, 0,
+				0, 1, 0, 1, 0);
+		YahooPannel cuePannel = new YahooPannel("cue", cueControl,
+				table.table_side_tabcolor_bg, table.table_side_tabcolor_fg);
+		container.addChildObject(cuePannel, 10, 1, 2, 1, 1, 0, ++counter[0], 1,
+				0, 1, 0);
 		poolTable.customTableColorPanel = poolTable.tableColorEditor;
 		poolTable.tableColorEditor.visible = false;
 		container.addChildObject(poolTable.tableColorEditor, 0, 0, true);
+		poolTable.cueControlPanel = poolTable.cueControlEditor;
+		poolTable.cueControlEditor.visible = false;
+		container.addChildObject(poolTable.cueControlEditor, 0, 0, true);
 		poolTable.applyTableColorSelection();
 		return result;
 	}
@@ -52,6 +62,9 @@ public class PoolControlContainer extends TableControlContainer {
 			poolTable.applyGhostStyleSelection();
 		else if (event.target == poolTable.cmbTableColor)
 			poolTable.applyTableColorSelection();
+		else if (event.target == poolTable.btnCueControls)
+			poolTable.setCueControlPanelVisible(!poolTable
+					.isCueControlPanelVisible());
 		else if (event.target == table.chkSound)
 			table.getApplet().Kg(table.chkSound.isChecked());
 		else
@@ -65,6 +78,10 @@ public class PoolControlContainer extends TableControlContainer {
 				&& event.target != poolTable.tableColorEditor
 				&& event.target != poolTable.cmbTableColor)
 			poolTable.setCustomTableColorPanelVisible(false);
+		if (poolTable != null && poolTable.isCueControlPanelVisible()
+				&& event.target != poolTable.cueControlEditor
+				&& event.target != poolTable.btnCueControls)
+			poolTable.setCueControlPanelVisible(false);
 		return super.eventMouseDown(event, x, y);
 	}
 

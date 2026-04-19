@@ -11,6 +11,7 @@ import java.util.Random;
 import java.util.Vector;
 
 import y.controls.YahooComponent;
+import y.controls.YahooButton;
 import y.controls.YahooComboBox;
 import y.controls.YahooControl;
 import y.controls.YahooLabel;
@@ -57,6 +58,15 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 
 	private static final int	BREAK_POWER_JITTER	= 10;
 	private static final int	MAX_CUE_POWER		= 120;
+	public static final int	DEFAULT_CUE_TAP_UNITS		= 8;
+	public static final int	DEFAULT_CUE_MAX_UNITS		= 8;
+	public static final int	DEFAULT_CUE_ACCEL_DELAY_MS	= 500;
+	public static final int	DEFAULT_CUE_ACCEL_RAMP_MS	= 900;
+	private static final String PROP_TABLE_COLOR		= "pool_table_color";
+	private static final String PROP_CUE_TAP		= "pool_cue_tap";
+	private static final String PROP_CUE_MAX		= "pool_cue_max";
+	private static final String PROP_CUE_DELAY		= "pool_cue_delay";
+	private static final String PROP_CUE_RAMP		= "pool_cue_ramp";
 	private static final Random BREAK_RANDOM		= new Random();
 	private static final String[] TABLE_COLOR_NAMES = { "Classic", "Aqua",
 			"Apricot", "Azure", "Berry", "Black", "Blush", "Bronze",
@@ -138,9 +148,19 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 	String			state;
 	YahooComboBox	cmbGhostStyle;
 	YahooComboBox	cmbTableColor;
+	YahooButton		btnCueControls;
 	YahooComponent	customTableColorPanel;
+	YahooComponent	cueControlPanel;
 	TableColorEditor	tableColorEditor;
+	CueControlEditor	cueControlEditor;
 	Color			currentTableColor;
+	int				cueTapUnits;
+	int				cueMaxUnits;
+	int				cueAccelDelayMs;
+	int				cueAccelRampMs;
+	boolean			loadingPreferences;
+	boolean			tableColorPreferenceDirty;
+	boolean			cueControlPreferenceDirty;
 	boolean			pendingCueSnapshotRestore;
 	boolean			pendingEnglishSnapshotRestore;
 	boolean			preserveCueSnapshotOnRestore;
@@ -179,6 +199,13 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		startedSeatNamesCaptured = false;
 		state = "";
 		currentTableColor = TABLE_COLOR_VALUES[0];
+		cueTapUnits = DEFAULT_CUE_TAP_UNITS;
+		cueMaxUnits = DEFAULT_CUE_MAX_UNITS;
+		cueAccelDelayMs = DEFAULT_CUE_ACCEL_DELAY_MS;
+		cueAccelRampMs = DEFAULT_CUE_ACCEL_RAMP_MS;
+		loadingPreferences = false;
+		tableColorPreferenceDirty = false;
+		cueControlPreferenceDirty = false;
 		pendingCueSnapshotRestore = false;
 		pendingEnglishSnapshotRestore = false;
 		preserveCueSnapshotOnRestore = false;
@@ -249,6 +276,8 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 
 	@Override
 	public void close() {
+		saveTableColorPreferenceIfDirty();
+		saveCueControlPreferencesIfDirty();
 		if (poolTimer != null) {
 			timerHandler.remove(poolTimer);
 			poolTimer = null;
@@ -922,6 +951,7 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		}
 		refreshTableColorUi();
 		applyCurrentTableColor();
+		saveTableColorPreference();
 	}
 
 	private void applyCurrentTableColor() {
@@ -929,6 +959,15 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 			poolAimer.setTableColor(currentTableColor);
 		if (poolArea != null && currentTableColor != null)
 			poolArea.setTableColor(currentTableColor);
+	}
+
+	private void applyCueControlSettings() {
+		if (poolArea != null && poolArea.cueSprite != null)
+			poolArea.cueSprite.setDirectionControl(cueTapUnits, cueMaxUnits,
+					cueAccelDelayMs, cueAccelRampMs);
+		if (cueControlEditor != null)
+			cueControlEditor.setValues(cueTapUnits, cueMaxUnits,
+					cueAccelDelayMs, cueAccelRampMs);
 	}
 
 	public void handleCustomTableColorChange(Color color) {
@@ -939,6 +978,7 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		currentTableColor = color;
 		refreshTableColorUi();
 		applyCurrentTableColor();
+		tableColorPreferenceDirty = true;
 	}
 
 	public void handleTableColorSliderChange(char channel, int value) {
@@ -969,6 +1009,149 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		handleCustomTableColorChange(new Color(red, green, blue));
 	}
 
+	public void handleCueControlChange(int tapUnits, int maxUnits,
+			int accelDelayMs, int accelRampMs) {
+		cueTapUnits = clamp(tapUnits, 1, 40);
+		cueMaxUnits = clamp(maxUnits, cueTapUnits, 140);
+		cueAccelDelayMs = clamp(accelDelayMs, 0, 3000);
+		cueAccelRampMs = clamp(accelRampMs, 100, 5000);
+		applyCueControlSettings();
+		cueControlPreferenceDirty = true;
+	}
+
+	public boolean isCueControlPanelVisible() {
+		return cueControlPanel != null && cueControlPanel.visible
+				&& !cueControlPanel.c;
+	}
+
+	public void setCueControlPanelVisible(boolean visible) {
+		if (cueControlPanel == null)
+			return;
+		if (visible) {
+			cueControlPanel.visible = true;
+			cueControlPanel.c = false;
+			positionPopupPanel(cueControlPanel, btnCueControls);
+			bringPanelToFront(cueControlPanel, btnCueControls);
+		}
+		else {
+			saveCueControlPreferencesIfDirty();
+			cueControlPanel.visible = false;
+			cueControlPanel.c = true;
+			cueControlPanel.setCoords(-1000, -1000, true);
+		}
+		cueControlPanel.invalidate();
+		if (cueControlPanel.getParent() != null)
+			cueControlPanel.getParent().invalidate();
+	}
+
+	private int clamp(int value, int min, int max) {
+		if (value < min)
+			return min;
+		if (value > max)
+			return max;
+		return value;
+	}
+
+	private void loadCueControlPreferences() {
+		cueTapUnits = readIntPreference(PROP_CUE_TAP, DEFAULT_CUE_TAP_UNITS, 1,
+				40);
+		cueMaxUnits = readIntPreference(PROP_CUE_MAX, DEFAULT_CUE_MAX_UNITS,
+				cueTapUnits, 140);
+		cueAccelDelayMs = readIntPreference(PROP_CUE_DELAY,
+				DEFAULT_CUE_ACCEL_DELAY_MS, 0, 3000);
+		cueAccelRampMs = readIntPreference(PROP_CUE_RAMP,
+				DEFAULT_CUE_ACCEL_RAMP_MS, 100, 5000);
+	}
+
+	private void loadTableColorPreference() {
+		if (cmbTableColor == null)
+			return;
+		String value = getApplet().getIdProperty(PROP_TABLE_COLOR);
+		if (value == null || value.length() == 0) {
+			cmbTableColor.fn(0);
+			currentTableColor = TABLE_COLOR_VALUES[0];
+			return;
+		}
+		for (int i = 0; i < TABLE_COLOR_NAMES.length - 1; i++) {
+			if (TABLE_COLOR_NAMES[i].equalsIgnoreCase(value)) {
+				cmbTableColor.fn(i);
+				currentTableColor = TABLE_COLOR_VALUES[i];
+				return;
+			}
+		}
+		Color custom = parseColorPreference(value);
+		if (custom != null) {
+			currentTableColor = custom;
+			if (tableColorEditor != null)
+				tableColorEditor.setColor(custom);
+			cmbTableColor.fn(TABLE_COLOR_NAMES.length - 1);
+			return;
+		}
+		cmbTableColor.fn(0);
+		currentTableColor = TABLE_COLOR_VALUES[0];
+	}
+
+	private Color parseColorPreference(String value) {
+		try {
+			if (value != null && value.length() == 7 && value.charAt(0) == '#')
+				return new Color(Integer.parseInt(value.substring(1), 16));
+		}
+		catch (NumberFormatException _ex) {
+		}
+		return null;
+	}
+
+	private int readIntPreference(String key, int defaultValue, int min, int max) {
+		String value = getApplet().getIdProperty(key);
+		try {
+			if (value != null && value.length() > 0)
+				return clamp(Integer.parseInt(value), min, max);
+		}
+		catch (NumberFormatException _ex) {
+		}
+		return clamp(defaultValue, min, max);
+	}
+
+	private void saveCueControlPreferences() {
+		if (loadingPreferences)
+			return;
+		getApplet().changeIdProperty(PROP_CUE_TAP, Integer.toString(cueTapUnits));
+		getApplet().changeIdProperty(PROP_CUE_MAX, Integer.toString(cueMaxUnits));
+		getApplet().changeIdProperty(PROP_CUE_DELAY,
+				Integer.toString(cueAccelDelayMs));
+		getApplet().changeIdProperty(PROP_CUE_RAMP,
+				Integer.toString(cueAccelRampMs));
+	}
+
+	private void saveCueControlPreferencesIfDirty() {
+		if (!cueControlPreferenceDirty)
+			return;
+		cueControlPreferenceDirty = false;
+		saveCueControlPreferences();
+	}
+
+	private void saveTableColorPreference() {
+		if (loadingPreferences)
+			return;
+		if (cmbTableColor == null || currentTableColor == null)
+			return;
+		int index = cmbTableColor.getItemIndex();
+		if (index >= 0 && index < TABLE_COLOR_NAMES.length - 1) {
+			getApplet().changeIdProperty(PROP_TABLE_COLOR, TABLE_COLOR_NAMES[index]);
+			return;
+		}
+		getApplet().changeIdProperty(PROP_TABLE_COLOR, String.format("#%02X%02X%02X",
+				currentTableColor.getRed(), currentTableColor.getGreen(),
+				currentTableColor.getBlue()));
+	}
+
+	private void saveTableColorPreferenceIfDirty() {
+		if (!tableColorPreferenceDirty)
+			return;
+		tableColorPreferenceDirty = false;
+		saveTableColorPreference();
+	}
+
 	public boolean isCustomTableColorPanelVisible() {
 		return customTableColorPanel != null && customTableColorPanel.visible
 				&& !customTableColorPanel.c;
@@ -989,6 +1172,7 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 			bringCustomTableColorPanelToFront();
 		}
 		else {
+			saveTableColorPreferenceIfDirty();
 			customTableColorPanel.visible = false;
 			customTableColorPanel.c = true;
 			customTableColorPanel.setCoords(-1000, -1000, true);
@@ -1009,15 +1193,7 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 	private void positionCustomTableColorPanel() {
 		if (customTableColorPanel == null || cmbTableColor == null)
 			return;
-		YahooControl host = ensureCustomTableColorPanelHost();
-		if (host == null)
-			return;
-		int left = cmbTableColor.getWorldLeft(host) - 4;
-		int dropdownTop = cmbTableColor.getWorldTop(host);
-		int top = dropdownTop - customTableColorPanel.getHeight() - 6;
-		if (top < 0)
-			top = dropdownTop + cmbTableColor.getHeight() + 6;
-		customTableColorPanel.setCoords(left, top, true);
+		positionPopupPanel(customTableColorPanel, cmbTableColor);
 	}
 
 	private YahooControl ensureCustomTableColorPanelHost() {
@@ -1038,13 +1214,48 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 	}
 
 	private void bringCustomTableColorPanelToFront() {
-		YahooControl parent = ensureCustomTableColorPanelHost();
-		if (customTableColorPanel == null || parent == null)
+		bringPanelToFront(customTableColorPanel, cmbTableColor);
+	}
+
+	private void bringPanelToFront(YahooComponent panel, YahooComponent anchor) {
+		YahooControl parent = ensurePanelHost(panel, anchor);
+		if (panel == null || parent == null)
 			return;
-		int left = customTableColorPanel.left;
-		int top = customTableColorPanel.top;
-		parent.removeChildObject(customTableColorPanel);
-		parent.addChildObject(customTableColorPanel, left, top, true);
+		int left = panel.left;
+		int top = panel.top;
+		parent.removeChildObject(panel);
+		parent.addChildObject(panel, left, top, true);
+	}
+
+	private YahooControl ensurePanelHost(YahooComponent panel, YahooComponent anchor) {
+		if (panel == null || anchor == null)
+			return null;
+		YahooControl host = anchor.getContainer();
+		if (host == null)
+			return panel.getParent();
+		if (panel.getParent() != host) {
+			YahooControl oldParent = panel.getParent();
+			int left = panel.left;
+			int top = panel.top;
+			if (oldParent != null)
+				oldParent.removeChildObject(panel);
+			host.addChildObject(panel, left, top, true);
+		}
+		return host;
+	}
+
+	private void positionPopupPanel(YahooComponent panel, YahooComponent anchor) {
+		if (panel == null || anchor == null)
+			return;
+		YahooControl host = ensurePanelHost(panel, anchor);
+		if (host == null)
+			return;
+		int left = anchor.getWorldLeft(host) - 4;
+		int dropdownTop = anchor.getWorldTop(host);
+		int top = dropdownTop - panel.getHeight() - 6;
+		if (top < 0)
+			top = dropdownTop + anchor.getHeight() + 6;
+		panel.setCoords(left, top, true);
 	}
 
 	@Override
@@ -1058,11 +1269,17 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		for (String tableColorName : TABLE_COLOR_NAMES)
 			cmbTableColor.setText(tableColorName);
 		tableColorEditor = new TableColorEditor(this);
+		btnCueControls = new YahooButton("Adjust");
+		cueControlEditor = new CueControlEditor(this);
+		loadingPreferences = true;
+		loadTableColorPreference();
+		loadCueControlPreferences();
 		super.rq();
 		cmbGhostStyle.fn(3);
-		cmbTableColor.fn(0);
 		applyGhostStyleSelection();
 		applyTableColorSelection();
+		applyCueControlSettings();
+		loadingPreferences = false;
 	}
 
 	public void Sc() {
