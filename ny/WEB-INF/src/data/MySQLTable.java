@@ -206,6 +206,7 @@ public class MySQLTable {
 					pool.discardConnection(connection);
 				else {
 					success = true;
+					System.err.println("MySQL command failed: " + command);
 					e.printStackTrace();
 				}
 			}
