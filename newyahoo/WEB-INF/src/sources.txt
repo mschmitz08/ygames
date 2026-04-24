@@ -295,6 +295,7 @@ C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\ycontrols\Advertisement.ja
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\ycontrols\AvatarImage.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\ycontrols\AvatarImageList.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\ycontrols\CustomTableOptions.java
+C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\ycontrols\PoolTopMessageOverlay.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\ycontrols\SaveCancel.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\ycontrols\SitContainer.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\ycontrols\Sound.java
