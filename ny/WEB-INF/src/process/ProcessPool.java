@@ -52,7 +52,7 @@ public class ProcessPool implements Destroyable {
 			return result;
 		for (int i = 1; i < process.length; i++) {
 			ProcessQueue result1 = process[i];
-			int size = result.size();
+			int size = result1.size();
 			if (size == 0)
 				return result1;
 			if (size < minSize) {

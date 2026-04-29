@@ -506,6 +506,10 @@ public class YahooPoolTable extends YahooTable implements PoolHandler {
 	}
 
 	public void rd() {
+		if (poolEngineTimer != null) {
+			poolEngineTimer.close();
+			poolEngineTimer = null;
+		}
 		poolEngineTimer = new ReverseClock(pool.poolEngine, 15, true);
 		poolEngineTimer.go();
 		// TODO verificar se não existe mais nada a implementar aqui

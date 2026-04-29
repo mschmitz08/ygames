@@ -27,7 +27,7 @@ public class ReverseClock implements Runnable {
 	}
 
 	public ReverseClock(ClockHandler handler, long interval, boolean enabled) {
-		this(ReverseClock.class.getName(), handler, interval, true);
+		this(ReverseClock.class.getName(), handler, interval, enabled);
 	}
 
 	public ReverseClock(String name, ClockHandler handler, long interval,

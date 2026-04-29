@@ -1206,6 +1206,11 @@ public abstract class YahooTable implements GameHandler {
 				currGameLogEntry = null;
 			}
 
+			if (game != null) {
+				game.close();
+				game = null;
+			}
+
 			properties.clear();
 			booteds.clear();
 			inviteds.clear();
