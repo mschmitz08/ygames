@@ -26,6 +26,7 @@ class PoolTableCreatorDialog extends YahooDialog {
 	TableCreator		tableCreator;
 	YahooCheckBox		chkRated;
 	YahooCheckBox		chkTraining;
+	YahooCheckBox		chkNineBallTraining;
 	YahooCheckBox		chkAutomat;
 	YahooCheckBox		chkEightBallGame;
 	YahooCheckBox		chkNineBallGame;
@@ -49,19 +50,22 @@ class PoolTableCreatorDialog extends YahooDialog {
 		m = new YahooButton(_pcls97.getApplet().lookupString(0x66501400));
 		tableCreator = _pcls97;
 		String category = _pcls97.getApplet().getParameter("category");
-		chkTraining = new YahooCheckBox(_pcls97.getApplet().lookupString(
-				0x66501405), null, category != null
+		chkTraining = new YahooCheckBox("8-Ball Training", null, category != null
 				&& !category.equals("social"));
 		addChildObject(chkTraining, 17, 0, 0, 2, 1, 0, 0);
 		chkTraining.setChecked(false);
-		chkEightBallGame = new YahooCheckBox("8-Ball", chkTraining, category != null && !category.equals("social"));
-		addChildObject(chkEightBallGame, 17, 0, 0, 2, 1, 0, 1);
-		chkEightBallGame.setChecked(true);
-		chkNineBallGame = new YahooCheckBox(_pcls97.getApplet().lookupString(
-				0x66501694), chkTraining, category != null
-				&& !category.equals("social"));
+		chkNineBallTraining = new YahooCheckBox("9-Ball Training",
+				chkTraining, category != null && !category.equals("social"));
 		if (_pcls97.getApplet().lookupString(0x6650179d).equals("y"))
-			addChildObject(chkNineBallGame, 17, 0, 0, 2, 1, 0, 2);
+			addChildObject(chkNineBallTraining, 17, 0, 0, 2, 1, 0, 1);
+		chkNineBallTraining.setChecked(false);
+		chkEightBallGame = new YahooCheckBox("8-Ball", chkTraining, category != null && !category.equals("social"));
+		addChildObject(chkEightBallGame, 17, 0, 0, 2, 1, 0, 2);
+		chkEightBallGame.setChecked(true);
+		chkNineBallGame = new YahooCheckBox("9-Ball", chkTraining,
+				category != null && !category.equals("social"));
+		if (_pcls97.getApplet().lookupString(0x6650179d).equals("y"))
+			addChildObject(chkNineBallGame, 17, 0, 0, 2, 1, 0, 3);
 		chkNineBallGame.setChecked(false);
 		chkAutomat = new YahooCheckBox("Automatic", null, category != null
 				&& !category.equals("social"));
@@ -92,13 +96,13 @@ class PoolTableCreatorDialog extends YahooDialog {
 		i.addChildObject(j, 17, 0, 0, 1, 1, 1, 1);
 		h.addChildObject(new YahooControl(), 0);
 		h.addChildObject(i, 1);
-		addChildObject(h, 17, 0, 0, 2, 1, 0, 3);
+		addChildObject(h, 17, 0, 0, 2, 1, 0, 4);
 		h.qo(1);
 		ptc_o = new TableDescription(_pcls97.getApplet().getTimerHandler(),
 				_pcls97.getApplet());
-		addChildObject(ptc_o, 2, 1, 0, 6);
+		addChildObject(ptc_o, 2, 1, 0, 7);
 		YahooControl _lcls79_1 = new YahooControl(1);
-		addChildObject(_lcls79_1, 10, 0, 0, 2, 1, 0, 7);
+		addChildObject(_lcls79_1, 10, 0, 0, 2, 1, 0, 8);
 		_lcls79_1.addChildObject(l, 0, 0, 2);
 		_lcls79_1.addChildObject(m, 1, 0, 2);
 		show();
@@ -112,7 +116,7 @@ class PoolTableCreatorDialog extends YahooDialog {
 				tableCreator.addProperty("rd", "");
 			if (!chkForceForfeit.isChecked())
 				tableCreator.addProperty("ff", "");
-			if (chkTraining.isChecked())
+			if (chkTraining.isChecked() || chkNineBallTraining.isChecked())
 				tableCreator.addProperty("training", "");
 			if (chkAutomat.isChecked())
 				tableCreator.addProperty("automat", "");
@@ -121,10 +125,11 @@ class PoolTableCreatorDialog extends YahooDialog {
 				if (chkTimer.isChecked())
 					tableCreator.addProperty("timer", txtTimer.getText());
 			}
-			if (chkNineBallGame.isChecked()) {
+			if (chkNineBallGame.isChecked()
+					|| chkNineBallTraining.isChecked()) {
 				tableCreator.addProperty("nineBallGame", "");
 				flag = true;
-				if (chkTimer.isChecked())
+				if (chkNineBallGame.isChecked() && chkTimer.isChecked())
 					tableCreator.addProperty("timer", txtTimer.getText());
 			}
 			if (ptc_o != null)

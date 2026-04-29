@@ -34,6 +34,10 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 	static int[]			_f	= { 0x0000, 0x0400, 0x0800, 0x0400, 0x0800,
 			0x0400, 0x0000, 0x0400, 0x0400, 0x0800, 0x0800, 0x0400, 0x0800,
 			0x0400, 0x0800, 0x0800 };
+	static int[]			nineBallD	= { 0x0001, 0x0010, 0x0008,
+			0x0004, 0x0100, 0x0020, 0x0040, 0x0080, 0x0002, 0x0010 };
+	static int[]			nineBallF	= { 0x0000, 0x0000, 0x0000,
+			0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0800 };
 
 	public static int getTimer(Hashtable<String, String> hashtable) {
 		int i1 = -1;
@@ -580,7 +584,9 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 		}
 		int i1 = getTimer(hashtable);
 		propertyes.put("INIT_TIME_PER_MOVE", new Integer(i1));
-		if (training)
+		if (training && isNineBallGame(hashtable))
+			Zj(new NineBallTrainingSetup(this));
+		else if (training)
 			Zj(new TrainingSetup(this));
 		else if (isNineBallGame(hashtable))
 			Zj(new NineBallSetup(this));
@@ -708,8 +714,15 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 			_lcls171.y0 = p.b;
 			_lcls171.radius = 0x000A0000;
 			_lcls171.m_inSlot = -1;
-			_lcls171.d = _d[j1];
-			_lcls171.type = _f[j1];
+			if (setup instanceof NineBallSetup
+					|| setup instanceof NineBallTrainingSetup) {
+				_lcls171.d = nineBallD[j1];
+				_lcls171.type = nineBallF[j1];
+			}
+			else {
+				_lcls171.d = _d[j1];
+				_lcls171.type = _f[j1];
+			}
 			_lcls171.setPool(this);
 			_lcls171.setHandler(handler);
 			ball[j1] = _lcls171;

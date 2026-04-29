@@ -39,8 +39,22 @@ public final class NineBallSetup extends PoolSetup implements PoolConsts {
 		initPos[9] = new YIPoint(PoolMath.intToYInt(431), PoolMath
 				.intToYInt(149));
 	}
+	static YIPoint[] createRackPos() {
+		YIPoint rackPos[] = new YIPoint[initPos.length];
+		for (int j = 0; j < initPos.length; j++)
+			rackPos[j] = initPos[j];
+		for (int j = 2; j < 9; j++) {
+			int k = j + (int) (Math.random() * (9 - j));
+			YIPoint pos = rackPos[j];
+			rackPos[j] = rackPos[k];
+			rackPos[k] = pos;
+		}
+		return rackPos;
+	}
+
 	private IBall				c;
 	private int					d;
+	private YIPoint				rackPos[];
 	public int					e;
 	public int					f;
 	public int					g;
@@ -51,6 +65,7 @@ public final class NineBallSetup extends PoolSetup implements PoolConsts {
 		super(_pcls57);
 		d = 0;
 		e = 1;
+		rackPos = createRackPos();
 		i = 0;
 	}
 
@@ -71,9 +86,9 @@ public final class NineBallSetup extends PoolSetup implements PoolConsts {
 
 	@Override
 	public YIPoint getInitPos(int j) {
-		if (j >= initPos.length)
+		if (j >= rackPos.length)
 			return new YIPoint(0, 0);
-		return initPos[j];
+		return rackPos[j];
 	}
 
 	@Override

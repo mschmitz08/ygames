@@ -24,6 +24,7 @@ C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\common\k\TurkishCheckers.jav
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\common\po\EightBallSetup.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\common\po\IBall.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\common\po\NineBallSetup.java
+C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\common\po\NineBallTrainingSetup.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\common\po\Obstacle.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\common\po\Point.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\common\po\Pool.java
