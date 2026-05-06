@@ -92,16 +92,27 @@ internal static class LaunchArtifactWriter
         builder.AppendLine($"      <param name=\"{HtmlEscape(name)}\" value=\"{HtmlEscape(value)}\">");
     }
 
-    private static string BuildWebUrl(string webBase, string relativePath)
-    {
-        var normalizedBase = webBase.TrimEnd('/');
-        if (!relativePath.StartsWith("/"))
-        {
-            relativePath = "/" + relativePath;
-        }
+	private static string BuildWebUrl(string webBase, string relativePath)
+	{
+		var normalizedBase = ForceHttps(webBase.TrimEnd('/'));
 
-        return normalizedBase + relativePath;
-    }
+		if (!relativePath.StartsWith("/", StringComparison.Ordinal))
+		{
+			relativePath = "/" + relativePath;
+		}
+
+		return normalizedBase + relativePath;
+	}
+
+	private static string ForceHttps(string url)
+	{
+		if (url.StartsWith("http://retroplayhub.com", StringComparison.OrdinalIgnoreCase))
+		{
+			return "https://" + url.Substring("http://".Length);
+		}
+
+		return url;
+	}
 
     private static string FileUrl(string path) => "file:///" + path.Replace("\\", "/");
 

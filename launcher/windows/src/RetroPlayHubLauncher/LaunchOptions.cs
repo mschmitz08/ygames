@@ -186,7 +186,7 @@ internal sealed record LaunchOptions(
         public string IntlCode { get; set; } = "us";
         public string AccountMode { get; set; } = string.Empty;
         public string LauncherVersion { get; set; } = string.Empty;
-        public string WebBase { get; set; } = "http://127.0.0.1:8080/ny";
+        public string WebBase { get; set; } = string.Empty;
         public string AppletWidth { get; set; } = "1400";
         public string AppletHeight { get; set; } = "900";
         public bool WidthSpecified { get; set; }
@@ -196,8 +196,11 @@ internal sealed record LaunchOptions(
         public string? SiteId { get; set; }
         public bool SkipSelfUpdate { get; set; }
 
-        public LaunchOptions ToImmutable() =>
-            new(
+        public LaunchOptions ToImmutable()
+        {
+            var webBase = NormalizeWebBase(WebBase, Host);
+
+            return new(
                 Game,
                 Room,
                 Host,
@@ -205,7 +208,7 @@ internal sealed record LaunchOptions(
                 IntlCode,
                 AccountMode,
                 LauncherVersion,
-                WebBase,
+                webBase,
                 AppletWidth,
                 AppletHeight,
                 WidthSpecified,
@@ -214,5 +217,23 @@ internal sealed record LaunchOptions(
                 ExpectedClientHash,
                 SiteId,
                 SkipSelfUpdate);
+        }
+
+        private static string NormalizeWebBase(string webBase, string host)
+        {
+            if (!string.IsNullOrWhiteSpace(webBase))
+            {
+                return webBase.TrimEnd('/');
+            }
+
+            if (!string.IsNullOrWhiteSpace(host)
+                && !host.Equals("127.0.0.1", StringComparison.OrdinalIgnoreCase)
+                && !host.Equals("localhost", StringComparison.OrdinalIgnoreCase))
+            {
+                return $"https://{host.Trim('/')}/ny";
+            }
+
+            return "https://retroplayhub.com/ny";
+        }
     }
 }
