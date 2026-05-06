@@ -12,6 +12,7 @@ import java.util.Vector;
 import server.io.YahooConnectionId;
 
 import common.utils.SynchronizedVector;
+import common.yutils.AvatarSupport;
 import common.yutils.YahooUtils;
 
 import data.MySQLTable;
@@ -97,7 +98,8 @@ public abstract class YahooRoom {
 				enterId(id, name2, name2);
 				if (id2.isAllStarMemberShip())
 					changePublicFlags(id, name2, id2.getMoreFlags());
-				changeAvatar(id, id2.getAvatar(), name2);
+				changeAvatar(id, id2.getAvatar(), name2,
+						id2.getCustomAvatarVersion());
 			}
 		}
 		finally {
@@ -128,7 +130,7 @@ public abstract class YahooRoom {
 				enterId(id2, name, name);
 				if (id.isAllStarMemberShip())
 					changePublicFlags(id2, name, id.getMoreFlags());
-				changeAvatar(id2, avatar, name);
+				changeAvatar(id2, avatar, name, id.getCustomAvatarVersion());
 			}
 		}
 		finally {
@@ -344,11 +346,13 @@ public abstract class YahooRoom {
 		}
 	}
 
-	public void changeAvatar(YahooConnectionId id, byte avatar, String name) {
+	public void changeAvatar(YahooConnectionId id, byte avatar, String name,
+			int version) {
 		synchronized (id) {
 			id.write('o');
 			id.write(avatar);
 			id.writeUTF(name);
+			id.writeInt(version);
 			id.flush();
 		}
 	}
@@ -772,7 +776,18 @@ public abstract class YahooRoom {
 			return;
 		}
 
-		if (!id.isAllStarMemberShip() && avatar > 34) {
+		int avatarIndex = avatar & 0xff;
+		if (!AvatarSupport.isValidAvatarIndex(avatarIndex)) {
+			id.close();
+			return;
+		}
+		if (AvatarSupport.isCustomAvatar(avatarIndex)
+				&& !id.hasCustomAvatar()) {
+			alert(id, "Upload a custom avatar before selecting it.");
+			return;
+		}
+		if (!id.isAllStarMemberShip()
+				&& avatarIndex >= AvatarSupport.BUILTIN_AVATAR_COUNT) {
 			id.close();
 			return;
 		}

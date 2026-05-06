@@ -25,6 +25,7 @@ public class Initializer extends HttpServlet {
     private int poolPort = 11998;
 
     public MySQLTable ids;
+    public MySQLTable id_avatars;
     public MySQLTable games;
     public MySQLTable checkers_rooms;
     public MySQLTable pool_rooms;
@@ -91,6 +92,7 @@ public class Initializer extends HttpServlet {
         using = null;
 
         ids = null;
+        id_avatars = null;
         games = null;
         checkers_rooms = null;
         pool_rooms = null;
@@ -123,6 +125,7 @@ public class Initializer extends HttpServlet {
 
         try {
             ids = new MySQLTable(connectionPool, "ids");
+            id_avatars = new MySQLTable(connectionPool, "id_avatars");
             games = new MySQLTable(connectionPool, "games");
             checkers_rooms = new MySQLTable(connectionPool, "checkers_rooms");
             pool_rooms = new MySQLTable(connectionPool, "pool_rooms");

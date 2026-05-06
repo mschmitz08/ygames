@@ -36,6 +36,8 @@ internal static class LaunchArtifactWriter
         var loginUrl = BuildWebUrl(options.WebBase, "/applet_login.jsp");
         var registerUrl = BuildWebUrl(options.WebBase, "/applet_register.jsp");
         var changePasswordUrl = BuildWebUrl(options.WebBase, "/applet_change_password.jsp");
+        var avatarUploadUrl = BuildWebUrl(options.WebBase, "/avatar_upload.jsp");
+        var avatarImageUrl = BuildWebUrl(options.WebBase, "/avatar.jsp");
 
         var builder = new StringBuilder();
         builder.AppendLine("<html>");
@@ -63,6 +65,8 @@ internal static class LaunchArtifactWriter
         builder.AppendLine($"      <param name=\"login_url\" value=\"{HtmlEscape(loginUrl)}\">");
         builder.AppendLine($"      <param name=\"register_url\" value=\"{HtmlEscape(registerUrl)}\">");
         builder.AppendLine($"      <param name=\"change_password_url\" value=\"{HtmlEscape(changePasswordUrl)}\">");
+        builder.AppendLine($"      <param name=\"avatar_upload_url\" value=\"{HtmlEscape(avatarUploadUrl)}\">");
+        builder.AppendLine($"      <param name=\"avatar_image_url\" value=\"{HtmlEscape(avatarImageUrl)}\">");
         builder.AppendLine($"      <param name=\"ldict_url\" value=\"{HtmlEscape(descriptor.DictionaryPath)}\">");
 
         foreach (var parameter in descriptor.Parameters)

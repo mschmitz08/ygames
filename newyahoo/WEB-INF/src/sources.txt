@@ -80,6 +80,7 @@ C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\common\utils\ClockHandler.ja
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\common\utils\IOBuffer.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\common\utils\ReverseClock.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\common\utils\SynchronizedVector.java
+C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\common\yutils\AvatarSupport.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\common\yutils\Game.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\common\yutils\GameHandler.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\common\yutils\GameHistory.java

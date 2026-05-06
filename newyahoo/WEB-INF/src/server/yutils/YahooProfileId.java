@@ -106,6 +106,27 @@ public abstract class YahooProfileId {
 		return flags;
 	}
 
+	public int getCustomAvatarVersion() {
+		ResultSet rs = null;
+		MySQLTable avatarTable = getAvatarTable();
+		if (avatarTable == null)
+			return 0;
+		try {
+			rs = avatarTable.getValue(new String[] { "name" },
+					new Object[] { getName() }, new String[] { "version" });
+			if (rs != null && rs.next())
+				return rs.getInt("version");
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		finally {
+			if (rs != null)
+				avatarTable.closeResultSet(rs);
+		}
+		return 0;
+	}
+
 	public IgnoredEntry getIgnoredEntry() {
 		IgnoredEntry result = getIgnoredEntryByIp();
 		if (result == null)
@@ -191,6 +212,10 @@ public abstract class YahooProfileId {
 
 	public boolean hidingStar() {
 		return (moreFlags & 1) != 0;
+	}
+
+	public boolean hasCustomAvatar() {
+		return getCustomAvatarVersion() > 0;
 	}
 
 	public void incrementDraws(int rating) {
@@ -493,6 +518,12 @@ public abstract class YahooProfileId {
 				rs = null;
 			}
 		}
+	}
+
+	private MySQLTable getAvatarTable() {
+		if (ids_table == null)
+			return null;
+		return new MySQLTable(ids_table.getPool(), "id_avatars");
 	}
 
 }

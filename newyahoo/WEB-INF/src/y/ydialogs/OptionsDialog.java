@@ -22,12 +22,14 @@ import y.yutils.AbstractYahooGamesApplet;
 public class OptionsDialog extends YahooDialog {
 
 	YahooButton					btnDone;
+	YahooButton					btnCustomAvatar;
 	AbstractYahooGamesApplet	applet;
 
 	public OptionsDialog(YahooControl _pcls79, AbstractYahooGamesApplet _pcls56) {
 		super(_pcls79, _pcls56.lookupString(0x66500d35));// Options
 		applet = _pcls56;
 		btnDone = new YahooButton(_pcls56.lookupString(0x66500d36));// Done
+		btnCustomAvatar = new YahooButton("Upload Custom Avatar");
 		addChildObject(new YahooLabel("Yahoo! Messenger Preferences:"), 17, 0,
 				0, 2, 1, 0, 0);
 		addChildObject(_pcls56.chkShowLinkToYahooMessenger, 17, 0, 0, 1, 1, 0,
@@ -57,6 +59,7 @@ public class OptionsDialog extends YahooDialog {
 		_lcls79_1.addChildObject(new YahooLabel(_pcls56
 				.lookupString(0x66500dde)), 17, 0, 0, 1, 1, 0, 0);// Avatars:
 		_lcls79_1.addChildObject(_pcls56.avatarList, 17, 2, 0, 1, 1, 0, 1);
+		_lcls79_1.addChildObject(btnCustomAvatar, 17, 1, 0, 2, 1, 0, 2);
 		addChildObject(btnDone, 2, 1, 0, ++i);
 	}
 
@@ -65,7 +68,11 @@ public class OptionsDialog extends YahooDialog {
 		if (event.target == btnDone) {
 			Rw();
 			close();
-			applet.changeAvatar(applet.avatarList.Ku());
+			applet.applySelectedAvatar();
+			return true;
+		}
+		if (event.target == btnCustomAvatar) {
+			applet.uploadCustomAvatar();
 			return true;
 		}
 		return false;

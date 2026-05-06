@@ -419,9 +419,19 @@ public class YahooListBox extends YahooControl {
 	}
 
 	public void putAvatarSquare(int avatarIndex, ListItem item, int x) {
+		putAvatarSquare(avatarIndex, item, x, null);
+	}
+
+	public void putAvatarSquare(int avatarIndex, ListItem item, int x,
+			Image customImage) {
 		if (item.componentTable[x][5] != null)
 			removeComponent(item, x, 5);
-		Image image = avatarImages[avatarIndex];
+		Image image = customImage;
+		if (image == null) {
+			if (avatarIndex < 0 || avatarIndex >= avatarImages.length)
+				avatarIndex = 0;
+			image = avatarImages[avatarIndex];
+		}
 		boolean flag = image.getHeight(null) > imageHeight;
 		if (flag)
 			imageHeight = image.getHeight(null);

@@ -147,7 +147,7 @@ public class YahooConnectionId implements YahooProfileIdListener, DataOutput {
 		roomIds.readLock();
 		try {
 			for (YahooConnectionId id : roomIds)
-				room.changeAvatar(id, avatar, name);
+				room.changeAvatar(id, avatar, name, getCustomAvatarVersion());
 		}
 		finally {
 			roomIds.readUnlock();
@@ -360,6 +360,12 @@ public class YahooConnectionId implements YahooProfileIdListener, DataOutput {
 		return changeIdPropertyFloodRecord;
 	}
 
+	public int getCustomAvatarVersion() {
+		if (profileId == null)
+			return 0;
+		return profileId.getCustomAvatarVersion();
+	}
+
 	/**
 	 * @return the changeTablePrivacyFloodRecord
 	 */
@@ -419,6 +425,12 @@ public class YahooConnectionId implements YahooProfileIdListener, DataOutput {
 
 	public Vector<String> getIgnoreds() {
 		return ignoreds;
+	}
+
+	public boolean hasCustomAvatar() {
+		if (profileId == null)
+			return false;
+		return profileId.hasCustomAvatar();
 	}
 
 	/**

@@ -36,6 +36,7 @@ public class Id {
 
 	public boolean			hasSentInviation;
 	public int				avatar;
+	public int				avatarVersion;
 
 	public Id(String s, String s1) {
 		publicFlags = 0;

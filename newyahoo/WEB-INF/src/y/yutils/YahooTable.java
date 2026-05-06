@@ -16,6 +16,7 @@ import y.ycontrols.Advertisement;
 import y.ycontrols.SitContainer;
 
 import common.io.YData;
+import common.yutils.AvatarSupport;
 import common.yutils.Game;
 import common.yutils.GameHandler;
 import common.yutils.GameHistory;
@@ -65,8 +66,8 @@ public abstract class YahooTable implements GameHandler {
 		if (mySitIndex >= 0 && getRealSitIndex(mySitIndex) == index) {
 			int avatar = previous ? previousAvatar() : nextAvatar();
 			avatarCounter = 533;
-			sits[index].image
-					.setImage(((YahooImageList) getApplet().avatars).image[avatar]);
+			sits[index].image.setImage(getApplet().resolveAvatarImage(getMyId(),
+					avatar, getApplet().getCustomAvatarVersion(getMyId())));
 		}
 	}
 
@@ -93,8 +94,16 @@ public abstract class YahooTable implements GameHandler {
 
 	void doChangeAvatar(int i1, int j1) {
 		avatars[i1] = j1;
-		sits[getRealSitIndex(i1)].image
-				.setImage(((YahooImageList) getApplet().avatars).image[j1]);
+		Id id = sitId[i1];
+		int version = id != null ? id.avatarVersion : 0;
+		sits[getRealSitIndex(i1)].image.setImage(getApplet().resolveAvatarImage(
+				id != null ? id.name : null, j1, version));
+	}
+
+	void doChangeAvatar(int i1, int j1, int version) {
+		if (sitId[i1] != null)
+			sitId[i1].avatarVersion = version;
+		doChangeAvatar(i1, j1);
 	}
 
 	protected void doChangeHost(String s1) {
@@ -287,7 +296,15 @@ public abstract class YahooTable implements GameHandler {
 	}
 
 	int nextAvatar() {
-		avatar = (avatar + 1) % 45;
+		boolean hasCustomAvatar = getApplet().getCustomAvatarVersion(getMyId()) > 0
+				|| AvatarSupport.isCustomAvatar(avatar);
+		if (AvatarSupport.isCustomAvatar(avatar))
+			avatar = 0;
+		else if (hasCustomAvatar
+				&& avatar == AvatarSupport.BUILTIN_AVATAR_COUNT - 1)
+			avatar = AvatarSupport.CUSTOM_AVATAR_INDEX;
+		else
+			avatar = (avatar + 1) % AvatarSupport.BUILTIN_AVATAR_COUNT;
 		return avatar;
 	}
 
@@ -337,8 +354,11 @@ public abstract class YahooTable implements GameHandler {
 
 		case 116: // 't': sit
 			int j1 = datainputstream.readByte();
-			int k1 = datainputstream.readByte();
+			int k1 = datainputstream.readByte() & 0xff;
+			int version = datainputstream.readInt();
 			Id id = getId(datainputstream);
+			if (id != null)
+				id.avatarVersion = version;
 			doSit(j1, k1, id);
 			break;
 
@@ -370,7 +390,8 @@ public abstract class YahooTable implements GameHandler {
 		case 56: // '8': change avatar
 			byte byte2 = datainputstream.readByte();
 			byte byte3 = datainputstream.readByte();
-			doChangeAvatar(byte2, byte3);
+			int avatarVersion = datainputstream.readInt();
+			doChangeAvatar(byte2, byte3 & 0xff, avatarVersion);
 			break;
 
 		default:
@@ -380,7 +401,15 @@ public abstract class YahooTable implements GameHandler {
 	}
 
 	int previousAvatar() {
-		avatar = (avatar - 1 + 45) % 45;
+		boolean hasCustomAvatar = getApplet().getCustomAvatarVersion(getMyId()) > 0
+				|| AvatarSupport.isCustomAvatar(avatar);
+		if (AvatarSupport.isCustomAvatar(avatar))
+			avatar = AvatarSupport.BUILTIN_AVATAR_COUNT - 1;
+		else if (hasCustomAvatar && avatar == 0)
+			avatar = AvatarSupport.CUSTOM_AVATAR_INDEX;
+		else
+			avatar = (avatar - 1 + AvatarSupport.BUILTIN_AVATAR_COUNT)
+					% AvatarSupport.BUILTIN_AVATAR_COUNT;
 		return avatar;
 	}
 

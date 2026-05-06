@@ -31,6 +31,7 @@ public class Initializer extends HttpServlet implements YahooRoomHandler {
     private int checkersPort = 11999;
 
     public MySQLTable ids;
+    public MySQLTable id_avatars;
     public MySQLTable games;
 
     public MySQLTable pool_rooms;
@@ -169,6 +170,7 @@ public class Initializer extends HttpServlet implements YahooRoomHandler {
         processPool = null;
 
         ids = null;
+        id_avatars = null;
         games = null;
 
         pool_rooms = null;
@@ -238,6 +240,10 @@ public class Initializer extends HttpServlet implements YahooRoomHandler {
             System.out.println("Creating ids");
             ids = new MySQLTable(connectionPool, "ids");
             tables.put("ids", ids);
+
+            System.out.println("Creating id_avatars");
+            id_avatars = new MySQLTable(connectionPool, "id_avatars");
+            tables.put("id_avatars", id_avatars);
 
             System.out.println("Creating games");
             games = new MySQLTable(connectionPool, "games");

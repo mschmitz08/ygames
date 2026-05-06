@@ -172,12 +172,14 @@ public abstract class YahooTable implements GameHandler {
 		}
 	}
 
-	public void changeAvatar(YahooConnectionId id, int sitIndex, byte avatar) {
+	public void changeAvatar(YahooConnectionId id, int sitIndex, byte avatar,
+			int version) {
 		synchronized (id) {
 			writeHeader(id);
 			id.write('8');
 			id.write(sitIndex);
 			id.write(avatar);
+			id.writeInt(version);
 			id.flush();
 		}
 	}
@@ -413,10 +415,11 @@ public abstract class YahooTable implements GameHandler {
 	 * 
 	 */
 	public void doChangeAvatar(int sitIndex, byte avatar) {
+		int version = getSitCustomAvatarVersion(sitIndex, avatar);
 		ids.readLock();
 		try {
 			for (YahooConnectionId id : ids)
-				changeAvatar(id, sitIndex, avatar);
+				changeAvatar(id, sitIndex, avatar, version);
 		}
 		finally {
 			ids.readUnlock();
@@ -559,7 +562,8 @@ public abstract class YahooTable implements GameHandler {
 				ids.readLock();
 				try {
 					for (YahooConnectionId id1 : ids)
-						sit(id1, sitIndex, id.getAvatar(), name);
+						sit(id1, sitIndex, id.getAvatar(),
+								id.getCustomAvatarVersion(), name);
 				}
 				finally {
 					ids.readUnlock();
@@ -1005,7 +1009,8 @@ public abstract class YahooTable implements GameHandler {
 			for (int i = 0; i < sits.length; i++) {
 				if (sits[i] == null)
 					continue;
-				sit(id, i, sits[i].getAvatar(), sits[i].getName());
+				sit(id, i, sits[i].getAvatar(),
+						sits[i].getCustomAvatarVersion(), sits[i].getName());
 			}
 		}
 		changeHost(id, host);
@@ -1227,12 +1232,24 @@ public abstract class YahooTable implements GameHandler {
 		}
 	}
 
-	public void sit(YahooConnectionId id, int sitIndex, byte avatar, String name) {
+	private int getSitCustomAvatarVersion(int sitIndex, byte avatar) {
+		if ((avatar & 0xff) != common.yutils.AvatarSupport.CUSTOM_AVATAR_INDEX)
+			return 0;
+		synchronized (sits) {
+			if (sitIndex >= 0 && sitIndex < sits.length && sits[sitIndex] != null)
+				return sits[sitIndex].getCustomAvatarVersion();
+		}
+		return 0;
+	}
+
+	public void sit(YahooConnectionId id, int sitIndex, byte avatar, int version,
+			String name) {
 		synchronized (id) {
 			writeHeader(id);
 			id.write('t');
 			id.write(sitIndex);
 			id.write(avatar);
+			id.writeInt(version);
 			id.writeUTF(name);
 			id.flush();
 		}

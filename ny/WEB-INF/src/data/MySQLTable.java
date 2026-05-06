@@ -70,6 +70,10 @@ public class MySQLTable {
 		resultSets = new Hashtable<ResultSet, Object[]>();
 	}
 
+	public MySQLConnectionPool getPool() {
+		return pool;
+	}
+
 	public void assyncDelete(String keyName, Object keyValue) {
 		String command = "DELETE FROM " + name + " WHERE " + keyName + " = "
 		+ MySQLTable.formatValue(keyValue);

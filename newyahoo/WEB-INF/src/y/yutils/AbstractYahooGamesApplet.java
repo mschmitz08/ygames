@@ -7,10 +7,16 @@ package y.yutils;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Event;
+import java.awt.FileDialog;
 import java.awt.Frame;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
@@ -22,6 +28,8 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.StringTokenizer;
 import java.util.Vector;
+
+import javax.imageio.ImageIO;
 
 import y.controls.AvatarList;
 import y.controls.ListItem;
@@ -55,6 +63,7 @@ import y.ydialogs.OptionsDialog;
 import y.ydialogs.PrivateChatFrame;
 
 import common.utils.ClientJarHash;
+import common.yutils.AvatarSupport;
 import common.yutils.YahooUtils;
 import common.yutils._cls159;
 
@@ -114,6 +123,8 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 	public Hashtable<String, PrivateChatFrame>	privateChatTable;
 	public Hashtable<String, InformationFrame>	informationTable;
 	public Hashtable<String, String>			idPropertyes;
+	public Hashtable<String, Image>				customAvatarImages;
+	public Hashtable<String, Integer>			customAvatarVersions;
 	public int									myAvatar;
 	public long									idFlags;
 	public YahooCheckBox						chkImFromFriendsOnly;
@@ -151,10 +162,13 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 	String								login_url;
 	String								register_url;
 	String								change_password_url;
+	String								avatar_upload_url;
+	String								avatar_image_url;
 	String								account_mode;
 	public static final String	APPLET_LOGIN_REQUEST	= "APPLET_LOGIN_REQUEST";
 	public static final String	APPLET_REGISTER_REQUEST	= "APPLET_REGISTER_REQUEST";
 	public static final String	APPLET_CHANGE_PASSWORD_REQUEST	= "APPLET_CHANGE_PASSWORD_REQUEST";
+	public static final String	APPLET_AVATAR_UPLOAD_REQUEST	= "APPLET_AVATAR_UPLOAD_REQUEST";
 	String										agent;
 	String										clientJarHash;
 	protected String							page_id;
@@ -193,6 +207,8 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 		privateChatTable = new Hashtable<String, PrivateChatFrame>(7);
 		informationTable = new Hashtable<String, InformationFrame>(7);
 		idPropertyes = new Hashtable<String, String>(7);
+		customAvatarImages = new Hashtable<String, Image>(7);
+		customAvatarVersions = new Hashtable<String, Integer>(7);
 		myAvatar = 0;
 		idFlags = 0L;
 		w = new YahooControl();
@@ -352,6 +368,99 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 
 	public void changeAvatar(int i1) {
 		send('F', i1);
+	}
+
+	public void applySelectedAvatar() {
+		int selected = avatarList.Ku();
+		if (selected == AvatarSupport.BUILTIN_AVATAR_COUNT) {
+			if (getCustomAvatarVersion(myId) > 0)
+				changeAvatar(AvatarSupport.CUSTOM_AVATAR_INDEX);
+			else
+				uploadCustomAvatar();
+			return;
+		}
+		changeAvatar(selected);
+	}
+
+	public int getCustomAvatarVersion(String name) {
+		if (name == null)
+			return 0;
+		Integer version = customAvatarVersions.get(name);
+		return version != null ? version.intValue() : 0;
+	}
+
+	public Image resolveAvatarImage(String name, int avatar, int version) {
+		if (!AvatarSupport.isCustomAvatar(avatar)) {
+			if (avatar < 0 || avatar >= avatars.image.length)
+				avatar = 0;
+			return avatars.image[avatar];
+		}
+		if (name == null || version <= 0)
+			return avatars.image[0];
+		String key = name + ":" + version;
+		Image image = customAvatarImages.get(key);
+		if (image != null)
+			return image;
+		try {
+			String url = avatar_image_url + "?name=" + URLEncoder.encode(name, "UTF-8")
+					+ "&v=" + version;
+			image = getImage(new URL(url));
+			customAvatarImages.put(key, image);
+			return image;
+		}
+		catch (Exception _ex) {
+			return avatars.image[0];
+		}
+	}
+
+	public void uploadCustomAvatar() {
+		Frame owner = findOwnerFrame();
+		FileDialog dialog = new FileDialog(owner, uiText("choose_avatar",
+				"Choose avatar image"), FileDialog.LOAD);
+		dialog.setVisible(true);
+		if (dialog.getFile() == null)
+			return;
+		File file = new File(dialog.getDirectory(), dialog.getFile());
+		try {
+			BufferedImage source = ImageIO.read(file);
+			if (source == null) {
+				new OkFrame(uiText("avatar_upload_failed", "Avatar upload failed"),
+						processor, this);
+				return;
+			}
+			BufferedImage normalized = normalizeAvatarImage(source);
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			ImageIO.write(normalized, "png", out);
+			String url = avatar_upload_url + "?name="
+					+ URLEncoder.encode(myId, "UTF-8") + "&ycookie="
+					+ URLEncoder.encode(ycookie, "UTF-8");
+			UrlProcessEntry entry = new UrlProcessEntry(url, 0,
+					APPLET_AVATAR_UPLOAD_REQUEST, false, "POST", "image/png",
+					out.toByteArray());
+			urlProcessQueue.add(entry);
+		}
+		catch (Exception e) {
+			new OkFrame(uiText("avatar_upload_failed", "Avatar upload failed: {0}",
+					e.toString()), processor, this);
+		}
+	}
+
+	private BufferedImage normalizeAvatarImage(BufferedImage source) {
+		BufferedImage result = new BufferedImage(AvatarSupport.AVATAR_WIDTH,
+				AvatarSupport.AVATAR_HEIGHT, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D graphics = result.createGraphics();
+		graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+				RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		double scale = Math.min(
+				(double) AvatarSupport.AVATAR_WIDTH / (double) source.getWidth(),
+				(double) AvatarSupport.AVATAR_HEIGHT / (double) source.getHeight());
+		int width = Math.max(1, (int) Math.round(source.getWidth() * scale));
+		int height = Math.max(1, (int) Math.round(source.getHeight() * scale));
+		int x = (AvatarSupport.AVATAR_WIDTH - width) / 2;
+		int y = (AvatarSupport.AVATAR_HEIGHT - height) / 2;
+		graphics.drawImage(source, x, y, width, height, null);
+		graphics.dispose();
+		return result;
 	}
 
 	protected void changeIdProperty(String s1, boolean flag) {
@@ -595,6 +704,10 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 		return "https://retroplayhub.com/ny/" + endpoint;
 	}
 
+	private String buildDefaultAvatarUrl(String endpoint) {
+		return buildDefaultCredentialUrl(endpoint);
+	}
+
 	@Override
 	protected boolean handleUrlProcessEntry(UrlProcessEntry entry) {
 		if (APPLET_LOGIN_REQUEST.equals(entry.obj)) {
@@ -609,7 +722,49 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 			processAppletChangePasswordResponse(entry);
 			return true;
 		}
+		if (APPLET_AVATAR_UPLOAD_REQUEST.equals(entry.obj)) {
+			processAvatarUploadResponse(entry);
+			return true;
+		}
 		return false;
+	}
+
+	protected void processAvatarUploadResponse(UrlProcessEntry entry) {
+		if (entry == null || entry.exception != null || entry.content == null) {
+			String message = entry != null && entry.exception != null
+					? "Avatar upload failed: " + entry.exception.toString()
+					: uiText("avatar_upload_failed", "Avatar upload failed");
+			new OkFrame(message, processor, this);
+			return;
+		}
+		String message = null;
+		int version = 0;
+		boolean ok = false;
+		StringTokenizer st = new StringTokenizer(entry.content, "\r\n");
+		while (st.hasMoreTokens()) {
+			String line = st.nextToken().trim();
+			if (line.equals("OK"))
+				ok = true;
+			else if (line.startsWith("version=")) {
+				try {
+					version = Integer.parseInt(line.substring("version=".length()));
+				}
+				catch (NumberFormatException _ex) {
+				}
+			}
+			else if (line.startsWith("message="))
+				message = line.substring("message=".length());
+		}
+		if (!ok || version <= 0) {
+			new OkFrame(message != null ? message : uiText("avatar_upload_failed",
+					"Avatar upload failed"), processor, this);
+			return;
+		}
+		customAvatarVersions.put(myId, new Integer(version));
+		customAvatarImages.remove(myId);
+		myAvatar = AvatarSupport.CUSTOM_AVATAR_INDEX;
+		changeAvatar(AvatarSupport.CUSTOM_AVATAR_INDEX);
+		notifyFlagsAvatar();
 	}
 
 	protected void processAppletLoginResponse(UrlProcessEntry entry) {
@@ -764,16 +919,22 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 			new OkFrame(message, processor, this);
 	}
 
-	void doChangeAvatar(int avatar, Id id) {
+	void doChangeAvatar(int avatar, int version, Id id) {
 		if (!closed) {
+			if (id == null)
+				return;
 			id.avatar = avatar;
+			id.avatarVersion = version;
+			if (AvatarSupport.isCustomAvatar(avatar) && version > 0)
+				customAvatarVersions.put(id.name, new Integer(version));
 			if (id.name.equals(myId)) {
 				myAvatar = avatar;
 				notifyFlagsAvatar();
 			}
 			if (!(this instanceof CustomYahooGamesApplet)
 					|| !(((CustomYahooGamesApplet) this).ratingmilestones || ((CustomYahooGamesApplet) this).isladder))
-				idList.putAvatarSquare(avatar, id.idListItem, 0);
+				idList.putAvatarSquare(avatar, id.idListItem, 0,
+						resolveAvatarImage(id.name, avatar, version));
 		}
 	}
 
@@ -1437,6 +1598,12 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 		change_password_url = getParameter("change_password_url");
 		if (change_password_url == null || change_password_url.length() == 0)
 			change_password_url = buildDefaultCredentialUrl("applet_change_password.jsp");
+		avatar_upload_url = getParameter("avatar_upload_url");
+		if (avatar_upload_url == null || avatar_upload_url.length() == 0)
+			avatar_upload_url = buildDefaultAvatarUrl("avatar_upload.jsp");
+		avatar_image_url = getParameter("avatar_image_url");
+		if (avatar_image_url == null || avatar_image_url.length() == 0)
+			avatar_image_url = buildDefaultAvatarUrl("avatar.jsp");
 		account_mode = getParameter("account_mode");
 		btnExit = new YahooButton(lookupString(0x665000f9));// Exit
 		// Games
@@ -1540,11 +1707,15 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 
 	void notifyFlagsAvatar() {
 		avatarList.Lu();
-		for (int i1 = 0; i1 < 45; i1++)
+		for (int i1 = 0; i1 < AvatarSupport.BUILTIN_AVATAR_COUNT; i1++)
 			avatarList
 					.add(new YahooImage(((YahooImageList) avatars).image[i1]));
+		avatarList.add(new YahooImage(resolveAvatarImage(myId,
+				AvatarSupport.CUSTOM_AVATAR_INDEX, getCustomAvatarVersion(myId))));
 
-		if (myAvatar < avatarList.size())
+		if (myAvatar == AvatarSupport.CUSTOM_AVATAR_INDEX)
+			avatarList.setCurrentAvatar(AvatarSupport.BUILTIN_AVATAR_COUNT);
+		else if (myAvatar < avatarList.size())
 			avatarList.setCurrentAvatar(myAvatar);
 	}
 
@@ -1630,8 +1801,10 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 			break;
 
 		case 111: // 'o': change avatar
-			byte avatar = datainputstream.readByte();
-			doChangeAvatar(avatar, getId(datainputstream));
+			int avatar = datainputstream.readByte() & 0xff;
+			Id avatarId = getId(datainputstream);
+			int avatarVersion = datainputstream.readInt();
+			doChangeAvatar(avatar, avatarVersion, avatarId);
 			break;
 
 		case 112: // 'p': change table privacy

@@ -153,6 +153,8 @@
 <param name="login_url" value="<%out.print(baseUrl);%>/applet_login.jsp">
 <param name="register_url" value="<%out.print(baseUrl);%>/applet_register.jsp">
 <param name="change_password_url" value="<%out.print(baseUrl);%>/applet_change_password.jsp">
+<param name="avatar_upload_url" value="<%out.print(baseUrl);%>/avatar_upload.jsp">
+<param name="avatar_image_url" value="<%out.print(baseUrl);%>/avatar.jsp">
 <param name="ldict_url" value="<%out.print(dictionaryUrl);%>">
 <param name="host" value="<%out.print(appletHost);%>">
 <param name="ratingmilestones" value="2100|1800|1500|1200|0">
