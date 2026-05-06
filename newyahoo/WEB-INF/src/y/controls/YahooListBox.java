@@ -133,7 +133,11 @@ public class YahooListBox extends YahooControl {
 	}
 
 	public ListItem append(Id id, String message, Color color) {
-		return insert(id, message, items.size(), color);
+		return insert(id, message, items.size(), color, null);
+	}
+
+	public ListItem append(Id id, String message, Color color, Image avatarImage) {
+		return insert(id, message, items.size(), color, avatarImage);
 	}
 
 	public void append(String text) {
@@ -227,8 +231,13 @@ public class YahooListBox extends YahooControl {
 	}
 
 	public ListItem insert(Id id, String message, int index, Color color) {
+		return insert(id, message, index, color, null);
+	}
+
+	public ListItem insert(Id id, String message, int index, Color color,
+			Image avatarImage) {
 		ListItem result = insert(id.caption + ": " + message, index, color);
-		putAvatarSquare(id.avatar, result, 0);
+		putAvatarSquare(id.avatar, result, 0, avatarImage);
 		return result;
 	}
 

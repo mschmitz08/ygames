@@ -967,7 +967,8 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 				color = Color.blue;
 			else if (id.adminFlags != 0)
 				color = Color.orange.darker();
-			lbChat.append(id, message, color);
+			lbChat.append(id, message, color,
+					resolveAvatarImage(id.name, id.avatar, id.avatarVersion));
 		}
 	}
 

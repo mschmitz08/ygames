@@ -2,7 +2,7 @@ package common.yutils;
 
 public final class AvatarSupport {
 
-	public static final int BUILTIN_AVATAR_COUNT = 45;
+	public static final int BUILTIN_AVATAR_COUNT = 95;
 	public static final int CUSTOM_AVATAR_INDEX = 127;
 	public static final int AVATAR_WIDTH = 34;
 	public static final int AVATAR_HEIGHT = 23;
