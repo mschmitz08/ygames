@@ -1509,8 +1509,7 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 		// inviations
 		chkShowLinkToYahooMessenger = new YahooCheckBox(
 				lookupString(0x66500b4c));// Show a link to my
-		// game in my Yahoo!
-		// Messenger status
+		// game in my Messenger status
 		chkShowAllStarMemberShip = new YahooCheckBox(lookupString(0x665016b9),
 				null, true);// Show All-Star
 		// membership

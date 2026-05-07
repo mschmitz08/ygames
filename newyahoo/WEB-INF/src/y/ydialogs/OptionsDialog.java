@@ -30,7 +30,7 @@ public class OptionsDialog extends YahooDialog {
 		applet = _pcls56;
 		btnDone = new YahooButton(_pcls56.lookupString(0x66500d36));// Done
 		btnCustomAvatar = new YahooButton("Upload Custom Avatar");
-		addChildObject(new YahooLabel("Yahoo! Messenger Preferences:"), 17, 0,
+		addChildObject(new YahooLabel("Messenger Preferences:"), 17, 0,
 				0, 2, 1, 0, 0);
 		addChildObject(_pcls56.chkShowLinkToYahooMessenger, 17, 0, 0, 1, 1, 0,
 				1, 0, 10, 0, 0);
