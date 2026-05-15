@@ -142,17 +142,24 @@ public class YahooConnectionId implements YahooProfileIdListener, DataOutput {
 	 */
 	@Override
 	public void actionSetAvatar(YahooProfileId sender, byte avatar) {
+		YahooRoom currentRoom = room;
+		Vector<YahooTable> currentTables = tables;
+		if (currentRoom == null || currentTables == null)
+			return;
 		String name = getName();
-		SynchronizedVector<YahooConnectionId> roomIds = room.getIds();
+		SynchronizedVector<YahooConnectionId> roomIds = currentRoom.getIds();
 		roomIds.readLock();
 		try {
 			for (YahooConnectionId id : roomIds)
-				room.changeAvatar(id, avatar, name, getCustomAvatarVersion());
+				currentRoom.changeAvatar(id, avatar, name, getCustomAvatarVersion());
 		}
 		finally {
 			roomIds.readUnlock();
 		}
-		for (YahooTable table : tables) {
+		Vector<YahooTable> tableSnapshot = (Vector<YahooTable>) currentTables.clone();
+		for (YahooTable table : tableSnapshot) {
+			if (table == null)
+				continue;
 			YahooConnectionId[] sits = table.getSits();
 			for (int i = 0; i < sits.length; i++)
 				if (sits[i] != null && sits[i].equals(this)) {
@@ -170,7 +177,9 @@ public class YahooConnectionId implements YahooProfileIdListener, DataOutput {
 	 */
 	@Override
 	public void actionSetFlags(YahooProfileId sender, long value) {
-		room.changeFlags(this, value);
+		YahooRoom currentRoom = room;
+		if (currentRoom != null)
+			currentRoom.changeFlags(this, value);
 	}
 
 	/*
@@ -182,12 +191,15 @@ public class YahooConnectionId implements YahooProfileIdListener, DataOutput {
 	 */
 	@Override
 	public void actionSetPublicFlags(YahooProfileId sender, int flags) {
+		YahooRoom currentRoom = room;
+		if (currentRoom == null)
+			return;
 		String name = getName();
-		SynchronizedVector<YahooConnectionId> roomIds = room.getIds();
+		SynchronizedVector<YahooConnectionId> roomIds = currentRoom.getIds();
 		roomIds.readLock();
 		try {
 			for (YahooConnectionId id1 : roomIds)
-				room.changePublicFlags(id1, name, flags);
+				currentRoom.changePublicFlags(id1, name, flags);
 		}
 		finally {
 			roomIds.readUnlock();
@@ -203,13 +215,16 @@ public class YahooConnectionId implements YahooProfileIdListener, DataOutput {
 	@Override
 	public void actionSetRating(YahooProfileId sender, int totalGames,
 			int rating) {
+		YahooRoom currentRoom = room;
+		if (currentRoom == null)
+			return;
 		if (totalGames >= 20) {
 			String name = getName();
-			SynchronizedVector<YahooConnectionId> roomIds = room.getIds();
+			SynchronizedVector<YahooConnectionId> roomIds = currentRoom.getIds();
 			roomIds.readLock();
 			try {
 				for (YahooConnectionId id : roomIds)
-					room.chageRating(id, name, rating);
+					currentRoom.chageRating(id, name, rating);
 			}
 			finally {
 				roomIds.readUnlock();

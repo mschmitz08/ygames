@@ -295,6 +295,8 @@ public class TableList extends YahooList {
 
 	public synchronized void notifyClose(Table _pcls118) {
 		int i = tlh_c.indexOf(_pcls118);
+		if (i < 0)
+			return;
 		tlh_c.remove(i);
 		lx();
 		Zu(_pcls118.d, _pcls118.a);
