@@ -772,7 +772,7 @@ function launch(mode) {
         <div class="content">
             <div class="panel panel-left">
                 <h2 class="section-title">Choose Your Game</h2>
-                <p class="section-copy">Pool comes up first now, but you can bounce between Pool and Checkers and keep the same polished launcher flow. Pool 2 has been retired so the launcher stays leaner and the runtime only exposes the stable games.</p>
+                <p class="section-copy">Pool comes up first now, but you can bounce between Pool and Checkers and keep the same polished launcher flow. The launcher stays lean and only exposes the stable games.</p>
                 <div class="choice-grid">
                     <label class="game-choice<%="checkers".equals(requestedGame) ? " active" : ""%>" data-game="checkers">
                         <input type="radio" name="game" value="checkers" <%="checkers".equals(requestedGame) ? "checked=\"checked\"" : ""%> onclick="syncLauncher()"/>

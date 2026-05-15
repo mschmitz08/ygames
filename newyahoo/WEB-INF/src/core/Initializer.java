@@ -313,7 +313,6 @@ public class Initializer extends HttpServlet implements YahooRoomHandler {
             checkersServer = new YahooCheckersServer(this, checkersPort, yports);
             System.out.println("YahooCheckersServer created");
 
-            System.out.println("Pool 2 runtime is retired; skipping Pool 2 server startup");
             getPublishedClientHash();
 
             System.out.println("NEWYAHOO INIT END");

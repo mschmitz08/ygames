@@ -99,59 +99,6 @@ CREATE TABLE `id_avatars` (
   PRIMARY KEY (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `pool2_admins` (
-  `name` varchar(32) NOT NULL DEFAULT '',
-  `level` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `pool2_games` (
-  `game_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `players` blob,
-  `oldratings` blob,
-  `newratings` blob,
-  `game_data` blob,
-  `flags` bigint(20) unsigned DEFAULT NULL,
-  `result` blob,
-  PRIMARY KEY (`game_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `pool2_ignoreds` (
-  `name` varchar(32) NOT NULL DEFAULT '',
-  `ban_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `ban_type` smallint(5) unsigned NOT NULL,
-  `ban_time` bigint(20) NOT NULL,
-  `reason` text NOT NULL,
-  `admin` varchar(32) NOT NULL,
-  `ip` varchar(16) NOT NULL,
-  PRIMARY KEY (`name`,`admin`,`ip`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `pool2_profiles` (
-  `name` varchar(32) NOT NULL DEFAULT '',
-  `rating` int(11) NOT NULL DEFAULT '1200',
-  `wins` int(10) unsigned NOT NULL DEFAULT '0',
-  `losses` int(10) unsigned NOT NULL DEFAULT '0',
-  `draws` int(10) unsigned NOT NULL DEFAULT '0',
-  `streak` int(11) NOT NULL DEFAULT '0',
-  `aborteds` int(10) unsigned NOT NULL DEFAULT '0',
-  `flags` bigint(20) unsigned NOT NULL,
-  `ip` varchar(16) NOT NULL,
-  PRIMARY KEY (`name`,`ip`),
-  KEY `index_2` (`ip`,`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `pool2_rooms` (
-  `name` varchar(32) NOT NULL DEFAULT '',
-  `label` text,
-  `public` tinyint(1) NOT NULL,
-  `country` varchar(2) NOT NULL,
-  `welcome_msg` text NOT NULL,
-  `id_count` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`name`,`country`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 CREATE TABLE `pool_admins` (
   `name` varchar(32) NOT NULL DEFAULT '',
   `level` int(10) unsigned NOT NULL,

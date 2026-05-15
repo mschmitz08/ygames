@@ -161,7 +161,6 @@ Make sure these tables contain usable rows:
 - `games`
 - `checkers_rooms`
 - `pool_rooms`
-- `pool2_rooms`
 
 Example:
 
@@ -169,7 +168,6 @@ Example:
 SELECT * FROM games;
 SELECT * FROM checkers_rooms;
 SELECT * FROM pool_rooms;
-SELECT * FROM pool2_rooms;
 ```
 
 To replace an existing Pool room list with the larger historical Yahoo Pool set, run:
@@ -345,14 +343,12 @@ The backend should open:
 
 - `11998` for Pool
 - `11999` for Checkers
-- `12002` for Pool2
 
 Check them:
 
 ```bat
 netstat -ano | findstr :11998
 netstat -ano | findstr :11999
-netstat -ano | findstr :12002
 ```
 
 If these ports are not listening, the applets will not connect.
@@ -463,7 +459,7 @@ The restore reached a point where all of the following worked locally:
 - frontend pages under `/ny`
 - backend socket listeners
 - Checkers room connection and table creation
-- Pool and Pool2 connection paths
+- Pool connection paths
 - local applet testing with `appletviewer`
 
 ## What Is Still Legacy
@@ -522,7 +518,6 @@ Check:
 - `games`
 - `checkers_rooms`
 - `pool_rooms`
-- `pool2_rooms`
 
 ### If `/newyahoo` Looks Broken in a Browser
 
