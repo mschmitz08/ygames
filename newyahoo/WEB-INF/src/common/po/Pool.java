@@ -530,7 +530,7 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 
 	public void handleCollBalls(IBall _pcls124, IBall _pcls124_1) {
 		if (!turnCollided) {
-			firstCollidedBall = _pcls124.isMoving() ? _pcls124_1 : _pcls124;
+			firstCollidedBall = inferFirstCueBallContact(_pcls124, _pcls124_1);
 			turnCollided = true;
 			if (handler != null)
 				handler.handleFirtsColl(firstCollidedBall);
@@ -541,6 +541,21 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 				handler.handleColl(0);
 			else
 				handler.handleColl(1);
+	}
+
+	private IBall inferFirstCueBallContact(IBall _pcls124, IBall _pcls124_1) {
+		IBall whiteBall = setup.getWhiteBall();
+		if (_pcls124.equals(whiteBall))
+			return _pcls124_1;
+		if (_pcls124_1.equals(whiteBall))
+			return _pcls124;
+		if (collBall > 0 && collBall < ball.length) {
+			IBall expectedBall = ball[collBall];
+			if (expectedBall != null
+					&& (expectedBall.equals(_pcls124) || expectedBall.equals(_pcls124_1)))
+				return expectedBall;
+		}
+		return _pcls124.isMoving() ? _pcls124_1 : _pcls124;
 	}
 
 	public void handleIterate() {
