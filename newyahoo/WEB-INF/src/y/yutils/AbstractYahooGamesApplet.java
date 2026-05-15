@@ -6,6 +6,7 @@ package y.yutils;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.Event;
 import java.awt.FileDialog;
 import java.awt.Frame;
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -1719,18 +1721,38 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 
 	public void openProfile(String name) {
 		try {
+			String encodedName = URLEncoder.encode(name, "UTF-8");
+			String encodedIntl = URLEncoder.encode(super.intl_code != null ? super.intl_code : "us", "UTF-8");
+			String profileUrl = getParameter("profile_url");
+			if (profileUrl != null && profileUrl.length() > 0) {
+				openExternalUrl(new URL(profileUrl
+						+ (profileUrl.indexOf('?') == -1 ? "?" : "&")
+						+ "name=" + encodedName + "&intl=" + encodedIntl));
+				return;
+			}
 			String profile_consolidater = getParameter("profile_consolidater");
-			getAppletContext().showDocument(
-					new URL(profile_prefix
-							+ "/profile2?name="
-							+ name
-							+ "&intl="
-							+ super.intl_code
-							+ (profile_consolidater != null ? "&consolidater="
-									+ profile_consolidater : "")), "_blank");
+			openExternalUrl(new URL(profile_prefix + "/profile2?name="
+					+ encodedName + "&intl=" + encodedIntl
+					+ (profile_consolidater != null ? "&consolidater="
+							+ URLEncoder.encode(profile_consolidater, "UTF-8")
+							: "")));
 		}
 		catch (MalformedURLException _ex) {
 		}
+		catch (UnsupportedEncodingException _ex) {
+		}
+	}
+
+	private void openExternalUrl(URL url) {
+		try {
+			if (Desktop.isDesktopSupported()) {
+				Desktop.getDesktop().browse(new URI(url.toString()));
+				return;
+			}
+		}
+		catch (Exception _ex) {
+		}
+		getAppletContext().showDocument(url, "_blank");
 	}
 
 	public void parseData(int i1, DataInputStream datainputstream)

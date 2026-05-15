@@ -160,6 +160,7 @@
 <param name="change_password_url" value="<%out.print(baseUrl);%>/applet_change_password.jsp">
 <param name="avatar_upload_url" value="<%out.print(baseUrl);%>/avatar_upload.jsp">
 <param name="avatar_image_url" value="<%out.print(baseUrl);%>/avatar.jsp">
+<param name="profile_url" value="<%out.print(baseUrl);%>/profile2.jsp?game=pool">
 <param name="path" value="/ny/servlet/YahooPoolServlet">
 <param name="update" value="1">
 <param name="intl_code" value="<%out.print(intlCode);%>">
