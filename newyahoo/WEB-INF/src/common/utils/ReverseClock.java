@@ -185,13 +185,23 @@ public class ReverseClock implements Runnable {
 					return;
 				if (remaningTime <= 0) {
 					remaningTime = 0;
-					handler.handleTimer(this);
+					try {
+						handler.handleTimer(this);
+					}
+					catch (Throwable t) {
+						t.printStackTrace();
+					}
 					if (finishing)
 						return;
 					resetTime();
 				}
 				else
-					handler.handlePause(this);
+					try {
+						handler.handlePause(this);
+					}
+					catch (Throwable t) {
+						t.printStackTrace();
+					}
 			}
 		}
 		catch (InterruptedException e) {

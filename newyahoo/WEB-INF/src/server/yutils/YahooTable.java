@@ -785,6 +785,8 @@ public abstract class YahooTable implements GameHandler {
 	public void handleStop(YData data) {
 		finishedGameCount++;
 
+		if (currGameLogEntry == null)
+			return;
 		int[] wonTurn = getWonTurn(data);
 		currGameLogEntry.setResult(wonTurn);
 
@@ -841,7 +843,7 @@ public abstract class YahooTable implements GameHandler {
 			String[] players = currGameLogEntry.getPlayers();
 			buf.writeShort(players.length);
 			for (String player : players)
-				buf.writeUTF(player);
+				buf.writeUTF(player != null ? player : "");
 			ps.setBlob(1, new SerialBlob(buf.getBytes()));
 
 			buf = new IOBuffer();
