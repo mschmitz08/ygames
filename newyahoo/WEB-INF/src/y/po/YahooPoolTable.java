@@ -57,6 +57,7 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		TimerHandler, PoolAreaHandler {
 
 	private static final int	BREAK_POWER_JITTER	= 10;
+	private static final float BREAK_ANGLE_JITTER_DEGREES = 2.5F;
 	private static final int	MAX_CUE_POWER		= 120;
 	public static final int	DEFAULT_CUE_TAP_UNITS		= 8;
 	public static final int	DEFAULT_CUE_MAX_UNITS		= 8;
@@ -1353,6 +1354,7 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 			boolean openingBreak = pool.isOpeningBreakShot(selectedBall, collBall);
 			if (openingBreak) {
 				cueDist = applyBreakPowerJitter(selectedBall, cueDist, selectedPower);
+				cueDist = applyBreakAngleJitter(selectedBall, cueDist);
 				cueDist = buildOpeningBreakCueDist(selectedBall, cueDist);
 			}
 			// System.out.println("cueDist=" + cueDist + "; englishDist="
@@ -1406,6 +1408,21 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		YIVector pullback = new YIVector((YIPoint) selectedBall, cueDist);
 		pullback.mul(PoolMath.floatToYInt((float) adjustedPower
 				/ (float) selectedPower));
+		YIPoint adjustedCueDist = ((PoolBall) selectedBall).newCopy();
+		adjustedCueDist.add(pullback);
+		return adjustedCueDist;
+	}
+
+	private YIPoint applyBreakAngleJitter(IBall selectedBall, YIPoint cueDist) {
+		YIVector pullback = new YIVector((YIPoint) selectedBall, cueDist);
+		if (pullback.abs() == 0)
+			return cueDist;
+		int maxJitter = PoolMath.mul(PoolMath.pi_180, PoolMath
+				.floatToYInt(BREAK_ANGLE_JITTER_DEGREES));
+		int jitter = BREAK_RANDOM.nextInt(maxJitter * 2 + 1) - maxJitter;
+		if (jitter == 0)
+			return cueDist;
+		pullback.rotate(jitter);
 		YIPoint adjustedCueDist = ((PoolBall) selectedBall).newCopy();
 		adjustedCueDist.add(pullback);
 		return adjustedCueDist;
