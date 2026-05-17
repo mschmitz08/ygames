@@ -177,8 +177,10 @@ public abstract class YahooRoom {
 
 		ids.readLock();
 		try {
-			for (int i = 0; i < ids.size(); i++)
-				chageRating(ids.elementAt(i), id.getName(), id.getRating());
+			String joinedName = id.getName();
+			if (joinedName != null)
+				for (int i = 0; i < ids.size(); i++)
+					chageRating(ids.elementAt(i), joinedName, id.getRating());
 		}
 		finally {
 			ids.readUnlock();
@@ -186,9 +188,12 @@ public abstract class YahooRoom {
 
 		ids.readLock();
 		try {
-			for (int i = 0; i < ids.size(); i++)
-				chageRating(id, ids.elementAt(i).getName(), ids.elementAt(i)
-						.getRating());
+			for (int i = 0; i < ids.size(); i++) {
+				YahooConnectionId roomId = ids.elementAt(i);
+				if (roomId == null)
+					continue;
+				chageRating(id, roomId.getName(), roomId.getRating());
+			}
 		}
 		finally {
 			ids.readUnlock();
@@ -338,6 +343,8 @@ public abstract class YahooRoom {
 	}
 
 	public void chageRating(YahooConnectionId id, String name, int rating) {
+		if (id == null || name == null)
+			return;
 		synchronized (id) {
 			id.write('t');
 			id.writeUTF(name);

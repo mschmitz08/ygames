@@ -93,7 +93,17 @@ public abstract class YahooServerConnection extends Thread implements
 			DataInputStream datainputstream) {
 		try {
 			DebugLog.log("YahooServerConnection.doProcess ENTER id=" + id + " state=" + (id == null ? "null" : Integer.toString(id.getState())));
+			if (id == null) {
+				DebugLog.log("YahooServerConnection.doProcess aborting null id");
+				return false;
+			}
 			YahooRoom room = id.getRoom();
+			if (room == null) {
+				DebugLog.log("YahooServerConnection.doProcess aborting null room id="
+						+ id + " state=" + id.getState());
+				id.close();
+				return false;
+			}
 			if (id.getState() != 0) {
 				byte cmd = datainputstream.readByte();
 				DebugLog.log("YahooServerConnection.doProcess existing-state cmd=" + cmd + " char=" + (char)cmd + " room=" + (room == null ? "null" : room.getYport()));

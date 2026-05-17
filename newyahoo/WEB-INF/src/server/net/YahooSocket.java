@@ -126,6 +126,8 @@ public class YahooSocket implements _cls125, YahooInputStreamHandler {
 	YahooConnectionId getYPort(int index) {
 		for (int l = 0; l < yportList.size(); l++) {
 			YahooConnectionId id = yportList.elementAt(l);
+			if (id == null || id.getRoom() == null)
+				continue;
 			if (id.getRoom().getIndex() == index)
 				return id;
 		}
@@ -139,6 +141,8 @@ public class YahooSocket implements _cls125, YahooInputStreamHandler {
 
 	public boolean isValidCommand(YahooConnectionId id, boolean flag)
 			throws IOException {
+		if (id == null)
+			return false;
 		YahooRoom room = id.getRoom();
 		if (room == null)
 			return false;
@@ -175,6 +179,11 @@ public class YahooSocket implements _cls125, YahooInputStreamHandler {
 			YahooConnectionId id = getYPort(index);
 			DebugLog.log("YahooSocket command d index=" + index + " id=" + id);
 			input.readShortLength();
+			if (id == null) {
+				DebugLog.log("YahooSocket command d ignored unknown yport index=" + index);
+				input.isExpectedPacketLength();
+				return;
+			}
 			handler.handleProcess(this, id, dataInput, false);
 			DebugLog.log("YahooSocket command d processed index=" + index);
 			if (!input.isExpectedPacketLength())
@@ -186,6 +195,11 @@ public class YahooSocket implements _cls125, YahooInputStreamHandler {
 			YahooConnectionId id = getYPort(index);
 			DebugLog.log("YahooSocket command e index=" + index + " id=" + id);
 			input.readIntLength();
+			if (id == null) {
+				DebugLog.log("YahooSocket command e ignored unknown yport index=" + index);
+				input.isExpectedPacketLength();
+				return;
+			}
 			handler.handleProcess(this, id, dataInput, true);
 			DebugLog.log("YahooSocket command e processed index=" + index);
 			if (!input.isExpectedPacketLength())
