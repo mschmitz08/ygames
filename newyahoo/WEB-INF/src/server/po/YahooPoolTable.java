@@ -22,6 +22,7 @@ import common.yutils.Game;
 
 public class YahooPoolTable extends YahooTable implements PoolHandler {
 
+	private static final long	POOL_ENGINE_TIMER_INTERVAL	= 15L;
 	public int			turnNum	= 0;
 	public Pool			pool;
 	public YIPoint		cueDist;
@@ -210,8 +211,10 @@ public class YahooPoolTable extends YahooTable implements PoolHandler {
 	private void doStrike(YahooConnectionId id, int sitIndex, int index,
 			int collBall, YIPoint cueDist, YIPoint englishDist,
 			YIPoint firstColl) throws IOException {
-		pool.doStrike(sitIndex, index, cueDist, englishDist, firstColl,
-				collBall);
+		if (!pool.doStrike(sitIndex, index, cueDist, englishDist, firstColl,
+				collBall))
+			return;
+		startPoolEngineTimer();
 
 		ids.readLock();
 		try {
@@ -371,6 +374,9 @@ public class YahooPoolTable extends YahooTable implements PoolHandler {
 		catch (IOException e) {
 			e.printStackTrace();
 		}
+		finally {
+			stopPoolEngineTimer();
+		}
 	}
 
 	@Override
@@ -506,13 +512,27 @@ public class YahooPoolTable extends YahooTable implements PoolHandler {
 	}
 
 	public void rd() {
+		stopPoolEngineTimer();
+		if (pool != null && pool.poolEngine != null
+				&& pool.poolEngine.movingExist())
+			startPoolEngineTimer();
+		// TODO verificar se não existe mais nada a implementar aqui
+	}
+
+	private void startPoolEngineTimer() {
+		if (pool == null || pool.poolEngine == null)
+			return;
+		stopPoolEngineTimer();
+		poolEngineTimer = new ReverseClock(pool.poolEngine,
+				POOL_ENGINE_TIMER_INTERVAL, true);
+		poolEngineTimer.go();
+	}
+
+	private void stopPoolEngineTimer() {
 		if (poolEngineTimer != null) {
 			poolEngineTimer.close();
 			poolEngineTimer = null;
 		}
-		poolEngineTimer = new ReverseClock(pool.poolEngine, 15, true);
-		poolEngineTimer.go();
-		// TODO verificar se não existe mais nada a implementar aqui
 	}
 
 	private void reset(YahooConnectionId id, int sitIndex) {
