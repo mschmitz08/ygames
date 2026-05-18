@@ -182,12 +182,13 @@ public final class EightBallSetup extends PoolSetup implements PoolConsts {
 						pool.Xj(pool.m_turn != 0 ? (int) c1 : l);
 				}
 				else {
-					super.turnChanged = false;
+					super.turnChanged = flag3;
 					super.b = flag;
 					if (flag3) {
 						if (whiteBall.inSlot() || pool.yj())
 							pool.Sj(pool.getBall(0), initPos[0].a, initPos[0].b);
 						pool.Wj(true);
+						return 0;
 					}
 					else {
 						pool.Wj(false);
@@ -197,6 +198,8 @@ public final class EightBallSetup extends PoolSetup implements PoolConsts {
 				flag1 = !pool.isInSlot(whiteBall)
 						|| pool.firstCollidedBall.equals(blackBall);
 			}
+		if (flag3 && !flag2)
+			flag1 = true;
 		super.turnChanged = flag1;
 		super.b = flag;
 		if (flag2)

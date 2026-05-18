@@ -106,6 +106,8 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 
 	private int							collBall;
 
+	private IBall						aimedFirstCollidedBall;
+
 	public Pool() {
 		super();
 		training = false;
@@ -249,6 +251,7 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 			turnPocketed = null;
 		}
 		firstCollidedBall = null;
+		aimedFirstCollidedBall = null;
 	}
 
 	@Override
@@ -416,6 +419,7 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 		englishDist = _englishDist;
 		firstColl = _firstColl;
 		collBall = _collBall;
+		aimedFirstCollidedBall = getAimedFirstCollidedBall();
 		firstStrike = isFirstStrike();
 		synchronized (poolEngine) {
 			m_currentState = 1;
@@ -549,6 +553,8 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 			return _pcls124_1;
 		if (_pcls124_1.equals(whiteBall))
 			return _pcls124;
+		if (aimedFirstCollidedBall != null)
+			return aimedFirstCollidedBall;
 		if (collBall > 0 && collBall < ball.length) {
 			IBall expectedBall = ball[collBall];
 			if (expectedBall != null
@@ -556,6 +562,17 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 				return expectedBall;
 		}
 		return _pcls124.isMoving() ? _pcls124_1 : _pcls124;
+	}
+
+	private IBall getAimedFirstCollidedBall() {
+		if (firstColl == null || firstColl.a == 0)
+			return null;
+		if (collBall <= 0 || collBall >= ball.length)
+			return null;
+		IBall expectedBall = ball[collBall];
+		if (expectedBall == null || expectedBall.inSlot())
+			return null;
+		return expectedBall;
 	}
 
 	public void handleIterate() {
@@ -684,6 +701,7 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 		type1 = 0;
 		turnPocketed.clear();
 		firstCollidedBall = null;
+		aimedFirstCollidedBall = null;
 		turnCollided = false;
 		pocketed = false;
 		sideCollided = false;
