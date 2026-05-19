@@ -46,6 +46,18 @@ public class PoolControlContainer extends TableControlContainer {
 				table.table_side_tabcolor_bg, table.table_side_tabcolor_fg);
 		container.addChildObject(cuePannel, 10, 1, 2, 1, 1, 0, ++counter[0], 1,
 				0, 1, 0);
+		if (poolTable.isTestRoom()) {
+			YahooControl testShotControl = new YahooControl();
+			testShotControl.addChildObject(poolTable.txtTestShot, 10, 2, 0, 1,
+					1, 0, 0, 1, 0, 1, 0);
+			testShotControl.addChildObject(poolTable.btnTestShot, 10, 2, 0, 1,
+					1, 0, 1, 1, 0, 1, 0);
+			YahooPannel testShotPannel = new YahooPannel("test shot",
+					testShotControl, table.table_side_tabcolor_bg,
+					table.table_side_tabcolor_fg);
+			container.addChildObject(testShotPannel, 10, 1, 2, 1, 1, 0,
+					++counter[0], 1, 0, 1, 0);
+		}
 		poolTable.customTableColorPanel = poolTable.tableColorEditor;
 		poolTable.tableColorEditor.visible = false;
 		container.addChildObject(poolTable.tableColorEditor, 0, 0, true);
@@ -65,6 +77,9 @@ public class PoolControlContainer extends TableControlContainer {
 		else if (event.target == poolTable.btnCueControls)
 			poolTable.setCueControlPanelVisible(!poolTable
 					.isCueControlPanelVisible());
+		else if (event.target == poolTable.btnTestShot
+				|| event.target == poolTable.txtTestShot)
+			poolTable.testShot(poolTable.txtTestShot.getText());
 		else if (event.target == table.chkSound)
 			table.getApplet().Kg(table.chkSound.isChecked());
 		else

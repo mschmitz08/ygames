@@ -24,6 +24,7 @@ INSERT INTO `pool_rooms` (`name`, `label`, `public`, `country`, `welcome_msg`, `
 ('a_face_in_the_crowd', 'A Face In The Crowd', 1, 'us', 'Welcome to room A Face In The Crowd', 50),
 ('achilles_last_stand', 'Achilles Last Stand', 1, 'us', 'Welcome to room Achilles Last Stand', 50),
 ('advanced_lounge', 'Advanced Lounge', 1, 'us', 'Welcome to room Advanced Lounge', 50),
+('test', 'Test', 0, 'us', 'Welcome to room Test', 50),
 ('advanced_lounge_2', 'Advanced Lounge 2', 1, 'us', 'Welcome to room Advanced Lounge 2', 50),
 ('advanced_lounge_3', 'Advanced Lounge 3', 1, 'us', 'Welcome to room Advanced Lounge 3', 50),
 ('afraid_to_lose', 'Afraid To Lose', 1, 'us', 'Welcome to room Afraid To Lose', 50),

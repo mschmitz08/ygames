@@ -5,9 +5,12 @@
 package y.po;
 
 import java.awt.Color;
+import java.awt.Event;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.Hashtable;
 import java.util.Random;
+import java.util.StringTokenizer;
 import java.util.Vector;
 
 import y.controls.YahooComponent;
@@ -15,6 +18,8 @@ import y.controls.YahooButton;
 import y.controls.YahooComboBox;
 import y.controls.YahooControl;
 import y.controls.YahooLabel;
+import y.controls.YahooTextBox;
+import y.dialogs.YahooDialog;
 import y.utils.Formater;
 import y.utils.TimerEngine;
 import y.utils.TimerEntry;
@@ -40,6 +45,7 @@ import common.po.YIVector;
 import common.po.YRectangle;
 import common.po.YVector;
 import common.utils.ByteArrayData;
+import common.yutils.GameHandler;
 
 // Referenced classes of package y.po:
 // _cls99, _cls145, _cls86, _cls50,
@@ -59,6 +65,9 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 	private static final int	BREAK_POWER_JITTER	= 10;
 	private static final float BREAK_ANGLE_JITTER_DEGREES = 2.5F;
 	private static final int	MAX_CUE_POWER		= 120;
+	private static final int	TEST_SHOT_BATCH_SIZE	= 50000;
+	private static final int	TEST_SHOT_MAX_TICKS	= 900;
+	private static final int	TEST_SHOT_BLACK_BALL_INDEX	= 6;
 	public static final int	DEFAULT_CUE_TAP_UNITS		= 8;
 	public static final int	DEFAULT_CUE_MAX_UNITS		= 8;
 	public static final int	DEFAULT_CUE_ACCEL_DELAY_MS	= 500;
@@ -150,6 +159,8 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 	YahooComboBox	cmbGhostStyle;
 	YahooComboBox	cmbTableColor;
 	YahooButton		btnCueControls;
+	YahooTextBox	txtTestShot;
+	YahooButton		btnTestShot;
 	YahooComponent	customTableColorPanel;
 	YahooComponent	cueControlPanel;
 	TableColorEditor	tableColorEditor;
@@ -1272,6 +1283,8 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		tableColorEditor = new TableColorEditor(this);
 		btnCueControls = new YahooButton("Adjust");
 		cueControlEditor = new CueControlEditor(this);
+		txtTestShot = new YahooTextBox(getTimerHandler(), "solid,stripe", 72);
+		btnTestShot = new YahooButton("Find");
 		loadingPreferences = true;
 		loadTableColorPreference();
 		loadCueControlPreferences();
@@ -1441,6 +1454,550 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		pool.poolEngine.active = true;
 	}
 
+	public void testShot(String spec) {
+		if (!isTestRoom()) {
+			Fd("Test shot finder is only available in the test room.");
+			return;
+		}
+		if (isTestShotHelpSpec(spec)) {
+			showTestShotHelp();
+			return;
+		}
+		if (!isMyTurn() || !pool.isRunning() || pool.getCurrentState() != 0) {
+			Fd("Test shot finder only runs on your active turn.");
+			return;
+		}
+		TestShotTarget target = parseTestShotSpec(spec);
+		if (target == null) {
+			Fd("Use balls or fouls, e.g. solid,stripe,cue or wrongfirst.");
+			return;
+		}
+		TestShotResult result = findTestShot(target);
+		if (result == null) {
+			Fd("No exact test shot found in " + TEST_SHOT_BATCH_SIZE + " tries.");
+			return;
+		}
+		Fd("Test shot found after " + result.attempts + " tries.");
+		strike(result.cueBallIndex, result.cueDist, result.englishDist,
+				result.firstColl, result.collBall);
+	}
+
+	public boolean isTestRoom() {
+		return getApplet() != null && getApplet().room != null
+				&& getApplet().room.equalsIgnoreCase("test");
+	}
+
+	private boolean isTestShotHelpSpec(String spec) {
+		if (spec == null)
+			return false;
+		String token = spec.toLowerCase().trim();
+		if (token.indexOf("help") != -1 || token.indexOf("?") != -1)
+			return true;
+		return token.equals("help") || token.equals("?")
+				|| token.equals("cheat") || token.equals("cheatsheet")
+				|| token.equals("cheat sheet") || token.equals("syntax");
+	}
+
+	private void showTestShotHelp() {
+		logMessage("*** Test shot help (local only)", Color.blue);
+		for (int i = 0; i < TestShotHelpDialog.HELP_LINES.length; i++)
+			logMessage("*** " + TestShotHelpDialog.HELP_LINES[i], Color.blue);
+		Fd("Test shot help was written to your local chat log.");
+	}
+
+	private TestShotResult findTestShot(TestShotTarget target) {
+		IBall selectedBall = poolArea.cueSprite.getSelectedBall();
+		if (selectedBall == null || selectedBall.inSlot())
+			selectedBall = pool.getSetup().getWhiteBall();
+		if (selectedBall == null || selectedBall.inSlot())
+			return null;
+		int cueBallIndex = selectedBall.getIndex();
+		for (int attempt = 1; attempt <= TEST_SHOT_BATCH_SIZE; attempt++) {
+			double angle = BREAK_RANDOM.nextDouble() * Math.PI * 2D;
+			YIPoint cueDist = buildTestCueDist(selectedBall, angle);
+			YIPoint englishDist = new YIPoint(0.0F, 0.0F);
+			CollisionHint hint = calculateCollisionHint(pool, cueBallIndex,
+					cueDist);
+			Pool simPool = createSimulationPool();
+			if (simPool == null)
+				return null;
+			if (!simPool.doStrike(simPool.m_turn, cueBallIndex, cueDist,
+					englishDist, hint.firstColl, hint.collBall))
+				continue;
+			runSimulation(simPool);
+			if (matchesPocketedSet(simPool, target)) {
+				TestShotResult result = new TestShotResult();
+				result.attempts = attempt;
+				result.cueBallIndex = cueBallIndex;
+				result.cueDist = cueDist;
+				result.englishDist = englishDist;
+				result.firstColl = hint.firstColl;
+				result.collBall = hint.collBall;
+				return result;
+			}
+		}
+		return null;
+	}
+
+	private YIPoint buildTestCueDist(IBall selectedBall, double angle) {
+		float cueX = selectedBall.getYIntX();
+		float cueY = selectedBall.getYIntY();
+		float pullX = (float) Math.cos(angle) * MAX_CUE_POWER;
+		float pullY = (float) Math.sin(angle) * MAX_CUE_POWER;
+		return new YIPoint(cueX - pullX, cueY - pullY);
+	}
+
+	private CollisionHint calculateCollisionHint(Pool sourcePool,
+			int cueBallIndex, YIPoint cueDist) {
+		CollisionHint hint = new CollisionHint();
+		hint.firstColl = new YIPoint(0, 0);
+		hint.collBall = -1;
+		IBall cueBallSource = sourcePool.getBall(cueBallIndex);
+		PoolBall cueBall = (PoolBall) ((PoolBall) cueBallSource).Copy();
+		YIVector velocity = new YIVector(cueBallSource.getX() - cueDist.a,
+				cueBallSource.getY() - cueDist.b);
+		if (velocity.abs() == 0)
+			return hint;
+		velocity.versor();
+		velocity.mul(PoolMath.intToYInt(20));
+		cueBall.vel.setFrom(velocity);
+		cueBall.sliding = true;
+		cueBall.wX.set(0, 0);
+		cueBall.uncolide();
+		YRectangle playAreaBalls = (YRectangle) sourcePool
+				.getProperty("PLAY_AREA_BALLS");
+		Vector<IBall> balls = sourcePool.getBallInPlayArea();
+		for (int tick = 0; tick < 600
+				&& playAreaBalls.containsPoint(cueBall.a, cueBall.b); cueBall
+				.nextPosition(), tick++) {
+			int bestTime = PoolMath.n_1;
+			IBall bestBall = null;
+			for (int i = 0; i < balls.size(); i++) {
+				IBall current = balls.elementAt(i);
+				if (current == null || current.getIndex() == cueBallIndex
+						|| current.inSlot())
+					continue;
+				int timeToBall = cueBall.timeToBall(current);
+				if (timeToBall < bestTime && timeToBall > 0) {
+					bestTime = timeToBall;
+					bestBall = current;
+				}
+			}
+			if (bestBall != null) {
+				hint.firstColl.setCoords(cueBall.a, cueBall.b);
+				YIVector step = cueBall.vel.je();
+				step.mul(bestTime);
+				hint.firstColl.add(step);
+				if (playAreaBalls.containsPoint(hint.firstColl.a,
+						hint.firstColl.b))
+					hint.collBall = resolveCollisionHint(cueBallIndex,
+							hint.firstColl, bestBall.getIndex());
+				return hint;
+			}
+			cueBall.add(cueBall.vel);
+		}
+		return hint;
+	}
+
+	private Pool createSimulationPool() {
+		Pool simPool = new Pool();
+		SilentPoolHandler handler = new SilentPoolHandler();
+		Hashtable<String, String> params = new Hashtable<String, String>();
+		if (pool.training)
+			params.put("training", "1");
+		if (pool.getSetup() instanceof NineBallSetup)
+			params.put("nineBallGame", "1");
+		simPool.initializeProperties(params, handler);
+		handler.setPool(simPool);
+		simPool.assign(pool);
+		return simPool;
+	}
+
+	private void runSimulation(Pool simPool) {
+		for (int tick = 0; tick < TEST_SHOT_MAX_TICKS
+				&& simPool.poolEngine.movingExist(); tick++)
+			simPool.poolEngine.handleTimer(0L);
+	}
+
+	private boolean matchesPocketedSet(Pool simPool, TestShotTarget target) {
+		if (!matchesFoulTarget(simPool, target))
+			return false;
+		if (!matchesEightPocketTarget(simPool, target))
+			return false;
+		if (!target.hasPocketTarget())
+			return true;
+		boolean[] seen = new boolean[target.exact.length];
+		int solidCount = 0;
+		int stripeCount = 0;
+		for (int i = 0; i < simPool.turnPocketed.size(); i++) {
+			IBall pocketed = simPool.turnPocketed.elementAt(i);
+			int index = pocketed.getIndex();
+			if (index < 0 || index >= target.exact.length)
+				return false;
+			if (target.exact[index]) {
+				seen[index] = true;
+				continue;
+			}
+			if (pocketed.getType() == 1024 && solidCount < target.solidCount) {
+				solidCount++;
+				continue;
+			}
+			if (pocketed.getType() == 2048 && stripeCount < target.stripeCount) {
+				stripeCount++;
+				continue;
+			}
+			return false;
+		}
+		for (int i = 0; i < target.exact.length; i++)
+			if (target.exact[i] && !seen[i])
+				return false;
+		return solidCount == target.solidCount
+				&& stripeCount == target.stripeCount;
+	}
+
+	private boolean matchesEightPocketTarget(Pool simPool,
+			TestShotTarget target) {
+		if (!target.eightCorrectPocket && !target.eightWrongPocket)
+			return true;
+		if (pool.selectedSlotIndex == -1)
+			return false;
+		IBall blackBall = simPool.getBall(TEST_SHOT_BLACK_BALL_INDEX);
+		if (blackBall == null || !simPool.turnPocketed.contains(blackBall)
+				|| !blackBall.inSlot())
+			return false;
+		boolean correctPocket = blackBall.getSlot() == pool.selectedSlotIndex;
+		if (target.eightCorrectPocket && !correctPocket)
+			return false;
+		if (target.eightWrongPocket && correctPocket)
+			return false;
+		return true;
+	}
+
+	private boolean matchesFoulTarget(Pool simPool, TestShotTarget target) {
+		boolean scratch = simPool.getSetup().whiteBallPocketed();
+		boolean noHit = !simPool.turnCollided;
+		boolean foul = simPool.getSetup().isFaul() || scratch;
+		boolean wrongFirst = false;
+		boolean opponentFirst = false;
+		boolean eightFirst = false;
+		if (simPool.turnCollided && simPool.firstCollidedBall != null) {
+			int currentType = simPool.m_turn != 0 ? simPool.type1
+					: simPool.type0;
+			int hitType = simPool.firstCollidedBall.getType();
+			eightFirst = hitType == 0 && simPool.firstCollidedBall.getIndex() != 0;
+			if (currentType != 0 && hitType != currentType) {
+				wrongFirst = true;
+				opponentFirst = hitType != 0;
+			}
+		}
+		if (target.ballInHand && !foul)
+			return false;
+		if (target.legal && foul)
+			return false;
+		if (target.scratch && !scratch)
+			return false;
+		if (target.noHit && !noHit)
+			return false;
+		if (target.wrongFirst && !wrongFirst)
+			return false;
+		if (target.opponentFirst && !opponentFirst)
+			return false;
+		if (target.eightFirst && !eightFirst)
+			return false;
+		return true;
+	}
+
+	private TestShotTarget parseTestShotSpec(String spec) {
+		if (spec == null)
+			return null;
+		TestShotTarget target = new TestShotTarget(pool.getBall().length);
+		String normalized = spec.toLowerCase();
+		normalized = normalized.replace(';', ',');
+		normalized = normalized.replace('+', ',');
+		normalized = normalized.replaceAll("\\band\\b", ",");
+		StringTokenizer tokenizer = new StringTokenizer(normalized, ",");
+		boolean any = false;
+		while (tokenizer.hasMoreTokens()) {
+			String token = tokenizer.nextToken().trim();
+			if (token.length() == 0)
+				continue;
+			if (parseFoulToken(target, token)) {
+				any = true;
+				continue;
+			}
+			if (parseEightPocketToken(target, token)) {
+				any = true;
+				continue;
+			}
+			if (token.equals("solid") || token.equals("solids")) {
+				target.solidCount++;
+				any = true;
+				continue;
+			}
+			if (token.equals("stripe") || token.equals("stripes")
+					|| token.equals("strip")) {
+				target.stripeCount++;
+				any = true;
+				continue;
+			}
+			if (token.equals("own") || token.equals("mine")
+					|| token.equals("my") || token.equals("myball")
+					|| token.equals("my ball")) {
+				if (!addCurrentTurnTypeTarget(target, true))
+					return null;
+				any = true;
+				continue;
+			}
+			if (token.equals("opponent") || token.equals("opponentball")
+					|| token.equals("opponent ball") || token.equals("theirs")
+					|| token.equals("their") || token.equals("theirball")
+					|| token.equals("their ball")) {
+				if (!addCurrentTurnTypeTarget(target, false))
+					return null;
+				any = true;
+				continue;
+			}
+			int index = parseExactTestShotToken(token);
+			if (index < 0 || index >= target.exact.length
+					|| pool.getBall(index).inSlot())
+				return null;
+			target.exact[index] = true;
+			any = true;
+		}
+		return any ? target : null;
+	}
+
+	private boolean addCurrentTurnTypeTarget(TestShotTarget target,
+			boolean ownType) {
+		int currentType = pool.m_turn != 0 ? pool.type1 : pool.type0;
+		if (currentType == 0)
+			return false;
+		int type = ownType ? currentType : currentType == 1024 ? 2048 : 1024;
+		if (type == 1024)
+			target.solidCount++;
+		else if (type == 2048)
+			target.stripeCount++;
+		else
+			return false;
+		return true;
+	}
+
+	private int parseExactTestShotToken(String token) {
+		if (token.equals("0") || token.indexOf("cue") != -1
+				|| token.indexOf("queue") != -1
+				|| token.indexOf("white") != -1)
+			return 0;
+		for (int i = 0; i < token.length(); i++) {
+			if (!Character.isDigit(token.charAt(i)))
+				continue;
+			int j = i + 1;
+			while (j < token.length() && Character.isDigit(token.charAt(j)))
+				j++;
+			try {
+				return Integer.parseInt(token.substring(i, j));
+			}
+			catch (NumberFormatException _ex) {
+				return -1;
+			}
+		}
+		int colorIndex = parseColorBall(token);
+		if (colorIndex != -1)
+			return colorIndex;
+		return -1;
+	}
+
+	private boolean parseFoulToken(TestShotTarget target, String token) {
+		if (token.equals("foul") || token.equals("illegal")
+				|| token.equals("ball in hand") || token.equals("ballinhand")
+				|| token.equals("bih")) {
+			target.ballInHand = true;
+			return true;
+		}
+		if (token.equals("legal") || token.equals("clean")) {
+			target.legal = true;
+			return true;
+		}
+		if (token.equals("scratch")) {
+			target.scratch = true;
+			return true;
+		}
+		if (token.equals("nohit") || token.equals("no hit")
+				|| token.equals("miss") || token.equals("whiff")) {
+			target.noHit = true;
+			target.ballInHand = true;
+			return true;
+		}
+		if (token.equals("wrongfirst") || token.equals("wrong first")
+				|| token.equals("wrongball") || token.equals("wrong ball")) {
+			target.wrongFirst = true;
+			target.ballInHand = true;
+			return true;
+		}
+		if (token.equals("opponentfirst") || token.equals("opponent first")
+				|| token.equals("opponentball")
+				|| token.equals("opponent ball")) {
+			target.opponentFirst = true;
+			target.ballInHand = true;
+			return true;
+		}
+		if (token.equals("eightfirst") || token.equals("8first")
+				|| token.equals("8 first") || token.equals("blackfirst")
+				|| token.equals("black first")) {
+			target.eightFirst = true;
+			target.ballInHand = true;
+			return true;
+		}
+		return false;
+	}
+
+	private boolean parseEightPocketToken(TestShotTarget target, String token) {
+		boolean eight = token.indexOf("eight") != -1
+				|| token.indexOf("8") != -1 || token.indexOf("black") != -1;
+		if (!eight)
+			return false;
+		if (token.indexOf("correct") != -1 || token.indexOf("right") != -1
+				|| token.indexOf("called") != -1 || token.indexOf("call") != -1
+				|| token.indexOf("win") != -1) {
+			target.eightCorrectPocket = true;
+			target.exact[TEST_SHOT_BLACK_BALL_INDEX] = true;
+			return true;
+		}
+		if (token.indexOf("wrong") != -1 || token.indexOf("incorrect") != -1
+				|| token.indexOf("bad") != -1) {
+			target.eightWrongPocket = true;
+			target.exact[TEST_SHOT_BLACK_BALL_INDEX] = true;
+			return true;
+		}
+		return false;
+	}
+
+	private int parseColorBall(String token) {
+		boolean stripe = token.indexOf("stripe") != -1;
+		boolean solid = token.indexOf("solid") != -1;
+		if (token.indexOf("yellow") != -1)
+			return stripe ? 9 : 1;
+		if (token.indexOf("blue") != -1)
+			return stripe ? 10 : 3;
+		if (token.indexOf("red") != -1)
+			return stripe ? 4 : 11;
+		if (token.indexOf("purple") != -1)
+			return stripe ? 12 : 13;
+		if (token.indexOf("orange") != -1)
+			return stripe ? 2 : 7;
+		if (token.indexOf("green") != -1)
+			return stripe ? 15 : 5;
+		if (token.indexOf("maroon") != -1 || token.indexOf("brown") != -1)
+			return stripe ? 14 : 8;
+		if (token.indexOf("black") != -1)
+			return solid ? -1 : 6;
+		return -1;
+	}
+
+	private static final class CollisionHint {
+		YIPoint	firstColl;
+		int		collBall;
+	}
+
+	private static final class TestShotTarget {
+		boolean[]	exact;
+		int			solidCount;
+		int			stripeCount;
+		boolean		ballInHand;
+		boolean		legal;
+		boolean		scratch;
+		boolean		noHit;
+		boolean		wrongFirst;
+		boolean		opponentFirst;
+		boolean		eightFirst;
+		boolean		eightCorrectPocket;
+		boolean		eightWrongPocket;
+
+		TestShotTarget(int ballCount) {
+			exact = new boolean[ballCount];
+		}
+
+		boolean hasPocketTarget() {
+			if (solidCount != 0 || stripeCount != 0)
+				return true;
+			for (int i = 0; i < exact.length; i++)
+				if (exact[i])
+					return true;
+			return false;
+		}
+	}
+
+	private static final class TestShotResult {
+		int		attempts;
+		int		cueBallIndex;
+		YIPoint	cueDist;
+		YIPoint	englishDist;
+		YIPoint	firstColl;
+		int		collBall;
+	}
+
+	private static final class TestShotHelpDialog extends YahooDialog {
+
+		private static final String[] HELP_LINES = {
+				"Use commas to combine targets, for example: solid,stripe,cue",
+				"Pocket targets",
+				"solid, solids - pockets one non-8 solid of any color.",
+				"stripe, stripes, strip - pockets one stripe of any color.",
+				"cue, queue, white, 0 - pockets the cue ball.",
+				"black - pockets the 8 ball.",
+				"1..15 - pockets that exact internal ball number.",
+				"Color targets",
+				"yellow / solid yellow = 1; stripe yellow = 9.",
+				"blue / solid blue = 3; stripe blue = 10.",
+				"red / solid red = 11; stripe red = 4.",
+				"purple / solid purple = 13; stripe purple = 12.",
+				"orange / solid orange = 7; stripe orange = 2.",
+				"green / solid green = 5; stripe green = 15.",
+				"brown, maroon = 8; stripe brown, stripe maroon = 14.",
+				"Group shortcuts",
+				"own, mine, my, myball, my ball - pockets one of the shooter's group balls.",
+				"opponent, theirs, their, theirball, their ball - pockets one opponent group ball.",
+				"Legality filters",
+				"legal, clean - requires the shot to avoid ball-in-hand fouls.",
+				"foul, illegal, ball in hand, ballinhand, bih - finds any ball-in-hand foul.",
+				"Foul filters",
+				"scratch - requires the cue ball to be pocketed.",
+				"nohit, no hit, miss, whiff - requires no object ball contact.",
+				"wrongfirst, wrong first, wrongball, wrong ball - first legal-contact test fails.",
+				"opponentfirst, opponent first - first contact is the opponent's group.",
+				"eightfirst, 8first, 8 first, blackfirst, black first - 8 ball is hit first too early.",
+				"8-ball called-pocket filters",
+				"eight correct pocket, 8 called pocket, black right pocket - pockets the 8 in the called pocket.",
+				"eight wrong pocket, 8 incorrect pocket, black bad pocket - pockets the 8 outside the called pocket.",
+				"Examples",
+				"solid,stripe,cue - pockets one solid, one stripe, and the cue ball only.",
+				"legal,orange - pockets orange and requires a legal shot.",
+				"legal,eight correct pocket - pockets the 8 in the called pocket without a ball-in-hand foul.",
+				"eight wrong pocket - pockets the 8 in a pocket other than the called pocket.",
+				"scratch,solid,stripe - pockets solid and stripe, and scratches.",
+				"wrongfirst,own - pockets one own ball after an illegal first hit.",
+				"eightfirst,cue - hits the 8 first too early and scratches." };
+
+		YahooButton	btnOk;
+
+		TestShotHelpDialog(YahooControl container) {
+			super(container, "Test Shot Help");
+			for (int i = 0; i < HELP_LINES.length; i++)
+				addChildObject(new YahooLabel(HELP_LINES[i], YahooLabel.yl_b,
+						690), 10, 2, 2, 1, 1, 0, i);
+			btnOk = new YahooButton("OK");
+			addChildObject(btnOk, 10, 2, 2, 1, 1, 0, HELP_LINES.length);
+		}
+
+		@Override
+		public boolean eventActionEvent(Event event, Object obj) {
+			if (event.target == btnOk) {
+				close();
+				return true;
+			}
+			return super.eventActionEvent(event, obj);
+		}
+	}
+
 	public void td() {
 		poolArea.xc();
 	}
@@ -1494,6 +2051,130 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 			else {
 				handleStartTick(180000);
 			}
+		}
+	}
+
+	private static final class SilentPoolHandler implements PoolHandler {
+		private Pool pool;
+
+		void setPool(Pool pool) {
+			this.pool = pool;
+		}
+
+		public void Ad() {
+		}
+
+		public void Bd(int i) {
+		}
+
+		public Vector<IBall> getBallInPlayArea() {
+			return pool.getBallInPlayArea();
+		}
+
+		public YRectangle getBounceArea() {
+			return (YRectangle) pool.getProperty("OUT_OF_BOUNCE_AREA");
+		}
+
+		public YIPoint getCenterPoint() {
+			return (YIPoint) pool.getProperty("CENTER_POINT");
+		}
+
+		public YRectangle getInArea() {
+			return (YRectangle) pool.getProperty("IN_AREA");
+		}
+
+		public int getLinearFriction() {
+			return pool.getIntProperty("linearFriction");
+		}
+
+		public YRectangle getPlayArea() {
+			return (YRectangle) pool.getProperty("PLAY_AREA");
+		}
+
+		public YRectangle getPocketArea() {
+			return (YRectangle) pool.getProperty("OUT_OF_POCKET_AREA");
+		}
+
+		public int getRotationFriction() {
+			return pool.getIntProperty("rotationFriction");
+		}
+
+		public int getSideRotationFriction() {
+			return pool.getIntProperty("sideRotationFriction");
+		}
+
+		public void handleColl(int i) {
+		}
+
+		public void handleFirtsColl(IBall ball) {
+		}
+
+		public void handleIterate() {
+		}
+
+		public void handleSetPos(int i, int j, int k, int l,
+				YIVector vector, Vel vel) {
+		}
+
+		public void handleShiftFromIntersect() {
+		}
+
+		public void handleStart() {
+		}
+
+		public void handleStartTick(int time) {
+		}
+
+		public void handleStop(YData data) {
+		}
+
+		public void handleStopMoving() {
+		}
+
+		public void handleStopTick() {
+		}
+
+		public void handleUpdateCue(int i) {
+		}
+
+		public void handleUpdateEnglish(int i) {
+		}
+
+		public void handleUpdateStatus(boolean flag) {
+		}
+
+		public void kd(int i) {
+		}
+
+		public void logState(String s) {
+		}
+
+		public void nd(YData data) {
+		}
+
+		public void qd(IBall ball) {
+		}
+
+		public void rd() {
+		}
+
+		public void Sc() {
+		}
+
+		public void selectSlot(int i) {
+		}
+
+		public void td() {
+		}
+
+		public String Xc(int i) {
+			return null;
+		}
+
+		public void xd(int i) {
+		}
+
+		public void zd(int i, boolean flag) {
 		}
 	}
 
