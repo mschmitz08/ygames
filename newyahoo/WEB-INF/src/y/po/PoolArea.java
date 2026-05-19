@@ -272,6 +272,16 @@ public class PoolArea extends YahooControl {
 		BallSprite _lcls31 = ballSprite[index];
 		switch (cmd) {
 		case 1: // '\001'
+			if (_lcls31.poolBall.inSlot()) {
+				if (isPocketTrayPosition(y)) {
+					_lcls31.fe(x, y, wX, h);
+					_lcls31.setInSlot(true);
+					_lcls31.setActive(true);
+				}
+				else
+					_lcls31.Td(x, y);
+				break;
+			}
 			_lcls31.setActive(true);
 			_lcls31.fe(x, y, wX, h);
 			break;
@@ -284,7 +294,27 @@ public class PoolArea extends YahooControl {
 			_lcls31.Td(x, y);
 			handler.handleColl(4);
 			break;
+
+		case 3: // '\003'
+			if (_lcls31.poolBall.inSlot()) {
+				if (isPocketTrayPosition(y)) {
+					_lcls31.fe(x, y, wX, h);
+					_lcls31.setInSlot(true);
+					_lcls31.setActive(true);
+				}
+				else
+					_lcls31.Td(x, y);
+			}
+			else {
+				_lcls31.setActive(true);
+				_lcls31.fe(x, y, wX, h);
+			}
+			break;
 		}
+	}
+
+	private boolean isPocketTrayPosition(int y) {
+		return y >= PoolMath.intToYInt(300);
 	}
 
 	public void gc() {
