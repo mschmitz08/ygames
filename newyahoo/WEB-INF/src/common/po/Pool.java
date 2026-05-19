@@ -553,6 +553,10 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 			return _pcls124_1;
 		if (_pcls124_1.equals(whiteBall))
 			return _pcls124;
+		if (isEightBall(_pcls124))
+			return _pcls124;
+		if (isEightBall(_pcls124_1))
+			return _pcls124_1;
 		if (aimedFirstCollidedBall != null)
 			return aimedFirstCollidedBall;
 		if (collBall > 0 && collBall < ball.length) {
@@ -562,6 +566,11 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 				return expectedBall;
 		}
 		return _pcls124.isMoving() ? _pcls124_1 : _pcls124;
+	}
+
+	private boolean isEightBall(IBall _pcls124) {
+		return setup instanceof EightBallSetup && _pcls124 != null
+				&& _pcls124.getIndex() != 0 && _pcls124.getType() == 0;
 	}
 
 	private IBall getAimedFirstCollidedBall() {

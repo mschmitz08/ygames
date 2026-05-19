@@ -232,7 +232,7 @@ public final class EightBallSetup extends PoolSetup implements PoolConsts {
 			return true;
 		int i = pool.m_turn != 0 ? pool.type1 : pool.type0;
 		if (pool.firstCollidedBall.equals(blackBall))
-			return typePocketed(i);
+			return i == 0 || typePocketed(i) || typePocketedThisShot(i);
 		if (i == 0 || pool.x)
 			return false;
 		return pool.firstCollidedBall.getType() != i;
@@ -258,6 +258,16 @@ public final class EightBallSetup extends PoolSetup implements PoolConsts {
 		for (int j = 0; j < a_lcls124.length; j++)
 			if (!a_lcls124[j].inSlot() && a_lcls124[j].getType() == type)
 				return true;
+
+		return false;
+	}
+
+	private boolean typePocketedThisShot(int type) {
+		for (int j = 0; j < pool.turnPocketed.size(); j++) {
+			IBall _lcls124 = pool.turnPocketed.elementAt(j);
+			if (_lcls124.getType() == type)
+				return true;
+		}
 
 		return false;
 	}

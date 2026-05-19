@@ -66,8 +66,11 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 	private static final float BREAK_ANGLE_JITTER_DEGREES = 2.5F;
 	private static final int	MAX_CUE_POWER		= 120;
 	private static final int	TEST_SHOT_BATCH_SIZE	= 50000;
+	private static final int	TEST_SHOT_ATTEMPTS_PER_TICK	= 50;
+	private static final int	TEST_SHOT_PROGRESS_INTERVAL	= 500;
 	private static final int	TEST_SHOT_MAX_TICKS	= 900;
 	private static final int	TEST_SHOT_BLACK_BALL_INDEX	= 6;
+	private static final long DEFERRED_TURN_STAT_TIMEOUT_MS = 8000L;
 	public static final int	DEFAULT_CUE_TAP_UNITS		= 8;
 	public static final int	DEFAULT_CUE_MAX_UNITS		= 8;
 	public static final int	DEFAULT_CUE_ACCEL_DELAY_MS	= 500;
@@ -176,6 +179,9 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 	boolean			pendingCueSnapshotRestore;
 	boolean			pendingEnglishSnapshotRestore;
 	boolean			preserveCueSnapshotOnRestore;
+	PoolData		pendingTurnStat;
+	long			pendingTurnStatTime;
+	TestShotSearch	testShotSearch;
 	String[]		startedSeatNames;
 	boolean			startedSeatNamesCaptured;
 
@@ -221,6 +227,9 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		pendingCueSnapshotRestore = false;
 		pendingEnglishSnapshotRestore = false;
 		preserveCueSnapshotOnRestore = false;
+		pendingTurnStat = new PoolData();
+		pendingTurnStatTime = 0L;
+		testShotSearch = null;
 		addSitParser(new SaveCancel(this));
 	}
 
@@ -564,6 +573,26 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 	}
 
 	public void handleStopMoving() {
+		applyPendingTurnStat(false);
+	}
+
+	private boolean shouldDeferTurnStat() {
+		return pool != null && pool.getCurrentState() != 0
+				&& pool.getPoolEngine() != null
+				&& pool.getPoolEngine().movingExist();
+	}
+
+	private void applyPendingTurnStat(boolean force) {
+		if (pool == null || pendingTurnStat == null || pendingTurnStat.cleared)
+			return;
+		if (!force && pool.getPoolEngine() != null
+				&& pool.getPoolEngine().movingExist())
+			return;
+		logState(force ? "notifyTStat applied after timeout."
+				: "notifyTStat applied after animation.");
+		pool.doNotifyTStat(pendingTurnStat, false);
+		pendingTurnStat.reset();
+		pendingTurnStatTime = 0L;
 	}
 
 	public synchronized void handleTimer(long l1) {
@@ -588,6 +617,11 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 			}
 			if (ypt_q)
 				playPoolSound();
+			if (pendingTurnStat != null && !pendingTurnStat.cleared
+					&& pendingTurnStatTime > 0L
+					&& System.currentTimeMillis() - pendingTurnStatTime >= DEFERRED_TURN_STAT_TIMEOUT_MS)
+				applyPendingTurnStat(true);
+			processTestShotSearch();
 			Fc();
 		}
 		catch (NullPointerException nullpointerexception) {
@@ -833,6 +867,12 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 			Xc(0);
 			Xc(1);
 			logState("notifyTStat.");
+			if (shouldDeferTurnStat()) {
+				J.Kw(pendingTurnStat);
+				pendingTurnStatTime = System.currentTimeMillis();
+				logState("notifyTStat deferred.");
+				break;
+			}
 			pool.doNotifyTStat(J, false);
 			break;
 
@@ -1455,6 +1495,11 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 	}
 
 	public void testShot(String spec) {
+		if (testShotSearch != null) {
+			cancelTestShotSearch("Test shot search cancelled after "
+					+ testShotSearch.attempts + " tries.");
+			return;
+		}
 		if (!isTestRoom()) {
 			Fd("Test shot finder is only available in the test room.");
 			return;
@@ -1472,14 +1517,7 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 			Fd("Use balls or fouls, e.g. solid,stripe,cue or wrongfirst.");
 			return;
 		}
-		TestShotResult result = findTestShot(target);
-		if (result == null) {
-			Fd("No exact test shot found in " + TEST_SHOT_BATCH_SIZE + " tries.");
-			return;
-		}
-		Fd("Test shot found after " + result.attempts + " tries.");
-		strike(result.cueBallIndex, result.cueDist, result.englishDist,
-				result.firstColl, result.collBall);
+		startTestShotSearch(target);
 	}
 
 	public boolean isTestRoom() {
@@ -1505,38 +1543,100 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		Fd("Test shot help was written to your local chat log.");
 	}
 
-	private TestShotResult findTestShot(TestShotTarget target) {
+	private void startTestShotSearch(TestShotTarget target) {
 		IBall selectedBall = poolArea.cueSprite.getSelectedBall();
 		if (selectedBall == null || selectedBall.inSlot())
 			selectedBall = pool.getSetup().getWhiteBall();
-		if (selectedBall == null || selectedBall.inSlot())
-			return null;
-		int cueBallIndex = selectedBall.getIndex();
-		for (int attempt = 1; attempt <= TEST_SHOT_BATCH_SIZE; attempt++) {
-			double angle = BREAK_RANDOM.nextDouble() * Math.PI * 2D;
-			YIPoint cueDist = buildTestCueDist(selectedBall, angle);
-			YIPoint englishDist = new YIPoint(0.0F, 0.0F);
-			CollisionHint hint = calculateCollisionHint(pool, cueBallIndex,
-					cueDist);
-			Pool simPool = createSimulationPool();
-			if (simPool == null)
-				return null;
-			if (!simPool.doStrike(simPool.m_turn, cueBallIndex, cueDist,
-					englishDist, hint.firstColl, hint.collBall))
-				continue;
-			runSimulation(simPool);
-			if (matchesPocketedSet(simPool, target)) {
-				TestShotResult result = new TestShotResult();
-				result.attempts = attempt;
-				result.cueBallIndex = cueBallIndex;
-				result.cueDist = cueDist;
-				result.englishDist = englishDist;
-				result.firstColl = hint.firstColl;
-				result.collBall = hint.collBall;
-				return result;
+		if (selectedBall == null || selectedBall.inSlot()) {
+			Fd("No playable cue ball is available for the test shot search.");
+			return;
+		}
+		testShotSearch = new TestShotSearch();
+		testShotSearch.target = target;
+		testShotSearch.cueBallIndex = selectedBall.getIndex();
+		testShotSearch.nextProgress = TEST_SHOT_PROGRESS_INTERVAL;
+		if (btnTestShot != null)
+			btnTestShot.setCaption("Cancel");
+		Fd("Test shot search started. Tried 0 of "
+				+ TEST_SHOT_BATCH_SIZE + ".");
+	}
+
+	private void processTestShotSearch() {
+		if (testShotSearch == null)
+			return;
+		if (!isMyTurn() || !pool.isRunning() || pool.getCurrentState() != 0) {
+			cancelTestShotSearch("Test shot search stopped; it is no longer your active turn.");
+			return;
+		}
+		for (int i = 0; i < TEST_SHOT_ATTEMPTS_PER_TICK
+				&& testShotSearch != null; i++) {
+			TestShotResult result = tryNextTestShot(testShotSearch);
+			if (result != null) {
+				finishTestShotSearch(result);
+				return;
+			}
+			if (testShotSearch != null
+					&& testShotSearch.attempts >= TEST_SHOT_BATCH_SIZE) {
+				cancelTestShotSearch("No exact test shot found in "
+						+ TEST_SHOT_BATCH_SIZE + " tries.");
+				return;
+			}
+			if (testShotSearch != null
+					&& testShotSearch.attempts >= testShotSearch.nextProgress) {
+				Fd("Test shot tried " + testShotSearch.attempts + " of "
+						+ TEST_SHOT_BATCH_SIZE + "...");
+				testShotSearch.nextProgress += TEST_SHOT_PROGRESS_INTERVAL;
 			}
 		}
+	}
+
+	private TestShotResult tryNextTestShot(TestShotSearch search) {
+		IBall selectedBall = pool.getBall(search.cueBallIndex);
+		if (selectedBall == null || selectedBall.inSlot()) {
+			cancelTestShotSearch("Test shot search stopped; cue ball is no longer playable.");
+			return null;
+		}
+		search.attempts++;
+		int cueBallIndex = search.cueBallIndex;
+		double angle = BREAK_RANDOM.nextDouble() * Math.PI * 2D;
+		YIPoint cueDist = buildTestCueDist(selectedBall, angle);
+		YIPoint englishDist = new YIPoint(0.0F, 0.0F);
+		CollisionHint hint = calculateCollisionHint(pool, cueBallIndex,
+				cueDist);
+		Pool simPool = createSimulationPool();
+		if (simPool == null)
+			return null;
+		if (!simPool.doStrike(simPool.m_turn, cueBallIndex, cueDist,
+				englishDist, hint.firstColl, hint.collBall))
+			return null;
+		runSimulation(simPool);
+		if (matchesPocketedSet(simPool, search.target)) {
+			TestShotResult result = new TestShotResult();
+			result.attempts = search.attempts;
+			result.cueBallIndex = cueBallIndex;
+			result.cueDist = cueDist;
+			result.englishDist = englishDist;
+			result.firstColl = hint.firstColl;
+			result.collBall = hint.collBall;
+			return result;
+		}
 		return null;
+	}
+
+	private void finishTestShotSearch(TestShotResult result) {
+		testShotSearch = null;
+		if (btnTestShot != null)
+			btnTestShot.setCaption("Find");
+		Fd("Test shot found after " + result.attempts + " tries.");
+		strike(result.cueBallIndex, result.cueDist, result.englishDist,
+				result.firstColl, result.collBall);
+	}
+
+	private void cancelTestShotSearch(String message) {
+		testShotSearch = null;
+		if (btnTestShot != null)
+			btnTestShot.setCaption("Find");
+		Fd(message);
 	}
 
 	private YIPoint buildTestCueDist(IBall selectedBall, double angle) {
@@ -1625,7 +1725,7 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		if (!matchesEightPocketTarget(simPool, target))
 			return false;
 		if (!target.hasPocketTarget())
-			return true;
+			return matchesTurnTarget(simPool, target);
 		boolean[] seen = new boolean[target.exact.length];
 		int solidCount = 0;
 		int stripeCount = 0;
@@ -1652,7 +1752,20 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 			if (target.exact[i] && !seen[i])
 				return false;
 		return solidCount == target.solidCount
-				&& stripeCount == target.stripeCount;
+				&& stripeCount == target.stripeCount
+				&& matchesTurnTarget(simPool, target);
+	}
+
+	private boolean matchesTurnTarget(Pool simPool, TestShotTarget target) {
+		if (!target.keepTurn && !target.turnOver)
+			return true;
+		simPool.getSetup().getState();
+		boolean turnChanged = simPool.getSetup().isTurnChanged();
+		if (target.keepTurn && turnChanged)
+			return false;
+		if (target.turnOver && !turnChanged)
+			return false;
+		return true;
 	}
 
 	private boolean matchesEightPocketTarget(Pool simPool,
@@ -1722,6 +1835,10 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 			if (token.length() == 0)
 				continue;
 			if (parseFoulToken(target, token)) {
+				any = true;
+				continue;
+			}
+			if (parseTurnToken(target, token)) {
 				any = true;
 				continue;
 			}
@@ -1850,6 +1967,22 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		return false;
 	}
 
+	private boolean parseTurnToken(TestShotTarget target, String token) {
+		if (token.equals("keepturn") || token.equals("keep turn")
+				|| token.equals("continue") || token.equals("keep shooting")
+				|| token.equals("shoot again")) {
+			target.keepTurn = true;
+			return true;
+		}
+		if (token.equals("turnover") || token.equals("turn over")
+				|| token.equals("lose turn") || token.equals("pass turn")
+				|| token.equals("next turn")) {
+			target.turnOver = true;
+			return true;
+		}
+		return false;
+	}
+
 	private boolean parseEightPocketToken(TestShotTarget target, String token) {
 		boolean eight = token.indexOf("eight") != -1
 				|| token.indexOf("8") != -1 || token.indexOf("black") != -1;
@@ -1911,6 +2044,8 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		boolean		eightFirst;
 		boolean		eightCorrectPocket;
 		boolean		eightWrongPocket;
+		boolean		keepTurn;
+		boolean		turnOver;
 
 		TestShotTarget(int ballCount) {
 			exact = new boolean[ballCount];
@@ -1933,6 +2068,13 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		YIPoint	englishDist;
 		YIPoint	firstColl;
 		int		collBall;
+	}
+
+	private static final class TestShotSearch {
+		TestShotTarget	target;
+		int				cueBallIndex;
+		int				attempts;
+		int				nextProgress;
 	}
 
 	private static final class TestShotHelpDialog extends YahooDialog {
@@ -1958,6 +2100,8 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 				"opponent, theirs, their, theirball, their ball - pockets one opponent group ball.",
 				"Legality filters",
 				"legal, clean - requires the shot to avoid ball-in-hand fouls.",
+				"keepturn, keep turn, continue, keep shooting, shoot again - requires the shooter to keep the turn.",
+				"turnover, turn over, lose turn, pass turn, next turn - requires a legal or illegal shot that passes the turn.",
 				"foul, illegal, ball in hand, ballinhand, bih - finds any ball-in-hand foul.",
 				"Foul filters",
 				"scratch - requires the cue ball to be pocketed.",
@@ -1971,6 +2115,7 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 				"Examples",
 				"solid,stripe,cue - pockets one solid, one stripe, and the cue ball only.",
 				"legal,orange - pockets orange and requires a legal shot.",
+				"legal,orange,keepturn - pockets orange legally and keeps shooting.",
 				"legal,eight correct pocket - pockets the 8 in the called pocket without a ball-in-hand foul.",
 				"eight wrong pocket - pockets the 8 in a pocket other than the called pocket.",
 				"scratch,solid,stripe - pockets solid and stripe, and scratches.",
