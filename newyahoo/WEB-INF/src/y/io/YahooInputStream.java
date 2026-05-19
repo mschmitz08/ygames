@@ -42,7 +42,7 @@ public class YahooInputStream extends InputStream {
 
 		p1 += "YAHOO!".length();
 		pend = p1;
-		// System.out.println("<<: YAHOO!");
+		// Protocol header consumed.
 	}
 
 	@Override

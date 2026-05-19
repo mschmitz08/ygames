@@ -1,7 +1,7 @@
 USE `newyahoo`;
 
--- Replaces the current Checkers room list with the historical Yahoo Checkers rooms
--- recovered from archived Yahoo room-directory pages and fan-maintained room lists.
+-- Replaces the current Checkers room list with historical Checkers rooms
+-- recovered from archived room-directory pages and fan-maintained room lists.
 DELETE FROM `checkers_rooms`;
 
 INSERT INTO `checkers_rooms` (`name`, `label`, `public`, `country`, `welcome_msg`, `id_count`) VALUES

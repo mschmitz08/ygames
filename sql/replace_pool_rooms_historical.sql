@@ -1,9 +1,9 @@
 ﻿USE `newyahoo`;
 
--- Replaces the current Pool room list with the historical Yahoo Pool rooms gathered from archived room directories.
+-- Replaces the current Pool room list with historical Pool rooms gathered from archived room directories.
 DELETE FROM `pool_rooms`;
 
--- Historical Yahoo Pool room seeds assembled from archived Yahoo Pool room lists.
+-- Historical Pool room seeds assembled from archived Pool room lists.
 INSERT INTO `pool_rooms` (`name`, `label`, `public`, `country`, `welcome_msg`, `id_count`) VALUES
 ('argentina', 'Argentina', 1, 'ar', 'Welcome to room Argentina', 50),
 ('australia_and_nz', 'Australia & NZ', 1, 'au', 'Welcome to room Australia & NZ', 50),

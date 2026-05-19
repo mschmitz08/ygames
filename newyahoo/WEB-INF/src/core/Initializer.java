@@ -288,9 +288,9 @@ public class Initializer extends HttpServlet implements YahooRoomHandler {
                 }
             }
 
-            System.out.println("Starting YahooPoolServer on " + poolPort);
+            System.out.println("Starting pool server on " + poolPort);
             poolServer = new YahooPoolServer(this, poolPort, yports);
-            System.out.println("YahooPoolServer created");
+            System.out.println("Pool server created");
 
             yports.clear();
             try {
@@ -309,9 +309,9 @@ public class Initializer extends HttpServlet implements YahooRoomHandler {
                 }
             }
 
-            System.out.println("Starting YahooCheckersServer on " + checkersPort);
+            System.out.println("Starting checkers server on " + checkersPort);
             checkersServer = new YahooCheckersServer(this, checkersPort, yports);
-            System.out.println("YahooCheckersServer created");
+            System.out.println("Checkers server created");
 
             getPublishedClientHash();
 
