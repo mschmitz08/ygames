@@ -100,6 +100,9 @@ C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\server\net\YahooSocket.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\server\net\YahooSocketHandler.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\server\po\Cue.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\server\po\English.java
+C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\server\po\PoolReplayDebugLog.java
+C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\server\po\PoolReplayPlayback.java
+C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\server\po\PoolReplayRecorder.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\server\po\YahooPoolProfileId.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\server\po\YahooPoolRoom.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\server\po\YahooPoolServer.java

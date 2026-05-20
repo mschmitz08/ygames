@@ -1,5 +1,6 @@
 package server.po;
 
+import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.Vector;
@@ -33,6 +34,9 @@ public class YahooPoolTable extends YahooTable implements PoolHandler {
 	PoolData			J;
 	Cue					cue;
 	English				english;
+	PoolReplayRecorder	replayRecorder;
+	PoolReplayPlayback	replayPlayback;
+	long				lastReplayShotAt;
 
 	public YahooPoolTable(YahooRoom room, int number) {
 		super(room, number);
@@ -43,8 +47,243 @@ public class YahooPoolTable extends YahooTable implements PoolHandler {
 		J = new PoolData();
 		cue = new Cue();
 		english = new English();
+		replayRecorder = null;
+		replayPlayback = null;
 	}
 
+
+	private void broadcastFullGame() {
+		ids.readLock();
+		try {
+			for (int i = 0; i < ids.size(); i++)
+				updateGame(ids.elementAt(i), pool);
+		}
+		finally {
+			ids.readUnlock();
+		}
+	}
+
+	private void handleReplayCommand(YahooConnectionId id, String command) {
+		if (command == null)
+			return;
+		String trimmed = command.trim();
+		String lower = trimmed.toLowerCase();
+		if (!lower.startsWith("replay"))
+			return;
+		if (lower.startsWith("replay log ")) {
+			PoolReplayDebugLog.log(room, number, id, "CLIENT "
+					+ trimmed.substring("replay log ".length()));
+			return;
+		}
+		if (!"test".equalsIgnoreCase(room.getYport())) {
+			room.alert(id, "Replay commands are only available in the test room.");
+			return;
+		}
+		if (!isHost(id)) {
+			room.alert(id, "Only the table host can control replay playback.");
+			return;
+		}
+		try {
+			if (lower.equals("replay next") || lower.equals("replay step")) {
+				PoolReplayDebugLog.log(room, number, id, "COMMAND replay next");
+				replayStep(id);
+				return;
+			}
+			if (lower.equals("replay reset")) {
+				PoolReplayDebugLog.log(room, number, id, "COMMAND replay reset");
+				replayLoadInitial(id);
+				return;
+			}
+			String replayKey = trimmed.substring("replay".length()).trim();
+			if (replayKey.toLowerCase().startsWith("load "))
+				replayKey = replayKey.substring(5).trim();
+			if (replayKey.length() == 0) {
+				room.alert(id, "Use: replay load <replay_key>, replay next, or replay reset.");
+				return;
+			}
+			replayPlayback = PoolReplayPlayback.load(room.getGameLogTable(), replayKey);
+			if (replayPlayback == null) {
+				room.alert(id, "Replay not found: " + replayKey);
+				return;
+			}
+			PoolReplayDebugLog.log(room, number, id, "COMMAND replay load "
+					+ replayKey + " events=" + replayPlayback.getEventCount());
+			replayLoadInitial(id);
+			doTableLog("Replay loaded: " + replayKey + " (" + replayPlayback.getEventCount()
+					+ " events). Use replay next to step.");
+		}
+		catch (Throwable e) {
+			e.printStackTrace();
+			room.alert(id, "Replay command failed: " + e.getMessage());
+		}
+	}
+
+	private void replayLoadInitial(YahooConnectionId id) throws IOException {
+		if (replayPlayback == null) {
+			room.alert(id, "No replay is loaded.");
+			return;
+		}
+		byte[] initialState = replayPlayback.getInitialState();
+		if (initialState == null || initialState.length == 0) {
+			room.alert(id, "Replay has no initial state.");
+			return;
+		}
+		if (poolEngineTimer != null)
+			stopPoolEngineTimer();
+		pool.read(new DataInputStream(new ByteArrayInputStream(initialState)));
+		replayPlayback.reset();
+		lastReplayShotAt = 0L;
+		replayRecorder = null;
+		broadcastFullGame();
+		doTableLog("Replay reset to initial state: " + replayPlayback.getReplayKey());
+	}
+
+	private void applyReplayTurnStat(PoolReplayPlayback.Event event)
+			throws IOException {
+		PoolReplayDebugLog.log(room, number, null, "SERVER TURN_STAT apply seq="
+				+ event.seq + " bytes=" + (event.payload != null ? event.payload.length : 0));
+		DataInputStream input = new DataInputStream(new ByteArrayInputStream(
+				event.payload != null ? event.payload : new byte[0]));
+		PoolData data = new PoolData();
+		data.read(input);
+		if (poolEngineTimer != null)
+			stopPoolEngineTimer();
+		pool.doNotifyTStat(data, false);
+		ids.readLock();
+		try {
+			for (int i = 0; i < ids.size(); i++)
+				updategame(ids.elementAt(i), data);
+		}
+		finally {
+			ids.readUnlock();
+		}
+	}
+
+	private void replayStep(YahooConnectionId id) throws IOException {
+		if (replayPlayback == null) {
+			room.alert(id, "No replay is loaded.");
+			return;
+		}
+		long now = System.currentTimeMillis();
+		if (lastReplayShotAt > 0L && now - lastReplayShotAt < 5000L) {
+			doTableLog("Replay shot is still settling; wait a moment before replay next.");
+			return;
+		}
+		PoolReplayPlayback.Event event = replayPlayback.next();
+		PoolReplayDebugLog.log(room, number, id, "SERVER next event="
+				+ (event == null ? "END" : event.seq + ":" + event.eventType));
+		if (event == null) {
+			doTableLog("Replay is already at the end.");
+			return;
+		}
+		DataInputStream input = new DataInputStream(new ByteArrayInputStream(
+				event.payload != null ? event.payload : new byte[0]));
+		if ("STRIKE".equals(event.eventType)) {
+			PoolReplayDebugLog.log(room, number, id, "SERVER STRIKE begin seq="
+					+ event.seq + " actor=" + event.actorSeat);
+			input.readInt();
+			int index = input.readInt();
+			int replayCollBall = input.readByte();
+			YIPoint replayCueDist = new YIPoint();
+			YIPoint replayEnglishDist = new YIPoint();
+			YIPoint replayFirstColl = new YIPoint();
+			replayCueDist.read(input);
+			replayEnglishDist.read(input);
+			replayFirstColl.read(input);
+			PoolReplayDebugLog.log(room, number, id, "SERVER STRIKE payload index="
+					+ index + " coll=" + replayCollBall + " cue="
+					+ replayCueDist + " english=" + replayEnglishDist + " first="
+					+ replayFirstColl);
+			if (pool.doStrike(event.actorSeat, index, replayCueDist,
+					replayEnglishDist, replayFirstColl, replayCollBall)) {
+				ids.readLock();
+				try {
+					for (int i = 0; i < ids.size(); i++)
+						strike(ids.elementAt(i), event.actorSeat, index,
+								replayCollBall, replayCueDist, replayEnglishDist,
+								replayFirstColl);
+				}
+				finally {
+					ids.readUnlock();
+				}
+				lastReplayShotAt = System.currentTimeMillis();
+				doTableLog("Replay shot " + event.seq + "/"
+						+ replayPlayback.getEventCount() + ": STRIKE");
+				PoolReplayPlayback.Event turnStatEvent = replayPlayback.peek();
+				if (turnStatEvent != null
+						&& "TURN_STAT".equals(turnStatEvent.eventType)) {
+					turnStatEvent = replayPlayback.next();
+					PoolReplayDebugLog.log(room, number, id, "SERVER applying paired TURN_STAT seq="
+							+ turnStatEvent.seq);
+					applyReplayTurnStat(turnStatEvent);
+					doTableLog("Replay shot " + event.seq + " settled with event "
+							+ turnStatEvent.seq + "/"
+							+ replayPlayback.getEventCount() + ".");
+				}
+				return;
+			}
+		}
+		else if ("CHANGE_BALL".equals(event.eventType)) {
+			int index = input.readInt();
+			int x = input.readInt();
+			int y = input.readInt();
+			pool.doUpdatePB(event.actorSeat, index, x, y);
+			ids.readLock();
+			try {
+				for (int i = 0; i < ids.size(); i++)
+					changeBall(ids.elementAt(i), index, x, y);
+			}
+			finally {
+				ids.readUnlock();
+			}
+		}
+		else if ("SET_SLOT".equals(event.eventType)) {
+			int slot = input.readInt();
+			pool.doSetSlot(event.actorSeat, slot);
+			ids.readLock();
+			try {
+				for (int i = 0; i < ids.size(); i++)
+					setSlot(ids.elementAt(i), slot);
+			}
+			finally {
+				ids.readUnlock();
+			}
+		}
+		else if ("SELECT_TYPE".equals(event.eventType)) {
+			int type = input.readInt();
+			pool.selectType(event.actorSeat, type);
+			ids.readLock();
+			try {
+				for (int i = 0; i < ids.size(); i++)
+					selectType(ids.elementAt(i), type);
+			}
+			finally {
+				ids.readUnlock();
+			}
+		}
+		else if ("RESET".equals(event.eventType)) {
+			pool.actionReset(event.actorSeat);
+			ids.readLock();
+			try {
+				for (int i = 0; i < ids.size(); i++)
+					reset(ids.elementAt(i), event.actorSeat);
+			}
+			finally {
+				ids.readUnlock();
+			}
+		}
+		else if ("TURN_STAT".equals(event.eventType)) {
+			applyReplayTurnStat(event);
+		}
+		else if ("TIME_EMPTY".equals(event.eventType)) {
+			PoolData data = new PoolData();
+			data.read(input);
+			pool.doNotifyTELAPS(data);
+			broadcastFullGame();
+		}
+		doTableLog("Replay event " + event.seq + "/" + replayPlayback.getEventCount()
+				+ ": " + event.eventType);
+	}
 	public void Ad() {
 		// TODO Auto-generated method stub
 
@@ -115,6 +354,8 @@ public class YahooPoolTable extends YahooTable implements PoolHandler {
 		J = null;
 		cue = null;
 		english = null;
+		replayRecorder = null;
+		replayPlayback = null;
 		super.close();
 	}
 
@@ -126,6 +367,8 @@ public class YahooPoolTable extends YahooTable implements PoolHandler {
 
 	private void doChangeBall(YahooConnectionId id, int i0, int i1, int i2) {
 		pool.doUpdatePB(pool.m_turn, i0, i1, i2);
+		if (replayRecorder != null)
+			replayRecorder.recordChangeBall(pool.m_turn, i0, i1, i2);
 		ids.readLock();
 		try {
 			for (int i = 0; i < ids.size(); i++)
@@ -163,6 +406,8 @@ public class YahooPoolTable extends YahooTable implements PoolHandler {
 
 	private void doReset(YahooConnectionId id, int sitIndex) {
 		pool.actionReset(sitIndex);
+		if (replayRecorder != null)
+			replayRecorder.recordReset(sitIndex);
 		ids.readLock();
 		try {
 			for (int i = 0; i < ids.size(); i++)
@@ -175,6 +420,8 @@ public class YahooPoolTable extends YahooTable implements PoolHandler {
 
 	private void doSelectType(YahooConnectionId id, int type) {
 		pool.selectType(pool.m_turn, type);
+		if (replayRecorder != null)
+			replayRecorder.recordSelectType(pool.m_turn, type);
 		ids.readLock();
 		try {
 			for (int i = 0; i < ids.size(); i++)
@@ -187,6 +434,8 @@ public class YahooPoolTable extends YahooTable implements PoolHandler {
 
 	private void doSetSlot(YahooConnectionId id, int slotIndex) {
 		pool.doSetSlot(pool.m_turn, slotIndex);
+		if (replayRecorder != null)
+			replayRecorder.recordSetSlot(pool.m_turn, slotIndex);
 		ids.readLock();
 		try {
 			for (int i = 0; i < ids.size(); i++)
@@ -214,6 +463,9 @@ public class YahooPoolTable extends YahooTable implements PoolHandler {
 		if (!pool.doStrike(sitIndex, index, cueDist, englishDist, firstColl,
 				collBall))
 			return;
+		if (replayRecorder != null)
+			replayRecorder.recordStrike(sitIndex, turnNum, index, collBall,
+					cueDist, englishDist, firstColl);
 		startPoolEngineTimer();
 
 		ids.readLock();
@@ -232,6 +484,8 @@ public class YahooPoolTable extends YahooTable implements PoolHandler {
 		J.reset();
 		logState("notifyTELAPS");
 		pool.doNotifyTELAPS(J);
+		if (replayRecorder != null)
+			replayRecorder.recordPoolData(pool.m_turn, "TIME_EMPTY", J);
 
 		ids.readLock();
 		try {
@@ -244,7 +498,10 @@ public class YahooPoolTable extends YahooTable implements PoolHandler {
 	}
 
 	private void doUpdateGame() throws IOException {
+		int actorSeat = pool.m_turn;
 		J = pool.tj();
+		if (replayRecorder != null)
+			replayRecorder.recordPoolData(actorSeat, "TURN_STAT", J);
 		pool.doNotifyTStat(J, false);
 
 		ids.readLock();
@@ -407,6 +664,25 @@ public class YahooPoolTable extends YahooTable implements PoolHandler {
 
 	}
 
+
+	@Override
+	public void handleStart() {
+		super.handleStart();
+		replayRecorder = new PoolReplayRecorder(room, number, getGameId(),
+				startedPlayers, currGameLogEntry != null ? currGameLogEntry
+						.getFlags() : 0L);
+	}
+
+	@Override
+	public void handleStop(YData data) {
+		if (replayRecorder != null) {
+			replayRecorder.finish(data, getWonTurn(data));
+			replayRecorder = null;
+		}
+		replayPlayback = null;
+		super.handleStop(data);
+	}
+
 	public void kd(int i) {
 		// TODO Auto-generated method stub
 
@@ -497,9 +773,8 @@ public class YahooPoolTable extends YahooTable implements PoolHandler {
 			int y = input.readInt();
 			doChangeBall(id, index, x, y);
 			break;
-		case -97: // 9F y virtual machine numeric precision
-			// TODO implementar
-			input.readUTF();
+		case -97: // 9F replay/test command
+			handleReplayCommand(id, input.readUTF());
 			break;
 		default:
 			super.parseData(id, byte0, input);
@@ -623,7 +898,8 @@ public class YahooPoolTable extends YahooTable implements PoolHandler {
 	}
 
 	public void zd(int i, boolean flag) {
-		// TODO Auto-generated method stub
+		if (replayRecorder != null)
+			replayRecorder.recordInitialState(pool);
 
 	}
 

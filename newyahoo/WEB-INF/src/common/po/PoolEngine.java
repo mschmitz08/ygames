@@ -158,6 +158,11 @@ public class PoolEngine implements ClockHandler, TimerHandler {
 		obstacles = _obstacles;
 		slots = _slots;
 		ball = _balls;
+		q.clear();
+		r.clear();
+		s.clear();
+		ballInPlayArea.clear();
+		ballInSlot.clear();
 		for (IBall element : ball)
 			if (element.inSlot()) {
 				ballInSlot.add(element);
