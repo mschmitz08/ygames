@@ -50,6 +50,10 @@ class PoolReplayRecorder {
 		return replayKey;
 	}
 
+	public int getSeq() {
+		return seq;
+	}
+
 	void finish(YData stopData, int[] result) {
 		if (!active)
 			return;

@@ -40,6 +40,7 @@ public class Initializer extends HttpServlet implements YahooRoomHandler {
     public MySQLTable pool_games;
     public MySQLTable pool_replay_games;
     public MySQLTable pool_replay_events;
+    public MySQLTable pool_replay_reports;
 
     public MySQLTable checkers_rooms;
     public MySQLTable checkers_ignoreds;
@@ -264,6 +265,8 @@ public class Initializer extends HttpServlet implements YahooRoomHandler {
             tables.put("pool_replay_games", pool_replay_games);
             pool_replay_events = new MySQLTable(connectionPool, "pool_replay_events");
             tables.put("pool_replay_events", pool_replay_events);
+            pool_replay_reports = new MySQLTable(connectionPool, "pool_replay_reports");
+            tables.put("pool_replay_reports", pool_replay_reports);
 
             System.out.println("Creating checkers tables");
             checkers_rooms = new MySQLTable(connectionPool, "checkers_rooms");

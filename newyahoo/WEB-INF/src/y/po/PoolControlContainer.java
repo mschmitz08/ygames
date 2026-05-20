@@ -42,6 +42,8 @@ public class PoolControlContainer extends TableControlContainer {
 		YahooControl cueControl = new YahooControl();
 		cueControl.addChildObject(poolTable.btnCueControls, 10, 2, 0, 1, 1, 0,
 				0, 1, 0, 1, 0);
+		cueControl.addChildObject(poolTable.btnBugReport, 10, 2, 0, 1, 1, 0,
+				1, 1, 0, 1, 0);
 		YahooPannel cuePannel = new YahooPannel("cue", cueControl,
 				table.table_side_tabcolor_bg, table.table_side_tabcolor_fg);
 		container.addChildObject(cuePannel, 10, 1, 2, 1, 1, 0, ++counter[0], 1,
@@ -80,6 +82,8 @@ public class PoolControlContainer extends TableControlContainer {
 		else if (event.target == poolTable.btnTestShot
 				|| event.target == poolTable.txtTestShot)
 			poolTable.testShot(poolTable.txtTestShot.getText());
+		else if (event.target == poolTable.btnBugReport)
+			poolTable.showBugReportDialog();
 		else if (event.target == table.chkSound)
 			table.getApplet().Kg(table.chkSound.isChecked());
 		else

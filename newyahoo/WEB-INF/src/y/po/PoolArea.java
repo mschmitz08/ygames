@@ -318,6 +318,17 @@ public class PoolArea extends YahooControl {
 	}
 
 	public void gc() {
+		if (poolAimer != null && ballSprite != null) {
+			for (int i1 = 0; i1 < ballSprite.length; i1++) {
+				if (ballSprite[i1] != null) {
+					poolAimer.removeChildObject(ballSprite[i1]);
+					poolAimer.removeChildObject(ballSprite[i1].Pd());
+				}
+			}
+		}
+		pa_E = null;
+		pa_F = null;
+		pa_G = null;
 		Ub();
 		if (poolAimer != null) {
 			poolAimer.fs(ballSprite);

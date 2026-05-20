@@ -63,11 +63,28 @@ public class YahooPoolTable extends YahooTable implements PoolHandler {
 		}
 	}
 
+	private void handleBugReport(YahooConnectionId id, String comment) {
+		String replayKey = replayRecorder != null ? replayRecorder.getReplayKey()
+				: null;
+		int eventSeq = replayRecorder != null ? replayRecorder.getSeq() : 0;
+		if (replayKey == null && replayPlayback != null)
+			replayKey = replayPlayback.getReplayKey();
+		if (replayKey == null) {
+			room.alert(id, "No active replay is available for this bug report.");
+			return;
+		}
+		PoolReplayReporter.report(room, number, id, replayKey, eventSeq, comment);
+		doTableLog("Bug report saved for replay " + replayKey + ".");
+	}
 	private void handleReplayCommand(YahooConnectionId id, String command) {
 		if (command == null)
 			return;
 		String trimmed = command.trim();
 		String lower = trimmed.toLowerCase();
+		if (lower.startsWith("bug report ")) {
+			handleBugReport(id, trimmed.substring("bug report ".length()));
+			return;
+		}
 		if (!lower.startsWith("replay"))
 			return;
 		if (lower.startsWith("replay log ")) {

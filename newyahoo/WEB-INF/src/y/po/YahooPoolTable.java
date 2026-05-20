@@ -164,6 +164,8 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 	YahooButton		btnCueControls;
 	YahooTextBox	txtTestShot;
 	YahooButton		btnTestShot;
+	YahooButton		btnBugReport;
+	BugReportDialog	bugReportDialog;
 	YahooComponent	customTableColorPanel;
 	YahooComponent	cueControlPanel;
 	TableColorEditor	tableColorEditor;
@@ -396,6 +398,10 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 	@Override
 	public void doUpdate(DataInputStream datainputstream) throws IOException {
 		super.doUpdate(datainputstream);
+		if (poolArea != null) {
+			poolArea.gc();
+			poolArea.xc();
+		}
 		if (pool != null && pool.isRunning() && pool.getCurrentState() == 0) {
 			pendingCueSnapshotRestore = true;
 			pendingEnglishSnapshotRestore = true;
@@ -1392,6 +1398,8 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		cueControlEditor = new CueControlEditor(this);
 		txtTestShot = new YahooTextBox(getTimerHandler(), "solid,stripe", 72);
 		btnTestShot = new YahooButton("Find");
+		btnBugReport = new YahooButton("Report Bug");
+		bugReportDialog = null;
 		loadingPreferences = true;
 		loadTableColorPreference();
 		loadCueControlPreferences();
@@ -1594,6 +1602,31 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 			return;
 		}
 		startTestShotSearch(target);
+	}
+
+	public void showBugReportDialog() {
+		if (bugReportDialog != null)
+			bugReportDialog.close();
+		bugReportDialog = new BugReportDialog(this, poolArea.getContainer());
+		bugReportDialog.show();
+	}
+
+	public void reportBug(String comment) {
+		if (comment == null || comment.trim().length() == 0
+				|| "What looked wrong?".equals(comment)) {
+			Fd("Type what looked wrong, then press Report Bug.");
+			return;
+		}
+		String trimmed = comment.trim();
+		if (trimmed.length() > 500)
+			trimmed = trimmed.substring(0, 500);
+		send('\uFF9F', "bug report " + trimmed);
+		Fd("Bug report sent with the current replay.");
+	}
+
+	private void closeBugReportDialog(BugReportDialog dialog) {
+		if (bugReportDialog == dialog)
+			bugReportDialog = null;
 	}
 
 	public boolean isTestRoom() {
@@ -2157,6 +2190,50 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		int				nextProgress;
 	}
 
+	private static final class BugReportDialog extends YahooDialog {
+
+		YahooPoolTable	table;
+		YahooTextBox	txtComment;
+		YahooButton		btnSubmit;
+		YahooButton		btnCancel;
+
+		BugReportDialog(YahooPoolTable table, YahooControl container) {
+			super(container, "Report Bug");
+			this.table = table;
+			addChildObject(new YahooLabel("What looked wrong?", YahooLabel.yl_b,
+					220), 10, 2, 2, 2, 1, 0, 0);
+			txtComment = new YahooTextBox(table.getTimerHandler(), "", 220);
+			btnSubmit = new YahooButton("Submit");
+			btnCancel = new YahooButton("Cancel");
+			addChildObject(txtComment, 10, 2, 2, 2, 1, 0, 1);
+			addChildObject(btnSubmit, 10, 2, 2, 1, 1, 0, 2);
+			addChildObject(btnCancel, 10, 2, 2, 1, 1, 1, 2);
+		}
+
+		@Override
+		public void close() {
+			if (table != null)
+				table.closeBugReportDialog(this);
+			table = null;
+			super.close();
+		}
+
+		@Override
+		public boolean eventActionEvent(Event event, Object obj) {
+			if (event.target == btnSubmit || event.target == txtComment) {
+				if (table != null)
+					table.reportBug(txtComment.getText());
+				close();
+				return true;
+			}
+			if (event.target == btnCancel) {
+				close();
+				return true;
+			}
+			return super.eventActionEvent(event, obj);
+		}
+	}
+
 	private static final class TestShotHelpDialog extends YahooDialog {
 
 		private static final String[] HELP_LINES = {
@@ -2200,7 +2277,14 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 				"eight wrong pocket - pockets the 8 in a pocket other than the called pocket.",
 				"scratch,solid,stripe - pockets solid and stripe, and scratches.",
 				"wrongfirst,own - pockets one own ball after an illegal first hit.",
-				"eightfirst,cue - hits the 8 first too early and scratches." };
+				"eightfirst,cue - hits the 8 first too early and scratches.",
+				"Replay commands",
+				"replay load <replay_key> - loads a saved replay in the test room.",
+				"replay next - steps the loaded replay forward one shot.",
+				"replay reset - returns the loaded replay to its initial state.",
+				"Bug reports",
+				"Report Bug button - opens a prompt and attaches your comment to the current replay.",
+				"bug report <comment> - command form of the same report; comments are capped at 500 characters." };
 
 		YahooButton	btnOk;
 
