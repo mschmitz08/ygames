@@ -87,11 +87,6 @@ public class YahooPoolTable extends YahooTable implements PoolHandler {
 		}
 		if (!lower.startsWith("replay"))
 			return;
-		if (lower.startsWith("replay log ")) {
-			PoolReplayDebugLog.log(room, number, id, "CLIENT "
-					+ trimmed.substring("replay log ".length()));
-			return;
-		}
 		if (!"test".equalsIgnoreCase(room.getYport())) {
 			room.alert(id, "Replay commands are only available in the test room.");
 			return;
@@ -102,12 +97,10 @@ public class YahooPoolTable extends YahooTable implements PoolHandler {
 		}
 		try {
 			if (lower.equals("replay next") || lower.equals("replay step")) {
-				PoolReplayDebugLog.log(room, number, id, "COMMAND replay next");
 				replayStep(id);
 				return;
 			}
 			if (lower.equals("replay reset")) {
-				PoolReplayDebugLog.log(room, number, id, "COMMAND replay reset");
 				replayLoadInitial(id);
 				return;
 			}
@@ -123,8 +116,6 @@ public class YahooPoolTable extends YahooTable implements PoolHandler {
 				room.alert(id, "Replay not found: " + replayKey);
 				return;
 			}
-			PoolReplayDebugLog.log(room, number, id, "COMMAND replay load "
-					+ replayKey + " events=" + replayPlayback.getEventCount());
 			replayLoadInitial(id);
 			doTableLog("Replay loaded: " + replayKey + " (" + replayPlayback.getEventCount()
 					+ " events). Use replay next to step.");
@@ -157,8 +148,6 @@ public class YahooPoolTable extends YahooTable implements PoolHandler {
 
 	private void applyReplayTurnStat(PoolReplayPlayback.Event event)
 			throws IOException {
-		PoolReplayDebugLog.log(room, number, null, "SERVER TURN_STAT apply seq="
-				+ event.seq + " bytes=" + (event.payload != null ? event.payload.length : 0));
 		DataInputStream input = new DataInputStream(new ByteArrayInputStream(
 				event.payload != null ? event.payload : new byte[0]));
 		PoolData data = new PoolData();
@@ -187,8 +176,6 @@ public class YahooPoolTable extends YahooTable implements PoolHandler {
 			return;
 		}
 		PoolReplayPlayback.Event event = replayPlayback.next();
-		PoolReplayDebugLog.log(room, number, id, "SERVER next event="
-				+ (event == null ? "END" : event.seq + ":" + event.eventType));
 		if (event == null) {
 			doTableLog("Replay is already at the end.");
 			return;
@@ -196,8 +183,6 @@ public class YahooPoolTable extends YahooTable implements PoolHandler {
 		DataInputStream input = new DataInputStream(new ByteArrayInputStream(
 				event.payload != null ? event.payload : new byte[0]));
 		if ("STRIKE".equals(event.eventType)) {
-			PoolReplayDebugLog.log(room, number, id, "SERVER STRIKE begin seq="
-					+ event.seq + " actor=" + event.actorSeat);
 			input.readInt();
 			int index = input.readInt();
 			int replayCollBall = input.readByte();
@@ -207,10 +192,6 @@ public class YahooPoolTable extends YahooTable implements PoolHandler {
 			replayCueDist.read(input);
 			replayEnglishDist.read(input);
 			replayFirstColl.read(input);
-			PoolReplayDebugLog.log(room, number, id, "SERVER STRIKE payload index="
-					+ index + " coll=" + replayCollBall + " cue="
-					+ replayCueDist + " english=" + replayEnglishDist + " first="
-					+ replayFirstColl);
 			if (pool.doStrike(event.actorSeat, index, replayCueDist,
 					replayEnglishDist, replayFirstColl, replayCollBall)) {
 				ids.readLock();
@@ -230,8 +211,6 @@ public class YahooPoolTable extends YahooTable implements PoolHandler {
 				if (turnStatEvent != null
 						&& "TURN_STAT".equals(turnStatEvent.eventType)) {
 					turnStatEvent = replayPlayback.next();
-					PoolReplayDebugLog.log(room, number, id, "SERVER applying paired TURN_STAT seq="
-							+ turnStatEvent.seq);
 					applyReplayTurnStat(turnStatEvent);
 					doTableLog("Replay shot " + event.seq + " settled with event "
 							+ turnStatEvent.seq + "/"

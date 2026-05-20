@@ -183,7 +183,6 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 	boolean			preserveCueSnapshotOnRestore;
 	PoolData		pendingTurnStat;
 	long			pendingTurnStatTime;
-	boolean			replayDebug;
 	TestShotSearch	testShotSearch;
 	String[]		startedSeatNames;
 	boolean			startedSeatNamesCaptured;
@@ -232,7 +231,6 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		preserveCueSnapshotOnRestore = false;
 		pendingTurnStat = new PoolData();
 		pendingTurnStatTime = 0L;
-		replayDebug = false;
 		testShotSearch = null;
 		addSitParser(new SaveCancel(this));
 	}
@@ -438,53 +436,6 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		Lq(getMySitIndex(), s1);
 	}
 
-	private void replayDebug(String message) {
-		if (replayDebug)
-			send('\uFF9F', "replay log " + message);
-	}
-
-	private boolean replayMoving() {
-		return pool != null && pool.getPoolEngine() != null
-				&& pool.getPoolEngine().movingExist();
-	}
-
-	private String replayPoolStatus() {
-		if (pool == null || pool.getPoolEngine() == null)
-			return "pool unavailable";
-		return "state=" + pool.getCurrentState() + ", turn=" + pool.m_turn
-				+ ", mySeat=" + getMySitIndex() + ", moving="
-				+ replayMoving() + ", inPlay="
-				+ pool.getPoolEngine().ballInPlayArea.size() + ", inSlot="
-				+ pool.getPoolEngine().ballInSlot.size();
-	}
-
-	private String replayPoolDataStatus(PoolData data) {
-		if (data == null)
-			return "no data";
-		return "pocketed=" + data.turnPocketed.getCount() + ", positions="
-				+ (data.turnInArea.getCount() / 4) + ", first="
-				+ data.firstCollidedBall + ", collided=" + data.turnCollided;
-	}
-
-	private String replayBallSnapshot() {
-		if (pool == null || pool.getBall() == null)
-			return "balls unavailable";
-		StringBuffer buffer = new StringBuffer();
-		IBall[] balls = pool.getBall();
-		for (int i = 0; i < balls.length; i++) {
-			IBall ball = balls[i];
-			if (ball == null)
-				continue;
-			if (buffer.length() > 0)
-				buffer.append(";");
-			buffer.append(i).append("=").append(ball.getX()).append(",")
-					.append(ball.getY()).append(",slot=")
-					.append(ball.getSlot()).append(",moving=")
-					.append(ball.isMoving());
-		}
-		return buffer.toString();
-	}
-
 	public boolean get_n() {
 		return n;
 	}
@@ -628,12 +579,10 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 	}
 
 	public void handleStopMoving() {
-		replayDebug("handleStopMoving " + replayPoolStatus());
 		applyPendingTurnStat(false);
 	}
 
 	private boolean shouldDeferTurnStat() {
-		replayDebug("shouldDefer? " + replayPoolStatus());
 		return pool != null && pool.getCurrentState() != 0
 				&& pool.getPoolEngine() != null
 				&& pool.getPoolEngine().movingExist();
@@ -647,9 +596,6 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 			return;
 		logState(force ? "notifyTStat applied after timeout."
 				: "notifyTStat applied after animation.");
-		replayDebug("applying deferred TURN_STAT force=" + force + " "
-				+ replayPoolStatus() + " "
-				+ replayPoolDataStatus(pendingTurnStat));
 		pool.doNotifyTStat(pendingTurnStat, false);
 		pendingTurnStat.reset();
 		pendingTurnStatTime = 0L;
@@ -908,16 +854,9 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 			englishDist.read(datainputstream);
 			firstColl.read(datainputstream);
 			logState("strike recvd " + byte4 + " " + k2);
-			replayDebug("STRIKE recv seat=" + byte4 + ", index=" + k2
-					+ ", willAnimate="
-					+ (byte4 != getMySitIndex() || pool.getCurrentState() == 0)
-					+ ", " + replayPoolStatus() + ", balls="
-					+ replayBallSnapshot());
 			if (byte4 != getMySitIndex() || pool.getCurrentState() == 0)
 				pool.doStrike(byte4, k2, cueDist, englishDist, firstColl,
 						byte5);
-			replayDebug("STRIKE after " + replayPoolStatus() + ", balls="
-					+ replayBallSnapshot());
 			break;
 
 		case -112: // 90: time empty
@@ -934,19 +873,13 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 			Xc(0);
 			Xc(1);
 			logState("notifyTStat.");
-			replayDebug("TURN_STAT recv " + replayPoolDataStatus(J) + ", "
-					+ replayPoolStatus() + ", balls=" + replayBallSnapshot());
 			if (shouldDeferTurnStat()) {
 				J.Kw(pendingTurnStat);
 				pendingTurnStatTime = System.currentTimeMillis();
 				logState("notifyTStat deferred.");
-				replayDebug("TURN_STAT deferred at " + replayPoolStatus());
 				break;
 			}
-			replayDebug("TURN_STAT applying immediately " + replayPoolStatus());
 			pool.doNotifyTStat(J, false);
-			replayDebug("TURN_STAT after " + replayPoolStatus() + ", balls="
-					+ replayBallSnapshot());
 			break;
 
 		case -105: // 97: change time
@@ -1584,11 +1517,7 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 			return;
 		}
 		if (isReplaySpec(spec)) {
-			replayDebug = true;
-			Fd("Replay client diagnostics enabled.");
 			send('\uFF9F', spec);
-			replayDebug("COMMAND " + spec + ", " + replayPoolStatus()
-					+ ", balls=" + replayBallSnapshot());
 			Fd("Replay command sent.");
 			return;
 		}
