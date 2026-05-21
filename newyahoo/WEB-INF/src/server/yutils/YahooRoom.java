@@ -613,7 +613,7 @@ public abstract class YahooRoom {
 		if (id1 == null)
 			return;
 		information(id, name, id1.getProfile(), (int) (System
-				.currentTimeMillis() - id.getLastRequestTime()));
+				.currentTimeMillis() - id1.getLastRequestTime()));
 	}
 
 	public YahooConnectionId getId(String name) {

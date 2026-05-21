@@ -43,7 +43,7 @@ class PoolReplayRecorder {
 				+ MySQLTable.formatValue(new Timestamp(System.currentTimeMillis()))
 				+ ", " + MySQLTable.formatValue(player0) + ", "
 				+ MySQLTable.formatValue(player1) + ", " + flags + ")";
-		games.assyncExecute(sql);
+		games.execute(sql);
 	}
 
 	public String getReplayKey() {
@@ -91,7 +91,7 @@ class PoolReplayRecorder {
 		String sql = "UPDATE " + games.name + " SET initial_state="
 				+ blobLiteral(bytes) + " WHERE replay_key="
 				+ MySQLTable.formatValue(replayKey);
-		games.assyncExecute(sql);
+		games.execute(sql);
 		initialStateRecorded = true;
 	}
 
