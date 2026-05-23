@@ -259,21 +259,12 @@ public class PoolEngine implements ClockHandler, TimerHandler {
 					if (balli3 == null)
 						continue;
 					int currTime2 = ballj2.timeToBall(balli3);
-					if (PoolPhysicsTrace.shouldTrace(ballj2, balli3))
-						PoolPhysicsTrace.log("engine checked ttc=" + currTime2
-								+ " minBall=" + minTimeToCollBall + " tnTick="
-								+ tnTick + " " + PoolPhysicsTrace.pair(ballj2,
-										balli3));
 					if (logMessages && currTime2 < PoolMath.n_1
 							&& currTime2 > 0)
 						addPhysicsLog("ttc " + ballj2.getIndex() + " "
 								+ balli3.getIndex() + " " + currTime2);
 					if (currTime2 <= minTimeToCollBall && currTime2 > 0
 							&& currTime2 <= tnTick) {
-						if (PoolPhysicsTrace.shouldTrace(ballj2, balli3))
-							PoolPhysicsTrace.log("engine selected ball collision ttc="
-									+ currTime2 + " " + PoolPhysicsTrace.pair(
-											ballj2, balli3));
 						if (logMessages)
 							addPhysicsLog("2bs pI " + ballj2.getIndex() + " "
 									+ balli3.getIndex());
@@ -308,10 +299,6 @@ public class PoolEngine implements ClockHandler, TimerHandler {
 							continue;
 						if (currBall.distance((YIPoint) _lcls124_8) < PoolMath
 								.intToYInt(20)) {
-							if (PoolPhysicsTrace.shouldTrace(currBall, _lcls124_8))
-								PoolPhysicsTrace.log("engine shiftFromIntersect requested "
-										+ PoolPhysicsTrace.pair(currBall,
-												_lcls124_8));
 							addPhysicsLog("shiftFromIntersect " + currBall);
 							shiftFromIntersect(currBall);
 						}
@@ -331,12 +318,6 @@ public class PoolEngine implements ClockHandler, TimerHandler {
 			if (minTimeToCollBall == cE && cb2 != null && cb1 != null) {
 				if (logMessages)
 					addPhysicsLog("cb1" + cb1 + "\n cb2" + cb2);
-				if (PoolPhysicsTrace.shouldTrace(cb2, cb1))
-					PoolPhysicsTrace.log("engine applying collision cE=" + cE
-							+ " v2Before=" + cb2.getVel().a + ","
-							+ cb2.getVel().b + " v1Before=" + cb1.getVel().a
-							+ "," + cb1.getVel().b + " "
-							+ PoolPhysicsTrace.pair(cb2, cb1));
 				v2.setFrom(cb2.getVel());
 				v1.setFrom(cb1.getVel());
 				if (cb2.getIndex() < cb1.getIndex()) {
@@ -348,9 +329,6 @@ public class PoolEngine implements ClockHandler, TimerHandler {
 					cb2.ov(cb1, v1);
 				}
 				separateAfterCollision(cb2, cb1);
-				if (PoolPhysicsTrace.shouldTrace(cb2, cb1))
-					PoolPhysicsTrace.log("engine collision done "
-							+ PoolPhysicsTrace.pair(cb2, cb1));
 			}
 			minTimeToObstacle = minTimeToCollBall = tnTick -= cE;
 		}
@@ -535,16 +513,9 @@ public class PoolEngine implements ClockHandler, TimerHandler {
 		int dyTwo = PoolMath.mul(normal.b, moveTwo);
 		one.setPos(p1.a + dxOne, p1.b + dyOne);
 		two.setPos(p2.a - dxTwo, p2.b - dyTwo);
-		PoolPhysicsTrace.log("separateAfterCollision overlap=" + overlap
-				+ " correction=" + correction + " beforeGap="
-				+ (distance - minDistance) + " after="
-				+ PoolPhysicsTrace.pair(one, two));
 	}
 
 	private void shiftFromIntersect(IBall _pcls124) {
-		if (_pcls124 != null && _pcls124.getIndex() == 0)
-			PoolPhysicsTrace.log("shiftFromIntersect start "
-					+ PoolPhysicsTrace.ball(_pcls124));
 		YIVector _lcls48 = new YIVector((YIPoint) _pcls124, new YIPoint(
 				playArea.left + playArea.width / 2, playArea.top
 						+ playArea.height / 2));
@@ -558,10 +529,6 @@ public class PoolEngine implements ClockHandler, TimerHandler {
 				if (!_pcls124.equals(_lcls124)
 						&& _pcls124.distance((YIPoint) _lcls124) < PoolMath
 								.intToYInt(20)) {
-					if (PoolPhysicsTrace.shouldTrace(_pcls124, _lcls124))
-						PoolPhysicsTrace.log("shiftFromIntersect overlap step="
-								+ steps + " " + PoolPhysicsTrace.pair(_pcls124,
-										_lcls124));
 					flag1 = true;
 				}
 			}
@@ -575,9 +542,6 @@ public class PoolEngine implements ClockHandler, TimerHandler {
 				flag = false;
 			}
 		}
-		if (steps > 0 && _pcls124 != null)
-			PoolPhysicsTrace.log("shiftFromIntersect end steps=" + steps + " "
-					+ PoolPhysicsTrace.ball(_pcls124));
 	}
 
 	public void stop() {

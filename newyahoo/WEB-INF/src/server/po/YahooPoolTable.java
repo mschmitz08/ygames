@@ -167,22 +167,10 @@ public class YahooPoolTable extends YahooTable implements PoolHandler {
 		return data;
 	}
 
-	private void logReplayTurnStat(PoolReplayPlayback.Event event)
-			throws IOException {
-		PoolData data = readReplayTurnStat(event);
-		common.po.PoolPhysicsTrace.log("replay recorded TURN_STAT seq=" + event.seq
-				+ " actor=" + event.actorSeat + " turnCollided="
-				+ data.turnCollided + " firstCollidedBall="
-				+ data.firstCollidedBall + " inAreaCount="
-				+ data.turnInArea.getCount() + " pocketedCount="
-				+ data.turnPocketed.getCount() + " data=" + data.clientTs());
-	}
 
 	private void applyReplayTurnStat(PoolReplayPlayback.Event event)
 			throws IOException {
 		PoolData data = readReplayTurnStat(event);
-		common.po.PoolPhysicsTrace.log("replay applied TURN_STAT seq=" + event.seq
-				+ " actor=" + event.actorSeat + " data=" + data.clientTs());
 		if (poolEngineTimer != null)
 			stopPoolEngineTimer();
 		pool.doNotifyTStat(data, false);
@@ -221,8 +209,6 @@ public class YahooPoolTable extends YahooTable implements PoolHandler {
 		finally {
 			ids.readUnlock();
 		}
-		common.po.PoolPhysicsTrace.log("replay force-applied TURN_STAT seq="
-				+ event.seq + " data=" + data.clientTs());
 	}
 
 	private void applyReplaySetupEvent(YahooConnectionId id,
@@ -315,13 +301,8 @@ public class YahooPoolTable extends YahooTable implements PoolHandler {
 					broadcastFullGame();
 					doTableLog("Replay jumped to turn " + targetShot
 							+ "; use replay next to test this shot with current physics.");
-					common.po.PoolPhysicsTrace.log("replay jump armed targetShot="
-							+ targetShot + " seq=" + event.seq);
 					return;
 				}
-				common.po.PoolPhysicsTrace.log("replay jump skipped prior STRIKE shot="
-						+ shot + " seq=" + event.seq
-						+ "; waiting for recorded settle state");
 			}
 			else {
 				applyReplaySetupEvent(id, event);
@@ -357,19 +338,8 @@ public class YahooPoolTable extends YahooTable implements PoolHandler {
 			replayCueDist.read(input);
 			replayEnglishDist.read(input);
 			replayFirstColl.read(input);
-			common.po.PoolPhysicsTrace.log("replay STRIKE seq=" + event.seq
-					+ " actor=" + event.actorSeat + " index=" + index
-					+ " collBall=" + replayCollBall + " cueDist=("
-					+ replayCueDist.a + "," + replayCueDist.b + ") english=("
-					+ replayEnglishDist.a + "," + replayEnglishDist.b
-					+ ") firstColl=(" + replayFirstColl.a + ","
-					+ replayFirstColl.b + ") stateBefore="
-					+ common.po.PoolPhysicsTrace.ball(pool.getBall(index)));
 			if (pool.doStrike(event.actorSeat, index, replayCueDist,
 					replayEnglishDist, replayFirstColl, replayCollBall)) {
-				common.po.PoolPhysicsTrace.log("replay STRIKE accepted seq="
-						+ event.seq + " stateAfter="
-						+ common.po.PoolPhysicsTrace.ball(pool.getBall(index)));
 				ids.readLock();
 				try {
 					for (int i = 0; i < ids.size(); i++)
@@ -390,10 +360,6 @@ public class YahooPoolTable extends YahooTable implements PoolHandler {
 					turnStatEvent = replayPlayback.next();
 					if (shouldSkipReplayTurnStat(turnStatEvent)) {
 						replaySkipNextRecordedTurnStat = false;
-						logReplayTurnStat(turnStatEvent);
-						common.po.PoolPhysicsTrace.log("replay skipped recorded TURN_STAT seq="
-								+ turnStatEvent.seq + " after STRIKE seq="
-								+ event.seq + "; using live physics");
 						doTableLog("Replay shot " + event.seq
 								+ " is using current physics; skipped recorded settle event "
 								+ turnStatEvent.seq + "/"
@@ -461,9 +427,6 @@ public class YahooPoolTable extends YahooTable implements PoolHandler {
 		else if ("TURN_STAT".equals(event.eventType)) {
 			if (shouldSkipReplayTurnStat(event)) {
 				replaySkipNextRecordedTurnStat = false;
-				logReplayTurnStat(event);
-				common.po.PoolPhysicsTrace.log("replay skipped standalone TURN_STAT seq="
-						+ event.seq + "; using live physics state");
 				doTableLog("Replay skipped recorded TURN_STAT " + event.seq
 						+ " because replay uses current physics.");
 			}
