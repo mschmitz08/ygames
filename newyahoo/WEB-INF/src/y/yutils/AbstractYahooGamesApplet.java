@@ -1548,7 +1548,7 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 			ad_info_filename = "appad.html";
 		profile_prefix = getParameter("profile_prefix");
 		if (profile_prefix == null)
-			profile_prefix = "http://saddam.virtuaserver.com.br/games";
+			profile_prefix = "https://retroplayhub.com/ny";
 		avatar_host = getParameter("avatar_host");
 		ad_image_url_prefix = getParameter("ad_image_url_prefix");
 		if (ad_image_url_prefix == null)
