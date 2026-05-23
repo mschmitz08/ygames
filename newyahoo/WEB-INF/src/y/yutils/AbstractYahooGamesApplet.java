@@ -1731,7 +1731,7 @@ public abstract class AbstractYahooGamesApplet extends AbstractYahooApplet
 				return;
 			}
 			String profile_consolidater = getParameter("profile_consolidater");
-			openExternalUrl(new URL(profile_prefix + "/profile2?name="
+			openExternalUrl(new URL(profile_prefix + "/profile2.jsp?name="
 					+ encodedName + "&intl=" + encodedIntl
 					+ (profile_consolidater != null ? "&consolidater="
 							+ URLEncoder.encode(profile_consolidater, "UTF-8")
