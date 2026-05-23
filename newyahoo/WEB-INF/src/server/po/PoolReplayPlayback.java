@@ -100,6 +100,14 @@ class PoolReplayPlayback {
 		return events.elementAt(cursor);
 	}
 
+	void setCursor(int cursor) {
+		if (cursor < 0)
+			cursor = 0;
+		if (cursor > events.size())
+			cursor = events.size();
+		this.cursor = cursor;
+	}
+
 	void reset() {
 		cursor = 0;
 	}
