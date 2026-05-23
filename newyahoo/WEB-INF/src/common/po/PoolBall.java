@@ -345,8 +345,17 @@ public class PoolBall extends YIPoint implements IBall {
 
 	public void ov(IBall ball, YIVector v) {
 		PoolBall _lcls171 = (PoolBall) ball;
-		if (ballColided && collBall == _lcls171.getIndex())
+		boolean trace = PoolPhysicsTrace.shouldTrace(this, _lcls171);
+		if (trace)
+			PoolPhysicsTrace.log("ov start incomingV=(" + v.a + "," + v.b
+					+ ") " + PoolPhysicsTrace.pair(this, _lcls171));
+		if (ballColided && collBall == _lcls171.getIndex()) {
+			if (trace)
+				PoolPhysicsTrace.log("ov applying firstColl ball=" + index
+						+ " collBall=" + collBall + " firstColl=("
+						+ firstColl.a + "," + firstColl.b + ")");
 			setPos(firstColl.a, firstColl.b);
+		}
 		if (L) {
 			A.setFrom(vel);
 			if (P) {
@@ -359,10 +368,14 @@ public class PoolBall extends YIPoint implements IBall {
 		}
 		C.setFrom(this, _lcls171);
 		C.versor();
+		int normalA = C.a;
+		int normalB = C.b;
 		long l1 = vel.mul(C);
 		long l2 = v.mul(C);
 		long l3 = l1 - l2;
 		C.mul((int) l3);
+		int impulseA = C.a;
+		int impulseB = C.b;
 		vel.subFrom(C);
 		if (L && distance(N) < PoolMath.intToYInt(40) && index < 11
 				&& (A.norm() < 5L || A.zf(vel) > PoolMath.pi / 4))
@@ -372,6 +385,12 @@ public class PoolBall extends YIPoint implements IBall {
 		C.versor();
 		zz(i1, C);
 		uncolide();
+		if (trace)
+			PoolPhysicsTrace.log("ov end normal=(" + normalA + "," + normalB
+					+ ") l1=" + l1 + " l2=" + l2 + " l3=" + l3
+					+ " impulse=(" + impulseA + "," + impulseB
+					+ ") spinImpulse=" + i1 + " " + PoolPhysicsTrace.ball(this)
+					+ " other=" + PoolPhysicsTrace.ball(_lcls171));
 	}
 
 	public void pv() {
@@ -567,32 +586,61 @@ public class PoolBall extends YIPoint implements IBall {
 		int deltaVy = vel.b - _lcls171.vel.b;
 		int deltaX = super.a - ((YIPoint) _lcls171).a;
 		int deltaY = super.b - ((YIPoint) _lcls171).b;
-		if (deltaVx == 0 && deltaVy == 0)
-			return nearFirstCollisionWithinTick(_lcls171, PoolMath.n_2);
+		boolean trace = PoolPhysicsTrace.shouldTrace(this, _lcls171);
+		if (trace)
+			PoolPhysicsTrace.log("timeToBall start d=" + d + " dx=" + deltaX
+					+ " dy=" + deltaY + " dv=(" + deltaVx + "," + deltaVy
+					+ ") " + PoolPhysicsTrace.pair(this, _lcls171));
+		if (deltaVx == 0 && deltaVy == 0) {
+			int result = nearFirstCollisionWithinTick(_lcls171, PoolMath.n_2);
+			if (trace)
+				PoolPhysicsTrace.log("timeToBall sameVelocity result=" + result);
+			return result;
+		}
 		if (Math.abs(deltaX) - Math.abs(deltaVx) > d + PoolMath.n_5
-				&& Math.abs(deltaY) - Math.abs(deltaVy) > d + PoolMath.n_5)
-			return nearFirstCollisionWithinTick(_lcls171, PoolMath.n_2);
+				&& Math.abs(deltaY) - Math.abs(deltaVy) > d + PoolMath.n_5) {
+			int result = nearFirstCollisionWithinTick(_lcls171, PoolMath.n_2);
+			if (trace)
+				PoolPhysicsTrace.log("timeToBall broadPhaseMiss result="
+						+ result);
+			return result;
+		}
 		long l2 = d;
 		long l3 = deltaVx;
 		long l4 = deltaVy;
 		long l5 = deltaX;
 		long l6 = deltaY;
 		long a = PoolMath2.mul(l3, l3) + PoolMath2.mul(l4, l4);
-		if (a == 0L)
-			return nearFirstCollisionWithinTick(_lcls171, PoolMath.n_2);
+		if (a == 0L) {
+			int result = nearFirstCollisionWithinTick(_lcls171, PoolMath.n_2);
+			if (trace)
+				PoolPhysicsTrace.log("timeToBall zeroA result=" + result);
+			return result;
+		}
 		long b = PoolMath2.mul(PoolMath2.n_2, PoolMath2.mul(l5, l3)
 				+ PoolMath2.mul(l6, l4));
 		long c = PoolMath2.mul(l5, l5) + PoolMath2.mul(l6, l6)
 				- PoolMath2.mul(l2, l2);
 		long delta = PoolMath2.mul(b, b)
 				- PoolMath2.mul(PoolMath2.n_4, PoolMath2.mul(a, c));
-		if (delta < 0L)
-			return nearFirstCollisionWithinTick(_lcls171, PoolMath.n_2);
+		if (delta < 0L) {
+			int result = nearFirstCollisionWithinTick(_lcls171, PoolMath.n_2);
+			if (trace)
+				PoolPhysicsTrace.log("timeToBall negativeDelta a=" + a
+						+ " b=" + b + " c=" + c + " delta=" + delta
+						+ " result=" + result);
+			return result;
+		}
 		long sqrtDelta = PoolMath2.sqrt(delta);
 		long x2 = PoolMath2
 				.div(-b - sqrtDelta, PoolMath2.mul(PoolMath2.n_2, a));
 		int k2 = PoolMath2.toInt(x2);
-		return nearFirstCollisionWithinTick(_lcls171, k2);
+		int result = nearFirstCollisionWithinTick(_lcls171, k2);
+		if (trace)
+			PoolPhysicsTrace.log("timeToBall solved a=" + a + " b=" + b
+					+ " c=" + c + " delta=" + delta + " sqrt=" + sqrtDelta
+					+ " root=" + x2 + " raw=" + k2 + " result=" + result);
+		return result;
 	}
 
 	private int nearFirstCollisionWithinTick(PoolBall otherBall, int defaultTime) {
