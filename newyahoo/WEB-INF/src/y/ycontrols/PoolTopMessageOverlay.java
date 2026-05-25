@@ -4,10 +4,12 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Random;
 
 import y.controls.YahooComponent;
 import y.controls.YahooGraphics;
+import y.yutils.YahooGamesTable;
 
 public class PoolTopMessageOverlay extends YahooComponent {
 
@@ -217,13 +219,20 @@ public class PoolTopMessageOverlay extends YahooComponent {
 
 	private final YahooComponent	content;
 	private final int				bannerHeight;
+	private final YahooGamesTable	table;
 	private final String			message;
 
 	public PoolTopMessageOverlay(YahooComponent content, int bannerHeight) {
+		this(null, content, bannerHeight);
+	}
+
+	public PoolTopMessageOverlay(YahooGamesTable table, YahooComponent content,
+			int bannerHeight) {
 		super();
+		this.table = table;
 		this.content = content;
 		this.bannerHeight = bannerHeight;
-		message = MESSAGES[RANDOM.nextInt(MESSAGES.length)];
+		message = buildMessage();
 	}
 
 	@Override
@@ -312,5 +321,53 @@ public class PoolTopMessageOverlay extends YahooComponent {
 		if (lines.size() == 0)
 			lines.add(message);
 		return lines;
+	}
+
+	private String buildMessage() {
+		if (table == null || table.getPropertyes() == null)
+			return MESSAGES[RANDOM.nextInt(MESSAGES.length)];
+		Hashtable<String, String> properties = table.getPropertyes();
+		StringBuffer text = new StringBuffer();
+		if (properties.containsKey("nineBallGame")
+				|| properties.containsKey("nineBallTraining"))
+			text.append("9-Ball");
+		else
+			text.append("8-Ball");
+		if (properties.containsKey("training"))
+			text.append(" Training");
+		if (properties.containsKey("rd"))
+			text.append(" | Rated");
+		else
+			text.append(" | Unrated");
+		if (properties.containsKey("timer"))
+			text.append(" | Timer " + properties.get("timer") + "s");
+		if (properties.containsKey("ff"))
+			text.append(" | No force forfeit");
+		else
+			text.append(" | Force forfeit allowed");
+		if (properties.containsKey("breakPocketCap"))
+			text.append(" | Break random <= "
+					+ properties.get("breakPocketCap") + "%");
+		else
+			text.append(" | Deterministic break");
+		appendPct(text, properties, "linearFriction", "Slide");
+		appendPct(text, properties, "rotationFriction", "Roll");
+		appendPct(text, properties, "sideRotationFriction", "Spin friction");
+		appendPct(text, properties, "railBounce", "Rail bounce");
+		appendPct(text, properties, "railSpinTransfer", "Rail spin");
+		appendPct(text, properties, "railSideSpin", "Rail side");
+		appendPct(text, properties, "maxCuePower", "Max power");
+		appendPct(text, properties, "cueForce", "Cue force");
+		appendPct(text, properties, "spinEffect", "Spin effect");
+		appendPct(text, properties, "ballRadius", "Ball size");
+		appendPct(text, properties, "collisionEnergy", "Collision");
+		return new String(text);
+	}
+
+	private void appendPct(StringBuffer text, Hashtable<String, String> properties,
+			String key, String label) {
+		String value = properties.get("physics." + key + "Pct");
+		if (value != null)
+			text.append(" | " + label + " " + value + "%");
 	}
 }

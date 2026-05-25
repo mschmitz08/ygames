@@ -63,8 +63,8 @@ public class TableTitle implements YahooGamesTableListener {
 				.getTableControlContainer(), 1, 1, 0, 0, true);
 		if (table instanceof y.po.YahooPoolTable)
 			((YahooFrame) frame).container.addChildObject(
-					new PoolTopMessageOverlay(table.getTableControlContainer(),
-							64), 0, 0, true);
+					new PoolTopMessageOverlay(table, table
+							.getTableControlContainer(), 64), 0, 0, true);
 		frame.setDefaultAction(table.Pp());
 		frame.pack();
 		frame.setVisible(true);

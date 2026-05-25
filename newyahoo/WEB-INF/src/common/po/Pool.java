@@ -512,9 +512,9 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 	}
 
 	public Object getProperty(String s1) {
-		Object obj = setup.get(s1);
+		Object obj = propertyes.get(s1);
 		if (obj == null)
-			obj = propertyes.get(s1);
+			obj = setup.get(s1);
 		return obj;
 	}
 
@@ -633,9 +633,84 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 			Zj(new NineBallSetup(this));
 		else
 			Zj(new EightBallSetup(this));
+		applyPhysicsPropertyOverrides(hashtable);
 		poolEngine = new PoolEngine(this);
 		ball = new IBall[setup.getBallCount()];
 		m_turnNum = 0;
+	}
+
+	private void applyPhysicsPropertyOverrides(Hashtable<String, String> hashtable) {
+		applyScaledIntProperty(hashtable, "linearFriction");
+		applyScaledIntProperty(hashtable, "rotationFriction");
+		applyScaledIntProperty(hashtable, "sideRotationFriction");
+		applyScaledDefaultProperty(hashtable, "railBounce",
+				PoolMath.floatToYInt(0.25F));
+		applyScaledDefaultProperty(hashtable, "railSpinTransfer",
+				PoolMath.floatToYInt(6F));
+		applyScaledDefaultProperty(hashtable, "railSideSpin",
+				PoolMath.floatToYInt(8F));
+		applyScaledDefaultProperty(hashtable, "maxCuePower", 120);
+		applyPercentProperty(hashtable, "cueForce");
+		applyPercentProperty(hashtable, "spinEffect");
+		applyScaledDefaultProperty(hashtable, "ballRadius", 0x000A0000);
+		applyScaledDefaultProperty(hashtable, "collisionEnergy", 55536);
+	}
+
+	private void applyScaledIntProperty(Hashtable<String, String> hashtable,
+			String key) {
+		Object defaultValue = PoolSetup.getProperty(key);
+		if (!(defaultValue instanceof Integer))
+			return;
+		String value = hashtable.get("physics." + key + "Pct");
+		if (value == null)
+			return;
+		try {
+			int percent = Integer.parseInt(value);
+			if (percent < 50)
+				percent = 50;
+			if (percent > 150)
+				percent = 150;
+			int scaled = (int) ((((Integer) defaultValue).longValue() * percent)
+					/ 100L);
+			propertyes.put(key, new Integer(scaled));
+		}
+		catch (NumberFormatException e) {
+		}
+	}
+
+	private void applyScaledDefaultProperty(Hashtable<String, String> hashtable,
+			String key, int defaultValue) {
+		String value = hashtable.get("physics." + key + "Pct");
+		if (value == null)
+			return;
+		try {
+			int percent = Integer.parseInt(value);
+			if (percent < 50)
+				percent = 50;
+			if (percent > 150)
+				percent = 150;
+			int scaled = (int) (((long) defaultValue * percent) / 100L);
+			propertyes.put(key, new Integer(scaled));
+		}
+		catch (NumberFormatException e) {
+		}
+	}
+
+	private void applyPercentProperty(Hashtable<String, String> hashtable,
+			String key) {
+		String value = hashtable.get("physics." + key + "Pct");
+		if (value == null)
+			return;
+		try {
+			int percent = Integer.parseInt(value);
+			if (percent < 50)
+				percent = 50;
+			if (percent > 150)
+				percent = 150;
+			propertyes.put(key, new Integer(percent));
+		}
+		catch (NumberFormatException e) {
+		}
 	}
 
 	@Override
@@ -754,7 +829,8 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 			_lcls171.setCoords(p.a, p.b);
 			_lcls171.x0 = p.a;
 			_lcls171.y0 = p.b;
-			_lcls171.radius = 0x000A0000;
+			int radius = getIntProperty("ballRadius");
+			_lcls171.radius = radius > 0 ? radius : 0x000A0000;
 			_lcls171.m_inSlot = -1;
 			if (setup instanceof NineBallSetup
 					|| setup instanceof NineBallTrainingSetup) {

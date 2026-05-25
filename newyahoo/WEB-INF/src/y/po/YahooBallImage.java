@@ -31,6 +31,7 @@ class YahooBallImage extends YahooImage {
 	@Override
 	public void paint(YahooGraphics yahooGraphics) {
 		if (!ybi_a.getInSlot() && ybi_a.active)
-			yahooGraphics.drawImage(ybi_c, 0, 0, this);
+			yahooGraphics.drawImage(ybi_c, 0, 0, ybi_a.radius * 2,
+					ybi_a.radius * 2 + 1, this);
 	}
 }

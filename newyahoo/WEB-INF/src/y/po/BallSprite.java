@@ -66,6 +66,7 @@ public class BallSprite extends YahooImage {
 		poolBall = _pcls124;
 		bs_o = new YahooBallImage(this);
 		radius = (int) PoolMath.yintToFloat(_pcls124.getRadius());
+		syncSpriteSize();
 		Wd();
 		Hn(true);
 		Sn(true);
@@ -98,6 +99,7 @@ public class BallSprite extends YahooImage {
 			bs_g = YahooPoolImageList.loadImages().B[j];
 		}
 		bs_o = new YahooBallImage(this);
+		syncSpriteSize();
 		bs_y = YahooPoolImageList.loadImages().A[poolBall.getIndex()];
 	}
 
@@ -199,14 +201,16 @@ public class BallSprite extends YahooImage {
 	public void paint(YahooGraphics yahooGraphics) {
 		if (active) {
 			super.paint(yahooGraphics);
+			int size = radius * 2;
 			if (!isWhite) {
 				int j = Od();
 				bs_f = bs_x[j];
-				yahooGraphics.drawImage(bs_g, 0, 0, this);
+				yahooGraphics.drawImage(bs_g, 0, 0, size, size, this);
 			}
-			yahooGraphics.drawImage(bs_f, 0, 0, this);
+			yahooGraphics.drawImage(bs_f, 0, 0, size, size, this);
 			if (bs_p && bs_y != null)
-				yahooGraphics.drawImage(bs_y, 5, 3, this);
+				yahooGraphics.drawImage(bs_y, radius / 2, radius * 3 / 10,
+						radius, radius, this);
 			if (isWhite && k) {
 				yahooGraphics.setColor(new Color(110, 156, 233));
 				if (e.abs() < radius - 4)
@@ -248,6 +252,14 @@ public class BallSprite extends YahooImage {
 		super.setCoords(j - radius, i1 - radius);
 		if (bs_o != null)
 			bs_o.setCoords(j - radius, i1 - radius);
+	}
+
+	private void syncSpriteSize() {
+		int size = radius * 2;
+		width = width1 = size;
+		height = height1 = size;
+		if (bs_o != null)
+			bs_o.setBounds(left, top, size, size + 1);
 	}
 
 	public void setInSlot(boolean flag) {

@@ -550,17 +550,12 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 			marker = cueEndPoint;
 		}
 		else {
-			PoolBall previewCollisionBall = cloneBall(collisionBall);
 			cueBall.setCoords(firstColl);
 			YPoint collisionPoint = cueBall.toYVector();
+			YPoint objectPoint = collisionBall.toYVector();
 			cueLine.setCoords(startFloatPoint, collisionPoint);
-			cueBall.vel.versor();
-			cueBall.vel.mul(0xa0000);
-			YIVector incomingVel = cueBall.vel.je();
-			cueBall.ov(previewCollisionBall, previewCollisionBall.vel);
-			previewCollisionBall.ov(cueBall, incomingVel.je());
 
-			int shotDistance = savedPos.distance(previewCollisionBall.a, previewCollisionBall.b);
+			int shotDistance = savedPos.distance(collisionBall.a, collisionBall.b);
 			int previewLength = pa_r;
 			if (shotDistance > PoolMath.intToYInt(40)) {
 				previewLength -= PoolMath.div(shotDistance - PoolMath.intToYInt(40), PoolMath.intToYInt(4));
@@ -569,28 +564,25 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 					previewLength = minPreviewLength;
 			}
 
-			YIVector cuePreview = cueBall.vel.je();
-			YIPoint cuePreviewEnd = new YIPoint(cueBall.a, cueBall.b);
-			if (cuePreview.abs() != 0) {
-				cuePreview.versor();
-				cuePreview.mul(previewLength);
-				cuePreviewEnd.add(cuePreview);
-			}
-			deflectionLine.setCoords(cueBall.toYVector(), cuePreviewEnd.toYVector());
+			float previewDistance = PoolMath.yintToFloat(previewLength);
+			YVector objectDirection = new YVector();
+			objectDirection.setCoords(collisionPoint, objectPoint);
+			if (objectDirection.abs() > 0.0001F)
+				targetLine.setCoords(objectPoint,
+						extendDistance(objectPoint, objectDirection, previewDistance));
 
-			YIVector objectPreview = previewCollisionBall.vel.je();
-			YIPoint objectPreviewEnd = new YIPoint(previewCollisionBall.a, previewCollisionBall.b);
-			if (objectPreview.abs() != 0) {
-				objectPreview.versor();
-				objectPreview.mul(previewLength);
-				objectPreviewEnd.add(objectPreview);
-			}
-			targetLine.setCoords(previewCollisionBall.toYVector(), objectPreviewEnd.toYVector());
-			previewCollisionBall.stop();
+			YVector incomingDirection = new YVector();
+			incomingDirection.setCoords(startFloatPoint, collisionPoint);
+			YVector deflectionDirection = computeDeflectionDirection(incomingDirection,
+					objectDirection);
+			if (deflectionDirection.abs() > 0.0001F)
+				deflectionLine.setCoords(collisionPoint,
+						extendDistance(collisionPoint, deflectionDirection, previewDistance));
 			marker = collisionPoint;
 		}
 
-		aim.add(cueLine, deflectionLine, targetLine, marker);
+		aim.add(cueLine, deflectionLine, targetLine, marker,
+				PoolMath.yintToInt(selectedBall.radius * 2));
 		aim.invalidate();
 	}
 
@@ -601,6 +593,19 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 			return new YPoint(start.x, start.y);
 		normalized.mul(1.0F / length);
 		return new YPoint(start.x + normalized.x * distance, start.y + normalized.y * distance);
+	}
+
+	private YVector computeDeflectionDirection(YVector incoming, YVector objectDirection) {
+		YVector incomingUnit = new YVector(incoming.x, incoming.y);
+		YVector objectUnit = new YVector(objectDirection.x, objectDirection.y);
+		if (incomingUnit.abs() <= 0.0001F || objectUnit.abs() <= 0.0001F)
+			return new YVector();
+		incomingUnit.versor();
+		objectUnit.versor();
+		float normalAmount = incomingUnit.x * objectUnit.x + incomingUnit.y
+				* objectUnit.y;
+		return new YVector(incomingUnit.x - objectUnit.x * normalAmount,
+				incomingUnit.y - objectUnit.y * normalAmount);
 	}
 
 	public void fs(BallSprite a_pcls31[]) {
@@ -683,7 +688,6 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 
 	@Override
 	public void paint(YahooGraphics yahooGraphics) {
-		super.paint(yahooGraphics);
 		if (tableBackground != null)
 			yahooGraphics.drawImage(tableBackground, 0, 0, null);
 		else {
@@ -714,6 +718,28 @@ public class PoolAimer extends YahooControl implements TimerHandler {
 			yahooGraphics.fillOval(pa_p - 10, pa_q - 14, 25, 25);
 			yahooGraphics.fillRect(pa_o, pa_q - 14, 420, 25);
 		}
+		paintOverlayChildren(yahooGraphics);
+	}
+
+	@Override
+	protected void zn(YahooGraphics graphics, int left, int top, int rigth,
+			int bottom) {
+		paint(graphics);
+	}
+
+	private void paintOverlayChildren(YahooGraphics yahooGraphics) {
+		int savedLeft = yahooGraphics.left;
+		int savedTop = yahooGraphics.top;
+		for (int i = 0; i < components.size(); i++) {
+			y.controls.YahooComponent component = components.elementAt(i);
+			if (component.c)
+				continue;
+			yahooGraphics.left = savedLeft + component.left;
+			yahooGraphics.top = savedTop + component.top;
+			component.paint(yahooGraphics);
+		}
+		yahooGraphics.left = savedLeft;
+		yahooGraphics.top = savedTop;
 	}
 
 	@Override

@@ -38,6 +38,12 @@ class PoolTableCreatorDialog extends YahooDialog {
 	YahooLabel		breakChanceLabel;
 	YahooControl		breakOptions;
 	BreakBehaviorPanel	breakPanel;
+	PoolPhysicsPanel	physicsPanel;
+	PoolPercentSlider	physicsSliders[];
+	YahooLabel		physicsValueLabels[];
+	PoolShotControlPanel	shotPanel;
+	PoolPercentSlider	shotSliders[];
+	YahooLabel		shotValueLabels[];
 	YahooControl		h;
 	YahooControl		i;
 	YahooControl		j;
@@ -46,6 +52,17 @@ class PoolTableCreatorDialog extends YahooDialog {
 	YahooButton			m;
 	YahooControl		ptc_n;
 	TableDescription	ptc_o;
+	static final String	PHYSICS_PROPERTY_KEYS[] = { "linearFriction",
+			"rotationFriction", "sideRotationFriction", "railBounce",
+			"railSpinTransfer", "railSideSpin" };
+	static final String	PHYSICS_PROPERTY_LABELS[] = { "Slide friction:",
+			"Roll friction:", "Side spin friction:", "Rail bounce:",
+			"Rail spin transfer:", "Rail side spin:" };
+	static final String	SHOT_PROPERTY_KEYS[] = { "maxCuePower",
+			"cueForce", "spinEffect", "ballRadius", "collisionEnergy" };
+	static final String	SHOT_PROPERTY_LABELS[] = { "Max cue power:",
+			"Cue force:", "Spin effectiveness:", "Ball size:",
+			"Collision energy:" };
 
 	PoolTableCreatorDialog(TableCreator _pcls97, YahooControl _pcls79) {
 		super(_pcls79, _pcls97.getApplet().lookupString(0x66501402));
@@ -72,6 +89,8 @@ class PoolTableCreatorDialog extends YahooDialog {
 				category != null && !category.equals("social"));
 		if (_pcls97.getApplet().lookupString(0x6650179d).equals("y"))
 			addChildObject(chkNineBallGame, 17, 0, 0, 2, 1, 0, 3);
+		else
+			addChildObject(chkNineBallGame, 17, 0, 0, 2, 1, 0, 1);
 		chkNineBallGame.setChecked(false);
 		chkAutomat = new YahooCheckBox("Automatic", null, category != null
 				&& !category.equals("social"));
@@ -123,12 +142,39 @@ class PoolTableCreatorDialog extends YahooDialog {
 		breakOptions.addChildObject(breakChanceControls, 1);
 		breakPanel.addChildObject(breakOptions, 12, 68, false);
 		breakOptions.qo(0);
-		addChildObject(breakPanel, 17, 0, 0, 1, 8, 2, 0, 12, 0, 0, 0);
+		addChildObject(breakPanel, 17, 0, 0, 1, 4, 2, 0, 12, 0, 0, 0);
+		physicsPanel = new PoolPhysicsPanel();
+		physicsSliders = new PoolPercentSlider[PHYSICS_PROPERTY_KEYS.length];
+		physicsValueLabels = new YahooLabel[PHYSICS_PROPERTY_KEYS.length];
+		for (int p = 0; p < PHYSICS_PROPERTY_KEYS.length; p++) {
+			physicsPanel.addChildObject(new YahooLabel(PHYSICS_PROPERTY_LABELS[p]),
+					12, 24 + p * 23, false);
+			physicsSliders[p] = new PoolPercentSlider(this, p, 50, 150, 100);
+			physicsPanel.addChildObject(physicsSliders[p], 130, 22 + p * 23,
+					false);
+			physicsValueLabels[p] = new YahooLabel("100%");
+			physicsPanel.addChildObject(physicsValueLabels[p], 247,
+					24 + p * 23, false);
+		}
+		addChildObject(physicsPanel, 17, 0, 0, 1, 7, 2, 4, 12, 0, 0, 0);
+		shotPanel = new PoolShotControlPanel();
+		shotSliders = new PoolPercentSlider[SHOT_PROPERTY_KEYS.length];
+		shotValueLabels = new YahooLabel[SHOT_PROPERTY_KEYS.length];
+		for (int s = 0; s < SHOT_PROPERTY_KEYS.length; s++) {
+			shotPanel.addChildObject(new YahooLabel(SHOT_PROPERTY_LABELS[s]), 12,
+					24 + s * 23, false);
+			shotSliders[s] = new PoolPercentSlider(this, s, true, 50, 150, 100);
+			shotPanel.addChildObject(shotSliders[s], 130, 22 + s * 23, false);
+			shotValueLabels[s] = new YahooLabel("100%");
+			shotPanel.addChildObject(shotValueLabels[s], 247, 24 + s * 23,
+					false);
+		}
+		addChildObject(shotPanel, 17, 0, 0, 1, 6, 0, 10, 0, 12, 12, 0);
 		ptc_o = new TableDescription(_pcls97.getApplet().getTimerHandler(),
 				_pcls97.getApplet());
 		addChildObject(ptc_o, 2, 1, 0, 8);
 		YahooControl _lcls79_1 = new YahooControl(1);
-		addChildObject(_lcls79_1, 10, 0, 0, 2, 1, 0, 9);
+		addChildObject(_lcls79_1, 10, 0, 0, 2, 1, 1, 15);
 		_lcls79_1.addChildObject(l, 0, 0, 2);
 		_lcls79_1.addChildObject(m, 1, 0, 2);
 		show();
@@ -142,6 +188,19 @@ class PoolTableCreatorDialog extends YahooDialog {
 	private void updateBreakOptionsVisibility() {
 		if (breakOptions != null)
 			breakOptions.qo(chkBreakAdaptive.isChecked() ? 1 : 0);
+	}
+
+	void handlePhysicsSliderChange(int index, int value) {
+		if (physicsValueLabels != null && index >= 0
+				&& index < physicsValueLabels.length
+				&& physicsValueLabels[index] != null)
+			physicsValueLabels[index].setCaption(value + "%");
+	}
+
+	void handleShotSliderChange(int index, int value) {
+		if (shotValueLabels != null && index >= 0 && index < shotValueLabels.length
+				&& shotValueLabels[index] != null)
+			shotValueLabels[index].setCaption(value + "%");
 	}
 
 	@Override
@@ -173,6 +232,15 @@ class PoolTableCreatorDialog extends YahooDialog {
 						.valueOf(breakChanceSlider.getValue()));
 			else
 				tableCreator.addProperty("breakDeterministic", "");
+			for (int p = 0; p < PHYSICS_PROPERTY_KEYS.length; p++)
+				if (physicsSliders[p].getValue() != 100)
+					tableCreator.addProperty("physics."
+							+ PHYSICS_PROPERTY_KEYS[p] + "Pct", String
+							.valueOf(physicsSliders[p].getValue()));
+			for (int s = 0; s < SHOT_PROPERTY_KEYS.length; s++)
+				if (shotSliders[s].getValue() != 100)
+					tableCreator.addProperty("physics." + SHOT_PROPERTY_KEYS[s]
+							+ "Pct", String.valueOf(shotSliders[s].getValue()));
 			if (ptc_o != null)
 				ptc_o.Qa(tableCreator);
 			tableCreator.makeTable();

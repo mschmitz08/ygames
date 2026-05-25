@@ -154,6 +154,19 @@ public abstract class PoolSetup implements Setup {
 		return new YIPoint(0, 0);
 	}
 
+	protected YIPoint getScaledRackPos(YIPoint basePos, YIPoint rackAnchor) {
+		if (basePos == null || rackAnchor == null)
+			return new YIPoint(0, 0);
+		int radius = pool == null ? -1 : pool.getIntProperty("ballRadius");
+		if (radius <= 0 || radius == PoolMath.intToYInt(10))
+			return basePos;
+		int dx = basePos.a - rackAnchor.a;
+		int dy = basePos.b - rackAnchor.b;
+		int scale = PoolMath.div(radius, PoolMath.intToYInt(10));
+		return new YIPoint(rackAnchor.a + PoolMath.mul(dx, scale),
+				rackAnchor.b + PoolMath.mul(dy, scale));
+	}
+
 	public int getSlotIndex() {
 		return -1;
 	}

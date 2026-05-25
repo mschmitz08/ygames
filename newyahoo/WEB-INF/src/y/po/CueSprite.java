@@ -650,6 +650,14 @@ public class CueSprite extends YahooComponent implements YData {
 		directionAccelRampMs = accelRampMs;
 	}
 
+	public void setMaxPower(int maxPower) {
+		if (maxPower < 60)
+			maxPower = 60;
+		if (maxPower > 180)
+			maxPower = 180;
+		this.maxPower = maxPower;
+	}
+
 	public void setCue(float x, float y) {
 		m_cue.setCoords(x, y);
 		m_ball.setCoordsTo(U);
@@ -806,7 +814,7 @@ public class CueSprite extends YahooComponent implements YData {
 		output.writeInt(PoolMath.floatToYInt(m_cue.x));
 		output.writeInt(PoolMath.floatToYInt(m_cue.y));
 
-		output.writeInt(power1 > 120 ? 120 : power1);
+		output.writeInt(power1 > maxPower ? maxPower : power1);
 	}
 
 	public void Xk() {

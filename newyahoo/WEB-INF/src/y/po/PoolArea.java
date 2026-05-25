@@ -133,7 +133,9 @@ public class PoolArea extends YahooControl {
 			addChildObject(m, 17, 3, 3, 1, 10, 2, 0, 1, 0, 1, 1);
 			pa_u = new YahooLabel("");
 		}
-		cueSprite = new CueSprite(this, poolAimer, handler, 120, 10);
+		int maxCuePower = handler.getPool().getIntProperty("maxCuePower");
+		cueSprite = new CueSprite(this, poolAimer, handler,
+				maxCuePower > 0 ? maxCuePower : 120, 10);
 		slot = (Slot[]) handler.getPool().getProperty("SLOTS");
 	}
 

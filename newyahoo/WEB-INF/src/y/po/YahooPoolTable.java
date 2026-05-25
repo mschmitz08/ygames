@@ -1588,10 +1588,11 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 			return cueDist;
 		int adjustedPower;
 		int powerJitter = BREAK_POWER_JITTER * level;
-		if (selectedPower >= MAX_CUE_POWER)
+		int maxCuePower = getMaxCuePower();
+		if (selectedPower >= maxCuePower)
 			adjustedPower = selectedPower - BREAK_RANDOM.nextInt(powerJitter + 1);
 		else
-			adjustedPower = Math.max(0, Math.min(MAX_CUE_POWER, selectedPower
+			adjustedPower = Math.max(0, Math.min(maxCuePower, selectedPower
 					+ BREAK_RANDOM.nextInt(powerJitter * 2 + 1)
 					- powerJitter));
 		if (adjustedPower == selectedPower)
@@ -1815,9 +1816,14 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 	private YIPoint buildTestCueDist(IBall selectedBall, double angle) {
 		float cueX = selectedBall.getYIntX();
 		float cueY = selectedBall.getYIntY();
-		float pullX = (float) Math.cos(angle) * MAX_CUE_POWER;
-		float pullY = (float) Math.sin(angle) * MAX_CUE_POWER;
+		float pullX = (float) Math.cos(angle) * getMaxCuePower();
+		float pullY = (float) Math.sin(angle) * getMaxCuePower();
 		return new YIPoint(cueX - pullX, cueY - pullY);
+	}
+
+	private int getMaxCuePower() {
+		int maxCuePower = pool.getIntProperty("maxCuePower");
+		return maxCuePower > 0 ? maxCuePower : MAX_CUE_POWER;
 	}
 
 	private CollisionHint calculateCollisionHint(Pool sourcePool,

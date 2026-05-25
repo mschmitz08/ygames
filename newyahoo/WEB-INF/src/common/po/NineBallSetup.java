@@ -88,7 +88,9 @@ public final class NineBallSetup extends PoolSetup implements PoolConsts {
 	public YIPoint getInitPos(int j) {
 		if (j >= rackPos.length)
 			return new YIPoint(0, 0);
-		return rackPos[j];
+		if (j == d)
+			return rackPos[j];
+		return getScaledRackPos(rackPos[j], initPos[9]);
 	}
 
 	@Override

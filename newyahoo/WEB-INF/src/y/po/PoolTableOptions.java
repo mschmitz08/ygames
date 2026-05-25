@@ -60,7 +60,22 @@ public class PoolTableOptions extends CustomTableOptions {
 		else if (hashtable.containsKey("breakPocketCap"))
 			stringbuffer.append(" break<=" + hashtable.get("breakPocketCap")
 					+ "%");
+		appendPhysicsOption(stringbuffer, hashtable, "linearFriction", " slide");
+		appendPhysicsOption(stringbuffer, hashtable, "rotationFriction", " roll");
+		appendPhysicsOption(stringbuffer, hashtable, "sideRotationFriction",
+				" spin");
+		appendPhysicsOption(stringbuffer, hashtable, "railBounce", " rail");
+		appendPhysicsOption(stringbuffer, hashtable, "maxCuePower", " power");
+		appendPhysicsOption(stringbuffer, hashtable, "cueForce", " force");
+		appendPhysicsOption(stringbuffer, hashtable, "ballRadius", " size");
 		return new String(stringbuffer);
+	}
+
+	private void appendPhysicsOption(StringBuffer stringbuffer,
+			Hashtable<String, String> hashtable, String key, String label) {
+		String value = hashtable.get("physics." + key + "Pct");
+		if (value != null)
+			stringbuffer.append(label + "=" + value + "%");
 	}
 
 	@Override

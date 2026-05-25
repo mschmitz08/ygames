@@ -20,20 +20,22 @@ public class PoolBall extends YIPoint implements IBall {
 											PoolMath.intToYInt(172));
 	static int					O	= 0x13880;
 	static boolean				P	= false;
-	private static YRectangle	IN_AREA;
-	static int					linearFriction;
-	static int					n_0_4;
-	static int					n_0_3;
-	static int					rotationFriction;
-	static int					sideRotationFriction;
-	static int					n_6;
-	static int					n_8;
-	static int					Y;
-	static int					Z;
-	static int					n_0_25;
-	static boolean				aa	= false;
-	static YRectangle			bounceArea;
-	static YRectangle			pocketArea;
+	private YRectangle			IN_AREA;
+	int					linearFriction;
+	int					n_0_4;
+	int					n_0_3;
+	int					rotationFriction;
+	int					sideRotationFriction;
+	int					n_6;
+	int					n_8;
+	int					Y;
+	int					Z;
+	int					n_0_25;
+	int					cueForcePercent;
+	int					spinEffectPercent;
+	int					collisionEnergy;
+	YRectangle				bounceArea;
+	YRectangle				pocketArea;
 	public static YRectangle	slot[];
 	static {
 		e1 = new YIVector(PoolMath.n_1, 0);
@@ -465,8 +467,7 @@ public class PoolBall extends YIPoint implements IBall {
 
 	public void setPool(PoolParams _pcls57) {
 		pool = _pcls57;
-		if (!aa)
-			updateParams();
+		updateParams();
 	}
 
 	public void setPos(int i1, int j1) {
@@ -504,6 +505,7 @@ public class PoolBall extends YIPoint implements IBall {
 					.floatToYInt(30F), j1), PoolMath.floatToYInt(0.001F)),
 					PoolMath.floatToYInt(0.157F));
 		}
+		i2 = scalePercent(i2, cueForcePercent);
 		YIVector _lcls48 = new YIVector(super.a - cueDist.a, super.b
 				- cueDist.b);
 		_lcls48.versor();
@@ -516,6 +518,7 @@ public class PoolBall extends YIPoint implements IBall {
 					PoolMath.mul(j1, PoolMath.mul(PoolMath.floatToYInt(0.001F),
 							PoolMath.mul(PoolMath.floatToYInt(2.5F), l1)))),
 					PoolMath.mul(PoolMath.floatToYInt(0.157F), radius));
+			k2 = scalePercent(k2, spinEffectPercent);
 			YIVector _lcls48_1 = new YIVector(englishDist.a, -1 * englishDist.b);
 			_lcls48_1.versor();
 			_lcls48_1.mul(k2);
@@ -725,14 +728,25 @@ public class PoolBall extends YIPoint implements IBall {
 		n_0_3 = PoolMath.floatToYInt(0.3F);
 		rotationFriction = pool.getIntProperty("rotationFriction");
 		sideRotationFriction = pool.getIntProperty("sideRotationFriction");
-		n_6 = PoolMath.floatToYInt(6F);
-		n_8 = PoolMath.floatToYInt(8F);
+		n_6 = getPoolIntProperty("railSpinTransfer", PoolMath.floatToYInt(6F));
+		n_8 = getPoolIntProperty("railSideSpin", PoolMath.floatToYInt(8F));
 		Y = PoolMath.floatToYInt(0.5F);
 		Z = PoolMath.floatToYInt(0.1F);
-		n_0_25 = PoolMath.floatToYInt(0.25F);
+		n_0_25 = getPoolIntProperty("railBounce", PoolMath.floatToYInt(0.25F));
+		cueForcePercent = getPoolIntProperty("cueForce", 100);
+		spinEffectPercent = getPoolIntProperty("spinEffect", 100);
+		collisionEnergy = getPoolIntProperty("collisionEnergy", 55536);
 		bounceArea = (YRectangle) pool.getProperty("OUT_OF_BOUNCE_AREA");
 		pocketArea = (YRectangle) pool.getProperty("OUT_OF_POCKET_AREA");
-		aa = true;
+	}
+
+	private int getPoolIntProperty(String key, int defaultValue) {
+		int value = pool.getIntProperty(key);
+		return value == -1 ? defaultValue : value;
+	}
+
+	private static int scalePercent(int value, int percent) {
+		return (int) (((long) value * percent) / 100L);
 	}
 
 	public void uz() {
@@ -826,7 +840,7 @@ public class PoolBall extends YIPoint implements IBall {
 			int l1 = h.he() <= Math.abs(i2) ? h.ke() : i2;
 			h.ne(l1);
 		}
-		vel.mul(55536);
+		vel.mul(collisionEnergy);
 		if (vel.norm() < 5L) {
 			vel.set(0, 0);
 			wX.set(0, 0);

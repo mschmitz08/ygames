@@ -77,7 +77,9 @@ public final class EightBallSetup extends PoolSetup implements PoolConsts {
 	public YIPoint getInitPos(int i) {
 		if (i >= initPos.length)
 			return new YIPoint(0, 0);
-		return initPos[i];
+		if (i == whiteBallIndex)
+			return initPos[i];
+		return getScaledRackPos(initPos[i], initPos[6]);
 	}
 
 	@Override

@@ -57,6 +57,12 @@ public class Aim extends YahooComponent {
 		setCoords(0, 0);
 	}
 
+	public void add(YLine line1, YLine line2, YLine line3, YPoint path,
+			int markerSize) {
+		a_g = markerSize;
+		add(line1, line2, line3, path);
+	}
+
 	public void clear() {
 		line.clear();
 		path.clear();
@@ -126,4 +132,5 @@ public class Aim extends YahooComponent {
 			}
 		}
 	}
+
 }
