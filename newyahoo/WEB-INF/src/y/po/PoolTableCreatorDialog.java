@@ -32,6 +32,12 @@ class PoolTableCreatorDialog extends YahooDialog {
 	YahooCheckBox		chkNineBallGame;
 	YahooCheckBox		chkTimer;
 	YahooCheckBox		chkForceForfeit;
+	YahooCheckBox		chkBreakDeterministic;
+	YahooCheckBox		chkBreakAdaptive;
+	BreakChanceSlider	breakChanceSlider;
+	YahooLabel		breakChanceLabel;
+	YahooControl		breakOptions;
+	BreakBehaviorPanel	breakPanel;
 	YahooControl		h;
 	YahooControl		i;
 	YahooControl		j;
@@ -98,14 +104,44 @@ class PoolTableCreatorDialog extends YahooDialog {
 		h.addChildObject(i, 1);
 		addChildObject(h, 17, 0, 0, 2, 1, 0, 4);
 		h.qo(1);
+		chkBreakDeterministic = new YahooCheckBox("Deterministic break", null,
+				true);
+		chkBreakAdaptive = new YahooCheckBox("Non-deterministic break",
+				chkBreakDeterministic, false);
+		breakPanel = new BreakBehaviorPanel();
+		breakPanel.addChildObject(chkBreakDeterministic, 12, 23, false);
+		breakPanel.addChildObject(chkBreakAdaptive, 12, 44, false);
+		breakOptions = new YahooControl(2);
+		breakChanceSlider = new BreakChanceSlider(this);
+		breakChanceLabel = new YahooLabel("Max pocket chance: 50%");
+		YahooControl breakChanceControls = new YahooControl(0);
+		breakChanceControls.addChildObject(breakChanceLabel, 17, 0, 0, 1, 1, 0,
+				0);
+		breakChanceControls.addChildObject(breakChanceSlider, 17, 0, 0, 1, 1,
+				0, 1);
+		breakOptions.addChildObject(new YahooControl(), 0);
+		breakOptions.addChildObject(breakChanceControls, 1);
+		breakPanel.addChildObject(breakOptions, 12, 68, false);
+		breakOptions.qo(0);
+		addChildObject(breakPanel, 17, 0, 0, 1, 8, 2, 0, 12, 0, 0, 0);
 		ptc_o = new TableDescription(_pcls97.getApplet().getTimerHandler(),
 				_pcls97.getApplet());
-		addChildObject(ptc_o, 2, 1, 0, 7);
+		addChildObject(ptc_o, 2, 1, 0, 8);
 		YahooControl _lcls79_1 = new YahooControl(1);
-		addChildObject(_lcls79_1, 10, 0, 0, 2, 1, 0, 8);
+		addChildObject(_lcls79_1, 10, 0, 0, 2, 1, 0, 9);
 		_lcls79_1.addChildObject(l, 0, 0, 2);
 		_lcls79_1.addChildObject(m, 1, 0, 2);
 		show();
+	}
+
+	void handleBreakChanceSliderChange(int value) {
+		if (breakChanceLabel != null)
+			breakChanceLabel.setCaption("Max pocket chance: " + value + "%");
+	}
+
+	private void updateBreakOptionsVisibility() {
+		if (breakOptions != null)
+			breakOptions.qo(chkBreakAdaptive.isChecked() ? 1 : 0);
 	}
 
 	@Override
@@ -132,6 +168,11 @@ class PoolTableCreatorDialog extends YahooDialog {
 				if (chkNineBallGame.isChecked() && chkTimer.isChecked())
 					tableCreator.addProperty("timer", txtTimer.getText());
 			}
+			if (chkBreakAdaptive.isChecked())
+				tableCreator.addProperty("breakPocketCap", String
+						.valueOf(breakChanceSlider.getValue()));
+			else
+				tableCreator.addProperty("breakDeterministic", "");
 			if (ptc_o != null)
 				ptc_o.Qa(tableCreator);
 			tableCreator.makeTable();
@@ -139,7 +180,11 @@ class PoolTableCreatorDialog extends YahooDialog {
 			return true;
 		}
 		if (event.target != chkRated)
-			if (event.target == chkTimer) {
+			if (event.target == chkBreakAdaptive
+					|| event.target == chkBreakDeterministic) {
+				updateBreakOptionsVisibility();
+			}
+			else if (event.target == chkTimer) {
 				if (chkTimer.isChecked())
 					j.qo(1);
 				else
