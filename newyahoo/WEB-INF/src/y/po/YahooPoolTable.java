@@ -74,6 +74,7 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 	private static final int	TEST_SHOT_ATTEMPTS_PER_TICK	= 50;
 	private static final int	TEST_SHOT_PROGRESS_INTERVAL	= 500;
 	private static final int	TEST_SHOT_MAX_TICKS	= 900;
+	private static final int	BREAK_ZERO_CAP_MAX_TICKS = 5000;
 	private static final int	TEST_SHOT_BLACK_BALL_INDEX	= 6;
 	private static final long DEFERRED_TURN_STAT_TIMEOUT_MS = 8000L;
 	public static final int	DEFAULT_CUE_TAP_UNITS		= 8;
@@ -1513,11 +1514,15 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 				englishDist);
 		if (targetPocketPercent >= 100)
 			return baseShot;
-		if (!doesBreakShotPocketBall(selectedBall.getIndex(), baseShot, englishDist))
-			return baseShot;
-		if (targetPocketPercent <= 0)
+		if (targetPocketPercent <= 0) {
+			if (!doesBreakShotPocketBall(selectedBall.getIndex(), baseShot,
+					englishDist, BREAK_ZERO_CAP_MAX_TICKS, true))
+				return baseShot;
 			return buildNoPocketOpeningBreakShot(selectedBall, selectedPower,
 					baseCueDist, englishDist, baseShot);
+		}
+		if (!doesBreakShotPocketBall(selectedBall.getIndex(), baseShot, englishDist))
+			return baseShot;
 		BreakShot fallback = baseShot;
 		for (int level = 1; level <= BREAK_JITTER_MAX_LEVEL; level++) {
 			int pocketed = 0;
@@ -1546,14 +1551,14 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 				BreakShot candidate = buildJitteredOpeningBreakShot(selectedBall,
 						selectedPower, baseCueDist, englishDist, level);
 				if (!doesBreakShotPocketBall(selectedBall.getIndex(), candidate,
-						englishDist))
+						englishDist, BREAK_ZERO_CAP_MAX_TICKS, true))
 					return candidate;
 			}
 		for (int percent = 90; percent >= 0; percent -= 10) {
 			BreakShot candidate = buildScaledOpeningBreakShot(selectedBall,
 					baseCueDist, englishDist, percent);
 			if (!doesBreakShotPocketBall(selectedBall.getIndex(), candidate,
-					englishDist))
+					englishDist, BREAK_ZERO_CAP_MAX_TICKS, true))
 				return candidate;
 			fallback = candidate;
 		}
@@ -1590,14 +1595,22 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 
 	private boolean doesBreakShotPocketBall(int cueBallIndex, BreakShot shot,
 			YIPoint englishDist) {
+		return doesBreakShotPocketBall(cueBallIndex, shot, englishDist,
+				TEST_SHOT_MAX_TICKS, false);
+	}
+
+	private boolean doesBreakShotPocketBall(int cueBallIndex, BreakShot shot,
+			YIPoint englishDist, int maxTicks, boolean movingIsPocketRisk) {
 		Pool simPool = createSimulationPool();
 		if (simPool == null)
 			return false;
 		if (!simPool.doStrike(simPool.m_turn, cueBallIndex, shot.cueDist,
 				englishDist, shot.firstColl, shot.collBall))
 			return false;
-		runSimulation(simPool);
-		return simPool.turnPocketed != null && simPool.turnPocketed.size() > 0;
+		boolean stillMoving = runSimulation(simPool, maxTicks);
+		if (simPool.turnPocketed != null && simPool.turnPocketed.size() > 0)
+			return true;
+		return movingIsPocketRisk && stillMoving;
 	}
 
 	private YIPoint buildOpeningBreakCueDist(IBall selectedBall, YIPoint cueDist) {
@@ -1926,10 +1939,15 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		return simPool;
 	}
 
-	private void runSimulation(Pool simPool) {
-		for (int tick = 0; tick < TEST_SHOT_MAX_TICKS
+	private boolean runSimulation(Pool simPool) {
+		return runSimulation(simPool, TEST_SHOT_MAX_TICKS);
+	}
+
+	private boolean runSimulation(Pool simPool, int maxTicks) {
+		for (int tick = 0; tick < maxTicks
 				&& simPool.poolEngine.movingExist(); tick++)
 			simPool.poolEngine.handleTimer(0L);
+		return simPool.poolEngine.movingExist();
 	}
 
 	private boolean matchesPocketedSet(Pool simPool, TestShotTarget target) {

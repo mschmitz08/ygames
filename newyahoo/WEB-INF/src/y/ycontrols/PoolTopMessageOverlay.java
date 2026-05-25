@@ -14,7 +14,13 @@ import y.yutils.YahooGamesTable;
 public class PoolTopMessageOverlay extends YahooComponent {
 
 	private static final Random	RANDOM	= new Random();
-	private static final Color	TEXT_FG	= new Color(90, 84, 42);
+	private static final Color	BANNER_BG	= new Color(118, 157, 120);
+	private static final Color	BANNER_TOP	= new Color(91, 129, 93);
+	private static final Color	BANNER_BOTTOM	= new Color(61, 94, 64);
+	private static final Color	CHIP_BG	= new Color(198, 214, 191);
+	private static final Color	CHIP_BORDER	= new Color(57, 82, 61);
+	private static final Color	TEXT_FG	= new Color(20, 30, 22);
+	private static final Color	MUTED_FG	= new Color(48, 70, 51);
 	private static final String[] MESSAGES = {
 			"Not an ad. Just extra cue room.",
 			"This space is intentionally not for advertising.",
@@ -221,6 +227,7 @@ public class PoolTopMessageOverlay extends YahooComponent {
 	private final int				bannerHeight;
 	private final YahooGamesTable	table;
 	private final String			message;
+	private final ArrayList<String>	settings;
 
 	public PoolTopMessageOverlay(YahooComponent content, int bannerHeight) {
 		this(null, content, bannerHeight);
@@ -233,6 +240,7 @@ public class PoolTopMessageOverlay extends YahooComponent {
 		this.content = content;
 		this.bannerHeight = bannerHeight;
 		message = buildMessage();
+		settings = buildSettings();
 	}
 
 	@Override
@@ -261,24 +269,92 @@ public class PoolTopMessageOverlay extends YahooComponent {
 		YahooGraphics overlay = null;
 		try {
 			overlay = graphics.create(0, 0, bannerWidth, bannerHeight);
-			Font font = pickFont(bannerWidth, bannerHeight);
-			overlay.setFont(font);
-			FontMetrics metrics = getFontMetrics(font);
-			ArrayList<String> lines = wrapMessage(metrics, bannerWidth - 40);
-			int totalHeight = lines.size() * metrics.getHeight();
-			int y = Math.max(metrics.getAscent() + 6,
-					(bannerHeight - totalHeight) / 2 + metrics.getAscent());
-			overlay.setColor(TEXT_FG);
-			for (int i = 0; i < lines.size(); i++) {
-				String line = lines.get(i);
-				int x = Math.max(20, (bannerWidth - metrics.stringWidth(line)) / 2);
-				overlay.drawString(line, x, y + i * metrics.getHeight());
-			}
+			drawBannerBackground(overlay, bannerWidth, bannerHeight);
+			if (table == null || table.getPropertyes() == null)
+				drawFallbackMessage(overlay, bannerWidth, bannerHeight);
+			else
+				drawSettings(overlay, bannerWidth, bannerHeight);
 		}
 		finally {
 			if (overlay != null)
 				overlay.dispose();
 		}
+	}
+
+	private void drawBannerBackground(YahooGraphics graphics, int width,
+			int height) {
+		graphics.setColor(BANNER_BG);
+		graphics.fillRect(0, 0, width, height);
+		graphics.setColor(BANNER_TOP);
+		graphics.fillRect(0, 0, width, 7);
+		graphics.setColor(BANNER_BOTTOM);
+		graphics.fillRect(0, height - 4, width, 4);
+		graphics.setColor(new Color(147, 182, 145));
+		graphics.drawLine(0, 7, width, 7);
+	}
+
+	private void drawFallbackMessage(YahooGraphics graphics, int bannerWidth,
+			int bannerHeight) {
+		Font font = pickFont(bannerWidth, bannerHeight);
+		graphics.setFont(font);
+		FontMetrics metrics = getFontMetrics(font);
+		ArrayList<String> lines = wrapMessage(metrics, bannerWidth - 40);
+		int totalHeight = lines.size() * metrics.getHeight();
+		int y = Math.max(metrics.getAscent() + 6,
+				(bannerHeight - totalHeight) / 2 + metrics.getAscent());
+		graphics.setColor(TEXT_FG);
+		for (int i = 0; i < lines.size(); i++) {
+			String line = lines.get(i);
+			int x = Math.max(20, (bannerWidth - metrics.stringWidth(line)) / 2);
+			graphics.drawString(line, x, y + i * metrics.getHeight());
+		}
+	}
+
+	private void drawSettings(YahooGraphics graphics, int bannerWidth,
+			int bannerHeight) {
+		Font titleFont = new Font(YahooComponent.defaultFont.getName(), Font.BOLD,
+				13);
+		Font chipFont = new Font(YahooComponent.defaultFont.getName(), Font.PLAIN,
+				11);
+		graphics.setFont(titleFont);
+		graphics.setColor(TEXT_FG);
+		graphics.drawString("Table settings", 12, 22);
+		graphics.setFont(chipFont);
+		FontMetrics metrics = getFontMetrics(chipFont);
+		int x = 12;
+		int y = 34;
+		int rowHeight = Math.max(18, metrics.getHeight() + 6);
+		for (int i = 0; i < settings.size(); i++) {
+			String setting = settings.get(i);
+			int chipWidth = metrics.stringWidth(setting) + 26;
+			if (x + chipWidth > bannerWidth - 12) {
+				x = 12;
+				y += rowHeight;
+			}
+			if (y + rowHeight > bannerHeight - 6)
+				break;
+			drawSettingChip(graphics, setting, x, y, chipWidth, rowHeight,
+					metrics);
+			x += chipWidth + 6;
+		}
+	}
+
+	private void drawSettingChip(YahooGraphics graphics, String setting, int x,
+			int y, int width, int height, FontMetrics metrics) {
+		graphics.setColor(CHIP_BG);
+		graphics.fillRect(x, y, width, height - 2);
+		graphics.setColor(CHIP_BORDER);
+		graphics.drawRect(x, y, width, height - 2);
+		int boxTop = y + (height - 2 - 9) / 2;
+		graphics.setColor(Color.white);
+		graphics.fillRect(x + 6, boxTop, 9, 9);
+		graphics.setColor(CHIP_BORDER);
+		graphics.drawRect(x + 6, boxTop, 9, 9);
+		graphics.drawLine(x + 8, boxTop + 5, x + 10, boxTop + 7);
+		graphics.drawLine(x + 10, boxTop + 7, x + 14, boxTop + 2);
+		graphics.setColor(MUTED_FG);
+		graphics.drawString(setting, x + 20, y + (height - 2
+				+ metrics.getAscent()) / 2 - 1);
 	}
 
 	private Font pickFont(int bannerWidth, int bannerHeight) {
@@ -365,6 +441,49 @@ public class PoolTopMessageOverlay extends YahooComponent {
 			text.append(" | Animation " + properties.get("animationSpeedPct")
 					+ "%");
 		return new String(text);
+	}
+
+	private ArrayList<String> buildSettings() {
+		ArrayList<String> result = new ArrayList<String>();
+		if (table == null || table.getPropertyes() == null)
+			return result;
+		Hashtable<String, String> properties = table.getPropertyes();
+		if (properties.containsKey("nineBallGame")
+				|| properties.containsKey("nineBallTraining"))
+			result.add("9-Ball");
+		else
+			result.add("8-Ball");
+		result.add(properties.containsKey("training") ? "Training" : "Standard");
+		result.add(properties.containsKey("rd") ? "Rated" : "Unrated");
+		if (properties.containsKey("timer"))
+			result.add("Timer " + properties.get("timer") + "s");
+		result.add(properties.containsKey("ff") ? "No force forfeit"
+				: "Force forfeit");
+		if (properties.containsKey("breakPocketCap"))
+			result.add("Break <= " + properties.get("breakPocketCap") + "%");
+		else
+			result.add("Deterministic break");
+		appendSettingPct(result, properties, "linearFriction", "Slide");
+		appendSettingPct(result, properties, "rotationFriction", "Roll");
+		appendSettingPct(result, properties, "sideRotationFriction", "Spin");
+		appendSettingPct(result, properties, "railBounce", "Rail bounce");
+		appendSettingPct(result, properties, "railSpinTransfer", "Rail spin");
+		appendSettingPct(result, properties, "railSideSpin", "Rail side");
+		appendSettingPct(result, properties, "maxCuePower", "Power");
+		appendSettingPct(result, properties, "cueForce", "Cue force");
+		appendSettingPct(result, properties, "spinEffect", "English");
+		appendSettingPct(result, properties, "ballRadius", "Ball size");
+		appendSettingPct(result, properties, "collisionEnergy", "Collision");
+		if (properties.containsKey("animationSpeedPct"))
+			result.add("Animation " + properties.get("animationSpeedPct") + "%");
+		return result;
+	}
+
+	private void appendSettingPct(ArrayList<String> result,
+			Hashtable<String, String> properties, String key, String label) {
+		String value = properties.get("physics." + key + "Pct");
+		if (value != null)
+			result.add(label + " " + value + "%");
 	}
 
 	private void appendPct(StringBuffer text, Hashtable<String, String> properties,

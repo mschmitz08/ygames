@@ -4,6 +4,7 @@
 
 package y.po;
 
+import java.awt.Color;
 import java.awt.Event;
 
 import y.controls.YahooButton;
@@ -335,10 +336,7 @@ class PoolTableCreatorDialog extends YahooDialog {
 
 		PoolOptionsHelpDialog(YahooControl container) {
 			super(container, "Pool Option Help");
-			YahooControl body = new YahooControl(560, 340);
-			for (int i = 0; i < HELP_LINES.length; i++)
-				body.addChildObject(new YahooLabel(HELP_LINES[i], YahooLabel.yl_b,
-						540), 12, 12 + i * 15, false);
+			YahooControl body = new PoolOptionsHelpPanel(HELP_LINES);
 			addChildObject(body, 1, 1, 0, 0);
 			btnOk = new YahooButton("OK");
 			addChildObject(btnOk, 1, 1, 0, 1);
@@ -352,6 +350,40 @@ class PoolTableCreatorDialog extends YahooDialog {
 				return true;
 			}
 			return super.eventActionEvent(event, obj);
+		}
+	}
+
+	private static final class PoolOptionsHelpPanel extends YahooControl {
+
+		private final String[]	lines;
+
+		PoolOptionsHelpPanel(String[] lines) {
+			super(610, 390);
+			this.lines = lines;
+		}
+
+		@Override
+		public void paint(y.controls.YahooGraphics graphics) {
+			graphics.setColor(new Color(192, 192, 192));
+			graphics.fillRect(0, 0, width, height);
+			graphics.setColor(Color.darkGray);
+			graphics.drawRect(0, 0, width - 1, height - 1);
+			graphics.setColor(Color.black);
+			int y = 18;
+			for (int i = 0; i < lines.length; i++) {
+				if (isHeading(lines[i]))
+					graphics.setColor(new Color(0, 0, 128));
+				else
+					graphics.setColor(Color.black);
+				graphics.drawString(lines[i], 12, y);
+				y += isHeading(lines[i]) ? 19 : 17;
+			}
+		}
+
+		private boolean isHeading(String text) {
+			return "Break shot behavior".equals(text)
+					|| "Ball and table physics".equals(text)
+					|| "Shot power and control".equals(text);
 		}
 	}
 }
