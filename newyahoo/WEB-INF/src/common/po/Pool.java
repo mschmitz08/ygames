@@ -512,6 +512,8 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 	}
 
 	public Object getProperty(String s1) {
+		if ("currentTurn".equals(s1))
+			return new Integer(m_turn);
 		Object obj = propertyes.get(s1);
 		if (obj == null)
 			obj = setup.get(s1);
@@ -654,6 +656,8 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 		applyPercentProperty(hashtable, "spinEffect");
 		applyScaledDefaultProperty(hashtable, "ballRadius", 0x000A0000);
 		applyScaledDefaultProperty(hashtable, "collisionEnergy", 55536);
+		applyBoundedIntProperty(hashtable, "pocketHandicap0", -10, 10);
+		applyBoundedIntProperty(hashtable, "pocketHandicap1", -10, 10);
 	}
 
 	private void applyScaledIntProperty(Hashtable<String, String> hashtable,
@@ -710,6 +714,23 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 			if (percent > 200)
 				percent = 200;
 			propertyes.put(key, new Integer(percent));
+		}
+		catch (NumberFormatException e) {
+		}
+	}
+
+	private void applyBoundedIntProperty(Hashtable<String, String> hashtable,
+			String key, int min, int max) {
+		String value = hashtable.get(key);
+		if (value == null)
+			return;
+		try {
+			int parsed = Integer.parseInt(value);
+			if (parsed < min)
+				parsed = min;
+			if (parsed > max)
+				parsed = max;
+			propertyes.put(key, new Integer(parsed));
 		}
 		catch (NumberFormatException e) {
 		}

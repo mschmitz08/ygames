@@ -190,13 +190,39 @@ public class PoolBall extends YIPoint implements IBall {
 		for (Slot slot2 : slots) {
 			if (slot2 == null)
 				continue;
-			if (slot2.Qy(this)) {
+			int pocketRadius = getPocketRadius(slot2);
+			if (distance(slot2) < pocketRadius) {
 				Mv(slot2);
 				break;
 			}
-			if (slot2.Oy(this))
-				vel.add(slot2.My(this));
+			if (distance(slot2) <= pocketRadius + Slot.f)
+				vel.add(getPocketPull(slot2));
 		}
+	}
+
+	private int getPocketRadius(Slot slot2) {
+		int handicap = getActivePocketHandicap();
+		int pocketRadius = slot2.c + PoolMath.intToYInt(handicap);
+		int minRadius = PoolMath.intToYInt(1);
+		return pocketRadius < minRadius ? minRadius : pocketRadius;
+	}
+
+	private int getActivePocketHandicap() {
+		int turn = pool == null ? 0 : pool.getIntProperty("currentTurn");
+		if (turn != 1)
+			turn = 0;
+		Object value = pool == null ? null : pool.getProperty("pocketHandicap"
+				+ turn);
+		if (value instanceof Integer)
+			return ((Integer) value).intValue();
+		return 0;
+	}
+
+	private YIVector getPocketPull(Slot slot2) {
+		YIVector pull = new YIVector(this, slot2);
+		pull.versor();
+		pull.mul(Slot.e);
+		return pull;
 	}
 
 	public IBall Copy() {

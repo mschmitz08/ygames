@@ -48,6 +48,11 @@ class PoolTableCreatorDialog extends YahooDialog {
 	PoolAnimationPanel	animationPanel;
 	PoolPercentSlider	animationSpeedSlider;
 	YahooLabel		animationSpeedValueLabel;
+	YahooButton		btnPocketHandicap;
+	int			pocketHandicap0;
+	int			pocketHandicap1;
+	YahooLabel		pocketHandicap0Label;
+	YahooLabel		pocketHandicap1Label;
 	YahooControl		h;
 	YahooControl		i;
 	YahooControl		j;
@@ -70,6 +75,8 @@ class PoolTableCreatorDialog extends YahooDialog {
 			"Collision energy:" };
 	static final String	ANIMATION_SPEED_PROPERTY = "animationSpeedPct";
 	static final int	ANIMATION_SPEED_INDEX = -1;
+	static final int	POCKET_HANDICAP_0_INDEX = -2;
+	static final int	POCKET_HANDICAP_1_INDEX = -3;
 
 	PoolTableCreatorDialog(TableCreator _pcls97, YahooControl _pcls79) {
 		super(_pcls79, _pcls97.getApplet().lookupString(0x66501402));
@@ -187,6 +194,8 @@ class PoolTableCreatorDialog extends YahooDialog {
 		animationPanel.addChildObject(animationSpeedSlider, 130, 26, false);
 		animationSpeedValueLabel = new YahooLabel("100%");
 		animationPanel.addChildObject(animationSpeedValueLabel, 247, 28, false);
+		btnPocketHandicap = new YahooButton("Pocket handicap...");
+		animationPanel.addChildObject(btnPocketHandicap, 12, 50, false);
 		addChildObject(animationPanel, 17, 0, 0, 1, 4, 2, 11, 12, 0, 0, 0);
 		ptc_o = new TableDescription(_pcls97.getApplet().getTimerHandler(),
 				_pcls97.getApplet());
@@ -221,6 +230,18 @@ class PoolTableCreatorDialog extends YahooDialog {
 		if (index == ANIMATION_SPEED_INDEX) {
 			if (animationSpeedValueLabel != null)
 				animationSpeedValueLabel.setCaption(value + "%");
+			return;
+		}
+		if (index == POCKET_HANDICAP_0_INDEX) {
+			pocketHandicap0 = value;
+			if (pocketHandicap0Label != null)
+				pocketHandicap0Label.setCaption(formatHandicap(value));
+			return;
+		}
+		if (index == POCKET_HANDICAP_1_INDEX) {
+			pocketHandicap1 = value;
+			if (pocketHandicap1Label != null)
+				pocketHandicap1Label.setCaption(formatHandicap(value));
 			return;
 		}
 		if (shotValueLabels != null && index >= 0 && index < shotValueLabels.length
@@ -269,6 +290,12 @@ class PoolTableCreatorDialog extends YahooDialog {
 			if (animationSpeedSlider.getValue() != 100)
 				tableCreator.addProperty(ANIMATION_SPEED_PROPERTY, String
 						.valueOf(animationSpeedSlider.getValue()));
+			if (pocketHandicap0 != 0)
+				tableCreator.addProperty("pocketHandicap0", String
+						.valueOf(pocketHandicap0));
+			if (pocketHandicap1 != 0)
+				tableCreator.addProperty("pocketHandicap1", String
+						.valueOf(pocketHandicap1));
 			if (ptc_o != null)
 				ptc_o.Qa(tableCreator);
 			tableCreator.makeTable();
@@ -303,7 +330,17 @@ class PoolTableCreatorDialog extends YahooDialog {
 				new PoolOptionsHelpDialog(ptc_n);
 				return true;
 			}
+			else if (event.target == btnPocketHandicap) {
+				new PocketHandicapDialog(ptc_n);
+				return true;
+			}
 		return false;
+	}
+
+	private String formatHandicap(int value) {
+		if (value > 0)
+			return "+" + value;
+		return String.valueOf(value);
 	}
 
 	private static final class PoolOptionsHelpDialog extends YahooDialog {
@@ -330,6 +367,8 @@ class PoolTableCreatorDialog extends YahooDialog {
 				"Collision energy: higher values retain more speed after ball-to-ball contact.",
 				"Animation speed: changes how fast shot animations play out, from 5% to 500%.",
 				"It does not change the shot chosen by the player.",
+				"Pocket handicap: Seat 1 and Seat 2 can be set from -10 to +10.",
+				"Positive is more forgiving; negative makes pockets reject more shots.",
 				"All percent values are relative to the classic default table at 100%." };
 
 		YahooButton	btnOk;
@@ -384,6 +423,47 @@ class PoolTableCreatorDialog extends YahooDialog {
 			return "Break shot behavior".equals(text)
 					|| "Ball and table physics".equals(text)
 					|| "Shot power and control".equals(text);
+		}
+	}
+
+	private final class PocketHandicapDialog extends YahooDialog {
+
+		YahooButton	btnOk;
+
+		PocketHandicapDialog(YahooControl container) {
+			super(container, "Pocket Handicap");
+			YahooControl body = new YahooControl(360, 100);
+			body.addChildObject(new YahooLabel("Seat 1 pocket acceptance:"), 12,
+					16, false);
+			PoolPercentSlider seat1 = new PoolPercentSlider(
+					PoolTableCreatorDialog.this, POCKET_HANDICAP_0_INDEX, true,
+					-10, 10, pocketHandicap0);
+			body.addChildObject(seat1, 170, 14, false);
+			pocketHandicap0Label = new YahooLabel(formatHandicap(pocketHandicap0));
+			body.addChildObject(pocketHandicap0Label, 292, 16, false);
+			body.addChildObject(new YahooLabel("Seat 2 pocket acceptance:"), 12,
+					48, false);
+			PoolPercentSlider seat2 = new PoolPercentSlider(
+					PoolTableCreatorDialog.this, POCKET_HANDICAP_1_INDEX, true,
+					-10, 10, pocketHandicap1);
+			body.addChildObject(seat2, 170, 46, false);
+			pocketHandicap1Label = new YahooLabel(formatHandicap(pocketHandicap1));
+			body.addChildObject(pocketHandicap1Label, 292, 48, false);
+			body.addChildObject(new YahooLabel("0 is classic. +10 is easier. -10 is harder."),
+					12, 78, false);
+			addChildObject(body, 1, 1, 0, 0);
+			btnOk = new YahooButton("OK");
+			addChildObject(btnOk, 1, 1, 0, 1);
+			show();
+		}
+
+		@Override
+		public boolean eventActionEvent(Event event, Object obj) {
+			if (event.target == btnOk) {
+				close();
+				return true;
+			}
+			return super.eventActionEvent(event, obj);
 		}
 	}
 }

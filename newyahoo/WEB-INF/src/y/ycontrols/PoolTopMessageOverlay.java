@@ -440,6 +440,10 @@ public class PoolTopMessageOverlay extends YahooComponent {
 		if (properties.containsKey("animationSpeedPct"))
 			text.append(" | Animation " + properties.get("animationSpeedPct")
 					+ "%");
+		if (properties.containsKey("pocketHandicap0"))
+			text.append(" | Seat 1 pocket " + properties.get("pocketHandicap0"));
+		if (properties.containsKey("pocketHandicap1"))
+			text.append(" | Seat 2 pocket " + properties.get("pocketHandicap1"));
 		return new String(text);
 	}
 
@@ -476,7 +480,20 @@ public class PoolTopMessageOverlay extends YahooComponent {
 		appendSettingPct(result, properties, "collisionEnergy", "Collision");
 		if (properties.containsKey("animationSpeedPct"))
 			result.add("Animation " + properties.get("animationSpeedPct") + "%");
+		if (properties.containsKey("pocketHandicap0"))
+			result.add("Seat 1 pocket " + formatSigned(properties
+					.get("pocketHandicap0")));
+		if (properties.containsKey("pocketHandicap1"))
+			result.add("Seat 2 pocket " + formatSigned(properties
+					.get("pocketHandicap1")));
 		return result;
+	}
+
+	private String formatSigned(String value) {
+		if (value != null && value.length() > 0 && value.charAt(0) != '-'
+				&& !"0".equals(value))
+			return "+" + value;
+		return value;
 	}
 
 	private void appendSettingPct(ArrayList<String> result,

@@ -1926,7 +1926,8 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 			for (Enumeration<String> keys = tableProperties.keys(); keys
 					.hasMoreElements();) {
 				String key = keys.nextElement();
-				if (key.startsWith("physics."))
+				if (key.startsWith("physics.")
+						|| key.startsWith("pocketHandicap"))
 					params.put(key, tableProperties.get(key));
 			}
 		if (pool.training)

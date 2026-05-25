@@ -78,6 +78,10 @@ public class PoolTableOptions extends CustomTableOptions {
 		String speed = hashtable.get("animationSpeedPct");
 		if (speed != null)
 			stringbuffer.append(" animation=" + speed + "%");
+		appendPlainOption(stringbuffer, hashtable, "pocketHandicap0",
+				" seat1 pocket");
+		appendPlainOption(stringbuffer, hashtable, "pocketHandicap1",
+				" seat2 pocket");
 		return new String(stringbuffer);
 	}
 
@@ -86,6 +90,13 @@ public class PoolTableOptions extends CustomTableOptions {
 		String value = hashtable.get("physics." + key + "Pct");
 		if (value != null)
 			stringbuffer.append(label + "=" + value + "%");
+	}
+
+	private void appendPlainOption(StringBuffer stringbuffer,
+			Hashtable<String, String> hashtable, String key, String label) {
+		String value = hashtable.get(key);
+		if (value != null)
+			stringbuffer.append(label + "=" + value);
 	}
 
 	@Override
