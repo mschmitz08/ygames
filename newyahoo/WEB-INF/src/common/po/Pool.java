@@ -666,10 +666,10 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 			return;
 		try {
 			int percent = Integer.parseInt(value);
-			if (percent < 50)
-				percent = 50;
-			if (percent > 150)
-				percent = 150;
+			if (percent < 0)
+				percent = 0;
+			if (percent > 200)
+				percent = 200;
 			int scaled = (int) ((((Integer) defaultValue).longValue() * percent)
 					/ 100L);
 			propertyes.put(key, new Integer(scaled));
@@ -685,10 +685,12 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 			return;
 		try {
 			int percent = Integer.parseInt(value);
-			if (percent < 50)
-				percent = 50;
-			if (percent > 150)
-				percent = 150;
+			if (percent < 0)
+				percent = 0;
+			if (percent > 200)
+				percent = 200;
+			if ("ballRadius".equals(key) && percent < 10)
+				percent = 10;
 			int scaled = (int) (((long) defaultValue * percent) / 100L);
 			propertyes.put(key, new Integer(scaled));
 		}
@@ -703,10 +705,10 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 			return;
 		try {
 			int percent = Integer.parseInt(value);
-			if (percent < 50)
-				percent = 50;
-			if (percent > 150)
-				percent = 150;
+			if (percent < 0)
+				percent = 0;
+			if (percent > 200)
+				percent = 200;
 			propertyes.put(key, new Integer(percent));
 		}
 		catch (NumberFormatException e) {

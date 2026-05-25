@@ -66,7 +66,7 @@ class PoolPercentSlider extends YahooComponent {
 		graphics.fillRect(TRACK_LEFT, TRACK_TOP, TRACK_WIDTH, TRACK_HEIGHT);
 		int fillWidth = valueToOffset(value);
 		if (fillWidth > 0) {
-			graphics.setColor(new Color(176, 34, 48));
+			graphics.setColor(getFillColor());
 			graphics.fillRect(TRACK_LEFT + 1, TRACK_TOP + 1, fillWidth,
 					TRACK_HEIGHT - 1);
 		}
@@ -77,7 +77,7 @@ class PoolPercentSlider extends YahooComponent {
 			knobLeft = TRACK_LEFT;
 		if (knobLeft > TRACK_LEFT + TRACK_WIDTH - KNOB_WIDTH)
 			knobLeft = TRACK_LEFT + TRACK_WIDTH - KNOB_WIDTH;
-		graphics.setColor(Color.white);
+		graphics.setColor(getFillColor());
 		graphics.fillRect(knobLeft, TRACK_TOP - 3, KNOB_WIDTH, TRACK_HEIGHT + 6);
 		graphics.setColor(Color.black);
 		graphics.drawRect(knobLeft, TRACK_TOP - 3, KNOB_WIDTH, TRACK_HEIGHT + 6);
@@ -113,5 +113,30 @@ class PoolPercentSlider extends YahooComponent {
 
 	private int valueToOffset(int value) {
 		return ((value - min) * TRACK_WIDTH) / (max - min);
+	}
+
+	private Color getFillColor() {
+		int midpoint = min + (max - min) / 2;
+		if (value <= midpoint)
+			return blend(new Color(45, 105, 210), new Color(235, 205, 55),
+					value - min, midpoint - min);
+		return blend(new Color(235, 205, 55), new Color(190, 35, 45),
+				value - midpoint, max - midpoint);
+	}
+
+	private Color blend(Color low, Color high, int position, int range) {
+		if (range <= 0)
+			return high;
+		if (position < 0)
+			position = 0;
+		if (position > range)
+			position = range;
+		int red = low.getRed()
+				+ (high.getRed() - low.getRed()) * position / range;
+		int green = low.getGreen()
+				+ (high.getGreen() - low.getGreen()) * position / range;
+		int blue = low.getBlue()
+				+ (high.getBlue() - low.getBlue()) * position / range;
+		return new Color(red, green, blue);
 	}
 }

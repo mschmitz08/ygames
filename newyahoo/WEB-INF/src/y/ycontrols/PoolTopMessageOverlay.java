@@ -361,6 +361,9 @@ public class PoolTopMessageOverlay extends YahooComponent {
 		appendPct(text, properties, "spinEffect", "Spin effect");
 		appendPct(text, properties, "ballRadius", "Ball size");
 		appendPct(text, properties, "collisionEnergy", "Collision");
+		if (properties.containsKey("animationSpeedPct"))
+			text.append(" | Animation " + properties.get("animationSpeedPct")
+					+ "%");
 		return new String(text);
 	}
 

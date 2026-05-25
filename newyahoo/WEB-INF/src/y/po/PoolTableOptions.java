@@ -65,9 +65,19 @@ public class PoolTableOptions extends CustomTableOptions {
 		appendPhysicsOption(stringbuffer, hashtable, "sideRotationFriction",
 				" spin");
 		appendPhysicsOption(stringbuffer, hashtable, "railBounce", " rail");
+		appendPhysicsOption(stringbuffer, hashtable, "railSpinTransfer",
+				" rail-spin");
+		appendPhysicsOption(stringbuffer, hashtable, "railSideSpin",
+				" rail-side");
 		appendPhysicsOption(stringbuffer, hashtable, "maxCuePower", " power");
 		appendPhysicsOption(stringbuffer, hashtable, "cueForce", " force");
+		appendPhysicsOption(stringbuffer, hashtable, "spinEffect", " english");
 		appendPhysicsOption(stringbuffer, hashtable, "ballRadius", " size");
+		appendPhysicsOption(stringbuffer, hashtable, "collisionEnergy",
+				" collision");
+		String speed = hashtable.get("animationSpeedPct");
+		if (speed != null)
+			stringbuffer.append(" animation=" + speed + "%");
 		return new String(stringbuffer);
 	}
 

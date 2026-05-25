@@ -8,6 +8,7 @@ import java.awt.Color;
 import java.awt.Event;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Random;
 import java.util.StringTokenizer;
@@ -67,6 +68,8 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 	private static final int	BREAK_JITTER_SIMULATIONS = 100;
 	private static final int	BREAK_JITTER_MAX_LEVEL = 5;
 	private static final int	MAX_CUE_POWER		= 120;
+	private static final int	POOL_ENGINE_TIMER_MS	= 15;
+	private static final String PROP_ANIMATION_SPEED = "animationSpeedPct";
 	private static final int	TEST_SHOT_BATCH_SIZE	= 50000;
 	private static final int	TEST_SHOT_ATTEMPTS_PER_TICK	= 50;
 	private static final int	TEST_SHOT_PROGRESS_INTERVAL	= 500;
@@ -343,7 +346,8 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		applyCurrentTableColor();
 		pool.getSetup().getBallCount();
 		timerHandler = getTimerHandler();
-		poolTimer = timerHandler.add(pool.getPoolEngine(), 15); // 15
+		poolTimer = timerHandler.add(pool.getPoolEngine(),
+				getPoolEngineTimerInterval());
 		poolAimerTimer = timerHandler.add(poolAimer, 200);
 		thisTimer = timerHandler.add(this, 15); // 15
 		long l1 = 0xfffffffffe386f04L;
@@ -369,6 +373,28 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 	@Override
 	public TableControlContainer createTableControlContainer() {
 		return new PoolControlContainer(this);
+	}
+
+	private int getPoolEngineTimerInterval() {
+		int speed = getAnimationSpeedPercent();
+		return Math.max(1, (POOL_ENGINE_TIMER_MS * 100 + speed / 2) / speed);
+	}
+
+	private int getAnimationSpeedPercent() {
+		Hashtable<String, String> properties = getPropertyes();
+		if (properties == null || !properties.containsKey(PROP_ANIMATION_SPEED))
+			return 100;
+		try {
+			int speed = Integer.parseInt(properties.get(PROP_ANIMATION_SPEED));
+			if (speed < 5)
+				return 5;
+			if (speed > 500)
+				return 500;
+			return speed;
+		}
+		catch (NumberFormatException e) {
+			return 100;
+		}
 	}
 
 	public boolean cueActive() {
@@ -1882,6 +1908,14 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		Pool simPool = new Pool();
 		SilentPoolHandler handler = new SilentPoolHandler();
 		Hashtable<String, String> params = new Hashtable<String, String>();
+		Hashtable<String, String> tableProperties = getPropertyes();
+		if (tableProperties != null)
+			for (Enumeration<String> keys = tableProperties.keys(); keys
+					.hasMoreElements();) {
+				String key = keys.nextElement();
+				if (key.startsWith("physics."))
+					params.put(key, tableProperties.get(key));
+			}
 		if (pool.training)
 			params.put("training", "1");
 		if (pool.getSetup() instanceof NineBallSetup)

@@ -44,12 +44,16 @@ class PoolTableCreatorDialog extends YahooDialog {
 	PoolShotControlPanel	shotPanel;
 	PoolPercentSlider	shotSliders[];
 	YahooLabel		shotValueLabels[];
+	PoolAnimationPanel	animationPanel;
+	PoolPercentSlider	animationSpeedSlider;
+	YahooLabel		animationSpeedValueLabel;
 	YahooControl		h;
 	YahooControl		i;
 	YahooControl		j;
 	YahooNumericTextBox	txtTimer;
 	YahooButton			l;
 	YahooButton			m;
+	YahooButton			btnHelp;
 	YahooControl		ptc_n;
 	TableDescription	ptc_o;
 	static final String	PHYSICS_PROPERTY_KEYS[] = { "linearFriction",
@@ -63,6 +67,8 @@ class PoolTableCreatorDialog extends YahooDialog {
 	static final String	SHOT_PROPERTY_LABELS[] = { "Max cue power:",
 			"Cue force:", "Spin effectiveness:", "Ball size:",
 			"Collision energy:" };
+	static final String	ANIMATION_SPEED_PROPERTY = "animationSpeedPct";
+	static final int	ANIMATION_SPEED_INDEX = -1;
 
 	PoolTableCreatorDialog(TableCreator _pcls97, YahooControl _pcls79) {
 		super(_pcls79, _pcls97.getApplet().lookupString(0x66501402));
@@ -149,7 +155,7 @@ class PoolTableCreatorDialog extends YahooDialog {
 		for (int p = 0; p < PHYSICS_PROPERTY_KEYS.length; p++) {
 			physicsPanel.addChildObject(new YahooLabel(PHYSICS_PROPERTY_LABELS[p]),
 					12, 24 + p * 23, false);
-			physicsSliders[p] = new PoolPercentSlider(this, p, 50, 150, 100);
+			physicsSliders[p] = new PoolPercentSlider(this, p, 0, 200, 100);
 			physicsPanel.addChildObject(physicsSliders[p], 130, 22 + p * 23,
 					false);
 			physicsValueLabels[p] = new YahooLabel("100%");
@@ -163,13 +169,24 @@ class PoolTableCreatorDialog extends YahooDialog {
 		for (int s = 0; s < SHOT_PROPERTY_KEYS.length; s++) {
 			shotPanel.addChildObject(new YahooLabel(SHOT_PROPERTY_LABELS[s]), 12,
 					24 + s * 23, false);
-			shotSliders[s] = new PoolPercentSlider(this, s, true, 50, 150, 100);
+			int minPercent = "ballRadius".equals(SHOT_PROPERTY_KEYS[s]) ? 10 : 0;
+			shotSliders[s] = new PoolPercentSlider(this, s, true, minPercent, 200,
+					100);
 			shotPanel.addChildObject(shotSliders[s], 130, 22 + s * 23, false);
 			shotValueLabels[s] = new YahooLabel("100%");
 			shotPanel.addChildObject(shotValueLabels[s], 247, 24 + s * 23,
 					false);
 		}
 		addChildObject(shotPanel, 17, 0, 0, 1, 6, 0, 10, 0, 12, 12, 0);
+		animationPanel = new PoolAnimationPanel();
+		animationPanel.addChildObject(new YahooLabel("Animation speed:"), 12, 28,
+				false);
+		animationSpeedSlider = new PoolPercentSlider(this, ANIMATION_SPEED_INDEX,
+				true, 5, 500, 100);
+		animationPanel.addChildObject(animationSpeedSlider, 130, 26, false);
+		animationSpeedValueLabel = new YahooLabel("100%");
+		animationPanel.addChildObject(animationSpeedValueLabel, 247, 28, false);
+		addChildObject(animationPanel, 17, 0, 0, 1, 4, 2, 11, 12, 0, 0, 0);
 		ptc_o = new TableDescription(_pcls97.getApplet().getTimerHandler(),
 				_pcls97.getApplet());
 		addChildObject(ptc_o, 2, 1, 0, 8);
@@ -177,6 +194,8 @@ class PoolTableCreatorDialog extends YahooDialog {
 		addChildObject(_lcls79_1, 10, 0, 0, 2, 1, 1, 15);
 		_lcls79_1.addChildObject(l, 0, 0, 2);
 		_lcls79_1.addChildObject(m, 1, 0, 2);
+		btnHelp = new YahooButton("Help");
+		_lcls79_1.addChildObject(btnHelp, 2, 0, 2);
 		show();
 	}
 
@@ -198,6 +217,11 @@ class PoolTableCreatorDialog extends YahooDialog {
 	}
 
 	void handleShotSliderChange(int index, int value) {
+		if (index == ANIMATION_SPEED_INDEX) {
+			if (animationSpeedValueLabel != null)
+				animationSpeedValueLabel.setCaption(value + "%");
+			return;
+		}
 		if (shotValueLabels != null && index >= 0 && index < shotValueLabels.length
 				&& shotValueLabels[index] != null)
 			shotValueLabels[index].setCaption(value + "%");
@@ -241,6 +265,9 @@ class PoolTableCreatorDialog extends YahooDialog {
 				if (shotSliders[s].getValue() != 100)
 					tableCreator.addProperty("physics." + SHOT_PROPERTY_KEYS[s]
 							+ "Pct", String.valueOf(shotSliders[s].getValue()));
+			if (animationSpeedSlider.getValue() != 100)
+				tableCreator.addProperty(ANIMATION_SPEED_PROPERTY, String
+						.valueOf(animationSpeedSlider.getValue()));
 			if (ptc_o != null)
 				ptc_o.Qa(tableCreator);
 			tableCreator.makeTable();
@@ -271,6 +298,60 @@ class PoolTableCreatorDialog extends YahooDialog {
 				tableCreator.cancel();
 				return true;
 			}
+			else if (event.target == btnHelp) {
+				new PoolOptionsHelpDialog(ptc_n);
+				return true;
+			}
 		return false;
+	}
+
+	private static final class PoolOptionsHelpDialog extends YahooDialog {
+
+		private static final String[] HELP_LINES = {
+				"Break shot behavior",
+				"Deterministic break: uses the exact shot selected by the player.",
+				"Non-deterministic break: opening breaks may be adjusted if they are likely to pocket a ball.",
+				"Max pocket chance: target cap for simulated jittered opening breaks.",
+				"0% tries to choose an adjusted opening break that pockets no ball.",
+				"Ball and table physics",
+				"Slide friction: higher values make sliding balls lose speed faster.",
+				"Roll friction: higher values make rolling balls slow down faster.",
+				"Side spin friction: higher values make english wear off faster.",
+				"Rail bounce: controls speed loss at rail contact.",
+				"Lower rail bounce is livelier; 0% does not make the ball stick to the rail.",
+				"Rail spin transfer: changes how much roll/spin interacts with rail hits.",
+				"Rail side spin: changes how side spin affects the rebound off rails.",
+				"Shot power and control",
+				"Max cue power: caps the highest selectable shot power.",
+				"Cue force: scales the force applied by the same cue pullback.",
+				"Spin effectiveness: scales how strongly english affects the cue ball.",
+				"Ball size: changes physics radius and visual ball size; minimum is 10%.",
+				"Collision energy: higher values retain more speed after ball-to-ball contact.",
+				"Animation speed: changes how fast shot animations play out, from 5% to 500%.",
+				"It does not change the shot chosen by the player.",
+				"All percent values are relative to the classic default table at 100%." };
+
+		YahooButton	btnOk;
+
+		PoolOptionsHelpDialog(YahooControl container) {
+			super(container, "Pool Option Help");
+			YahooControl body = new YahooControl(560, 340);
+			for (int i = 0; i < HELP_LINES.length; i++)
+				body.addChildObject(new YahooLabel(HELP_LINES[i], YahooLabel.yl_b,
+						540), 12, 12 + i * 15, false);
+			addChildObject(body, 1, 1, 0, 0);
+			btnOk = new YahooButton("OK");
+			addChildObject(btnOk, 1, 1, 0, 1);
+			show();
+		}
+
+		@Override
+		public boolean eventActionEvent(Event event, Object obj) {
+			if (event.target == btnOk) {
+				close();
+				return true;
+			}
+			return super.eventActionEvent(event, obj);
+		}
 	}
 }
