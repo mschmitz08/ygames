@@ -64,6 +64,8 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 
 	private static final int	BREAK_POWER_JITTER	= 10;
 	private static final float BREAK_ANGLE_JITTER_DEGREES = 2.5F;
+	private static final int	BREAK_JITTER_SIMULATIONS = 100;
+	private static final int	BREAK_JITTER_MAX_LEVEL = 5;
 	private static final int	MAX_CUE_POWER		= 120;
 	private static final int	TEST_SHOT_BATCH_SIZE	= 50000;
 	private static final int	TEST_SHOT_ATTEMPTS_PER_TICK	= 50;
@@ -80,6 +82,8 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 	private static final String PROP_CUE_MAX		= "pool_cue_max";
 	private static final String PROP_CUE_DELAY		= "pool_cue_delay";
 	private static final String PROP_CUE_RAMP		= "pool_cue_ramp";
+	private static final String PROP_BREAK_DETERMINISTIC = "breakDeterministic";
+	private static final String PROP_BREAK_POCKET_CAP = "breakPocketCap";
 	private static final Random BREAK_RANDOM		= new Random();
 	private static final String[] TABLE_COLOR_NAMES = { "Classic", "Aqua",
 			"Apricot", "Azure", "Berry", "Black", "Blush", "Bronze",
@@ -1414,9 +1418,17 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 			collBall = resolveCollisionHint(selectedBall.getIndex(), firstColl, collBall);
 			boolean openingBreak = pool.isOpeningBreakShot(selectedBall, collBall);
 			if (openingBreak) {
-				cueDist = applyBreakPowerJitter(selectedBall, cueDist, selectedPower);
-				cueDist = applyBreakAngleJitter(selectedBall, cueDist);
-				cueDist = buildOpeningBreakCueDist(selectedBall, cueDist);
+				BreakShot breakShot;
+				if (isDeterministicBreak())
+					breakShot = buildOpeningBreakShot(selectedBall, cueDist,
+							englishDist);
+				else
+					breakShot = buildAdaptiveOpeningBreakShot(selectedBall,
+							selectedPower, cueDist, englishDist,
+							getBreakPocketCap());
+				cueDist = breakShot.cueDist;
+				firstColl = breakShot.firstColl;
+				collBall = breakShot.collBall;
 			}
 			// System.out.println("cueDist=" + cueDist + "; englishDist="
 			// + englishDist + "; firstColl=" + firstColl + "; collBall="
@@ -1445,6 +1457,123 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		return nearestBallIndex;
 	}
 
+	private boolean isDeterministicBreak() {
+		Hashtable<String, String> properties = getPropertyes();
+		return properties != null
+				&& properties.containsKey(PROP_BREAK_DETERMINISTIC);
+	}
+
+	private int getBreakPocketCap() {
+		Hashtable<String, String> properties = getPropertyes();
+		if (properties == null || !properties.containsKey(PROP_BREAK_POCKET_CAP))
+			return 50;
+		try {
+			int cap = Integer.parseInt(properties.get(PROP_BREAK_POCKET_CAP));
+			if (cap < 0)
+				return 0;
+			if (cap > 100)
+				return 100;
+			return cap;
+		}
+		catch (NumberFormatException e) {
+			return 50;
+		}
+	}
+
+	private BreakShot buildAdaptiveOpeningBreakShot(IBall selectedBall,
+			int selectedPower, YIPoint baseCueDist, YIPoint englishDist,
+			int targetPocketPercent) {
+		BreakShot baseShot = buildOpeningBreakShot(selectedBall, baseCueDist,
+				englishDist);
+		if (targetPocketPercent >= 100)
+			return baseShot;
+		if (!doesBreakShotPocketBall(selectedBall.getIndex(), baseShot, englishDist))
+			return baseShot;
+		if (targetPocketPercent <= 0)
+			return buildNoPocketOpeningBreakShot(selectedBall, selectedPower,
+					baseCueDist, englishDist, baseShot);
+		BreakShot fallback = baseShot;
+		for (int level = 1; level <= BREAK_JITTER_MAX_LEVEL; level++) {
+			int pocketed = 0;
+			BreakShot candidates[] = new BreakShot[BREAK_JITTER_SIMULATIONS];
+			for (int i = 0; i < BREAK_JITTER_SIMULATIONS; i++) {
+				BreakShot candidate = buildJitteredOpeningBreakShot(selectedBall,
+						selectedPower, baseCueDist, englishDist, level);
+				candidates[i] = candidate;
+				if (doesBreakShotPocketBall(selectedBall.getIndex(), candidate,
+					englishDist))
+					pocketed++;
+			}
+			fallback = candidates[BREAK_RANDOM.nextInt(candidates.length)];
+			if (pocketed * 100 <= targetPocketPercent
+					* BREAK_JITTER_SIMULATIONS)
+				return fallback;
+		}
+		return fallback;
+	}
+
+	private BreakShot buildNoPocketOpeningBreakShot(IBall selectedBall,
+			int selectedPower, YIPoint baseCueDist, YIPoint englishDist,
+			BreakShot fallback) {
+		for (int level = 1; level <= BREAK_JITTER_MAX_LEVEL; level++)
+			for (int i = 0; i < BREAK_JITTER_SIMULATIONS; i++) {
+				BreakShot candidate = buildJitteredOpeningBreakShot(selectedBall,
+						selectedPower, baseCueDist, englishDist, level);
+				if (!doesBreakShotPocketBall(selectedBall.getIndex(), candidate,
+						englishDist))
+					return candidate;
+			}
+		for (int percent = 90; percent >= 0; percent -= 10) {
+			BreakShot candidate = buildScaledOpeningBreakShot(selectedBall,
+					baseCueDist, englishDist, percent);
+			if (!doesBreakShotPocketBall(selectedBall.getIndex(), candidate,
+					englishDist))
+				return candidate;
+			fallback = candidate;
+		}
+		return fallback;
+	}
+
+	private BreakShot buildOpeningBreakShot(IBall selectedBall, YIPoint cueDist,
+			YIPoint englishDist) {
+		BreakShot shot = new BreakShot();
+		shot.cueDist = buildOpeningBreakCueDist(selectedBall, cueDist);
+		CollisionHint hint = calculateCollisionHint(pool, selectedBall.getIndex(),
+				shot.cueDist);
+		shot.firstColl = hint.firstColl;
+		shot.collBall = hint.collBall;
+		return shot;
+	}
+
+	private BreakShot buildJitteredOpeningBreakShot(IBall selectedBall,
+			int selectedPower, YIPoint baseCueDist, YIPoint englishDist, int level) {
+		YIPoint cueDist = applyBreakPowerJitter(selectedBall, baseCueDist,
+				selectedPower, level);
+		cueDist = applyBreakAngleJitter(selectedBall, cueDist, level);
+		return buildOpeningBreakShot(selectedBall, cueDist, englishDist);
+	}
+
+	private BreakShot buildScaledOpeningBreakShot(IBall selectedBall,
+			YIPoint baseCueDist, YIPoint englishDist, int percent) {
+		YIVector pullback = new YIVector((YIPoint) selectedBall, baseCueDist);
+		pullback.mul(PoolMath.floatToYInt((float) percent / 100F));
+		YIPoint adjustedCueDist = ((PoolBall) selectedBall).newCopy();
+		adjustedCueDist.add(pullback);
+		return buildOpeningBreakShot(selectedBall, adjustedCueDist, englishDist);
+	}
+
+	private boolean doesBreakShotPocketBall(int cueBallIndex, BreakShot shot,
+			YIPoint englishDist) {
+		Pool simPool = createSimulationPool();
+		if (simPool == null)
+			return false;
+		if (!simPool.doStrike(simPool.m_turn, cueBallIndex, shot.cueDist,
+				englishDist, shot.firstColl, shot.collBall))
+			return false;
+		runSimulation(simPool);
+		return simPool.turnPocketed != null && simPool.turnPocketed.size() > 0;
+	}
+
 	private YIPoint buildOpeningBreakCueDist(IBall selectedBall, YIPoint cueDist) {
 		YIVector boostedPullback = new YIVector((YIPoint) selectedBall, cueDist);
 		boostedPullback.mul(PoolMath.floatToYInt(1.4F));
@@ -1454,16 +1583,17 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 	}
 
 	private YIPoint applyBreakPowerJitter(IBall selectedBall, YIPoint cueDist,
-			int selectedPower) {
+			int selectedPower, int level) {
 		if (selectedPower <= 0)
 			return cueDist;
 		int adjustedPower;
+		int powerJitter = BREAK_POWER_JITTER * level;
 		if (selectedPower >= MAX_CUE_POWER)
-			adjustedPower = selectedPower - BREAK_RANDOM.nextInt(BREAK_POWER_JITTER + 1);
+			adjustedPower = selectedPower - BREAK_RANDOM.nextInt(powerJitter + 1);
 		else
 			adjustedPower = Math.max(0, Math.min(MAX_CUE_POWER, selectedPower
-					+ BREAK_RANDOM.nextInt(BREAK_POWER_JITTER * 2 + 1)
-					- BREAK_POWER_JITTER));
+					+ BREAK_RANDOM.nextInt(powerJitter * 2 + 1)
+					- powerJitter));
 		if (adjustedPower == selectedPower)
 			return cueDist;
 		YIVector pullback = new YIVector((YIPoint) selectedBall, cueDist);
@@ -1474,12 +1604,13 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		return adjustedCueDist;
 	}
 
-	private YIPoint applyBreakAngleJitter(IBall selectedBall, YIPoint cueDist) {
+	private YIPoint applyBreakAngleJitter(IBall selectedBall, YIPoint cueDist,
+			int level) {
 		YIVector pullback = new YIVector((YIPoint) selectedBall, cueDist);
 		if (pullback.abs() == 0)
 			return cueDist;
 		int maxJitter = PoolMath.mul(PoolMath.pi_180, PoolMath
-				.floatToYInt(BREAK_ANGLE_JITTER_DEGREES));
+				.floatToYInt(BREAK_ANGLE_JITTER_DEGREES * level));
 		int jitter = BREAK_RANDOM.nextInt(maxJitter * 2 + 1) - maxJitter;
 		if (jitter == 0)
 			return cueDist;
@@ -2066,6 +2197,12 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		if (token.indexOf("black") != -1)
 			return solid ? -1 : 6;
 		return -1;
+	}
+
+	private static final class BreakShot {
+		YIPoint	cueDist;
+		YIPoint	firstColl;
+		int		collBall;
 	}
 
 	private static final class CollisionHint {

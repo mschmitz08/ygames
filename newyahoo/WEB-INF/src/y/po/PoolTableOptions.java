@@ -55,6 +55,11 @@ public class PoolTableOptions extends CustomTableOptions {
 			stringbuffer.append(_pcls14.lookupString(0x6650132d));
 		if (hashtable.containsKey("rd"))
 			stringbuffer.append(_pcls14.lookupString(0x6650132e));
+		if (hashtable.containsKey("breakDeterministic"))
+			stringbuffer.append(" deterministic break");
+		else if (hashtable.containsKey("breakPocketCap"))
+			stringbuffer.append(" break<=" + hashtable.get("breakPocketCap")
+					+ "%");
 		return new String(stringbuffer);
 	}
 

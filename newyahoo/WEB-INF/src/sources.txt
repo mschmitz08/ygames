@@ -196,6 +196,8 @@ C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\BallImage.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\BallProducer.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\BallSprite.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\BlackProducer.java
+C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\BreakBehaviorPanel.java
+C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\BreakChanceSlider.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\ColorChannelSlider.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\ColoredBallProducer.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\CueControlEditor.java
