@@ -182,22 +182,45 @@ public class PoolBall extends YIPoint implements IBall {
 	public void checkSlots(Slot[] slots) {
 		if (slots == null)
 			return;
-		if (pocketArea != null
+		boolean insidePocketArea = pocketArea != null
 				&& pocketArea.containsPoint(
 						(int) PoolMath.yintToFloat(super.a), (int) PoolMath
-								.yintToFloat(super.b)) || !isMoving())
+								.yintToFloat(super.b));
+		if (insidePocketArea && !isInPocketMouth(slots)) {
 			return;
+		}
 		for (Slot slot2 : slots) {
 			if (slot2 == null)
 				continue;
 			int pocketRadius = getPocketRadius(slot2);
-			if (distance(slot2) < pocketRadius) {
+			int pocketPullRadius = getPocketPullRadius(slot2);
+			int distance = distance(slot2);
+			if (distance < pocketRadius) {
 				Mv(slot2);
 				break;
 			}
-			if (distance(slot2) <= pocketRadius + Slot.f)
+			if (insidePocketArea && isMoving()
+					&& distance <= getPocketMouthRadius(slot2)
+					&& isMovingTowardSlot(slot2)) {
+				Mv(slot2);
+				break;
+			}
+			if (!isMoving() && distance <= pocketPullRadius) {
+				Mv(slot2);
+				break;
+			}
+			if (distance <= pocketPullRadius) {
 				vel.add(getPocketPull(slot2));
+			}
 		}
+	}
+
+	private boolean isInPocketMouth(Slot[] slots) {
+		for (int i = 0; i < slots.length; i++)
+			if (slots[i] != null
+					&& distance(slots[i]) <= getPocketMouthRadius(slots[i]))
+				return true;
+		return false;
 	}
 
 	private int getPocketRadius(Slot slot2) {
@@ -205,6 +228,19 @@ public class PoolBall extends YIPoint implements IBall {
 		int pocketRadius = slot2.c + PoolMath.intToYInt(handicap);
 		int minRadius = PoolMath.intToYInt(1);
 		return pocketRadius < minRadius ? minRadius : pocketRadius;
+	}
+
+	private int getPocketPullRadius(Slot slot2) {
+		return getPocketRadius(slot2) + PoolMath.intToYInt(Slot.f);
+	}
+
+	private int getPocketMouthRadius(Slot slot2) {
+		return getPocketRadius(slot2) + PoolMath.intToYInt(8);
+	}
+
+	private boolean isMovingTowardSlot(Slot slot2) {
+		YIVector toSlot = new YIVector(this, slot2);
+		return vel.mul(toSlot) > 0L;
 	}
 
 	private int getActivePocketHandicap() {
