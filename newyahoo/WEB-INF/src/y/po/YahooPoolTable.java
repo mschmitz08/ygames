@@ -1688,13 +1688,22 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 			YIPoint firstColl, int collBall) {
 		logState("strike done and sent turn=" + pool.m_turnNum + " seat="
 				+ getMySitIndex());
-		send('\uFF82', pool.m_turnNum, index, (byte) collBall, cueDist,
-				englishDist, firstColl);
+		resetShotAnimationTimer();
 		pool.poolEngine.active = false;
-		pool.doStrike(getMySitIndex(), index, cueDist, englishDist, firstColl,
-				collBall);
+		boolean struck = pool.doStrike(getMySitIndex(), index, cueDist,
+				englishDist, firstColl, collBall);
 		pool.poolEngine.resetLog();
 		pool.poolEngine.active = true;
+		if (struck)
+			send('\uFF82', pool.m_turnNum, index, (byte) collBall, cueDist,
+					englishDist, firstColl);
+	}
+
+	private void resetShotAnimationTimer() {
+		if (poolTimer != null)
+			poolTimer.start();
+		if (timerHandler != null)
+			timerHandler.refresh();
 	}
 
 	public void testShot(String spec) {
