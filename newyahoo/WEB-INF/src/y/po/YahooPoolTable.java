@@ -381,6 +381,13 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		return Math.max(1, (POOL_ENGINE_TIMER_MS * 100 + speed / 2) / speed);
 	}
 
+	private long getDeferredTurnStatTimeoutMs() {
+		int speed = getAnimationSpeedPercent();
+		if (speed >= 100)
+			return DEFERRED_TURN_STAT_TIMEOUT_MS;
+		return (DEFERRED_TURN_STAT_TIMEOUT_MS * 100L + speed / 2) / speed;
+	}
+
 	private int getAnimationSpeedPercent() {
 		Hashtable<String, String> properties = getPropertyes();
 		if (properties == null || !properties.containsKey(PROP_ANIMATION_SPEED))
@@ -656,7 +663,7 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 				playPoolSound();
 			if (pendingTurnStat != null && !pendingTurnStat.cleared
 					&& pendingTurnStatTime > 0L
-					&& System.currentTimeMillis() - pendingTurnStatTime >= DEFERRED_TURN_STAT_TIMEOUT_MS)
+					&& System.currentTimeMillis() - pendingTurnStatTime >= getDeferredTurnStatTimeoutMs())
 				applyPendingTurnStat(true);
 			processTestShotSearch();
 			Fc();
@@ -1434,7 +1441,9 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 
 	public void strike() {
 		if (isMyTurn() && pool.isRunning() && pool.getCurrentState() == 0) {
-			IBall selectedBall = poolArea.cueSprite.getSelectedBall();
+			IBall selectedBall = getSelectedCueBall();
+			if (selectedBall == null)
+				return;
 			int selectedPower = poolArea.cueSprite.power1;
 			YIPoint cueDist = poolArea.cueSprite.getPos(true).copy();
 			YIPoint englishDist = poolArea.english.getPos().copy();
@@ -1463,6 +1472,21 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 			strike(selectedBall.getIndex(), cueDist, englishDist, firstColl,
 					collBall);
 		}
+	}
+
+	private IBall getSelectedCueBall() {
+		IBall selectedBall = poolArea.cueSprite.getSelectedBall();
+		if (selectedBall != null && !selectedBall.inSlot())
+			return selectedBall;
+		selectedBall = pool.getSetup().getWhiteBall();
+		if (selectedBall != null && !selectedBall.inSlot())
+			return selectedBall;
+		if (pool.training && pool.getBall() != null && pool.getBall().length > 0) {
+			selectedBall = pool.getBall(0);
+			if (selectedBall != null && !selectedBall.inSlot())
+				return selectedBall;
+		}
+		return null;
 	}
 
 	private int resolveCollisionHint(int cueBallIndex, YIPoint firstColl,

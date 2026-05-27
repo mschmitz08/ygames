@@ -215,7 +215,16 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 	}
 
 	public boolean isOpeningBreakShot(IBall _pcls124, int i1) {
+		if (training && m_turnNum == 0 && isPlayableObjectBall(i1))
+			return true;
 		return hasOpeningRackState(_pcls124) && isRackClusterBall(i1);
+	}
+
+	private boolean isPlayableObjectBall(int i1) {
+		if (i1 <= 0 || i1 >= ball.length)
+			return false;
+		IBall _lcls124 = getBall(i1);
+		return _lcls124 != null && !_lcls124.inSlot();
 	}
 
 	public void changeTurn(boolean change, boolean ballInHand) {
@@ -802,6 +811,7 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 	public void reset() {
 		poolEngine.reset();
 		m_aimStateInit = true;
+		m_turnNum = 0;
 		o = 0;
 		n = false;
 		type0 = 0;

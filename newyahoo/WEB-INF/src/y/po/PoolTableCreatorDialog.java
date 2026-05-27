@@ -177,14 +177,18 @@ class PoolTableCreatorDialog extends YahooDialog {
 		for (int s = 0; s < SHOT_PROPERTY_KEYS.length; s++) {
 			shotPanel.addChildObject(new YahooLabel(SHOT_PROPERTY_LABELS[s]), 12,
 					24 + s * 23, false);
-			int minPercent = "ballRadius".equals(SHOT_PROPERTY_KEYS[s]) ? 10 : 0;
-			shotSliders[s] = new PoolPercentSlider(this, s, true, minPercent, 200,
-					100);
+			boolean ballSize = "ballRadius".equals(SHOT_PROPERTY_KEYS[s]);
+			int minPercent = ballSize ? 25 : 0;
+			int maxPercent = ballSize ? 150 : 200;
+			shotSliders[s] = new PoolPercentSlider(this, s, true, minPercent,
+					maxPercent, 100);
 			shotPanel.addChildObject(shotSliders[s], 130, 22 + s * 23, false);
 			shotValueLabels[s] = new YahooLabel("100%");
 			shotPanel.addChildObject(shotValueLabels[s], 247, 24 + s * 23,
 					false);
 		}
+		btnPocketHandicap = new YahooButton("Pocket handicap...");
+		shotPanel.addChildObject(btnPocketHandicap, 12, 140, false);
 		addChildObject(shotPanel, 17, 0, 0, 1, 6, 0, 10, 0, 12, 12, 0);
 		animationPanel = new PoolAnimationPanel();
 		animationPanel.addChildObject(new YahooLabel("Animation speed:"), 12, 28,
@@ -194,8 +198,6 @@ class PoolTableCreatorDialog extends YahooDialog {
 		animationPanel.addChildObject(animationSpeedSlider, 130, 26, false);
 		animationSpeedValueLabel = new YahooLabel("100%");
 		animationPanel.addChildObject(animationSpeedValueLabel, 247, 28, false);
-		btnPocketHandicap = new YahooButton("Pocket handicap...");
-		animationPanel.addChildObject(btnPocketHandicap, 12, 50, false);
 		addChildObject(animationPanel, 17, 0, 0, 1, 4, 2, 11, 12, 0, 0, 0);
 		ptc_o = new TableDescription(_pcls97.getApplet().getTimerHandler(),
 				_pcls97.getApplet());
@@ -363,7 +365,7 @@ class PoolTableCreatorDialog extends YahooDialog {
 				"Max cue power: caps the highest selectable shot power.",
 				"Cue force: scales the force applied by the same cue pullback.",
 				"Spin effectiveness: scales how strongly english affects the cue ball.",
-				"Ball size: changes physics radius and visual ball size; minimum is 10%.",
+				"Ball size: changes physics radius and visual ball size; range is 25% to 150%.",
 				"Collision energy: higher values retain more speed after ball-to-ball contact.",
 				"Animation speed: changes how fast shot animations play out, from 5% to 500%.",
 				"It does not change the shot chosen by the player.",

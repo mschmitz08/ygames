@@ -440,8 +440,27 @@ public class PoolArea extends YahooControl {
 			pc(pa_G);
 			return;
 		}
+		IBall defaultCueBall = getDefaultCueBall();
+		if (defaultCueBall != null && ballSprite != null) {
+			int index = defaultCueBall.getIndex();
+			if (index >= 0 && index < ballSprite.length
+					&& !ballSprite[index].getInSlot()) {
+				pc(ballSprite[index]);
+				return;
+			}
+		}
 		pc(null);
 		return;
+	}
+
+	private IBall getDefaultCueBall() {
+		IBall whiteBall = handler.getPool().getSetup().getWhiteBall();
+		if (whiteBall != null)
+			return whiteBall;
+		if (handler.getPool().training && handler.getPool().getBall() != null
+				&& handler.getPool().getBall().length > 0)
+			return handler.getPool().getBall(0);
+		return null;
 	}
 
 	@Override

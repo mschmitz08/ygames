@@ -104,6 +104,11 @@ public final class TrainingSetup extends PoolSetup implements PoolConsts {
 	}
 
 	@Override
+	public void initializeWB() {
+		whiteBall = pool.getBall(0);
+	}
+
+	@Override
 	public boolean isFaul() {
 		if (pool.firstCollidedBall == null)
 			return true;

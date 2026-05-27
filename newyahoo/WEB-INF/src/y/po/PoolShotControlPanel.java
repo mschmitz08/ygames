@@ -8,7 +8,7 @@ import y.controls.YahooGraphics;
 class PoolShotControlPanel extends YahooControl {
 
 	PoolShotControlPanel() {
-		super(285, 152);
+		super(285, 176);
 	}
 
 	@Override
