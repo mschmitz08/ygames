@@ -199,12 +199,6 @@ public class PoolBall extends YIPoint implements IBall {
 				Mv(slot2);
 				break;
 			}
-			if (insidePocketArea && isMoving()
-					&& distance <= getPocketMouthRadius(slot2)
-					&& isMovingTowardSlot(slot2)) {
-				Mv(slot2);
-				break;
-			}
 			if (!isMoving() && distance <= pocketPullRadius) {
 				Mv(slot2);
 				break;
@@ -236,11 +230,6 @@ public class PoolBall extends YIPoint implements IBall {
 
 	private int getPocketMouthRadius(Slot slot2) {
 		return getPocketRadius(slot2) + PoolMath.intToYInt(8);
-	}
-
-	private boolean isMovingTowardSlot(Slot slot2) {
-		YIVector toSlot = new YIVector(this, slot2);
-		return vel.mul(toSlot) > 0L;
 	}
 
 	private int getActivePocketHandicap() {
