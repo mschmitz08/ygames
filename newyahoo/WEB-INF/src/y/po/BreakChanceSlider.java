@@ -42,22 +42,22 @@ class BreakChanceSlider extends YahooComponent {
 	@Override
 	public void paint(YahooGraphics graphics) {
 		super.paint(graphics);
-		graphics.setColor(new Color(45, 45, 45));
+		graphics.setColor(Color.darkGray);
 		graphics.fillRect(TRACK_LEFT, TRACK_TOP, TRACK_WIDTH, TRACK_HEIGHT);
-		graphics.setColor(new Color(210, 210, 210));
-		graphics.drawRect(TRACK_LEFT, TRACK_TOP, TRACK_WIDTH, TRACK_HEIGHT);
 		int fillWidth = valueToOffset(value);
 		if (fillWidth > 0) {
-			graphics.setColor(new Color(176, 34, 48));
+			graphics.setColor(getFillColor());
 			graphics.fillRect(TRACK_LEFT + 1, TRACK_TOP + 1, fillWidth,
 					TRACK_HEIGHT - 1);
 		}
+		graphics.setColor(Color.black);
+		graphics.drawRect(TRACK_LEFT, TRACK_TOP, TRACK_WIDTH, TRACK_HEIGHT);
 		int knobLeft = TRACK_LEFT + fillWidth - KNOB_WIDTH / 2;
 		if (knobLeft < TRACK_LEFT)
 			knobLeft = TRACK_LEFT;
 		if (knobLeft > TRACK_LEFT + TRACK_WIDTH - KNOB_WIDTH)
 			knobLeft = TRACK_LEFT + TRACK_WIDTH - KNOB_WIDTH;
-		graphics.setColor(Color.white);
+		graphics.setColor(getFillColor());
 		graphics.fillRect(knobLeft, TRACK_TOP - 3, KNOB_WIDTH, TRACK_HEIGHT + 6);
 		graphics.setColor(Color.black);
 		graphics.drawRect(knobLeft, TRACK_TOP - 3, KNOB_WIDTH, TRACK_HEIGHT + 6);
@@ -96,5 +96,29 @@ class BreakChanceSlider extends YahooComponent {
 
 	private int valueToOffset(int value) {
 		return (value * TRACK_WIDTH) / 100;
+	}
+
+	private Color getFillColor() {
+		if (value <= 50)
+			return blend(new Color(45, 105, 210), new Color(235, 205, 55),
+					value, 50);
+		return blend(new Color(235, 205, 55), new Color(190, 35, 45),
+				value - 50, 50);
+	}
+
+	private Color blend(Color low, Color high, int position, int range) {
+		if (range <= 0)
+			return high;
+		if (position < 0)
+			position = 0;
+		if (position > range)
+			position = range;
+		int red = low.getRed()
+				+ (high.getRed() - low.getRed()) * position / range;
+		int green = low.getGreen()
+				+ (high.getGreen() - low.getGreen()) * position / range;
+		int blue = low.getBlue()
+				+ (high.getBlue() - low.getBlue()) * position / range;
+		return new Color(red, green, blue);
 	}
 }

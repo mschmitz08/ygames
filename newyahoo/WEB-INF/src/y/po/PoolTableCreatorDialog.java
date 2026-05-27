@@ -439,7 +439,8 @@ class PoolTableCreatorDialog extends YahooDialog {
 					PoolTableCreatorDialog.this, POCKET_HANDICAP_0_INDEX, true,
 					-10, 10, pocketHandicap0);
 			body.addChildObject(seat1, 170, 14, false);
-			pocketHandicap0Label = new YahooLabel(formatHandicap(pocketHandicap0));
+			pocketHandicap0Label = new YahooLabel(formatHandicap(pocketHandicap0),
+					YahooLabel.yl_b, 34);
 			body.addChildObject(pocketHandicap0Label, 292, 16, false);
 			body.addChildObject(new YahooLabel("Seat 2 pocket acceptance:"), 12,
 					48, false);
@@ -447,7 +448,8 @@ class PoolTableCreatorDialog extends YahooDialog {
 					PoolTableCreatorDialog.this, POCKET_HANDICAP_1_INDEX, true,
 					-10, 10, pocketHandicap1);
 			body.addChildObject(seat2, 170, 46, false);
-			pocketHandicap1Label = new YahooLabel(formatHandicap(pocketHandicap1));
+			pocketHandicap1Label = new YahooLabel(formatHandicap(pocketHandicap1),
+					YahooLabel.yl_b, 34);
 			body.addChildObject(pocketHandicap1Label, 292, 48, false);
 			body.addChildObject(new YahooLabel("0 is classic. +10 is easier. -10 is harder."),
 					12, 78, false);
