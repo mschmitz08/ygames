@@ -55,48 +55,7 @@ public class PoolTableOptions extends CustomTableOptions {
 			stringbuffer.append(_pcls14.lookupString(0x6650132d));
 		if (hashtable.containsKey("rd"))
 			stringbuffer.append(_pcls14.lookupString(0x6650132e));
-		if (hashtable.containsKey("breakDeterministic"))
-			stringbuffer.append(" deterministic break");
-		else if (hashtable.containsKey("breakPocketCap"))
-			stringbuffer.append(" break<=" + hashtable.get("breakPocketCap")
-					+ "%");
-		appendPhysicsOption(stringbuffer, hashtable, "linearFriction", " slide");
-		appendPhysicsOption(stringbuffer, hashtable, "rotationFriction", " roll");
-		appendPhysicsOption(stringbuffer, hashtable, "sideRotationFriction",
-				" spin");
-		appendPhysicsOption(stringbuffer, hashtable, "railBounce", " rail");
-		appendPhysicsOption(stringbuffer, hashtable, "railSpinTransfer",
-				" rail-spin");
-		appendPhysicsOption(stringbuffer, hashtable, "railSideSpin",
-				" rail-side");
-		appendPhysicsOption(stringbuffer, hashtable, "maxCuePower", " power");
-		appendPhysicsOption(stringbuffer, hashtable, "cueForce", " force");
-		appendPhysicsOption(stringbuffer, hashtable, "spinEffect", " english");
-		appendPhysicsOption(stringbuffer, hashtable, "ballRadius", " size");
-		appendPhysicsOption(stringbuffer, hashtable, "collisionEnergy",
-				" collision");
-		String speed = hashtable.get("animationSpeedPct");
-		if (speed != null)
-			stringbuffer.append(" animation=" + speed + "%");
-		appendPlainOption(stringbuffer, hashtable, "pocketHandicap0",
-				" seat1 pocket");
-		appendPlainOption(stringbuffer, hashtable, "pocketHandicap1",
-				" seat2 pocket");
 		return new String(stringbuffer);
-	}
-
-	private void appendPhysicsOption(StringBuffer stringbuffer,
-			Hashtable<String, String> hashtable, String key, String label) {
-		String value = hashtable.get("physics." + key + "Pct");
-		if (value != null)
-			stringbuffer.append(label + "=" + value + "%");
-	}
-
-	private void appendPlainOption(StringBuffer stringbuffer,
-			Hashtable<String, String> hashtable, String key, String label) {
-		String value = hashtable.get(key);
-		if (value != null)
-			stringbuffer.append(label + "=" + value);
 	}
 
 	@Override

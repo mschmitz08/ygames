@@ -19,6 +19,7 @@ public class PoolTopMessageOverlay extends YahooComponent {
 	private static final Color	BANNER_BOTTOM	= new Color(61, 94, 64);
 	private static final Color	CHIP_BG	= new Color(198, 214, 191);
 	private static final Color	CHIP_BORDER	= new Color(57, 82, 61);
+	private static final Color	CHIP_ALT_BG	= new Color(226, 221, 174);
 	private static final Color	TEXT_FG	= new Color(20, 30, 22);
 	private static final Color	MUTED_FG	= new Color(48, 70, 51);
 	private static final String[] MESSAGES = {
@@ -313,47 +314,40 @@ public class PoolTopMessageOverlay extends YahooComponent {
 	private void drawSettings(YahooGraphics graphics, int bannerWidth,
 			int bannerHeight) {
 		Font titleFont = new Font(YahooComponent.defaultFont.getName(), Font.BOLD,
-				13);
+				12);
 		Font chipFont = new Font(YahooComponent.defaultFont.getName(), Font.PLAIN,
-				11);
+				10);
 		graphics.setFont(titleFont);
 		graphics.setColor(TEXT_FG);
-		graphics.drawString("Table settings", 12, 22);
+		graphics.drawString("Table settings", 10, 17);
 		graphics.setFont(chipFont);
 		FontMetrics metrics = getFontMetrics(chipFont);
-		int x = 12;
-		int y = 34;
-		int rowHeight = Math.max(18, metrics.getHeight() + 6);
+		int x = 10;
+		int y = 24;
+		int rowHeight = Math.max(16, metrics.getHeight() + 4);
 		for (int i = 0; i < settings.size(); i++) {
 			String setting = settings.get(i);
-			int chipWidth = metrics.stringWidth(setting) + 26;
-			if (x + chipWidth > bannerWidth - 12) {
-				x = 12;
+			int chipWidth = metrics.stringWidth(setting) + 12;
+			if (x + chipWidth > bannerWidth - 10) {
+				x = 10;
 				y += rowHeight;
 			}
-			if (y + rowHeight > bannerHeight - 6)
+			if (y + rowHeight > bannerHeight - 5)
 				break;
 			drawSettingChip(graphics, setting, x, y, chipWidth, rowHeight,
-					metrics);
-			x += chipWidth + 6;
+					metrics, i);
+			x += chipWidth + 4;
 		}
 	}
 
 	private void drawSettingChip(YahooGraphics graphics, String setting, int x,
-			int y, int width, int height, FontMetrics metrics) {
-		graphics.setColor(CHIP_BG);
-		graphics.fillRect(x, y, width, height - 2);
+			int y, int width, int height, FontMetrics metrics, int index) {
+		graphics.setColor(index % 2 == 0 ? CHIP_BG : CHIP_ALT_BG);
+		graphics.fillRoundRect(x, y, width, height - 2, 8, 8);
 		graphics.setColor(CHIP_BORDER);
 		graphics.drawRect(x, y, width, height - 2);
-		int boxTop = y + (height - 2 - 9) / 2;
-		graphics.setColor(Color.white);
-		graphics.fillRect(x + 6, boxTop, 9, 9);
-		graphics.setColor(CHIP_BORDER);
-		graphics.drawRect(x + 6, boxTop, 9, 9);
-		graphics.drawLine(x + 8, boxTop + 5, x + 10, boxTop + 7);
-		graphics.drawLine(x + 10, boxTop + 7, x + 14, boxTop + 2);
 		graphics.setColor(MUTED_FG);
-		graphics.drawString(setting, x + 20, y + (height - 2
+		graphics.drawString(setting, x + 6, y + (height - 2
 				+ metrics.getAscent()) / 2 - 1);
 	}
 
@@ -461,6 +455,8 @@ public class PoolTopMessageOverlay extends YahooComponent {
 		result.add(properties.containsKey("rd") ? "Rated" : "Unrated");
 		if (properties.containsKey("timer"))
 			result.add("Timer " + properties.get("timer") + "s");
+		else
+			result.add("No timer");
 		result.add(properties.containsKey("ff") ? "No force forfeit"
 				: "Force forfeit");
 		if (properties.containsKey("breakPocketCap"))
@@ -469,23 +465,23 @@ public class PoolTopMessageOverlay extends YahooComponent {
 			result.add("Deterministic break");
 		appendSettingPct(result, properties, "linearFriction", "Slide");
 		appendSettingPct(result, properties, "rotationFriction", "Roll");
-		appendSettingPct(result, properties, "sideRotationFriction", "Spin");
-		appendSettingPct(result, properties, "railBounce", "Rail bounce");
-		appendSettingPct(result, properties, "railSpinTransfer", "Rail spin");
-		appendSettingPct(result, properties, "railSideSpin", "Rail side");
+		appendSettingPct(result, properties, "sideRotationFriction", "SpinF");
+		appendSettingPct(result, properties, "railBounce", "Rail");
+		appendSettingPct(result, properties, "railSpinTransfer", "RailSpin");
+		appendSettingPct(result, properties, "railSideSpin", "RailSide");
 		appendSettingPct(result, properties, "maxCuePower", "Power");
-		appendSettingPct(result, properties, "cueForce", "Cue force");
+		appendSettingPct(result, properties, "cueForce", "Cue");
 		appendSettingPct(result, properties, "spinEffect", "English");
-		appendSettingPct(result, properties, "ballRadius", "Ball size");
+		appendSettingPct(result, properties, "ballRadius", "Size");
 		appendSettingPct(result, properties, "collisionEnergy", "Collision");
-		if (properties.containsKey("animationSpeedPct"))
-			result.add("Animation " + properties.get("animationSpeedPct") + "%");
-		if (properties.containsKey("pocketHandicap0"))
-			result.add("Seat 1 pocket " + formatSigned(properties
-					.get("pocketHandicap0")));
-		if (properties.containsKey("pocketHandicap1"))
-			result.add("Seat 2 pocket " + formatSigned(properties
-					.get("pocketHandicap1")));
+		result.add("Animation "
+				+ getPropertyValue(properties, "animationSpeedPct", "100") + "%");
+		result.add("S1 pocket " + formatSigned(getPropertyValue(properties,
+				"pocketHandicap0", "0")));
+		result.add("S2 pocket " + formatSigned(getPropertyValue(properties,
+				"pocketHandicap1", "0")));
+		if (properties.get("dc") != null)
+			result.add("Desc " + truncate(properties.get("dc"), 20));
 		return result;
 	}
 
@@ -498,9 +494,21 @@ public class PoolTopMessageOverlay extends YahooComponent {
 
 	private void appendSettingPct(ArrayList<String> result,
 			Hashtable<String, String> properties, String key, String label) {
-		String value = properties.get("physics." + key + "Pct");
-		if (value != null)
-			result.add(label + " " + value + "%");
+		String value = getPropertyValue(properties, "physics." + key + "Pct",
+				"100");
+		result.add(label + " " + value + "%");
+	}
+
+	private String getPropertyValue(Hashtable<String, String> properties,
+			String key, String defaultValue) {
+		String value = properties.get(key);
+		return value != null ? value : defaultValue;
+	}
+
+	private String truncate(String value, int maxLength) {
+		if (value == null || value.length() <= maxLength)
+			return value;
+		return value.substring(0, maxLength - 3) + "...";
 	}
 
 	private void appendPct(StringBuffer text, Hashtable<String, String> properties,
