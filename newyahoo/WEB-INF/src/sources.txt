@@ -210,6 +210,7 @@ C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\PoolAreaHandler.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\PoolControlContainer.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\PoolPercentSlider.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\PoolPhysicsPanel.java
+C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\PoolSettingsViewDialog.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\PoolShotControlPanel.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\PoolTableCreator.java
 C:\Users\mschm\Desktop\ygames2\newyahoo\WEB-INF\src\y\po\PoolTableCreatorDialog.java

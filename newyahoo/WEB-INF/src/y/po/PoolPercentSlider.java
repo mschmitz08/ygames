@@ -21,6 +21,7 @@ class PoolPercentSlider extends YahooComponent {
 	private final int				max;
 	private int					value;
 	private boolean					focused;
+	private boolean					enabled;
 
 	PoolPercentSlider(PoolTableCreatorDialog owner, int index, int min, int max,
 			int value) {
@@ -32,6 +33,7 @@ class PoolPercentSlider extends YahooComponent {
 		this.max = max;
 		this.value = clamp(value);
 		focused = false;
+		enabled = true;
 	}
 
 	PoolPercentSlider(PoolTableCreatorDialog owner, int index,
@@ -44,10 +46,13 @@ class PoolPercentSlider extends YahooComponent {
 		this.max = max;
 		this.value = clamp(value);
 		focused = false;
+		enabled = true;
 	}
 
 	@Override
 	public boolean eventMouseDown(Event event, int x, int y) {
+		if (!enabled)
+			return true;
 		Gn(true);
 		updateValue(x);
 		return true;
@@ -55,6 +60,8 @@ class PoolPercentSlider extends YahooComponent {
 
 	@Override
 	public boolean eventMouseDrag(Event event, int x, int y) {
+		if (!enabled)
+			return true;
 		updateValue(x);
 		return true;
 	}
@@ -65,6 +72,8 @@ class PoolPercentSlider extends YahooComponent {
 
 	@Override
 	public boolean eventKeyPress(Event event, int key) {
+		if (!enabled)
+			return true;
 		if (key == Event.LEFT || key == Event.DOWN) {
 			setValue(value - getKeyStep(event));
 			return true;
@@ -135,6 +144,11 @@ class PoolPercentSlider extends YahooComponent {
 		if (value > max)
 			return max;
 		return value;
+	}
+
+	void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+		invalidate();
 	}
 
 	private int getKeyStep(Event event) {

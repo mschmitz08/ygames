@@ -9,6 +9,7 @@ import java.util.Random;
 
 import y.controls.YahooComponent;
 import y.controls.YahooGraphics;
+import y.po.PoolSettingsViewDialog;
 import y.yutils.YahooGamesTable;
 
 public class PoolTopMessageOverlay extends YahooComponent {
@@ -23,6 +24,8 @@ public class PoolTopMessageOverlay extends YahooComponent {
 	private static final Color	TAB_ACTIVE_BG	= new Color(226, 235, 207);
 	private static final Color	TEXT_FG	= new Color(20, 30, 22);
 	private static final Color	MUTED_FG	= new Color(48, 70, 51);
+	private static final int	SETTINGS_BUTTON_WIDTH	= 132;
+	private static final int	SETTINGS_BUTTON_HEIGHT	= 18;
 	private static final String[] TAB_NAMES = { "Rules", "Break", "Physics",
 			"Shot", "Handicap", "More" };
 	private static final String[] MESSAGES = {
@@ -326,6 +329,7 @@ public class PoolTopMessageOverlay extends YahooComponent {
 		graphics.setFont(chipFont);
 		FontMetrics metrics = getFontMetrics(chipFont);
 		drawTabs(graphics, metrics, bannerWidth);
+		drawSettingsButton(graphics, metrics, bannerWidth);
 		ArrayList<String> settings = buildSettings(selectedTab);
 		int x = 10;
 		int y = 40;
@@ -352,7 +356,7 @@ public class PoolTopMessageOverlay extends YahooComponent {
 		int height = 18;
 		for (int i = 0; i < TAB_NAMES.length; i++) {
 			int width = getTabWidth(metrics, TAB_NAMES[i]);
-			if (x + width > bannerWidth - 8)
+			if (x + width > getSettingsButtonLeft(bannerWidth) - 6)
 				break;
 			graphics.setColor(i == selectedTab ? TAB_ACTIVE_BG : TAB_BG);
 			graphics.fillRect(x, y, width, height);
@@ -363,6 +367,21 @@ public class PoolTopMessageOverlay extends YahooComponent {
 					+ metrics.getAscent()) / 2 - 1);
 			x += width + 3;
 		}
+	}
+
+	private void drawSettingsButton(YahooGraphics graphics, FontMetrics metrics,
+			int bannerWidth) {
+		int x = getSettingsButtonLeft(bannerWidth);
+		int y = 6;
+		graphics.setColor(TAB_ACTIVE_BG);
+		graphics.fillRect(x, y, SETTINGS_BUTTON_WIDTH, SETTINGS_BUTTON_HEIGHT);
+		graphics.setColor(CHIP_BORDER);
+		graphics.drawRect(x, y, SETTINGS_BUTTON_WIDTH, SETTINGS_BUTTON_HEIGHT);
+		graphics.setColor(TEXT_FG);
+		String label = "Show Settings Window";
+		graphics.drawString(label, x + (SETTINGS_BUTTON_WIDTH
+				- metrics.stringWidth(label)) / 2, y
+				+ (SETTINGS_BUTTON_HEIGHT + metrics.getAscent()) / 2 - 1);
 	}
 
 	private void drawSettingChip(YahooGraphics graphics, String setting, int x,
@@ -380,6 +399,14 @@ public class PoolTopMessageOverlay extends YahooComponent {
 	public boolean eventMouseDown(java.awt.Event event, int x, int y) {
 		if (table == null || table.getPropertyes() == null)
 			return false;
+		int bannerWidth = Math.max(120, Math.min(getWidth(),
+				Math.max(content.getWidth(), content.getWidth1())));
+		int buttonLeft = getSettingsButtonLeft(bannerWidth);
+		if (x >= buttonLeft && x <= buttonLeft + SETTINGS_BUTTON_WIDTH && y >= 6
+				&& y <= 6 + SETTINGS_BUTTON_HEIGHT) {
+			new PoolSettingsViewDialog(getContainer(), table.getPropertyes());
+			return true;
+		}
 		Font chipFont = new Font(YahooComponent.defaultFont.getName(), Font.PLAIN,
 				10);
 		FontMetrics metrics = getFontMetrics(chipFont);
@@ -399,6 +426,10 @@ public class PoolTopMessageOverlay extends YahooComponent {
 			tabX += tabWidth + 3;
 		}
 		return false;
+	}
+
+	private int getSettingsButtonLeft(int bannerWidth) {
+		return Math.max(108, bannerWidth - SETTINGS_BUTTON_WIDTH - 10);
 	}
 
 	private int getTabWidth(FontMetrics metrics, String label) {
