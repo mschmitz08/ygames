@@ -19,9 +19,12 @@ public class PoolTopMessageOverlay extends YahooComponent {
 	private static final Color	BANNER_BOTTOM	= new Color(61, 94, 64);
 	private static final Color	CHIP_BG	= new Color(198, 214, 191);
 	private static final Color	CHIP_BORDER	= new Color(57, 82, 61);
-	private static final Color	CHIP_ALT_BG	= new Color(226, 221, 174);
+	private static final Color	TAB_BG	= new Color(154, 183, 148);
+	private static final Color	TAB_ACTIVE_BG	= new Color(226, 235, 207);
 	private static final Color	TEXT_FG	= new Color(20, 30, 22);
 	private static final Color	MUTED_FG	= new Color(48, 70, 51);
+	private static final String[] TAB_NAMES = { "Rules", "Break", "Physics",
+			"Shot", "Handicap", "More" };
 	private static final String[] MESSAGES = {
 			"Not an ad. Just extra cue room.",
 			"This space is intentionally not for advertising.",
@@ -228,7 +231,7 @@ public class PoolTopMessageOverlay extends YahooComponent {
 	private final int				bannerHeight;
 	private final YahooGamesTable	table;
 	private final String			message;
-	private final ArrayList<String>	settings;
+	private int					selectedTab;
 
 	public PoolTopMessageOverlay(YahooComponent content, int bannerHeight) {
 		this(null, content, bannerHeight);
@@ -241,7 +244,7 @@ public class PoolTopMessageOverlay extends YahooComponent {
 		this.content = content;
 		this.bannerHeight = bannerHeight;
 		message = buildMessage();
-		settings = buildSettings();
+		selectedTab = 0;
 	}
 
 	@Override
@@ -319,11 +322,13 @@ public class PoolTopMessageOverlay extends YahooComponent {
 				10);
 		graphics.setFont(titleFont);
 		graphics.setColor(TEXT_FG);
-		graphics.drawString("Table settings", 10, 17);
+		graphics.drawString("Table settings", 10, 14);
 		graphics.setFont(chipFont);
 		FontMetrics metrics = getFontMetrics(chipFont);
+		drawTabs(graphics, metrics, bannerWidth);
+		ArrayList<String> settings = buildSettings(selectedTab);
 		int x = 10;
-		int y = 24;
+		int y = 40;
 		int rowHeight = Math.max(16, metrics.getHeight() + 4);
 		for (int i = 0; i < settings.size(); i++) {
 			String setting = settings.get(i);
@@ -335,20 +340,69 @@ public class PoolTopMessageOverlay extends YahooComponent {
 			if (y + rowHeight > bannerHeight - 5)
 				break;
 			drawSettingChip(graphics, setting, x, y, chipWidth, rowHeight,
-					metrics, i);
+					metrics);
 			x += chipWidth + 4;
 		}
 	}
 
+	private void drawTabs(YahooGraphics graphics, FontMetrics metrics,
+			int bannerWidth) {
+		int x = 108;
+		int y = 6;
+		int height = 18;
+		for (int i = 0; i < TAB_NAMES.length; i++) {
+			int width = getTabWidth(metrics, TAB_NAMES[i]);
+			if (x + width > bannerWidth - 8)
+				break;
+			graphics.setColor(i == selectedTab ? TAB_ACTIVE_BG : TAB_BG);
+			graphics.fillRect(x, y, width, height);
+			graphics.setColor(CHIP_BORDER);
+			graphics.drawRect(x, y, width, height);
+			graphics.setColor(i == selectedTab ? TEXT_FG : MUTED_FG);
+			graphics.drawString(TAB_NAMES[i], x + 7, y + (height
+					+ metrics.getAscent()) / 2 - 1);
+			x += width + 3;
+		}
+	}
+
 	private void drawSettingChip(YahooGraphics graphics, String setting, int x,
-			int y, int width, int height, FontMetrics metrics, int index) {
-		graphics.setColor(index % 2 == 0 ? CHIP_BG : CHIP_ALT_BG);
+			int y, int width, int height, FontMetrics metrics) {
+		graphics.setColor(CHIP_BG);
 		graphics.fillRoundRect(x, y, width, height - 2, 8, 8);
 		graphics.setColor(CHIP_BORDER);
 		graphics.drawRect(x, y, width, height - 2);
 		graphics.setColor(MUTED_FG);
 		graphics.drawString(setting, x + 6, y + (height - 2
 				+ metrics.getAscent()) / 2 - 1);
+	}
+
+	@Override
+	public boolean eventMouseDown(java.awt.Event event, int x, int y) {
+		if (table == null || table.getPropertyes() == null)
+			return false;
+		Font chipFont = new Font(YahooComponent.defaultFont.getName(), Font.PLAIN,
+				10);
+		FontMetrics metrics = getFontMetrics(chipFont);
+		int tabX = 108;
+		int tabY = 6;
+		int tabHeight = 18;
+		for (int i = 0; i < TAB_NAMES.length; i++) {
+			int tabWidth = getTabWidth(metrics, TAB_NAMES[i]);
+			if (x >= tabX && x <= tabX + tabWidth && y >= tabY
+					&& y <= tabY + tabHeight) {
+				if (selectedTab != i) {
+					selectedTab = i;
+					invalidate();
+				}
+				return true;
+			}
+			tabX += tabWidth + 3;
+		}
+		return false;
+	}
+
+	private int getTabWidth(FontMetrics metrics, String label) {
+		return metrics.stringWidth(label) + 16;
 	}
 
 	private Font pickFont(int bannerWidth, int bannerHeight) {
@@ -441,17 +495,37 @@ public class PoolTopMessageOverlay extends YahooComponent {
 		return new String(text);
 	}
 
-	private ArrayList<String> buildSettings() {
+	private ArrayList<String> buildSettings(int tab) {
 		ArrayList<String> result = new ArrayList<String>();
 		if (table == null || table.getPropertyes() == null)
 			return result;
 		Hashtable<String, String> properties = table.getPropertyes();
+		if (tab == 0)
+			buildRuleSettings(result, properties);
+		else if (tab == 1)
+			buildBreakSettings(result, properties);
+		else if (tab == 2)
+			buildPhysicsSettings(result, properties);
+		else if (tab == 3)
+			buildShotSettings(result, properties);
+		else if (tab == 4)
+			buildPocketSettings(result, properties);
+		else
+			buildMoreSettings(result, properties);
+		return result;
+	}
+
+	private void buildRuleSettings(ArrayList<String> result,
+			Hashtable<String, String> properties) {
 		if (properties.containsKey("nineBallGame")
 				|| properties.containsKey("nineBallTraining"))
-			result.add("9-Ball");
+			result.add("Game 9-Ball");
 		else
-			result.add("8-Ball");
-		result.add(properties.containsKey("training") ? "Training" : "Standard");
+			result.add("Game 8-Ball");
+		result.add(properties.containsKey("training") ? "Mode Training"
+				: "Mode Standard");
+		result.add(properties.containsKey("automat") ? "Automatic"
+				: "Manual start");
 		result.add(properties.containsKey("rd") ? "Rated" : "Unrated");
 		if (properties.containsKey("timer"))
 			result.add("Timer " + properties.get("timer") + "s");
@@ -459,30 +533,55 @@ public class PoolTopMessageOverlay extends YahooComponent {
 			result.add("No timer");
 		result.add(properties.containsKey("ff") ? "No force forfeit"
 				: "Force forfeit");
+	}
+
+	private void buildBreakSettings(ArrayList<String> result,
+			Hashtable<String, String> properties) {
 		if (properties.containsKey("breakPocketCap"))
-			result.add("Break <= " + properties.get("breakPocketCap") + "%");
+			result.add("Behavior Non-deterministic");
 		else
-			result.add("Deterministic break");
+			result.add("Behavior Deterministic");
+		result.add("Max pocket " + getPropertyValue(properties,
+				"breakPocketCap", "0") + "%");
+	}
+
+	private void buildPhysicsSettings(ArrayList<String> result,
+			Hashtable<String, String> properties) {
 		appendSettingPct(result, properties, "linearFriction", "Slide");
 		appendSettingPct(result, properties, "rotationFriction", "Roll");
-		appendSettingPct(result, properties, "sideRotationFriction", "SpinF");
-		appendSettingPct(result, properties, "railBounce", "Rail");
-		appendSettingPct(result, properties, "railSpinTransfer", "RailSpin");
-		appendSettingPct(result, properties, "railSideSpin", "RailSide");
-		appendSettingPct(result, properties, "maxCuePower", "Power");
-		appendSettingPct(result, properties, "cueForce", "Cue");
+		appendSettingPct(result, properties, "sideRotationFriction", "Side spin");
+		appendSettingPct(result, properties, "railBounce", "Rail bounce");
+		appendSettingPct(result, properties, "railSpinTransfer", "Rail spin");
+		appendSettingPct(result, properties, "railSideSpin", "Rail side");
+	}
+
+	private void buildShotSettings(ArrayList<String> result,
+			Hashtable<String, String> properties) {
+		appendSettingPct(result, properties, "maxCuePower", "Max cue power");
+		appendSettingPct(result, properties, "cueForce", "Cue force");
 		appendSettingPct(result, properties, "spinEffect", "English");
-		appendSettingPct(result, properties, "ballRadius", "Size");
-		appendSettingPct(result, properties, "collisionEnergy", "Collision");
+		appendSettingPct(result, properties, "ballRadius", "Ball size");
+		appendSettingPct(result, properties, "collisionEnergy", "Collision energy");
+	}
+
+	private void buildPocketSettings(ArrayList<String> result,
+			Hashtable<String, String> properties) {
+		result.add("Seat 1 pocket handicap " + formatSigned(getPropertyValue(
+				properties, "pocketHandicap0", "0")));
+		result.add("Seat 2 pocket handicap " + formatSigned(getPropertyValue(
+				properties, "pocketHandicap1", "0")));
+		result.add("+ easier");
+		result.add("- harder");
+	}
+
+	private void buildMoreSettings(ArrayList<String> result,
+			Hashtable<String, String> properties) {
 		result.add("Animation "
 				+ getPropertyValue(properties, "animationSpeedPct", "100") + "%");
-		result.add("S1 pocket " + formatSigned(getPropertyValue(properties,
-				"pocketHandicap0", "0")));
-		result.add("S2 pocket " + formatSigned(getPropertyValue(properties,
-				"pocketHandicap1", "0")));
 		if (properties.get("dc") != null)
 			result.add("Desc " + truncate(properties.get("dc"), 20));
-		return result;
+		else
+			result.add("No description");
 	}
 
 	private String formatSigned(String value) {
