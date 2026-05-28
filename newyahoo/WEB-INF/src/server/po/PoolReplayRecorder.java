@@ -24,7 +24,7 @@ class PoolReplayRecorder {
 	private boolean			initialStateRecorded;
 
 	PoolReplayRecorder(YahooRoom room, int tableNumber, int gameType,
-			YahooConnectionId[] players, long flags) {
+			YahooConnectionId[] players, long flags, String tableSettings) {
 		MySQLTable gameLogTable = room.getGameLogTable();
 		games = new MySQLTable(gameLogTable.getPool(), "pool_replay_games");
 		events = new MySQLTable(gameLogTable.getPool(), "pool_replay_events");
@@ -36,13 +36,14 @@ class PoolReplayRecorder {
 		String player0 = getPlayerName(players, 0);
 		String player1 = getPlayerName(players, 1);
 		String sql = "INSERT INTO " + games.name
-				+ " (replay_key, room_name, table_number, game_type, started_at, player0, player1, flags)"
+				+ " (replay_key, room_name, table_number, game_type, started_at, player0, player1, flags, table_settings)"
 				+ " VALUES (" + MySQLTable.formatValue(replayKey) + ", "
 				+ MySQLTable.formatValue(room.getYport()) + ", " + tableNumber
 				+ ", " + gameType + ", "
 				+ MySQLTable.formatValue(new Timestamp(System.currentTimeMillis()))
 				+ ", " + MySQLTable.formatValue(player0) + ", "
-				+ MySQLTable.formatValue(player1) + ", " + flags + ")";
+				+ MySQLTable.formatValue(player1) + ", " + flags + ", "
+				+ MySQLTable.formatValue(tableSettings) + ")";
 		games.execute(sql);
 	}
 

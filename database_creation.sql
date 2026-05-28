@@ -17,6 +17,7 @@ CREATE TABLE `checkers_games` (
   `game_data` blob,
   `flags` bigint(20) unsigned DEFAULT NULL,
   `result` blob,
+  `table_settings` text,
   PRIMARY KEY (`game_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8;
 
@@ -114,6 +115,7 @@ CREATE TABLE `pool_games` (
   `game_data` blob,
   `flags` bigint(20) unsigned DEFAULT NULL,
   `result` blob,
+  `table_settings` text,
   PRIMARY KEY (`game_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -130,6 +132,7 @@ CREATE TABLE `pool_replay_games` (
   `initial_state` mediumblob,
   `stop_data` blob,
   `result` blob,
+  `table_settings` text,
   PRIMARY KEY (`replay_key`),
   KEY `pool_replay_games_started_at` (`started_at`),
   KEY `pool_replay_games_room_table` (`room_name`,`table_number`,`started_at`)

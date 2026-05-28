@@ -20,6 +20,7 @@ class PoolPercentSlider extends YahooComponent {
 	private final int				min;
 	private final int				max;
 	private int					value;
+	private boolean					focused;
 
 	PoolPercentSlider(PoolTableCreatorDialog owner, int index, int min, int max,
 			int value) {
@@ -30,6 +31,7 @@ class PoolPercentSlider extends YahooComponent {
 		this.min = min;
 		this.max = max;
 		this.value = clamp(value);
+		focused = false;
 	}
 
 	PoolPercentSlider(PoolTableCreatorDialog owner, int index,
@@ -41,10 +43,12 @@ class PoolPercentSlider extends YahooComponent {
 		this.min = min;
 		this.max = max;
 		this.value = clamp(value);
+		focused = false;
 	}
 
 	@Override
 	public boolean eventMouseDown(Event event, int x, int y) {
+		Gn(true);
 		updateValue(x);
 		return true;
 	}
@@ -57,6 +61,27 @@ class PoolPercentSlider extends YahooComponent {
 
 	int getValue() {
 		return value;
+	}
+
+	@Override
+	public boolean eventKeyPress(Event event, int key) {
+		if (key == Event.LEFT || key == Event.DOWN) {
+			setValue(value - getKeyStep(event));
+			return true;
+		}
+		if (key == Event.RIGHT || key == Event.UP) {
+			setValue(value + getKeyStep(event));
+			return true;
+		}
+		if (key == Event.HOME) {
+			setValue(min);
+			return true;
+		}
+		if (key == Event.END) {
+			setValue(max);
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -81,6 +106,27 @@ class PoolPercentSlider extends YahooComponent {
 		graphics.fillRect(knobLeft, TRACK_TOP - 3, KNOB_WIDTH, TRACK_HEIGHT + 6);
 		graphics.setColor(Color.black);
 		graphics.drawRect(knobLeft, TRACK_TOP - 3, KNOB_WIDTH, TRACK_HEIGHT + 6);
+		if (focused) {
+			graphics.setColor(Color.white);
+			graphics.drawRect(0, 0, width - 1, height - 1);
+			graphics.setColor(Color.black);
+			graphics.drawRect(1, 1, width - 3, height - 3);
+		}
+	}
+
+	@Override
+	public boolean processEvent(Event event) {
+		if (event.id == Event.GOT_FOCUS) {
+			focused = true;
+			invalidate();
+			return true;
+		}
+		if (event.id == Event.LOST_FOCUS) {
+			focused = false;
+			invalidate();
+			return true;
+		}
+		return super.processEvent(event);
 	}
 
 	private int clamp(int value) {
@@ -91,14 +137,11 @@ class PoolPercentSlider extends YahooComponent {
 		return value;
 	}
 
-	private void updateValue(int x) {
-		int relative = x - TRACK_LEFT;
-		if (relative < 0)
-			relative = 0;
-		if (relative > TRACK_WIDTH)
-			relative = TRACK_WIDTH;
-		int updated = min + (relative * (max - min) + TRACK_WIDTH / 2)
-				/ TRACK_WIDTH;
+	private int getKeyStep(Event event) {
+		return (event.modifiers & Event.SHIFT_MASK) == Event.SHIFT_MASK ? 10 : 1;
+	}
+
+	private void setValue(int updated) {
 		updated = clamp(updated);
 		if (updated != value) {
 			value = updated;
@@ -109,6 +152,17 @@ class PoolPercentSlider extends YahooComponent {
 				else
 					owner.handlePhysicsSliderChange(index, value);
 		}
+	}
+
+	private void updateValue(int x) {
+		int relative = x - TRACK_LEFT;
+		if (relative < 0)
+			relative = 0;
+		if (relative > TRACK_WIDTH)
+			relative = TRACK_WIDTH;
+		int updated = min + (relative * (max - min) + TRACK_WIDTH / 2)
+				/ TRACK_WIDTH;
+		setValue(updated);
 	}
 
 	private int valueToOffset(int value) {

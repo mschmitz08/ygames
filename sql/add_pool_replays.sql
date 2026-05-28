@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS `pool_replay_games` (
   `initial_state` mediumblob,
   `stop_data` blob,
   `result` blob,
+  `table_settings` text,
   PRIMARY KEY (`replay_key`),
   KEY `pool_replay_games_started_at` (`started_at`),
   KEY `pool_replay_games_room_table` (`room_name`,`table_number`,`started_at`)

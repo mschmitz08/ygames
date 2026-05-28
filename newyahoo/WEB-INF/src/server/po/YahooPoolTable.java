@@ -829,7 +829,7 @@ public class YahooPoolTable extends YahooTable implements PoolHandler {
 		super.handleStart();
 		replayRecorder = new PoolReplayRecorder(room, number, getGameId(),
 				startedPlayers, currGameLogEntry != null ? currGameLogEntry
-						.getFlags() : 0L);
+						.getFlags() : 0L, getTableSettingsSnapshot());
 	}
 
 	@Override

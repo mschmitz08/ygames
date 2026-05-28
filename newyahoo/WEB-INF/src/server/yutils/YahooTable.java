@@ -5,7 +5,10 @@ import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Hashtable;
+import java.util.Enumeration;
 import java.util.Vector;
 
 import javax.sql.rowset.serial.SerialBlob;
@@ -128,6 +131,7 @@ public abstract class YahooTable implements GameHandler {
 	private String									host;
 	private int										privacy;
 	private int										finishedGameCount;
+	private String									currTableSettingsSnapshot;
 
 	public YahooTable(YahooRoom room, int number) {
 		this.room = room;
@@ -140,6 +144,7 @@ public abstract class YahooTable implements GameHandler {
 		inviteds = new Hashtable<String, String>();
 		gameLog = new Vector<GameHistory>();
 		currGameLogEntry = null;
+		currTableSettingsSnapshot = "";
 		startedPlayers = new YahooConnectionId[getSitCount()];
 		host = null;
 	}
@@ -238,6 +243,7 @@ public abstract class YahooTable implements GameHandler {
 			currGameLogEntry.close();
 			currGameLogEntry = null;
 		}
+		currTableSettingsSnapshot = null;
 		startedPlayers = null;
 	}
 
@@ -739,6 +745,47 @@ public abstract class YahooTable implements GameHandler {
 		return properties;
 	}
 
+	public String getTableSettingsSnapshot() {
+		if (properties == null || properties.isEmpty())
+			return "";
+		ArrayList<String> keys = new ArrayList<String>();
+		for (Enumeration<String> e = properties.keys(); e.hasMoreElements();)
+			keys.add(e.nextElement());
+		Collections.sort(keys);
+		StringBuffer result = new StringBuffer();
+		for (String key : keys) {
+			if (!shouldSnapshotTableSetting(key))
+				continue;
+			if (result.length() > 0)
+				result.append("; ");
+			result.append(key);
+			result.append("=");
+			String value = properties.get(key);
+			if (value != null)
+				result.append(value);
+		}
+		return result.toString();
+	}
+
+	protected boolean shouldSnapshotTableSetting(String key) {
+		if (key == null || "dc".equals(key))
+			return false;
+		if (this instanceof server.po.YahooPoolTable)
+			return isPoolGameplayTableSetting(key);
+		return true;
+	}
+
+	private boolean isPoolGameplayTableSetting(String key) {
+		return "rd".equals(key) || "ff".equals(key) || "timer".equals(key)
+				|| "training".equals(key) || "automat".equals(key)
+				|| "eightBallGame".equals(key) || "nineBallGame".equals(key)
+				|| "eightBall".equals(key) || "nineBall".equals(key)
+				|| "breakPocketCap".equals(key)
+				|| "breakDeterministic".equals(key)
+				|| key.startsWith("physics.")
+				|| key.startsWith("pocketHandicap");
+	}
+
 	public abstract int getSitCount();
 
 	/**
@@ -770,6 +817,7 @@ public abstract class YahooTable implements GameHandler {
 		}
 		currGameLogEntry = new GameHistory(System.currentTimeMillis(), players,
 				1 << getGameId());
+		currTableSettingsSnapshot = getTableSettingsSnapshot();
 	}
 
 	public void handleStartTick(int time) {
@@ -834,10 +882,11 @@ public abstract class YahooTable implements GameHandler {
 		try {
 			ps = table.prepareStatement("INSERT INTO "
 					+ table.name
+					+ " (game_id, date, players, oldratings, newratings, game_data, flags, result, table_settings)"
 					+ " VALUES (null, "
 					+ MySQLTable.formatValue(new Timestamp(currGameLogEntry
 							.getTime())) + ", ?, ?, ?, ?, "
-							+ currGameLogEntry.getFlags() + ", ?)");
+							+ currGameLogEntry.getFlags() + ", ?, ?)");
 
 			IOBuffer buf = new IOBuffer();
 			String[] players = currGameLogEntry.getPlayers();
@@ -867,6 +916,8 @@ public abstract class YahooTable implements GameHandler {
 			bytes = int2bytes(result);
 			ps.setBlob(5, bytes != null && bytes.length > 0 ? new SerialBlob(
 					bytes) : null);
+			ps.setString(6, currTableSettingsSnapshot != null
+					? currTableSettingsSnapshot : "");
 			ps.execute();
 		}
 		catch (SQLException e) {
