@@ -178,6 +178,7 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 	YahooComponent	cueControlPanel;
 	TableColorEditor	tableColorEditor;
 	CueControlEditor	cueControlEditor;
+	PoolSettingsViewDialog	settingsViewDialog;
 	Color			currentTableColor;
 	int				cueTapUnits;
 	int				cueMaxUnits;
@@ -231,6 +232,7 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		cueMaxUnits = DEFAULT_CUE_MAX_UNITS;
 		cueAccelDelayMs = DEFAULT_CUE_ACCEL_DELAY_MS;
 		cueAccelRampMs = DEFAULT_CUE_ACCEL_RAMP_MS;
+		settingsViewDialog = null;
 		loadingPreferences = false;
 		tableColorPreferenceDirty = false;
 		cueControlPreferenceDirty = false;
@@ -1128,6 +1130,21 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 		cueAccelRampMs = clamp(accelRampMs, 100, 5000);
 		applyCueControlSettings();
 		cueControlPreferenceDirty = true;
+	}
+
+	public void showPoolSettingsViewDialog(YahooControl container) {
+		if (settingsViewDialog != null) {
+			settingsViewDialog.bringToFront();
+			return;
+		}
+		settingsViewDialog = new PoolSettingsViewDialog(this, container,
+				getPropertyes());
+	}
+
+	public void handlePoolSettingsViewDialogClosed(
+			PoolSettingsViewDialog dialog) {
+		if (settingsViewDialog == dialog)
+			settingsViewDialog = null;
 	}
 
 	public boolean isCueControlPanelVisible() {

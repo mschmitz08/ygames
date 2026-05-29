@@ -487,7 +487,10 @@ public class PoolTopMessageOverlay extends YahooComponent {
 		int buttonLeft = getSettingsButtonLeft(bannerWidth);
 		if (x >= buttonLeft && x <= buttonLeft + SETTINGS_BUTTON_WIDTH && y >= 6
 				&& y <= 6 + SETTINGS_BUTTON_HEIGHT) {
-			new PoolSettingsViewDialog(getContainer(), table.getPropertyes());
+			if (table instanceof YahooPoolTable)
+				((YahooPoolTable) table).showPoolSettingsViewDialog(getContainer());
+			else
+				new PoolSettingsViewDialog(getContainer(), table.getPropertyes());
 			return true;
 		}
 		Font chipFont = new Font(YahooComponent.defaultFont.getName(), Font.PLAIN,

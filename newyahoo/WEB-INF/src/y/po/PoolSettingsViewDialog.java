@@ -14,12 +14,19 @@ import y.dialogs.YahooDialog;
 public class PoolSettingsViewDialog extends YahooDialog {
 
 	private final Hashtable<String, String>	properties;
+	private final YahooPoolTable				owner;
 	private YahooButton					btnClose;
 	private YahooButton					btnPocketHandicap;
 
 	public PoolSettingsViewDialog(YahooControl container,
 			Hashtable<String, String> properties) {
+		this(null, container, properties);
+	}
+
+	public PoolSettingsViewDialog(YahooPoolTable owner, YahooControl container,
+			Hashtable<String, String> properties) {
 		super(container, "Table Settings");
+		this.owner = owner;
 		this.properties = properties;
 		build();
 		show();
@@ -216,6 +223,23 @@ public class PoolSettingsViewDialog extends YahooDialog {
 			return true;
 		}
 		return super.eventActionEvent(event, obj);
+	}
+
+	public void bringToFront() {
+		YahooControl parent = getParent();
+		if (parent == null)
+			return;
+		int dialogLeft = left;
+		int dialogTop = top;
+		parent.removeChildObject(this);
+		parent.addChildObject(this, dialogLeft, dialogTop, true);
+	}
+
+	@Override
+	public void close() {
+		if (owner != null)
+			owner.handlePoolSettingsViewDialogClosed(this);
+		super.close();
 	}
 
 	private static final class ReadOnlyCheckBox extends YahooCheckBox {
