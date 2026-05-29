@@ -10,6 +10,7 @@ import java.util.Random;
 import y.controls.YahooComponent;
 import y.controls.YahooGraphics;
 import y.po.PoolSettingsViewDialog;
+import y.po.YahooPoolTable;
 import y.yutils.YahooGamesTable;
 
 public class PoolTopMessageOverlay extends YahooComponent {
@@ -290,13 +291,13 @@ public class PoolTopMessageOverlay extends YahooComponent {
 
 	private void drawBannerBackground(YahooGraphics graphics, int width,
 			int height) {
-		graphics.setColor(BANNER_BG);
+		graphics.setColor(getBannerBg());
 		graphics.fillRect(0, 0, width, height);
-		graphics.setColor(BANNER_TOP);
+		graphics.setColor(getBannerTop());
 		graphics.fillRect(0, 0, width, 7);
-		graphics.setColor(BANNER_BOTTOM);
+		graphics.setColor(getBannerBottom());
 		graphics.fillRect(0, height - 4, width, 4);
-		graphics.setColor(new Color(147, 182, 145));
+		graphics.setColor(getBannerLine());
 		graphics.drawLine(0, 7, width, 7);
 	}
 
@@ -309,7 +310,7 @@ public class PoolTopMessageOverlay extends YahooComponent {
 		int totalHeight = lines.size() * metrics.getHeight();
 		int y = Math.max(metrics.getAscent() + 6,
 				(bannerHeight - totalHeight) / 2 + metrics.getAscent());
-		graphics.setColor(TEXT_FG);
+		graphics.setColor(getBannerTextFg());
 		for (int i = 0; i < lines.size(); i++) {
 			String line = lines.get(i);
 			int x = Math.max(20, (bannerWidth - metrics.stringWidth(line)) / 2);
@@ -324,7 +325,7 @@ public class PoolTopMessageOverlay extends YahooComponent {
 		Font chipFont = new Font(YahooComponent.defaultFont.getName(), Font.PLAIN,
 				10);
 		graphics.setFont(titleFont);
-		graphics.setColor(TEXT_FG);
+		graphics.setColor(getBannerTextFg());
 		graphics.drawString("Table settings", 10, 14);
 		graphics.setFont(chipFont);
 		FontMetrics metrics = getFontMetrics(chipFont);
@@ -358,11 +359,11 @@ public class PoolTopMessageOverlay extends YahooComponent {
 			int width = getTabWidth(metrics, TAB_NAMES[i]);
 			if (x + width > getSettingsButtonLeft(bannerWidth) - 6)
 				break;
-			graphics.setColor(i == selectedTab ? TAB_ACTIVE_BG : TAB_BG);
+			graphics.setColor(i == selectedTab ? getTabActiveBg() : getTabBg());
 			graphics.fillRect(x, y, width, height);
-			graphics.setColor(CHIP_BORDER);
+			graphics.setColor(getChipBorder());
 			graphics.drawRect(x, y, width, height);
-			graphics.setColor(i == selectedTab ? TEXT_FG : MUTED_FG);
+			graphics.setColor(i == selectedTab ? getTextFg() : getMutedFg());
 			graphics.drawString(TAB_NAMES[i], x + 7, y + (height
 					+ metrics.getAscent()) / 2 - 1);
 			x += width + 3;
@@ -373,11 +374,11 @@ public class PoolTopMessageOverlay extends YahooComponent {
 			int bannerWidth) {
 		int x = getSettingsButtonLeft(bannerWidth);
 		int y = 6;
-		graphics.setColor(TAB_ACTIVE_BG);
+		graphics.setColor(getTabActiveBg());
 		graphics.fillRect(x, y, SETTINGS_BUTTON_WIDTH, SETTINGS_BUTTON_HEIGHT);
-		graphics.setColor(CHIP_BORDER);
+		graphics.setColor(getChipBorder());
 		graphics.drawRect(x, y, SETTINGS_BUTTON_WIDTH, SETTINGS_BUTTON_HEIGHT);
-		graphics.setColor(TEXT_FG);
+		graphics.setColor(getTextFg());
 		String label = "Show Settings Window";
 		graphics.drawString(label, x + (SETTINGS_BUTTON_WIDTH
 				- metrics.stringWidth(label)) / 2, y
@@ -386,13 +387,95 @@ public class PoolTopMessageOverlay extends YahooComponent {
 
 	private void drawSettingChip(YahooGraphics graphics, String setting, int x,
 			int y, int width, int height, FontMetrics metrics) {
-		graphics.setColor(CHIP_BG);
+		graphics.setColor(getChipBg());
 		graphics.fillRoundRect(x, y, width, height - 2, 8, 8);
-		graphics.setColor(CHIP_BORDER);
+		graphics.setColor(getChipBorder());
 		graphics.drawRect(x, y, width, height - 2);
-		graphics.setColor(MUTED_FG);
+		graphics.setColor(getMutedFg());
 		graphics.drawString(setting, x + 6, y + (height - 2
 				+ metrics.getAscent()) / 2 - 1);
+	}
+
+	private Color getTableColor() {
+		if (table instanceof YahooPoolTable)
+			return ((YahooPoolTable) table).getCurrentTableColor();
+		return null;
+	}
+
+	private Color getBannerBg() {
+		Color color = getTableColor();
+		return color == null ? BANNER_BG : blend(color, Color.white, 0.35F);
+	}
+
+	private Color getBannerTop() {
+		Color color = getTableColor();
+		return color == null ? BANNER_TOP : blend(color, Color.white, 0.20F);
+	}
+
+	private Color getBannerBottom() {
+		Color color = getTableColor();
+		return color == null ? BANNER_BOTTOM : blend(color, Color.black, 0.28F);
+	}
+
+	private Color getBannerLine() {
+		Color color = getTableColor();
+		return color == null ? new Color(147, 182, 145) : blend(color,
+				Color.white, 0.50F);
+	}
+
+	private Color getChipBg() {
+		Color color = getTableColor();
+		return color == null ? CHIP_BG : blend(color, Color.white, 0.70F);
+	}
+
+	private Color getChipBorder() {
+		Color color = getTableColor();
+		return color == null ? CHIP_BORDER : blend(color, Color.black, 0.55F);
+	}
+
+	private Color getTabBg() {
+		Color color = getTableColor();
+		return color == null ? TAB_BG : blend(color, Color.white, 0.52F);
+	}
+
+	private Color getTabActiveBg() {
+		Color color = getTableColor();
+		return color == null ? TAB_ACTIVE_BG : blend(color, Color.white, 0.82F);
+	}
+
+	private Color getTextFg() {
+		Color color = getTableColor();
+		return color == null ? TEXT_FG : blend(color, Color.black, 0.78F);
+	}
+
+	private Color getMutedFg() {
+		Color color = getTableColor();
+		return color == null ? MUTED_FG : blend(color, Color.black, 0.58F);
+	}
+
+	private Color getBannerTextFg() {
+		Color background = getBannerBg();
+		return getBrightness(background) < 95 ? Color.white : getTextFg();
+	}
+
+	private int getBrightness(Color color) {
+		return (color.getRed() * 299 + color.getGreen() * 587 + color.getBlue()
+				* 114) / 1000;
+	}
+
+	private Color blend(Color color, Color color1, float value) {
+		float amount = value;
+		if (amount < 0.0F)
+			amount = 0.0F;
+		if (amount > 1.0F)
+			amount = 1.0F;
+		int red = (int) (color.getRed() * (1.0F - amount) + color1.getRed()
+				* amount);
+		int green = (int) (color.getGreen() * (1.0F - amount) + color1
+				.getGreen() * amount);
+		int blue = (int) (color.getBlue() * (1.0F - amount) + color1.getBlue()
+				* amount);
+		return new Color(red, green, blue);
 	}
 
 	@Override

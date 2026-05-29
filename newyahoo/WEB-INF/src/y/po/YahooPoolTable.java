@@ -1055,6 +1055,21 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 			poolAimer.setTableColor(currentTableColor);
 		if (poolArea != null && currentTableColor != null)
 			poolArea.setTableColor(currentTableColor);
+		invalidateTableChrome();
+	}
+
+	public Color getCurrentTableColor() {
+		return currentTableColor;
+	}
+
+	private void invalidateTableChrome() {
+		YahooControl tableContainer = getTableControlContainer();
+		if (tableContainer == null)
+			return;
+		if (tableContainer.getParent() != null)
+			tableContainer.getParent().invalidate();
+		else
+			tableContainer.invalidate();
 	}
 
 	private void applyCueControlSettings() {
