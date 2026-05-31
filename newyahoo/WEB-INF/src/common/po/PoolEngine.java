@@ -336,6 +336,7 @@ public class PoolEngine implements ClockHandler, TimerHandler {
 			IBall currBall = ballInPlayArea.elementAt(i2);
 			currBall.nextPosition();
 		}
+		resolveRestingOverlaps("iterate-end");
 		return currFlag;
 	}
 
@@ -549,5 +550,31 @@ public class PoolEngine implements ClockHandler, TimerHandler {
 			element.stop();
 		moving = false;
 
+	}
+
+	public void resolveRestingOverlaps(String reason) {
+		if (ballInPlayArea == null)
+			return;
+		for (int pass = 0; pass < 8; pass++) {
+			boolean changed = false;
+			for (int i1 = 0; i1 < ballInPlayArea.size(); i1++) {
+				IBall one = ballInPlayArea.elementAt(i1);
+				if (one == null || one.inSlot())
+					continue;
+				for (int j1 = i1 + 1; j1 < ballInPlayArea.size(); j1++) {
+					IBall two = ballInPlayArea.elementAt(j1);
+					if (two == null || two.inSlot())
+						continue;
+					int minDistance = one.getRadius() + two.getRadius();
+					int distance = one.distance((YIPoint) two);
+					if (distance >= minDistance)
+						continue;
+					separateAfterCollision(one, two);
+					changed = true;
+				}
+			}
+			if (!changed)
+				return;
+		}
 	}
 }

@@ -785,6 +785,8 @@ public class YahooPoolTable extends YahooTable implements PoolHandler {
 
 	public void handleStopMoving() {
 		try {
+			if (pool != null && pool.getPoolEngine() != null)
+				pool.getPoolEngine().resolveRestingOverlaps("server-stop");
 			doUpdateGame();
 		}
 		catch (IOException e) {

@@ -890,6 +890,8 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 	}
 
 	public PoolData tj() {
+		if (poolEngine != null)
+			poolEngine.resolveRestingOverlaps("turn-stat-before-write");
 		G.reset();
 		G.turnCollided = turnCollided;
 		G.c = sideCollided;
