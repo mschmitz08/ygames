@@ -145,25 +145,6 @@
         return -1;
     }
 
-    private String utf8Hex(String value) {
-        if (value == null)
-            return "";
-        try {
-            byte[] bytes = value.getBytes("UTF-8");
-            StringBuffer text = new StringBuffer(bytes.length * 2);
-            for (int i = 0; i < bytes.length; i++) {
-                int b = bytes[i] & 0xff;
-                if (b < 16)
-                    text.append('0');
-                text.append(Integer.toHexString(b));
-            }
-            return text.toString().toUpperCase(Locale.US);
-        }
-        catch (UnsupportedEncodingException e) {
-            return "";
-        }
-    }
-
     private String opponentText(GameRow row) {
         StringBuffer text = new StringBuffer();
         if (row.players != null) {
@@ -244,8 +225,9 @@
         int matched = 0;
         try {
             ps = table.prepareStatement("SELECT game_id, date, players, oldratings, newratings, result FROM "
-                    + table.name + " WHERE LOCATE(?, HEX(players)) > 0 ORDER BY date DESC, game_id DESC");
-            ps.setString(1, utf8Hex(name));
+                    + table.name
+                    + " WHERE LOCATE(?, LOWER(CONVERT(players USING latin1))) > 0 ORDER BY date DESC, game_id DESC");
+            ps.setString(1, name.toLowerCase(Locale.US));
             rs = ps.executeQuery();
             while (rs.next() && rows.size() < limit + 1) {
                 GameRow row = new GameRow();
