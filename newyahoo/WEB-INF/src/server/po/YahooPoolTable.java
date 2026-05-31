@@ -189,18 +189,9 @@ public class YahooPoolTable extends YahooTable implements PoolHandler {
 		PoolData data = readReplayTurnStat(event);
 		if (poolEngineTimer != null)
 			stopPoolEngineTimer();
-		pool.getPoolEngine().stop();
-		int index;
-		int x;
-		int y;
-		int slot;
-		for (int i = 0; i < data.turnInArea.getCount(); pool.setPos(index,
-				x, y, slot)) {
-			index = data.turnInArea.getInteger(i++);
-			x = data.turnInArea.getInteger(i++);
-			y = data.turnInArea.getInteger(i++);
-			slot = data.turnInArea.getInteger(i++);
-		}
+		pool.m_turn = event.actorSeat;
+		pool.m_currentState = 1;
+		pool.doNotifyTStat(data, false);
 		ids.readLock();
 		try {
 			for (int i = 0; i < ids.size(); i++)
