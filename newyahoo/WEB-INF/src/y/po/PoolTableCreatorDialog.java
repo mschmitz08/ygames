@@ -138,9 +138,9 @@ class PoolTableCreatorDialog extends YahooDialog {
 		addChildObject(h, 17, 0, 0, 2, 1, 0, 4);
 		h.qo(1);
 		chkBreakDeterministic = new YahooCheckBox("Deterministic break", null,
-				true);
+				false);
 		chkBreakAdaptive = new YahooCheckBox("Non-deterministic break",
-				chkBreakDeterministic, false);
+				chkBreakDeterministic, true);
 		breakPanel = new BreakBehaviorPanel();
 		breakPanel.addChildObject(chkBreakDeterministic, 12, 23, false);
 		breakPanel.addChildObject(chkBreakAdaptive, 12, 44, false);
@@ -155,7 +155,7 @@ class PoolTableCreatorDialog extends YahooDialog {
 		breakOptions.addChildObject(new YahooControl(), 0);
 		breakOptions.addChildObject(breakChanceControls, 1);
 		breakPanel.addChildObject(breakOptions, 12, 68, false);
-		breakOptions.qo(0);
+		breakOptions.qo(1);
 		addChildObject(breakPanel, 17, 0, 0, 1, 4, 2, 0, 12, 0, 0, 0);
 		physicsPanel = new PoolPhysicsPanel();
 		physicsSliders = new PoolPercentSlider[PHYSICS_PROPERTY_KEYS.length];
