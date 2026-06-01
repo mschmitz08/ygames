@@ -679,10 +679,7 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 			return;
 		try {
 			int percent = Integer.parseInt(value);
-			if (percent < 0)
-				percent = 0;
-			if (percent > 200)
-				percent = 200;
+			percent = clampPhysicsPercent(key, percent);
 			int scaled = (int) ((((Integer) defaultValue).longValue() * percent)
 					/ 100L);
 			propertyes.put(key, new Integer(scaled));
@@ -698,12 +695,7 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 			return;
 		try {
 			int percent = Integer.parseInt(value);
-			if (percent < 0)
-				percent = 0;
-			if (percent > 200)
-				percent = 200;
-			if ("ballRadius".equals(key) && percent < 10)
-				percent = 10;
+			percent = clampPhysicsPercent(key, percent);
 			int scaled = (int) (((long) defaultValue * percent) / 100L);
 			propertyes.put(key, new Integer(scaled));
 		}
@@ -718,14 +710,47 @@ public class Pool extends Game implements PoolConsts, PoolEngineHandler,
 			return;
 		try {
 			int percent = Integer.parseInt(value);
-			if (percent < 0)
-				percent = 0;
-			if (percent > 200)
-				percent = 200;
+			percent = clampPhysicsPercent(key, percent);
 			propertyes.put(key, new Integer(percent));
 		}
 		catch (NumberFormatException e) {
 		}
+	}
+
+	private int clampPhysicsPercent(String key, int percent) {
+		int min = getPhysicsPercentMin(key);
+		int max = getPhysicsPercentMax(key);
+		if (percent < min)
+			return min;
+		if (percent > max)
+			return max;
+		return percent;
+	}
+
+	private int getPhysicsPercentMin(String key) {
+		if ("linearFriction".equals(key) || "rotationFriction".equals(key)
+				|| "sideRotationFriction".equals(key)
+				|| "railBounce".equals(key) || "maxCuePower".equals(key)
+				|| "cueForce".equals(key))
+			return 25;
+		if ("ballRadius".equals(key))
+			return 25;
+		return 0;
+	}
+
+	private int getPhysicsPercentMax(String key) {
+		if ("linearFriction".equals(key) || "rotationFriction".equals(key)
+				|| "sideRotationFriction".equals(key))
+			return 175;
+		if ("railBounce".equals(key) || "railSpinTransfer".equals(key)
+				|| "railSideSpin".equals(key) || "maxCuePower".equals(key)
+				|| "cueForce".equals(key) || "spinEffect".equals(key))
+			return 150;
+		if ("ballRadius".equals(key))
+			return 150;
+		if ("collisionEnergy".equals(key))
+			return 125;
+		return 200;
 	}
 
 	private void applyBoundedIntProperty(Hashtable<String, String> hashtable,

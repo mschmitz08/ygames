@@ -219,17 +219,18 @@ public class PoolBall extends YIPoint implements IBall {
 
 	private int getPocketRadius(Slot slot2) {
 		int handicap = getActivePocketHandicap();
+		if (handicap <= -10)
+			return 0;
 		int pocketRadius = slot2.c + PoolMath.intToYInt(handicap);
-		int minRadius = PoolMath.intToYInt(1);
-		return pocketRadius < minRadius ? minRadius : pocketRadius;
+		return pocketRadius < 0 ? 0 : pocketRadius;
 	}
 
 	private int getPocketPullRadius(Slot slot2) {
-		return getPocketRadius(slot2) + PoolMath.intToYInt(Slot.f);
+		return getPocketRadius(slot2) + PoolMath.intToYInt(getPocketAssist(Slot.f));
 	}
 
 	private int getPocketMouthRadius(Slot slot2) {
-		return getPocketRadius(slot2) + PoolMath.intToYInt(8);
+		return getPocketRadius(slot2) + PoolMath.intToYInt(getPocketAssist(8));
 	}
 
 	private int getActivePocketHandicap() {
@@ -246,8 +247,17 @@ public class PoolBall extends YIPoint implements IBall {
 	private YIVector getPocketPull(Slot slot2) {
 		YIVector pull = new YIVector(this, slot2);
 		pull.versor();
-		pull.mul(Slot.e);
+		pull.mul(getPocketAssist(Slot.e));
 		return pull;
+	}
+
+	private int getPocketAssist(int baseAssist) {
+		int handicap = getActivePocketHandicap();
+		if (handicap >= 0)
+			return baseAssist;
+		if (handicap <= -10)
+			return 0;
+		return baseAssist * (10 + handicap) / 10;
 	}
 
 	public IBall Copy() {

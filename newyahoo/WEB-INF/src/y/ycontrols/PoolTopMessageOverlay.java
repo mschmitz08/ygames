@@ -654,12 +654,13 @@ public class PoolTopMessageOverlay extends YahooComponent {
 
 	private void buildBreakSettings(ArrayList<String> result,
 			Hashtable<String, String> properties) {
-		if (properties.containsKey("breakPocketCap"))
+		if (properties.containsKey("breakPocketCap")) {
 			result.add("Behavior Non-deterministic");
+			result.add("Max pocket " + getPropertyValue(properties,
+					"breakPocketCap", "0") + "%");
+		}
 		else
 			result.add("Behavior Deterministic");
-		result.add("Max pocket " + getPropertyValue(properties,
-				"breakPocketCap", "0") + "%");
 	}
 
 	private void buildPhysicsSettings(ArrayList<String> result,

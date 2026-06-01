@@ -78,6 +78,35 @@ class PoolTableCreatorDialog extends YahooDialog {
 	static final int	POCKET_HANDICAP_0_INDEX = -2;
 	static final int	POCKET_HANDICAP_1_INDEX = -3;
 
+	static int getPhysicsMinPercent(String key) {
+		if ("railSpinTransfer".equals(key) || "railSideSpin".equals(key))
+			return 0;
+		return 25;
+	}
+
+	static int getPhysicsMaxPercent(String key) {
+		if ("railBounce".equals(key) || "railSpinTransfer".equals(key)
+				|| "railSideSpin".equals(key))
+			return 150;
+		return 175;
+	}
+
+	static int getShotMinPercent(String key) {
+		if ("ballRadius".equals(key))
+			return 25;
+		if ("spinEffect".equals(key) || "collisionEnergy".equals(key))
+			return 0;
+		return 25;
+	}
+
+	static int getShotMaxPercent(String key) {
+		if ("ballRadius".equals(key))
+			return 150;
+		if ("collisionEnergy".equals(key))
+			return 125;
+		return 150;
+	}
+
 	PoolTableCreatorDialog(TableCreator _pcls97, YahooControl _pcls79) {
 		super(_pcls79, _pcls97.getApplet().lookupString(0x66501402));
 		txtTimer = new YahooNumericTextBox(_pcls97.applet.getTimerHandler(),
@@ -163,7 +192,9 @@ class PoolTableCreatorDialog extends YahooDialog {
 		for (int p = 0; p < PHYSICS_PROPERTY_KEYS.length; p++) {
 			physicsPanel.addChildObject(new YahooLabel(PHYSICS_PROPERTY_LABELS[p]),
 					12, 24 + p * 23, false);
-			physicsSliders[p] = new PoolPercentSlider(this, p, 0, 200, 100);
+			physicsSliders[p] = new PoolPercentSlider(this, p,
+					getPhysicsMinPercent(PHYSICS_PROPERTY_KEYS[p]),
+					getPhysicsMaxPercent(PHYSICS_PROPERTY_KEYS[p]), 100);
 			physicsPanel.addChildObject(physicsSliders[p], 130, 22 + p * 23,
 					false);
 			physicsValueLabels[p] = new YahooLabel("100%");
@@ -177,9 +208,8 @@ class PoolTableCreatorDialog extends YahooDialog {
 		for (int s = 0; s < SHOT_PROPERTY_KEYS.length; s++) {
 			shotPanel.addChildObject(new YahooLabel(SHOT_PROPERTY_LABELS[s]), 12,
 					24 + s * 23, false);
-			boolean ballSize = "ballRadius".equals(SHOT_PROPERTY_KEYS[s]);
-			int minPercent = ballSize ? 25 : 0;
-			int maxPercent = ballSize ? 150 : 200;
+			int minPercent = getShotMinPercent(SHOT_PROPERTY_KEYS[s]);
+			int maxPercent = getShotMaxPercent(SHOT_PROPERTY_KEYS[s]);
 			shotSliders[s] = new PoolPercentSlider(this, s, true, minPercent,
 					maxPercent, 100);
 			shotPanel.addChildObject(shotSliders[s], 130, 22 + s * 23, false);
@@ -194,7 +224,7 @@ class PoolTableCreatorDialog extends YahooDialog {
 		animationPanel.addChildObject(new YahooLabel("Animation speed:"), 12, 28,
 				false);
 		animationSpeedSlider = new PoolPercentSlider(this, ANIMATION_SPEED_INDEX,
-				true, 5, 500, 100);
+				true, 25, 300, 100);
 		animationPanel.addChildObject(animationSpeedSlider, 130, 26, false);
 		animationSpeedValueLabel = new YahooLabel("100%");
 		animationPanel.addChildObject(animationSpeedValueLabel, 247, 28, false);
@@ -366,8 +396,8 @@ class PoolTableCreatorDialog extends YahooDialog {
 				"Cue force: scales the force applied by the same cue pullback.",
 				"Spin effectiveness: scales how strongly english affects the cue ball.",
 				"Ball size: changes physics radius and visual ball size; range is 25% to 150%.",
-				"Collision energy: higher values retain more speed after ball-to-ball contact.",
-				"Animation speed: changes how fast shot animations play out, from 5% to 500%.",
+				"Collision energy: higher values retain more speed after ball-to-ball contact; capped at 125%.",
+				"Animation speed: changes how fast shot animations play out, from 25% to 300%.",
 				"It does not change the shot chosen by the player.",
 				"Pocket handicap: Seat 1 and Seat 2 can be set from -10 to +10.",
 				"Positive is more forgiving; negative makes pockets reject more shots.",
@@ -399,7 +429,7 @@ class PoolTableCreatorDialog extends YahooDialog {
 		private final String[]	lines;
 
 		PoolOptionsHelpPanel(String[] lines) {
-			super(610, 390);
+			super(610, 350);
 			this.lines = lines;
 		}
 
@@ -410,14 +440,20 @@ class PoolTableCreatorDialog extends YahooDialog {
 			graphics.setColor(Color.darkGray);
 			graphics.drawRect(0, 0, width - 1, height - 1);
 			graphics.setColor(Color.black);
-			int y = 18;
+			int y = 14;
 			for (int i = 0; i < lines.length; i++) {
-				if (isHeading(lines[i]))
-					graphics.setColor(new Color(0, 0, 128));
-				else
+				if (isHeading(lines[i])) {
 					graphics.setColor(Color.black);
-				graphics.drawString(lines[i], 12, y);
-				y += isHeading(lines[i]) ? 19 : 17;
+					graphics.fillRect(6, y - 11, width - 12, 15);
+					graphics.setColor(Color.white);
+					graphics.drawString(lines[i], 12, y);
+					y += 15;
+				}
+				else {
+					graphics.setColor(Color.black);
+					graphics.drawString(lines[i], 12, y);
+					y += 13;
+				}
 			}
 		}
 

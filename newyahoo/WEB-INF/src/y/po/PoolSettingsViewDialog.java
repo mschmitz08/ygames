@@ -120,7 +120,9 @@ public class PoolSettingsViewDialog extends YahooDialog {
 					PoolTableCreatorDialog.PHYSICS_PROPERTY_LABELS[p]), 12,
 					24 + p * 23, false);
 			String key = PoolTableCreatorDialog.PHYSICS_PROPERTY_KEYS[p];
-			PoolPercentSlider slider = disabledSlider(null, 0, 200,
+			PoolPercentSlider slider = disabledSlider(null,
+					PoolTableCreatorDialog.getPhysicsMinPercent(key),
+					PoolTableCreatorDialog.getPhysicsMaxPercent(key),
 					getPhysicsPct(key, 100));
 			panel.addChildObject(slider, 130, 22 + p * 23, false);
 			panel.addChildObject(valueLabel(getPhysicsPct(key, 100) + "%"), 247,
@@ -136,9 +138,8 @@ public class PoolSettingsViewDialog extends YahooDialog {
 					PoolTableCreatorDialog.SHOT_PROPERTY_LABELS[s]), 12,
 					24 + s * 23, false);
 			String key = PoolTableCreatorDialog.SHOT_PROPERTY_KEYS[s];
-			boolean ballSize = "ballRadius".equals(key);
-			int minPercent = ballSize ? 25 : 0;
-			int maxPercent = ballSize ? 150 : 200;
+			int minPercent = PoolTableCreatorDialog.getShotMinPercent(key);
+			int maxPercent = PoolTableCreatorDialog.getShotMaxPercent(key);
 			PoolPercentSlider slider = disabledSlider(null, minPercent,
 					maxPercent, getPhysicsPct(key, 100));
 			panel.addChildObject(slider, 130, 22 + s * 23, false);
@@ -153,7 +154,7 @@ public class PoolSettingsViewDialog extends YahooDialog {
 	private void buildAnimationOptions() {
 		PoolAnimationPanel panel = new PoolAnimationPanel();
 		panel.addChildObject(new YahooLabel("Animation speed:"), 12, 28, false);
-		PoolPercentSlider slider = disabledSlider(null, 5, 500,
+		PoolPercentSlider slider = disabledSlider(null, 25, 300,
 				getInt("animationSpeedPct", 100));
 		panel.addChildObject(slider, 130, 26, false);
 		panel.addChildObject(valueLabel(getInt("animationSpeedPct", 100) + "%"),

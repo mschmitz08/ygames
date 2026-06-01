@@ -396,10 +396,10 @@ public class YahooPoolTable extends YahooGamesTable implements PoolHandler,
 			return 100;
 		try {
 			int speed = Integer.parseInt(properties.get(PROP_ANIMATION_SPEED));
-			if (speed < 5)
-				return 5;
-			if (speed > 500)
-				return 500;
+			if (speed < 25)
+				return 25;
+			if (speed > 300)
+				return 300;
 			return speed;
 		}
 		catch (NumberFormatException e) {
