@@ -271,8 +271,6 @@ public class PoolEngine implements ClockHandler, TimerHandler {
 						minTimeToCollBall = currTime2;
 						cb1 = ballj2;
 						cb2 = balli3;
-						if (handler != null)
-							handler.handleCollBalls(cb2, cb1);
 					}
 				}
 
@@ -318,6 +316,8 @@ public class PoolEngine implements ClockHandler, TimerHandler {
 			if (minTimeToCollBall == cE && cb2 != null && cb1 != null) {
 				if (logMessages)
 					addPhysicsLog("cb1" + cb1 + "\n cb2" + cb2);
+				if (handler != null)
+					handler.handleCollBalls(cb2, cb1);
 				v2.setFrom(cb2.getVel());
 				v1.setFrom(cb1.getVel());
 				if (cb2.getIndex() < cb1.getIndex()) {
